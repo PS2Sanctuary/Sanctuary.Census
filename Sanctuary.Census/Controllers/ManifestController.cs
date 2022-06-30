@@ -12,7 +12,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Sanctuary.Census.Abstractions.Services;
 using Sanctuary.Census.Objects;
-using Sanctuary.Census.Objects.Models;
+using Sanctuary.Census.Objects.ClientDataModels;
 using Sanctuary.Census.Util;
 
 namespace Sanctuary.Census.Controllers;

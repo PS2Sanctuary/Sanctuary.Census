@@ -7,7 +7,14 @@
     </PropertyGroup>
 
     <ItemGroup>
+        <PackageReference Include="carlst99.Mandible" Version="1.1.0" />
         <PackageReference Include="Swashbuckle.AspNetCore" Version="6.3.1" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Compile Update="Util\SpanReader.Search.cs">
+        <DependentUpon>SpanReader.cs</DependentUpon>
+      </Compile>
     </ItemGroup>
 
 </Project>

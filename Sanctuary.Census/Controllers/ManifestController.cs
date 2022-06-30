@@ -1,11 +1,19 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using CommunityToolkit.HighPerformance.Buffers;
+using Mandible.Pack2;
+using Mandible.Services;
+using Mandible.Util;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Sanctuary.Census.Abstractions.Services;
 using Sanctuary.Census.Objects;
+using Sanctuary.Census.Objects.Models;
+using Sanctuary.Census.Util;
 
 namespace Sanctuary.Census.Controllers;
 
@@ -41,14 +49,26 @@ public class ManifestController : ControllerBase
         }
     }
 
-    [HttpGet("data/{fileName}")]
-    public async Task<ActionResult> GetManifestFileDataAsync(string fileName, CancellationToken ct)
+    [HttpGet("data")]
+    public async Task<ActionResult<IEnumerable<ClientItemDatasheetData>>> ParseFireModeDataAsync(CancellationToken ct)
     {
         try
         {
-            ManifestFile file = await _manifestService.GetFileAsync(fileName, PS2Environment.Live, ct);
-            await using Stream data = await _manifestService.GetFileDataAsync(file, ct);
-            return Ok();
+            ManifestFile file = await _manifestService.GetFileAsync("data_x64_0.pack2", PS2Environment.Live, ct);
+            await using Stream fileData = await _manifestService.GetFileDataAsync(file, ct);
+
+            await using StreamDataReaderService sdrs = new(fileData, false);
+            using Pack2Reader reader = new(sdrs);
+
+            ulong nameHash = PackCrc64.Calculate("ClientItemDatasheetData.txt");
+            IReadOnlyList<Asset2Header> assetHeaders = await reader.ReadAssetHeadersAsync(ct).ConfigureAwait(false);
+
+            Asset2Header? header = assetHeaders.FirstOrDefault(h => h.NameHash == nameHash);
+            if (header is null)
+                return NotFound();
+
+            using MemoryOwner<byte> data = await reader.ReadAssetDataAsync(header, ct).ConfigureAwait(false);
+            return DatasheetSerializer.Deserialize<ClientItemDatasheetData>(data.Span);
         }
         catch (Exception ex)
         {

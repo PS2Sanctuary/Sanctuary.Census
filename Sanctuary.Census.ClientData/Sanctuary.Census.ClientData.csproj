@@ -6,15 +6,13 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Compile Update="Util\SpanReader.Search.cs">
-        <DependentUpon>SpanReader.cs</DependentUpon>
-      </Compile>
-    </ItemGroup>
-
-    <ItemGroup>
       <None Update="LocalManifestFiles\data_x64_0.pack2">
         <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       </None>
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\Sanctuary.Census.Common\Sanctuary.Census.Common.csproj" />
     </ItemGroup>
 
 </Project>

@@ -1,4 +1,4 @@
-﻿namespace Sanctuary.Census.ClientData.Objects;
+﻿namespace Sanctuary.Census.Common.Objects;
 
 /// <summary>
 /// Enumerates the environments that Sanctuary.Census can retrieve data from.

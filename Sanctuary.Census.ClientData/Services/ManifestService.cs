@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using System.Xml;
 using Sanctuary.Census.ClientData.Abstractions.Services;
 using Sanctuary.Census.ClientData.Objects;
+using Sanctuary.Census.Common.Objects;
 
 namespace Sanctuary.Census.ClientData.Services;
 

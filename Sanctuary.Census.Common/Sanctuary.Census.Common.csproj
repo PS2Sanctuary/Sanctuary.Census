@@ -1,3 +1,9 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
+    <ItemGroup>
+        <Compile Update="Util\SpanReader.Search.cs">
+            <DependentUpon>SpanReader.cs</DependentUpon>
+        </Compile>
+    </ItemGroup>
+    
 </Project>

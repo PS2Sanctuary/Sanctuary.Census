@@ -1,4 +1,4 @@
-﻿namespace Sanctuary.Census.ClientData.Objects.CommonModels;
+﻿namespace Sanctuary.Census.Common.Objects.Models;
 
 /// <summary>
 /// Enumerates the various faction IDs.

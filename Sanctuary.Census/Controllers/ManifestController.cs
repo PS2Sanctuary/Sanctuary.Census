@@ -16,7 +16,7 @@ using Sanctuary.Census.ClientData.Objects.ClientDataModels;
 using Sanctuary.Census.ClientData.Util;
 using Sanctuary.Census.Common.Objects;
 
-namespace Sanctuary.Census.ClientData.Controllers;
+namespace Sanctuary.Census.Controllers;
 
 [ApiController]
 [Route("[controller]")]

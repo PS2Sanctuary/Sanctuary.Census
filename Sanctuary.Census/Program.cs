@@ -8,7 +8,7 @@ using Sanctuary.Census.ClientData.Abstractions.Services;
 using Sanctuary.Census.ClientData.Objects;
 using Sanctuary.Census.ClientData.Services;
 
-namespace Sanctuary.Census.ClientData;
+namespace Sanctuary.Census;
 
 /// <summary>
 /// The main class of the application.
@@ -21,7 +21,7 @@ public static class Program
     /// <param name="args">Runtime arguments to be passed to the application.</param>
     public static void Main(string[] args)
     {
-        var builder = WebApplication.CreateBuilder(args);
+        WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
 #if DEBUG
         builder.Services.Configure<DebugOptions>(builder.Configuration.GetSection(nameof(DebugOptions)));
@@ -36,11 +36,11 @@ public static class Program
         builder.Services.AddEndpointsApiExplorer();
         builder.Services.AddSwaggerGen(options =>
         {
-            var xmlFilename = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+            string xmlFilename = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
             options.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, xmlFilename));
         });
 
-        var app = builder.Build();
+        WebApplication app = builder.Build();
 
         // Configure the HTTP request pipeline.
         if (app.Environment.IsDevelopment())
@@ -54,9 +54,7 @@ public static class Program
         }
 
         app.UseHttpsRedirection();
-
         app.UseAuthorization();
-
         app.MapControllers();
 
         app.Run();

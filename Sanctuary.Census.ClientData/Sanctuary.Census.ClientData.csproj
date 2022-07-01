@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk.Web">
+<Project Sdk="Microsoft.NET.Sdk">
 
     <ItemGroup>
         <PackageReference Include="carlst99.Mandible" Version="1.1.0" />
@@ -6,13 +6,19 @@
     </ItemGroup>
 
     <ItemGroup>
-      <None Update="LocalManifestFiles\data_x64_0.pack2">
-        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      </None>
+      <ProjectReference Include="..\Sanctuary.Census.Common\Sanctuary.Census.Common.csproj" />
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\Sanctuary.Census.Common\Sanctuary.Census.Common.csproj" />
+      <Compile Remove="LocalManifestFiles\**" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <EmbeddedResource Remove="LocalManifestFiles\**" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <None Remove="LocalManifestFiles\**" />
     </ItemGroup>
 
 </Project>

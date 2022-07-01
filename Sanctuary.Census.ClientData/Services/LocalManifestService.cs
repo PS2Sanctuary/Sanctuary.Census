@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using System.IO;
+﻿using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Options;
@@ -30,7 +29,7 @@ public class LocalManifestService : IManifestService
         string filePath = Path.Combine(_options.LocalManifestFilePath, fileName);
         FileInfo info = new(filePath);
         if (!info.Exists)
-            throw new KeyNotFoundException();
+            throw new FileNotFoundException("Failed to locate file in local directory", fileName);
 
         return Task.FromResult(new ManifestFile
         (

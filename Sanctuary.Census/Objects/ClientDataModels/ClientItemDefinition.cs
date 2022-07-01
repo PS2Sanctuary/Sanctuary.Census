@@ -3,7 +3,7 @@
 namespace Sanctuary.Census.Objects.ClientDataModels;
 
 /// <summary>
-/// Represents client item definitions.
+/// Represents a client item definition.
 /// </summary>
 /// <param name="ID">The item ID.</param>
 /// <param name="CodeFactoryName">The name of the code factory that produces the item stats.</param>

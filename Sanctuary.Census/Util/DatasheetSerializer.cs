@@ -76,8 +76,8 @@ public static class DatasheetSerializer
             ctorParamLowerNames = ctorParams.Select(p => p.Name!.ToLower())
                 .ToArray();
 
-            TypeCtorLowerCaseParamNames.Add(tType, ctorParamLowerNames);
             TypeCtorParamValueConverters.Add(tType, GetValueConverters(ctorParams));
+            TypeCtorLowerCaseParamNames.Add(tType, ctorParamLowerNames);
         }
 
         for (int i = 0; i < header.Count; i++)
@@ -97,43 +97,46 @@ public static class DatasheetSerializer
 
     private static Func<string, object>[] GetValueConverters(IReadOnlyList<ParameterInfo> parameters)
     {
-        Func<string, object>[] converters = new Func<string, object>[parameters.Count];
-
-        for (int i = 0; i < parameters.Count; i++)
+        Func<string, object> GetConverter(Type pType)
         {
-            Type pType = parameters[i].ParameterType;
-
             if (pType == typeof(bool))
-                converters[i] = ParseBoolean;
+                return ParseBoolean;
             else if (pType == typeof(byte))
-                converters[i] = s => byte.Parse(s);
+                return s => byte.Parse(s);
             else if (pType == typeof(sbyte))
-                converters[i] = s => sbyte.Parse(s);
+                return s => sbyte.Parse(s);
             else if (pType == typeof(ushort))
-                converters[i] = s => ushort.Parse(s);
+                return s => ushort.Parse(s);
             else if (pType == typeof(short))
-                converters[i] = s => short.Parse(s);
+                return s => short.Parse(s);
             else if (pType == typeof(uint))
-                converters[i] = s => uint.Parse(s);
+                return s => uint.Parse(s);
             else if (pType == typeof(int))
-                converters[i] = s => int.Parse(s);
+                return s => int.Parse(s);
             else if (pType == typeof(ulong))
-                converters[i] = s => ulong.Parse(s);
+                return s => ulong.Parse(s);
             else if (pType == typeof(long))
-                converters[i] = s => long.Parse(s);
+                return s => long.Parse(s);
             else if (pType == typeof(float))
-                converters[i] = s => float.Parse(s);
+                return s => float.Parse(s);
             else if (pType == typeof(double))
-                converters[i] = s => double.Parse(s);
+                return s => double.Parse(s);
             else if (pType == typeof(decimal))
-                converters[i] = s => decimal.Parse(s);
+                return s => decimal.Parse(s);
             else if (pType == typeof(string))
-                converters[i] = s => s;
+                return s => s;
             else if (pType.IsEnum)
-                converters[i] = s => Enum.Parse(pType, s);
+                return s => Enum.Parse(pType, s);
+            else if (Nullable.GetUnderlyingType(pType) != null)
+                return GetConverter(Nullable.GetUnderlyingType(pType)!);
             else
                 throw new InvalidOperationException($"Parameters of type {pType} are not supported");
         }
+
+        Func<string, object>[] converters = new Func<string, object>[parameters.Count];
+
+        for (int i = 0; i < parameters.Count; i++)
+            converters[i] = GetConverter(parameters[i].ParameterType);
 
         return converters;
     }
@@ -173,9 +176,22 @@ public static class DatasheetSerializer
         object?[] ctorParams = new object[ctorParamValues.Count];
         for (int i = 0; i < ctorParamValues.Count; i++)
         {
-            ctorParams[i] = ctorParamValues[i] is null
-                ? null
-                : converters[i](ctorParamValues[i]!);
+            try
+            {
+                ctorParams[i] = ctorParamValues[i] is null
+                    ? null
+                    : converters[i](ctorParamValues[i]!);
+            }
+            catch (FormatException fex)
+            {
+                string paramName = TypeCtorLowerCaseParamNames[typeof(T)][i];
+                throw new FormatException
+                (
+                    $"Failed to convert value {ctorParamValues[i]} for param {paramName}. " +
+                    "See inner exception for more details.",
+                    fex
+                );
+            }
         }
 
         T? value = (T?)Activator.CreateInstance(typeof(T), ctorParams);

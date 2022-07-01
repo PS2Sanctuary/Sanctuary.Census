@@ -10,12 +10,12 @@ using Mandible.Services;
 using Mandible.Util;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using Sanctuary.Census.Abstractions.Services;
-using Sanctuary.Census.Objects;
-using Sanctuary.Census.Objects.ClientDataModels;
-using Sanctuary.Census.Util;
+using Sanctuary.Census.ClientData.Abstractions.Services;
+using Sanctuary.Census.ClientData.Objects;
+using Sanctuary.Census.ClientData.Objects.ClientDataModels;
+using Sanctuary.Census.ClientData.Util;
 
-namespace Sanctuary.Census.Controllers;
+namespace Sanctuary.Census.ClientData.Controllers;
 
 [ApiController]
 [Route("[controller]")]

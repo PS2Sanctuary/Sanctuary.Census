@@ -1,9 +1,9 @@
 ﻿using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
-using Sanctuary.Census.Objects;
+using Sanctuary.Census.ClientData.Objects;
 
-namespace Sanctuary.Census.Abstractions.Services;
+namespace Sanctuary.Census.ClientData.Abstractions.Services;
 
 /// <summary>
 /// Represents a service for retrieving PlanetSide 2 patch manifest data.

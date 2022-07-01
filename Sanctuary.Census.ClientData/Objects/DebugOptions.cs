@@ -1,4 +1,4 @@
-﻿namespace Sanctuary.Census.Objects;
+﻿namespace Sanctuary.Census.ClientData.Objects;
 
 /// <summary>
 /// Represents options that can control debug mode operations.

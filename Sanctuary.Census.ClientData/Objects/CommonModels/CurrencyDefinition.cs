@@ -1,4 +1,4 @@
-﻿namespace Sanctuary.Census.Objects.CommonModels;
+﻿namespace Sanctuary.Census.ClientData.Objects.CommonModels;
 
 /// <summary>
 /// Enumerates the various currency types.

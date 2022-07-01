@@ -1,4 +1,4 @@
-﻿namespace Sanctuary.Census.Objects.ClientDataModels;
+﻿namespace Sanctuary.Census.ClientData.Objects.ClientDataModels;
 
 /// <summary>
 /// Represents client display data for weaponry.

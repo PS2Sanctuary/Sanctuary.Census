@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Runtime.CompilerServices;
 
-namespace Sanctuary.Census.Util
+namespace Sanctuary.Census.ClientData.Util
 {
     /// <summary>
     /// Provides methods for reading binary and text data

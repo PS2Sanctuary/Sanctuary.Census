@@ -3,10 +3,10 @@ using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Options;
-using Sanctuary.Census.Abstractions.Services;
-using Sanctuary.Census.Objects;
+using Sanctuary.Census.ClientData.Abstractions.Services;
+using Sanctuary.Census.ClientData.Objects;
 
-namespace Sanctuary.Census.Services;
+namespace Sanctuary.Census.ClientData.Services;
 
 /// <inheritdoc />
 /// <remarks>This service retrieves manifest data from a local directory.</remarks>

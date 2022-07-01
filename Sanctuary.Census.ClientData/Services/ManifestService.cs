@@ -5,10 +5,10 @@ using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Xml;
-using Sanctuary.Census.Abstractions.Services;
-using Sanctuary.Census.Objects;
+using Sanctuary.Census.ClientData.Abstractions.Services;
+using Sanctuary.Census.ClientData.Objects;
 
-namespace Sanctuary.Census.Services;
+namespace Sanctuary.Census.ClientData.Services;
 
 /// <inheritdoc />
 public class ManifestService : IManifestService

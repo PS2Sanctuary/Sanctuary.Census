@@ -1,6 +1,6 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sanctuary.Census", "Sanctuary.Census\Sanctuary.Census.csproj", "{5E625CD9-6E4F-483D-A966-11A3100DAABC}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sanctuary.Census.ClientData", "Sanctuary.Census.ClientData\Sanctuary.Census.ClientData.csproj", "{5E625CD9-6E4F-483D-A966-11A3100DAABC}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

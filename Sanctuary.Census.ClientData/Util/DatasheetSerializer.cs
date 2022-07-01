@@ -4,7 +4,7 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 
-namespace Sanctuary.Census.Util;
+namespace Sanctuary.Census.ClientData.Util;
 
 /// <summary>
 /// A reflection-based helper for serializing types to and from

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Runtime.CompilerServices;
 
-namespace Sanctuary.Census.Util
+namespace Sanctuary.Census.ClientData.Util
 {
     public ref partial struct SpanReader<T> where T : unmanaged, IEquatable<T>
     {

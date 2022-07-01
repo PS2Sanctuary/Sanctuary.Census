@@ -3,7 +3,7 @@
 /// <summary>
 /// Enumerates character genders.
 /// </summary>
-public enum GenderDefinition
+public enum GenderDefinition : byte
 {
     /// <summary>
     /// The given entity can be used on all genders.

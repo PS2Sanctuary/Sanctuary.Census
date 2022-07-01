@@ -1,7 +1,7 @@
 ﻿namespace Sanctuary.Census.Objects.ClientDataModels;
 
 /// <summary>
-/// Represents a resource type.
+/// Represents a client resource type.
 /// </summary>
 /// <param name="TypeID">The ID of the resource type.</param>
 /// <param name="TypeName">The name of the resource type.</param>

@@ -7,6 +7,8 @@ using Microsoft.Extensions.Hosting;
 using Sanctuary.Census.ClientData.Abstractions.Services;
 using Sanctuary.Census.ClientData.Objects;
 using Sanctuary.Census.ClientData.Services;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Sanctuary.Census;
 
@@ -36,8 +38,15 @@ public static class Program
         builder.Services.AddEndpointsApiExplorer();
         builder.Services.AddSwaggerGen(options =>
         {
-            string xmlFilename = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
-            options.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, xmlFilename));
+            IEnumerable<Assembly> assems = AppDomain.CurrentDomain
+                .GetAssemblies()
+                .Where(a => a.FullName?.StartsWith("Sanctuary.Census") == true);
+
+            foreach (Assembly a in assems)
+            {
+                string xmlFilename = $"{a.GetName().Name}.xml";
+                options.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, xmlFilename));
+            }
         });
 
         WebApplication app = builder.Build();

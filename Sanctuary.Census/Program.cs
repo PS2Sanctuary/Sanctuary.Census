@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Sanctuary.Census.Abstractions.Services;
+using Sanctuary.Census.Objects;
 using Sanctuary.Census.Services;
 
 namespace Sanctuary.Census;
@@ -22,7 +23,12 @@ public static class Program
     {
         var builder = WebApplication.CreateBuilder(args);
 
+#if DEBUG
+        builder.Services.Configure<DebugOptions>(builder.Configuration.GetSection(nameof(DebugOptions)));
+        builder.Services.AddSingleton<IManifestService, LocalManifestService>();
+#else
         builder.Services.AddHttpClient<IManifestService, ManifestService>();
+#endif
 
         builder.Services.AddControllers();
 

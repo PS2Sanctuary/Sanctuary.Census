@@ -73,7 +73,7 @@ public class ManifestController : ControllerBase
         catch (Exception ex)
         {
             _logger.LogError(ex, "Failed to retrieve manifest file information");
-            return NotFound();
+            return StatusCode(500);
         }
     }
 }

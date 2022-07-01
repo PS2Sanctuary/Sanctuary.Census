@@ -13,7 +13,7 @@
 /// <param name="RefireTimeMS">The time in milliseconds that the weapon takes to recover after firing a projectile.</param>
 /// <param name="ReloadTimeMS">The time in milliseconds that the weapon takes to reload.</param>
 /// <param name="ClipSize">The clip size of the weapon.</param>
-/// <param name="RangeStringID">The string ID of the general range category that the weapon falls into.</param>
+/// <param name="RangeStringID">The locale ID of the general range category that the weapon falls into.</param>
 /// <param name="MinConeOfFire">The weapon's starting cone of fire.</param>
 public record ClientItemDatasheetData
 (

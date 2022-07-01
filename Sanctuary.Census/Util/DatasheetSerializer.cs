@@ -182,7 +182,7 @@ public static class DatasheetSerializer
                     ? null
                     : converters[i](ctorParamValues[i]!);
             }
-            catch (FormatException fex)
+            catch (Exception fex)
             {
                 string paramName = TypeCtorLowerCaseParamNames[typeof(T)][i];
                 throw new FormatException

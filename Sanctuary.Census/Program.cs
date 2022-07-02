@@ -5,7 +5,6 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Sanctuary.Census.ClientData.Abstractions.Services;
-using Sanctuary.Census.ClientData.Objects;
 using Sanctuary.Census.ClientData.Services;
 using System.Collections.Generic;
 using System.Linq;

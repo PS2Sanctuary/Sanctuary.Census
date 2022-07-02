@@ -35,8 +35,7 @@ public static class Program
         WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
 #if DEBUG
-        builder.Services.Configure<DebugOptions>(builder.Configuration.GetSection(nameof(DebugOptions)));
-        builder.Services.AddHttpClient<IManifestService, CachingManifestService>(h => new CachingManifestService(h, AppDataDirectory));
+        builder.Services.AddHttpClient<IManifestService, DebugManifestService>(h => new DebugManifestService(h, AppDataDirectory));
 #else
         builder.Services.AddHttpClient<IManifestService, CachingManifestService>(h => new CachingManifestService(h, AppDataDirectory));
 #endif

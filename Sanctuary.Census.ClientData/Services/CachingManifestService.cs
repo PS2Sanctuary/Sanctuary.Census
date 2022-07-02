@@ -10,29 +10,32 @@ namespace Sanctuary.Census.ClientData.Services;
 /// <remarks>This service will cache manifest files in local appdata.</remarks>
 public class CachingManifestService : ManifestService
 {
-    private readonly string _cachePath;
+    /// <summary>
+    /// Gets the directory under which files are cached.
+    /// </summary>
+    protected readonly string CacheDirectory;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="CachingManifestService"/> class.
     /// </summary>
     /// <param name="httpClient">The HTTP client to use.</param>
-    /// <param name="appDataPath">The path to the app data directory to use.</param>
-    public CachingManifestService(HttpClient httpClient, string appDataPath)
+    /// <param name="appDataDirectory">The path to the app data directory to use.</param>
+    public CachingManifestService(HttpClient httpClient, string appDataDirectory)
         : base(httpClient)
     {
-        _cachePath = Path.Combine(appDataPath, "ManifestCache");
+        CacheDirectory = Path.Combine(appDataDirectory, "ManifestCache");
     }
 
     /// <inheritdoc />
     public override async Task<Stream> GetFileDataAsync(ManifestFile file, CancellationToken ct = default)
     {
-        if (!Directory.Exists(_cachePath))
-            Directory.CreateDirectory(_cachePath);
+        if (!Directory.Exists(CacheDirectory))
+            Directory.CreateDirectory(CacheDirectory);
 
-        string filePath = Path.Combine(_cachePath, file.FileName);
+        string filePath = Path.Combine(CacheDirectory, file.FileName);
         FileInfo fileInfo = new(filePath);
 
-        if (fileInfo.Exists && fileInfo.CreationTimeUtc > file.Timestamp)
+        if (fileInfo.Exists && fileInfo.LastWriteTimeUtc >= file.Timestamp)
             return File.OpenRead(filePath);
 
         Stream dataStream = await base.GetFileDataAsync(file, ct).ConfigureAwait(false);

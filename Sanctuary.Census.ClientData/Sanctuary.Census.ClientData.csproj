@@ -9,16 +9,4 @@
       <ProjectReference Include="..\Sanctuary.Census.Common\Sanctuary.Census.Common.csproj" />
     </ItemGroup>
 
-    <ItemGroup>
-      <Compile Remove="LocalManifestFiles\**" />
-    </ItemGroup>
-
-    <ItemGroup>
-      <EmbeddedResource Remove="LocalManifestFiles\**" />
-    </ItemGroup>
-
-    <ItemGroup>
-      <None Remove="LocalManifestFiles\**" />
-    </ItemGroup>
-
 </Project>

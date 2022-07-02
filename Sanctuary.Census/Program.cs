@@ -18,6 +18,15 @@ namespace Sanctuary.Census;
 public static class Program
 {
     /// <summary>
+    /// Gets the directory under which any app data should be stored.
+    /// </summary>
+    public static readonly string AppDataDirectory = Path.Combine
+    (
+        Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
+        "Sanctuary.Census"
+    );
+
+    /// <summary>
     /// The entry point of the application.
     /// </summary>
     /// <param name="args">Runtime arguments to be passed to the application.</param>
@@ -27,9 +36,9 @@ public static class Program
 
 #if DEBUG
         builder.Services.Configure<DebugOptions>(builder.Configuration.GetSection(nameof(DebugOptions)));
-        builder.Services.AddSingleton<IManifestService, LocalManifestService>();
+        builder.Services.AddHttpClient<IManifestService, CachingManifestService>(h => new CachingManifestService(h, AppDataDirectory));
 #else
-        builder.Services.AddHttpClient<IManifestService, ManifestService>();
+        builder.Services.AddHttpClient<IManifestService, CachingManifestService>(h => new CachingManifestService(h, AppDataDirectory));
 #endif
 
         builder.Services.AddControllers();

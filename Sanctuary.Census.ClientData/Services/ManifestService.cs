@@ -34,7 +34,7 @@ public class ManifestService : IManifestService
     }
 
     /// <inheritdoc />
-    public async Task<ManifestFile> GetFileAsync(string fileName, PS2Environment ps2Environment, CancellationToken ct = default)
+    public virtual async Task<ManifestFile> GetFileAsync(string fileName, PS2Environment ps2Environment, CancellationToken ct = default)
     {
         await using Stream manifestData = await _httpClient
             .GetStreamAsync(ManifestUrls[ps2Environment], ct)
@@ -93,7 +93,7 @@ public class ManifestService : IManifestService
     }
 
     /// <inheritdoc />
-    public async Task<Stream> GetFileDataAsync(ManifestFile file, CancellationToken ct = default)
+    public virtual async Task<Stream> GetFileDataAsync(ManifestFile file, CancellationToken ct = default)
     {
         string downloadPath = $"{ROOT_DOWNLOAD_URL}{file.SHA[..2]}/{file.SHA[2..5]}/{file.SHA[5..]}";
         await using Stream manifestData = await _httpClient.GetStreamAsync(downloadPath, ct).ConfigureAwait(false);

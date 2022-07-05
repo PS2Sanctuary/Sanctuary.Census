@@ -7,6 +7,7 @@
 /// <param name="TypeName">The name of the resource type.</param>
 /// <param name="ImageSet">The ID of the resource type's image set.</param>
 /// <param name="NameID">The locale ID of the resource type.</param>
+[DataFile("ResourceTypes.txt")]
 public record ResourceType
 (
     uint TypeID,

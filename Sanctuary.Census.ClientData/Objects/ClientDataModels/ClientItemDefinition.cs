@@ -76,6 +76,7 @@ namespace Sanctuary.Census.ClientData.Objects.ClientDataModels;
 /// <param name="ResourceType">Gets the ID of the resource type that this item consumes.</param>
 /// <param name="ResourceCost">Gets the amount of the given resource type that this item consumes.</param>
 /// <param name="NoGift">Indicates whether this item can be gifted.</param>
+[DataFile("ClientItemDefinitions.txt")]
 public record ClientItemDefinition
 (
     uint ID,

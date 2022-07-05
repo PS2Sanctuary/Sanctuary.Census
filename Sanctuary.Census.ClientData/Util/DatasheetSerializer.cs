@@ -20,10 +20,10 @@ public static class DatasheetSerializer
     /// <summary>
     /// Deserializes a UTF8 datasheet to the given type.
     /// </summary>
-    /// <param name="datasheet"></param>
-    /// <typeparam name="T"></typeparam>
-    /// <returns></returns>
-    /// <exception cref="FormatException"></exception>
+    /// <typeparam name="T">The type to deserialize the datasheet to.</typeparam>
+    /// <param name="datasheet">The UTF-8 datasheet data.</param>
+    /// <returns>The deserialized datasheet.</returns>
+    /// <exception cref="FormatException">Thrown if the datasheet did not have a header.</exception>
     public static List<T> Deserialize<T>(ReadOnlySpan<byte> datasheet)
     {
         List<T> objects = new();

@@ -1,4 +1,4 @@
-﻿namespace Sanctuary.Census.Common.Objects.Models;
+﻿namespace Sanctuary.Census.Common.Objects.CommonModels;
 
 /// <summary>
 /// Enumerates character genders.

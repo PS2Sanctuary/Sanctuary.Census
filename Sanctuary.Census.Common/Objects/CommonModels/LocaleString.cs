@@ -1,6 +1,6 @@
 ﻿using System.Text.Json.Serialization;
 
-namespace Sanctuary.Census.Common.Objects.Models;
+namespace Sanctuary.Census.Common.Objects.CommonModels;
 
 /// <summary>
 /// Represents a globalized string model.

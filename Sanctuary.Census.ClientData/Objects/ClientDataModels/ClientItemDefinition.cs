@@ -1,4 +1,4 @@
-﻿using Sanctuary.Census.Common.Objects.Models;
+﻿using Sanctuary.Census.Common.Objects.CommonModels;
 
 namespace Sanctuary.Census.ClientData.Objects.ClientDataModels;
 

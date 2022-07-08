@@ -5,73 +5,73 @@ namespace Sanctuary.Census.Common.Util;
 
 /// <summary>
 /// Provides methods for reading binary and text data
-/// out of a <see cref="ReadOnlySpan{T}"/> with a focus
+/// out of a <see cref="ReadOnlyMemory{T}"/> with a focus
 /// on performance and minimal or zero heap allocations.
 /// </summary>
-/// <typeparam name="T">The type of the read-only span.</typeparam>
-public ref partial struct SpanReader<T> where T : unmanaged, IEquatable<T>
+/// <typeparam name="T">The type of the read-only memory.</typeparam>
+public partial struct MemoryReader<T> where T : unmanaged, IEquatable<T>
 {
     /// <summary>
-    /// Gets the underlying <see cref="ReadOnlySpan{T}"/> for the reader.
+    /// Gets the underlying <see cref="ReadOnlyMemory{T}"/> for the reader.
     /// </summary>
-    public readonly ReadOnlySpan<T> Span;
+    public readonly ReadOnlyMemory<T> Memory;
 
     /// <summary>
-    /// Gets the number of items that this <see cref="SpanReader{T}"/>
-    /// has consumed from the underlying <see cref="Span"/>.
+    /// Gets the number of items that this <see cref="MemoryReader{T}"/>
+    /// has consumed from the underlying <see cref="Memory"/>.
     /// </summary>
     public int Consumed { get; private set; }
 
     /// <summary>
     /// Gets a value indicating whether the reader has
-    /// reached the end of the <see cref="Span"/>.
+    /// reached the end of the <see cref="Memory"/>.
     /// </summary>
-    public readonly bool End => Consumed >= Span.Length;
+    public readonly bool End => Consumed >= Memory.Length;
 
     /// <summary>
     /// Gets the number of remaining <typeparamref name="T"/>'s
-    /// in the reader's <see cref="Span"/>.
+    /// in the reader's <see cref="Memory"/>.
     /// </summary>
-    public readonly int Remaining => Span.Length - Consumed;
+    public readonly int Remaining => Memory.Length - Consumed;
 
     /// <summary>
-    /// Creates a <see cref="SpanReader{T}"/> over the given <see cref="ReadOnlySpan{T}"/>
+    /// Creates a <see cref="MemoryReader{T}"/> over the given <see cref="ReadOnlyMemory{T}"/>
     /// </summary>
-    /// <param name="span">The <see cref="ReadOnlySpan{T}"/> to read.</param>
-    public SpanReader(ReadOnlySpan<T> span)
+    /// <param name="memory">The <see cref="ReadOnlyMemory{T}"/> to read.</param>
+    public MemoryReader(ReadOnlyMemory<T> memory)
     {
-        Span = span;
+        Memory = memory;
         Consumed = 0;
     }
 
     /// <summary>
-    /// Forms a slice out of the current <see cref="SpanReader{T}"/>,
+    /// Forms a slice out of the current <see cref="MemoryReader{T}"/>,
     /// beginning at the current <see cref="Consumed"/>.
     /// </summary>
     /// <param name="length">The desired length of the slice.</param>
     /// <returns>
-    /// A <see cref="SpanReader{T}"/> backed by a slice of the current <see cref="Span"/>.
+    /// A <see cref="MemoryReader{T}"/> backed by a slice of the current <see cref="Memory"/>.
     /// </returns>
-    public SpanReader<T> Slice(int length)
-        => new SpanReader<T>(Span.Slice(Consumed, length));
+    public MemoryReader<T> Slice(int length)
+        => new MemoryReader<T>(Memory.Slice(Consumed, length));
 
     /// <summary>
-    /// Forms a slice out of the current <see cref="SpanReader{T}"/>.
+    /// Forms a slice out of the current <see cref="MemoryReader{T}"/>.
     /// </summary>
     /// <param name="start">The index to begin the slice at.</param>
     /// <param name="length">The desired length of the slice.</param>
     /// <returns>
-    /// A <see cref="SpanReader{T}"/> backed by a slice of the current <see cref="Span"/>.
+    /// A <see cref="MemoryReader{T}"/> backed by a slice of the current <see cref="Memory"/>.
     /// </returns>
-    public SpanReader<T> Slice(int start, int length)
-        => new SpanReader<T>(Span.Slice(start, length));
+    public MemoryReader<T> Slice(int start, int length)
+        => new MemoryReader<T>(Memory.Slice(start, length));
 
     /// <summary>
     /// Advances the reader by the given number of items.
     /// </summary>
     /// <remarks>
     /// If the <paramref name="count"/> would move the reader past the end,
-    /// it will simply move to the end of the <see cref="Span"/>.
+    /// it will simply move to the end of the <see cref="Memory"/>.
     /// </remarks>
     /// <param name="count">The number of items to move ahead by.</param>
     /// <exception cref="ArgumentOutOfRangeException">Thrown if the <paramref name="count"/> is negative.</exception>
@@ -82,7 +82,7 @@ public ref partial struct SpanReader<T> where T : unmanaged, IEquatable<T>
             throw new ArgumentOutOfRangeException(nameof(count), count, "Count must not be negative");
 
         if (count > Remaining)
-            Consumed = Span.Length;
+            Consumed = Memory.Span.Length;
         else
             Consumed += count;
     }
@@ -122,7 +122,7 @@ public ref partial struct SpanReader<T> where T : unmanaged, IEquatable<T>
             return false;
         }
 
-        value = Span[Consumed];
+        value = Memory.Span[Consumed];
         return true;
     }
 
@@ -147,7 +147,7 @@ public ref partial struct SpanReader<T> where T : unmanaged, IEquatable<T>
             return false;
         }
 
-        value = Span[Consumed + offset];
+        value = Memory.Span[Consumed + offset];
         return true;
     }
 
@@ -165,7 +165,7 @@ public ref partial struct SpanReader<T> where T : unmanaged, IEquatable<T>
             return false;
         }
 
-        value = Span[Consumed++];
+        value = Memory.Span[Consumed++];
         return true;
     }
 }

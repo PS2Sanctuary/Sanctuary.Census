@@ -15,6 +15,7 @@ using Sanctuary.Census.ClientData.Objects;
 using Sanctuary.Census.ClientData.Objects.ClientDataModels;
 using Sanctuary.Census.ClientData.Util;
 using Sanctuary.Census.Common.Objects;
+using System.Diagnostics;
 
 namespace Sanctuary.Census.Controllers;
 
@@ -69,7 +70,8 @@ public class ManifestController : ControllerBase
                 return NotFound();
 
             using MemoryOwner<byte> data = await reader.ReadAssetDataAsync(header, ct).ConfigureAwait(false);
-            return DatasheetSerializer.Deserialize<ClientItemDatasheetData>(data.Span);
+            IEnumerable<ClientItemDatasheetData> records = DatasheetSerializer.Deserialize<ClientItemDatasheetData>(data.Memory);
+            return new ActionResult<IEnumerable<ClientItemDatasheetData>>(records);
         }
         catch (Exception ex)
         {

@@ -1,8 +1,8 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
     <ItemGroup>
-        <Compile Update="Util\SpanReader.Search.cs">
-            <DependentUpon>SpanReader.cs</DependentUpon>
+        <Compile Update="Util\MemoryReader.Search.cs">
+          <DependentUpon>MemoryReader.cs</DependentUpon>
         </Compile>
     </ItemGroup>
     

@@ -3,7 +3,7 @@ using System.Runtime.CompilerServices;
 
 namespace Sanctuary.Census.Common.Util;
 
-public ref partial struct SpanReader<T> where T : unmanaged, IEquatable<T>
+public partial struct MemoryReader<T> where T : unmanaged, IEquatable<T>
 {
     /// <summary>
     /// Checks to see if the given value is next.
@@ -17,7 +17,7 @@ public ref partial struct SpanReader<T> where T : unmanaged, IEquatable<T>
         if (End)
             return false;
 
-        if (!Span[Consumed].Equals(value))
+        if (!Memory.Span[Consumed].Equals(value))
             return false;
 
         if (advancePast)
@@ -38,7 +38,7 @@ public ref partial struct SpanReader<T> where T : unmanaged, IEquatable<T>
         if (End)
             return false;
 
-        if (!Span[Consumed..].StartsWith(value))
+        if (!Memory.Span[Consumed..].StartsWith(value))
             return false;
 
         if (advancePast)
@@ -50,21 +50,21 @@ public ref partial struct SpanReader<T> where T : unmanaged, IEquatable<T>
     /// <summary>
     /// Attempts to read everything up to the given <paramref name="delimiter"/>.
     /// </summary>
-    /// <param name="span">The read data, if any.</param>
+    /// <param name="memory">The read data, if any.</param>
     /// <param name="delimiter">The delimiter to search for.</param>
     /// <param name="advancePastDelimiter"><c>True</c> to move past the <paramref name="delimiter"/>, if found.</param>
     /// <returns><c>True</c> if the given <paramref name="delimiter"/> was found, otherwise <c>False</c>.</returns>
-    public bool TryReadTo(out ReadOnlySpan<T> span, T delimiter, bool advancePastDelimiter = true)
+    public bool TryReadTo(out ReadOnlyMemory<T> memory, T delimiter, bool advancePastDelimiter = true)
     {
         int currIndex = Consumed;
 
         if (!TryAdvanceTo(delimiter, false))
         {
-            span = default;
+            memory = default;
             return false;
         }
 
-        span = Span[currIndex..Consumed];
+        memory = Memory[currIndex..Consumed];
         if (advancePastDelimiter)
             Consumed++;
 
@@ -74,21 +74,21 @@ public ref partial struct SpanReader<T> where T : unmanaged, IEquatable<T>
     /// <summary>
     /// Attempts to read everything up to the given <paramref name="delimiter"/>.
     /// </summary>
-    /// <param name="span">The read data, if any.</param>
+    /// <param name="memory">The read data, if any.</param>
     /// <param name="delimiter">The delimiter to search for.</param>
     /// <param name="advancePastDelimiter"><c>True</c> to move past the <paramref name="delimiter"/>, if found.</param>
     /// <returns><c>True</c> if the given <paramref name="delimiter"/> was found, otherwise <c>False</c>.</returns>
-    public bool TryReadTo(out ReadOnlySpan<T> span, ReadOnlySpan<T> delimiter, bool advancePastDelimiter = true)
+    public bool TryReadTo(out ReadOnlyMemory<T> memory, ReadOnlySpan<T> delimiter, bool advancePastDelimiter = true)
     {
         int currIndex = Consumed;
 
         if (!TryAdvanceTo(delimiter, false))
         {
-            span = default;
+            memory = default;
             return false;
         }
 
-        span = Span[currIndex..Consumed];
+        memory = Memory[currIndex..Consumed];
         if (advancePastDelimiter)
             Advance(delimiter.Length);
 
@@ -98,22 +98,22 @@ public ref partial struct SpanReader<T> where T : unmanaged, IEquatable<T>
     /// <summary>
     /// Attempts to read the exact amount of data as specified by <paramref name="count"/>.
     /// </summary>
-    /// <param name="span">The read data, if any.</param>
+    /// <param name="memory">The read data, if any.</param>
     /// <param name="count">The amount of data to read.</param>
     /// <returns><c>True</c> if the exact amount of data was able to be read, else <c>False</c>.</returns>
     /// <exception cref="ArgumentOutOfRangeException">Thrown if the <paramref name="count"/> is negative.</exception>
-    public bool TryReadExact(out ReadOnlySpan<T> span, int count)
+    public bool TryReadExact(out ReadOnlyMemory<T> memory, int count)
     {
         if (count < 0)
             throw new ArgumentOutOfRangeException(nameof(count), count, "Count must not be a negative value");
 
         if (count > Remaining)
         {
-            span = default;
+            memory = default;
             return false;
         }
 
-        span = Span.Slice(Consumed, count);
+        memory = Memory.Slice(Consumed, count);
         Advance(count);
 
         return true;
@@ -130,7 +130,7 @@ public ref partial struct SpanReader<T> where T : unmanaged, IEquatable<T>
         if (End)
             return false;
 
-        int index = Span[Consumed..].IndexOf(delimiter);
+        int index = Memory.Span[Consumed..].IndexOf(delimiter);
         if (index == -1)
             return false;
 
@@ -149,7 +149,7 @@ public ref partial struct SpanReader<T> where T : unmanaged, IEquatable<T>
         if (End)
             return false;
 
-        int index = Span[Consumed..].IndexOf(delimiter);
+        int index = Memory.Span[Consumed..].IndexOf(delimiter);
         if (index == -1)
             return false;
 

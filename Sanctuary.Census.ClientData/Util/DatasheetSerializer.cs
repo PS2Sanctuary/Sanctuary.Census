@@ -24,10 +24,9 @@ public static class DatasheetSerializer
     /// <param name="datasheet">The UTF-8 datasheet data.</param>
     /// <returns>The deserialized datasheet.</returns>
     /// <exception cref="FormatException">Thrown if the datasheet did not have a header.</exception>
-    public static List<T> Deserialize<T>(ReadOnlySpan<byte> datasheet)
+    public static IEnumerable<T> Deserialize<T>(ReadOnlyMemory<byte> datasheet)
     {
-        List<T> objects = new();
-        SpanReader<byte> reader = new(datasheet);
+        MemoryReader<byte> reader = new(datasheet);
 
         IReadOnlyList<string?> header = GetLineContents(ref reader, out bool hadHeaderIndicator);
         if (!hadHeaderIndicator)
@@ -42,23 +41,21 @@ public static class DatasheetSerializer
             reader.IsNext((byte)'\r', true);
             if (reader.IsNext((byte)'\n', true))
             {
-                objects.Add(ParseToObject<T>(values));
+                yield return ParseToObject<T>(values);
                 linePosition = 0;
                 values = new string?[positionMap.Count];
             }
 
-            if (!reader.TryReadTo(out ReadOnlySpan<byte> element, (byte)'^'))
+            if (!reader.TryReadTo(out ReadOnlyMemory<byte> element, (byte)'^'))
                 break;
 
             if (positionMap.TryGetValue(linePosition++, out int ctorIndex))
             {
                 values[ctorIndex] = element.Length == 0
                     ? null
-                    : Encoding.UTF8.GetString(element);
+                    : Encoding.UTF8.GetString(element.Span);
             }
         }
-
-        return objects;
     }
 
     private static IReadOnlyDictionary<int, int> MapHeaderToConstructor<T>(IReadOnlyList<string?> header)
@@ -142,7 +139,7 @@ public static class DatasheetSerializer
         return converters;
     }
 
-    private static IReadOnlyList<string?> GetLineContents(ref SpanReader<byte> reader, out bool hadHeaderIndicator)
+    private static IReadOnlyList<string?> GetLineContents(ref MemoryReader<byte> reader, out bool hadHeaderIndicator)
     {
         List<string?> elements = new();
         hadHeaderIndicator = false;
@@ -153,12 +150,12 @@ public static class DatasheetSerializer
             reader.Advance(HeaderIdentifier.Length);
         }
 
-        while (reader.TryReadTo(out ReadOnlySpan<byte> element, (byte) '^'))
+        while (reader.TryReadTo(out ReadOnlyMemory<byte> element, (byte) '^'))
         {
             if (element.Length == 0)
                 elements.Add(null);
             else
-                elements.Add(Encoding.UTF8.GetString(element));
+                elements.Add(Encoding.UTF8.GetString(element.Span));
 
             reader.IsNext((byte)'\r', true);
             if (reader.IsNext((byte)'\n', true))

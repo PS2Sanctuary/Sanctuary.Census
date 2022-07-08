@@ -4,8 +4,7 @@ using System.Reflection;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Sanctuary.Census.ClientData.Abstractions.Services;
-using Sanctuary.Census.ClientData.Services;
+using Sanctuary.Census.ClientData.Extensions;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -33,11 +32,7 @@ public static class Program
     {
         WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
-#if DEBUG
-        builder.Services.AddHttpClient<IManifestService, DebugManifestService>(h => new DebugManifestService(h, AppDataDirectory));
-#else
-        builder.Services.AddHttpClient<IManifestService, CachingManifestService>(h => new CachingManifestService(h, AppDataDirectory));
-#endif
+        builder.Services.AddClientDataService(AppDataDirectory);
 
         builder.Services.AddControllers();
 

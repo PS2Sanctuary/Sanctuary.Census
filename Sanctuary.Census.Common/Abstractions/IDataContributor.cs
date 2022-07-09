@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using Sanctuary.Census.Common.Objects;
+using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -33,14 +34,15 @@ public interface IDataContributor<TContributeFrom>
     /// <typeparam name="TContributeTo">The type of the <paramref name="item"/>.</typeparam>
     /// <param name="item">The item to contribute to.</param>
     /// <param name="ct">A <see cref="CancellationToken"/> that can be used to stop the operation.</param>
-    /// <returns>A <see cref="ValueTask{TResult}"/> representing the potentially asynchronous operation.</returns>
-    ValueTask ContributeAsync<TContributeTo>(TContributeTo item, CancellationToken ct = default);
+    /// <returns>A <see cref="ContributionResult{TContributedTo}"/>.</returns>
+    ValueTask<ContributionResult<TContributeTo>> ContributeAsync<TContributeTo>(TContributeTo item, CancellationToken ct = default)
+        where TContributeTo : class;
 
-    /// <summary>
-    /// Gets a source data item.
-    /// </summary>
-    /// <param name="id">The ID of the item.</param>
-    /// <param name="ct">A <see cref="CancellationToken"/> that can be used to stop the operation.</param>
-    /// <returns>A source data item.</returns>
-    ValueTask<TContributeFrom> GetDataAsync(uint id, CancellationToken ct = default);
+    // /// <summary>
+    // /// Gets a source data item.
+    // /// </summary>
+    // /// <param name="id">The ID of the item.</param>
+    // /// <param name="ct">A <see cref="CancellationToken"/> that can be used to stop the operation.</param>
+    // /// <returns>A source data item.</returns>
+    // ValueTask<TContributeFrom> GetDataAsync(uint id, CancellationToken ct = default);
 }

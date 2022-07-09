@@ -17,8 +17,6 @@ namespace Sanctuary.Census.ClientData.DataContributors;
 public abstract class BaseDataContributor<TContributeFrom> : IDataContributor<TContributeFrom>
 {
     private readonly IDatasheetLoaderService _datasheetLoader;
-    private readonly Dictionary<Type, Func<TContributeFrom, uint>> _typeIDBindings;
-    private readonly Dictionary<Type, Dictionary<uint, TContributeFrom>> _indexedStore;
 
     private bool _isCached;
 
@@ -31,6 +29,18 @@ public abstract class BaseDataContributor<TContributeFrom> : IDataContributor<TC
     /// The environment that this contributor is sourcing data from.
     /// </summary>
     protected PS2Environment Environment { get; }
+
+    /// <summary>
+    /// A dictionary of methods that will retrieve the ID value for which the given
+    /// key type expects data to be contributed.
+    /// </summary>
+    protected Dictionary<Type, Func<TContributeFrom, uint>> TypeIDBindings { get; }
+
+    /// <summary>
+    /// The type-indexed data store. Call <see cref="CacheRecordsAsync"/>
+    /// to ensure that this store is populated.
+    /// </summary>
+    protected Dictionary<Type, Dictionary<uint, TContributeFrom>> IndexedStore { get; }
 
     /// <summary>
     /// Initializes a new instance of the <see cref="BaseDataContributor{TContributeFrom}"/>
@@ -53,35 +63,44 @@ public abstract class BaseDataContributor<TContributeFrom> : IDataContributor<TC
         _datasheetLoader = datasheetLoader;
         SourceDatasheet = sourceDatasheet;
         Environment = environment;
-        _typeIDBindings = typeIDBindings;
+        TypeIDBindings = typeIDBindings;
 
-        _indexedStore = new Dictionary<Type, Dictionary<uint, TContributeFrom>>();
-        foreach (Type element in _typeIDBindings.Keys)
-            _indexedStore.Add(element, new Dictionary<uint, TContributeFrom>());
+        IndexedStore = new Dictionary<Type, Dictionary<uint, TContributeFrom>>();
+        foreach (Type element in TypeIDBindings.Keys)
+            IndexedStore.Add(element, new Dictionary<uint, TContributeFrom>());
     }
 
     /// <inheritdoc />
-    public abstract ValueTask ContributeAsync<TContributeTo>(TContributeTo item, CancellationToken ct = default);
+    public abstract ValueTask<ContributionResult<TContributeTo>> ContributeAsync<TContributeTo>(TContributeTo item, CancellationToken ct = default)
+        where TContributeTo : class;
 
     /// <inheritdoc />
     public bool CanContributeTo<TContributeTo>()
-        => _typeIDBindings.ContainsKey(typeof(TContributeTo));
+        => TypeIDBindings.ContainsKey(typeof(TContributeTo));
 
     /// <inheritdoc />
     public async ValueTask<IReadOnlyList<uint>> GetContributableIDsAsync<TContributeTo>(CancellationToken ct = default)
     {
+        if (!CanContributeTo<TContributeTo>())
+            throw GetTypeNotSupportedException<TContributeTo>();
+
         await CacheRecordsAsync(ct).ConfigureAwait(false);
-        return _indexedStore[typeof(TContributeTo)].Keys.ToList();
+        return IndexedStore[typeof(TContributeTo)].Keys.ToList();
     }
 
-    /// <inheritdoc />
-    public async ValueTask<TContributeFrom> GetDataAsync(uint id, CancellationToken ct = default)
-    {
-        await CacheRecordsAsync(ct).ConfigureAwait(false);
-        return _indexedStore[typeof(TContributeFrom)][id];
-    }
+    // /// <inheritdoc />
+    // public async ValueTask<TContributeFrom> GetDataAsync(uint id, CancellationToken ct = default)
+    // {
+    //     await CacheRecordsAsync(ct).ConfigureAwait(false);
+    //     return IndexedStore[typeof(TContributeFrom)][id];
+    // }
 
-    private async ValueTask CacheRecordsAsync(CancellationToken ct)
+    /// <summary>
+    /// Caches all records from the datasheet. Call this to ensure
+    /// that <see cref="IndexedStore"/> is populated.
+    /// </summary>
+    /// <param name="ct">A <see cref="CancellationToken"/> that can be used to stop the operation.</param>
+    protected async ValueTask CacheRecordsAsync(CancellationToken ct)
     {
         if (_isCached)
             return;
@@ -93,15 +112,31 @@ public abstract class BaseDataContributor<TContributeFrom> : IDataContributor<TC
             ct
         ).ConfigureAwait(false);
 
-        foreach (TContributeFrom record in records)
-        {
-            foreach (KeyValuePair<Type, Func<TContributeFrom, uint>> typeIDBinding in _typeIDBindings)
-            {
-                uint id = typeIDBinding.Value(record);
-                _indexedStore[typeIDBinding.Key][id] = record;
-            }
-        }
-
+        StoreRecords(records);
         _isCached = true;
     }
+
+    /// <summary>
+    /// Stores the given records in the <see cref="IndexedStore"/>.
+    /// </summary>
+    /// <param name="records">The records to store.</param>
+    protected virtual void StoreRecords(IEnumerable<TContributeFrom> records)
+    {
+        foreach (TContributeFrom record in records)
+        {
+            foreach (KeyValuePair<Type, Func<TContributeFrom, uint>> typeIDBinding in TypeIDBindings)
+            {
+                uint id = typeIDBinding.Value(record);
+                IndexedStore[typeIDBinding.Key][id] = record;
+            }
+        }
+    }
+
+    /// <summary>
+    /// Creates an exception that should be thrown if this contributor
+    /// is asked to contribute to a type that it does not support.
+    /// </summary>
+    /// <returns></returns>
+    protected InvalidOperationException GetTypeNotSupportedException<TContributeTo>()
+        => new($"{GetType().Name} cannot contribute to the type {typeof(TContributeTo).Name}");
 }

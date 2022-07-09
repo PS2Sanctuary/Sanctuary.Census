@@ -67,7 +67,7 @@ public class ManifestServiceTests
             .Verify
             (
                 "SendAsync",
-                Times.Exactly(1),
+                Times.Once(),
                 ItExpr.Is<HttpRequestMessage>
                 (
                     req => req.Method == HttpMethod.Get
@@ -80,9 +80,9 @@ public class ManifestServiceTests
         Assert.Equal(0, fileData.Position);
     }
 
-    private ManifestService GetManifestService(out Mock<HttpMessageHandler> handlerMock)
+    private static ManifestService GetManifestService(out Mock<HttpMessageHandler> handlerMock)
     {
-        FileStream manifestFS = new("Data\\ManifestService\\manifest.xml", FileMode.Open);
+        FileStream manifestFS = new("Data\\ManifestService\\manifest.xml", FileMode.Open, FileAccess.Read, FileShare.Read);
 
         handlerMock = new Mock<HttpMessageHandler>();
         handlerMock.Protected()
@@ -94,7 +94,7 @@ public class ManifestServiceTests
             )
             .ReturnsAsync
             (
-                new HttpResponseMessage()
+                new HttpResponseMessage
                 {
                     StatusCode = HttpStatusCode.OK,
                     Content = new StreamContent(manifestFS)

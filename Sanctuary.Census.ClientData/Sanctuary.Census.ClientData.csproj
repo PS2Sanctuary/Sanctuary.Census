@@ -4,6 +4,7 @@
         <PackageReference Include="carlst99.Mandible" Version="1.2.0" />
         <PackageReference Include="Microsoft.Extensions.Hosting.Abstractions" Version="6.0.0" />
         <PackageReference Include="Microsoft.Extensions.Http" Version="6.0.0" />
+        <PackageReference Include="System.IO.Abstractions" Version="17.0.21" />
     </ItemGroup>
 
     <ItemGroup>

@@ -1,0 +1,540 @@
+﻿<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<digest digestBuilderVersion="159" productName="PlanetSide 2" defaultServerFolder="http://pls.patch.daybreakgames.com/patch/sha/planetside2/planetside2.sha.zs" publisher="Sony Online Entertainment" packageSizeKB="18495974" fileCount="6348" defaultLocalFolder="planetside2.sha.zs" shaAssetURL="http://pls.patch.daybreakgames.com/patch/sha/planetside2/planetside2.sha.zs" timestamp="1656704998" compressionType="lzma">
+    <fallback host="pls.patch.daybreakgames.com" />
+    <fallback host="antonica.patch.daybreakgames.com" />
+    <fallback host="faydwer.patch.daybreakgames.com" />
+    <fallback host="odus.patch.daybreakgames.com" />
+    <folder>
+        <folder downloadPriority="30">
+            <file name="Uninstaller.exe" compressedSize="138583" uncompressedSize="314784" crc="1220914910" timestamp="1329165695" os="windows" sha="b3a478c93557146432e67f17477628ed26e3e830" />
+        </folder>
+        <folder downloadPriority="20">
+            <file name="!if.Is32Bit.dll" delete="yes" />
+            <file name="!if.Is64Bit.dll" delete="yes" />
+        </folder>
+        <folder name="Locale">
+            <file name="de_de_data.dat" compressedSize="774096" uncompressedSize="3579690" crc="1903561906" timestamp="1656534832" sha="39b9e6400a8def96599069b89d4bd71294092ed9">
+                <patch sourceUncompressedSize="3566504" sourceCrc="763359010" sourceTimestamp="1652993880" patchCompressedSize="6825" patchUncompressedSize="8870" />
+                <patch sourceUncompressedSize="3566573" sourceCrc="2982005707" sourceTimestamp="1653431409" patchCompressedSize="6768" patchUncompressedSize="8790" />
+                <patch sourceUncompressedSize="3570859" sourceCrc="1707930079" sourceTimestamp="1655248863" patchCompressedSize="4713" patchUncompressedSize="6326" />
+            </file>
+            <file name="de_de_data.dir" compressedSize="292196" uncompressedSize="1179174" crc="1503342924" timestamp="1656534832" sha="d0b284b1488671a2b6df436b5343fdfeebe712ff">
+                <patch sourceUncompressedSize="1174830" sourceCrc="2027089878" sourceTimestamp="1652993880" patchCompressedSize="40609" patchUncompressedSize="315687" />
+                <patch sourceUncompressedSize="1174878" sourceCrc="2010210999" sourceTimestamp="1653431409" patchCompressedSize="39825" patchUncompressedSize="312794" />
+                <patch sourceUncompressedSize="1176223" sourceCrc="2049069738" sourceTimestamp="1655248863" patchCompressedSize="36224" patchUncompressedSize="304175" />
+            </file>
+            <file name="en_us_data.dat" compressedSize="765317" uncompressedSize="3345277" crc="323684655" timestamp="1656703068" sha="e90a93804fa068d54c849b20f028136ab13f947e">
+                <patch sourceUncompressedSize="3341839" sourceCrc="2754279069" sourceTimestamp="1655248863" patchCompressedSize="1695" patchUncompressedSize="1983" />
+                <patch sourceUncompressedSize="3343595" sourceCrc="3003179500" sourceTimestamp="1655850787" patchCompressedSize="939" patchUncompressedSize="902" />
+                <patch sourceUncompressedSize="3345178" sourceCrc="3555834458" sourceTimestamp="1656463429" patchCompressedSize="190" patchUncompressedSize="61" />
+            </file>
+            <file name="en_us_data.dir" compressedSize="318165" uncompressedSize="1311138" crc="3069435827" timestamp="1656703068" sha="151a246c01163d68b15d72dc8c180b3dac487487">
+                <patch sourceUncompressedSize="1310090" sourceCrc="1902365100" sourceTimestamp="1655248863" patchCompressedSize="31533" patchUncompressedSize="319801" />
+                <patch sourceUncompressedSize="1310645" sourceCrc="3451482392" sourceTimestamp="1655850787" patchCompressedSize="29935" patchUncompressedSize="298614" />
+                <patch sourceUncompressedSize="1311088" sourceCrc="3565959829" sourceTimestamp="1656463429" patchCompressedSize="9747" patchUncompressedSize="158675" />
+            </file>
+            <file name="es_es_data.dat" compressedSize="749003" uncompressedSize="3582099" crc="1243817830" timestamp="1656534832" sha="68f8dc11361d5cf547affc513fb6409008f3585a">
+                <patch sourceUncompressedSize="3568525" sourceCrc="1897531975" sourceTimestamp="1652993880" patchCompressedSize="6808" patchUncompressedSize="9143" />
+                <patch sourceUncompressedSize="3568592" sourceCrc="1138876240" sourceTimestamp="1653431409" patchCompressedSize="6745" patchUncompressedSize="8975" />
+                <patch sourceUncompressedSize="3572802" sourceCrc="3108918504" sourceTimestamp="1655248863" patchCompressedSize="4764" patchUncompressedSize="6569" />
+            </file>
+            <file name="es_es_data.dir" compressedSize="292820" uncompressedSize="1179417" crc="1735236237" timestamp="1656534832" sha="d6db220aa4f0727ccf6637d99d32a77273d95fa5">
+                <patch sourceUncompressedSize="1175069" sourceCrc="761327924" sourceTimestamp="1652993880" patchCompressedSize="40494" patchUncompressedSize="316458" />
+                <patch sourceUncompressedSize="1175117" sourceCrc="369084354" sourceTimestamp="1653431409" patchCompressedSize="40300" patchUncompressedSize="315721" />
+                <patch sourceUncompressedSize="1176462" sourceCrc="3308858439" sourceTimestamp="1655248863" patchCompressedSize="37709" patchUncompressedSize="305619" />
+            </file>
+            <file name="fr_fr_data.dat" compressedSize="768549" uncompressedSize="3726903" crc="3472683520" timestamp="1656534832" sha="2910795472bce19c73e2e72ecfe669b228a1c8b5">
+                <patch sourceUncompressedSize="3712758" sourceCrc="2799909668" sourceTimestamp="1652993880" patchCompressedSize="6931" patchUncompressedSize="9095" />
+                <patch sourceUncompressedSize="3712825" sourceCrc="3742768622" sourceTimestamp="1653431409" patchCompressedSize="6897" patchUncompressedSize="9059" />
+                <patch sourceUncompressedSize="3717313" sourceCrc="2195859103" sourceTimestamp="1655248863" patchCompressedSize="4836" patchUncompressedSize="6598" />
+            </file>
+            <file name="fr_fr_data.dir" compressedSize="295464" uncompressedSize="1179173" crc="2455718176" timestamp="1656534832" sha="964bf3182706972beacf886827ffd34f6f75bc62">
+                <patch sourceUncompressedSize="1174826" sourceCrc="2307365833" sourceTimestamp="1652993880" patchCompressedSize="39418" patchUncompressedSize="312895" />
+                <patch sourceUncompressedSize="1174875" sourceCrc="3117962012" sourceTimestamp="1653431409" patchCompressedSize="40831" patchUncompressedSize="317438" />
+                <patch sourceUncompressedSize="1176221" sourceCrc="2653160672" sourceTimestamp="1655248863" patchCompressedSize="36857" patchUncompressedSize="298861" />
+            </file>
+            <file name="it_it_data.dat" compressedSize="749718" uncompressedSize="3549564" crc="2512345197" timestamp="1656534832" sha="d9f26da36e9002c5888048156f49851506f4c21c">
+                <patch sourceUncompressedSize="3535815" sourceCrc="3963987247" sourceTimestamp="1652993881" patchCompressedSize="6789" patchUncompressedSize="8852" />
+                <patch sourceUncompressedSize="3535876" sourceCrc="1029688063" sourceTimestamp="1653431410" patchCompressedSize="6733" patchUncompressedSize="8905" />
+                <patch sourceUncompressedSize="3540079" sourceCrc="76327467" sourceTimestamp="1655248864" patchCompressedSize="4788" patchUncompressedSize="6432" />
+            </file>
+            <file name="it_it_data.dir" compressedSize="293201" uncompressedSize="1178176" crc="809387564" timestamp="1656534832" sha="f7522c3c6270c65d9b3bea137583641cc6fafbcf">
+                <patch sourceUncompressedSize="1173837" sourceCrc="1275326635" sourceTimestamp="1652993881" patchCompressedSize="40590" patchUncompressedSize="314904" />
+                <patch sourceUncompressedSize="1173885" sourceCrc="3542758038" sourceTimestamp="1653431410" patchCompressedSize="39671" patchUncompressedSize="315246" />
+                <patch sourceUncompressedSize="1175227" sourceCrc="1533001352" sourceTimestamp="1655248864" patchCompressedSize="36324" patchUncompressedSize="304858" />
+            </file>
+            <file name="ko_kr_data.dat" compressedSize="325335" uncompressedSize="1673933" crc="1925835182" timestamp="1397449092" sha="f97b45eeabab235dc2c713a35299eb41a2ae2b23">
+                <patch sourceUncompressedSize="1595281" sourceCrc="3867999405" sourceTimestamp="1393008991" patchCompressedSize="80903" patchUncompressedSize="118330" />
+                <patch sourceUncompressedSize="1658332" sourceCrc="1129149143" sourceTimestamp="1395876295" patchCompressedSize="19478" patchUncompressedSize="25270" />
+            </file>
+            <file name="ko_kr_data.dir" compressedSize="161638" uncompressedSize="632704" crc="4053068730" timestamp="1397449092" sha="f2cd2d619dda24461d8e54bd9aa0ffeb40b1e2f7" />
+            <file name="pt_br_data.dat" compressedSize="296405" uncompressedSize="1581502" crc="3912614524" timestamp="1382726654" sha="c4a2abf87fab2d9ea33a1ba2f62ba6a5add3d2ce">
+                <patch sourceUncompressedSize="1520410" sourceCrc="3808671382" sourceTimestamp="1381366537" patchCompressedSize="58482" patchUncompressedSize="86783" />
+                <patch sourceUncompressedSize="1580096" sourceCrc="702339169" sourceTimestamp="1382653277" patchCompressedSize="1195" patchUncompressedSize="1388" />
+            </file>
+            <file name="pt_br_data.dat.dir" delete="yes" />
+            <file name="pt_br_data.dir" compressedSize="149107" uncompressedSize="581090" crc="466564950" timestamp="1382726654" sha="1cbb02fcd853052a603d386d4217490218f7140b" />
+            <file name="ru_ru_data.dat" compressedSize="808400" uncompressedSize="5113860" crc="1660554056" timestamp="1656534832" sha="9d8ac1236767e8afd36f18ac1418658a395948a4">
+                <patch sourceUncompressedSize="5095768" sourceCrc="2213455686" sourceTimestamp="1653431410" patchCompressedSize="7140" patchUncompressedSize="9632" />
+                <patch sourceUncompressedSize="5101894" sourceCrc="696203801" sourceTimestamp="1655248864" patchCompressedSize="5003" patchUncompressedSize="7033" />
+                <patch sourceUncompressedSize="5102009" sourceCrc="1173433228" sourceTimestamp="1655312676" patchCompressedSize="4962" patchUncompressedSize="6959" />
+            </file>
+            <file name="ru_ru_data.dir" compressedSize="301042" uncompressedSize="1151576" crc="1618391456" timestamp="1656534832" sha="0a26a4515e0630412ecf1051e4d888b2b71c1fe5">
+                <patch sourceUncompressedSize="1147281" sourceCrc="15398571" sourceTimestamp="1653431410" patchCompressedSize="42177" patchUncompressedSize="309836" />
+                <patch sourceUncompressedSize="1148620" sourceCrc="3640726350" sourceTimestamp="1655248864" patchCompressedSize="38567" patchUncompressedSize="300292" />
+                <patch sourceUncompressedSize="1148621" sourceCrc="3832186093" sourceTimestamp="1655312676" patchCompressedSize="39105" patchUncompressedSize="299321" />
+            </file>
+            <file name="tr_tr_data.dat" compressedSize="350901" uncompressedSize="1685243" crc="1781702838" timestamp="1404861829" sha="4ea88a4fffe18ffd53b55d1397f981764648aa92">
+                <patch sourceUncompressedSize="1677271" sourceCrc="684190823" sourceTimestamp="1402967042" patchCompressedSize="7236" patchUncompressedSize="10388" />
+                <patch sourceUncompressedSize="1679076" sourceCrc="1989105260" sourceTimestamp="1403124310" patchCompressedSize="6370" patchUncompressedSize="9113" />
+                <patch sourceUncompressedSize="1681678" sourceCrc="3790790132" sourceTimestamp="1403731299" patchCompressedSize="3884" patchUncompressedSize="5164" />
+            </file>
+            <file name="tr_tr_data.dir" compressedSize="166084" uncompressedSize="655283" crc="1912855554" timestamp="1404861829" sha="8e60e354a6d0ab437e5ae70d1528d2be72ae9723" />
+            <file name="zh_cn_data.dat" compressedSize="711574" uncompressedSize="3029030" crc="2728436649" timestamp="1656534832" sha="0e7b56919c6760c083a59cd6ea853bff3a9c090e">
+                <patch sourceUncompressedSize="3016989" sourceCrc="938697842" sourceTimestamp="1653431410" patchCompressedSize="6747" patchUncompressedSize="8811" />
+                <patch sourceUncompressedSize="3020671" sourceCrc="2191412937" sourceTimestamp="1655312676" patchCompressedSize="4769" patchUncompressedSize="6455" />
+                <patch sourceUncompressedSize="3020674" sourceCrc="589177742" sourceTimestamp="1655248864" patchCompressedSize="4855" patchUncompressedSize="6561" />
+            </file>
+            <file name="zh_cn_data.dir" compressedSize="284382" uncompressedSize="1144676" crc="3354478631" timestamp="1656534832" sha="e9647f0c7624618f302c04c4a1b9e179f71e5b21">
+                <patch sourceUncompressedSize="1140400" sourceCrc="1261024257" sourceTimestamp="1653431410" patchCompressedSize="37611" patchUncompressedSize="303921" />
+                <patch sourceUncompressedSize="1141736" sourceCrc="698189695" sourceTimestamp="1655312677" patchCompressedSize="33985" patchUncompressedSize="294094" />
+                <patch sourceUncompressedSize="1141736" sourceCrc="3504142948" sourceTimestamp="1655248864" patchCompressedSize="34597" patchUncompressedSize="293825" />
+            </file>
+        </folder>
+        <folder name="Resources">
+            <folder name="Assets">
+                <file name="Amerish_x64_0.pack2" compressedSize="163522209" uncompressedSize="163522080" crc="2943552331" timestamp="1583866429" sha="4ce9856ebbc03228af4936fca6ef2f13b864b280">
+                    <patch sourceUncompressedSize="163522112" sourceCrc="1305261760" sourceTimestamp="1556152922" patchCompressedSize="364" patchUncompressedSize="469" />
+                </file>
+                <file name="Amerish_x64_1.pack2" compressedSize="163983329" uncompressedSize="163983200" crc="516629793" timestamp="1583866429" sha="2eb2e8a142345ed60f2ee4d819e7fa4cd84b85bc">
+                    <patch sourceUncompressedSize="163983232" sourceCrc="3829298862" sourceTimestamp="1556152922" patchCompressedSize="360" patchUncompressedSize="673" />
+                </file>
+                <file name="Amerish_x64_2.pack2" compressedSize="165223617" uncompressedSize="165223488" crc="2884916162" timestamp="1583866429" sha="32965163edc434b8f30596c17af7cbdedd598000">
+                    <patch sourceUncompressedSize="165223520" sourceCrc="3895069511" sourceTimestamp="1556152923" patchCompressedSize="362" patchUncompressedSize="685" />
+                </file>
+                <file name="Amerish_x64_3.pack2" compressedSize="164957281" uncompressedSize="164957152" crc="3691946446" timestamp="1556152923" sha="6362abb3abefbc000188e0e7acc901efa262625d" />
+                <file name="Amerish_x64_4.pack2" compressedSize="163510305" uncompressedSize="163510176" crc="1969727986" timestamp="1583866430" sha="fd779df1953672eb80522f396c1e5d8e616a79e1">
+                    <patch sourceUncompressedSize="163430720" sourceCrc="588484916" sourceTimestamp="1556152923" patchCompressedSize="79218" patchUncompressedSize="79089" />
+                </file>
+                <file name="Amerish_x64_5.pack2" compressedSize="163685601" uncompressedSize="163685472" crc="3587329241" timestamp="1646700879" sha="4c3c864e294754d8c0de65eda947c2c9a9095fa3">
+                    <patch sourceUncompressedSize="163685504" sourceCrc="3346636040" sourceTimestamp="1556152923" patchCompressedSize="416" patchUncompressedSize="28838" />
+                </file>
+                <file name="Amerish_x64_6.pack2" compressedSize="164108161" uncompressedSize="164108032" crc="77853376" timestamp="1556152923" sha="aa97f4d382bca2c64e7a92a7b8d43780369826f8" />
+                <file name="Amerish_x64_7.pack2" compressedSize="165484481" uncompressedSize="165484352" crc="3921628883" timestamp="1583866430" sha="2d8946c68d76db910587412001fa5c473e7f8191">
+                    <patch sourceUncompressedSize="165484384" sourceCrc="1210092937" sourceTimestamp="1556152923" patchCompressedSize="360" patchUncompressedSize="691" />
+                </file>
+                <file name="Amerish_x64_8.pack2" compressedSize="165191873" uncompressedSize="165191744" crc="1103615294" timestamp="1646700879" sha="3038b1b69842ce20e1647f9d99a388c967b9149b">
+                    <patch sourceUncompressedSize="163474176" sourceCrc="898304760" sourceTimestamp="1556152923" patchCompressedSize="1717727" patchUncompressedSize="1717598" />
+                    <patch sourceUncompressedSize="163504416" sourceCrc="1480183902" sourceTimestamp="1583866430" patchCompressedSize="1687567" patchUncompressedSize="1687438" />
+                </file>
+                <file name="Amerish_x64_9.pack2" compressedSize="164227617" uncompressedSize="164227488" crc="162836330" timestamp="1556152924" sha="7f8bffdeed508af6cc3f9693705caa0e9631a551" />
+                <file name="Assets_000.pack" delete="yes" />
+                <file name="Assets_001.pack" delete="yes" />
+                <file name="assets_x64_0.pack2" compressedSize="254262721" uncompressedSize="254262592" crc="1110281903" timestamp="1656463813" sha="aa9d33412f1270a231d97b50ef7829b7140cbfb7">
+                    <patch sourceUncompressedSize="254262592" sourceCrc="3062195029" sourceTimestamp="1655249226" patchCompressedSize="4797" patchUncompressedSize="4668" />
+                    <patch sourceUncompressedSize="254262624" sourceCrc="771177487" sourceTimestamp="1652821716" patchCompressedSize="4861" patchUncompressedSize="4732" />
+                    <patch sourceUncompressedSize="254262624" sourceCrc="1253492956" sourceTimestamp="1649114011" patchCompressedSize="6087" patchUncompressedSize="5958" />
+                </file>
+                <file name="assets_x64_1.pack2" compressedSize="253188577" uncompressedSize="253188448" crc="885873248" timestamp="1655249226" sha="8bda0fceb2b174e2393e56df6065f3998a12d3e6">
+                    <patch sourceUncompressedSize="252224000" sourceCrc="1857794704" sourceTimestamp="1649114012" patchCompressedSize="3756807" patchUncompressedSize="3775292" />
+                    <patch sourceUncompressedSize="252224000" sourceCrc="2870664713" sourceTimestamp="1651614747" patchCompressedSize="3756506" patchUncompressedSize="3774932" />
+                    <patch sourceUncompressedSize="253188480" sourceCrc="3138907504" sourceTimestamp="1652821716" patchCompressedSize="342" patchUncompressedSize="213" />
+                </file>
+                <file name="assets_x64_10.pack2" compressedSize="256423489" uncompressedSize="256423360" crc="4011460872" timestamp="1656463814" sha="4a6e6bd5cc38b5d4a8d0c3d610476af6f213a639">
+                    <patch sourceUncompressedSize="256423392" sourceCrc="3000249717" sourceTimestamp="1652821717" patchCompressedSize="340" patchUncompressedSize="211" />
+                    <patch sourceUncompressedSize="256423424" sourceCrc="1557789783" sourceTimestamp="1648594012" patchCompressedSize="1434" patchUncompressedSize="1305" />
+                    <patch sourceUncompressedSize="256423424" sourceCrc="2619041740" sourceTimestamp="1643760975" patchCompressedSize="2087962" patchUncompressedSize="2122465" />
+                </file>
+                <file name="assets_x64_11.pack2" compressedSize="252863265" uncompressedSize="252863136" crc="2858350457" timestamp="1652821717" sha="053945bd7f24ad3f69e8d7d7bab71e4ed84fdf40">
+                    <patch sourceUncompressedSize="251545952" sourceCrc="2783568250" sourceTimestamp="1648594012" patchCompressedSize="1353163" patchUncompressedSize="1409884" />
+                    <patch sourceUncompressedSize="251546752" sourceCrc="187732977" sourceTimestamp="1649114012" patchCompressedSize="1245950" patchUncompressedSize="1303038" />
+                    <patch sourceUncompressedSize="252863136" sourceCrc="3568583311" sourceTimestamp="1651614747" patchCompressedSize="9738" patchUncompressedSize="10182" />
+                </file>
+                <file name="assets_x64_12.pack2" compressedSize="255502657" uncompressedSize="255502528" crc="29431404" timestamp="1651614747" sha="879a2fdd0120b46cb016b90711b8eedb2ad9b0f0">
+                    <patch sourceUncompressedSize="250783968" sourceCrc="595001582" sourceTimestamp="1646700878" patchCompressedSize="8484865" patchUncompressedSize="8484736" />
+                    <patch sourceUncompressedSize="250784000" sourceCrc="2221928946" sourceTimestamp="1643760975" patchCompressedSize="8619677" patchUncompressedSize="8619548" />
+                    <patch sourceUncompressedSize="255502528" sourceCrc="2463525064" sourceTimestamp="1648594012" patchCompressedSize="5133" patchUncompressedSize="5004" />
+                </file>
+                <file name="assets_x64_13.pack2" compressedSize="253382721" uncompressedSize="253382592" crc="4032713274" timestamp="1655249227" sha="6fce8d91233e1a1e0dec44d24cead45b3d8e6c12">
+                    <patch sourceUncompressedSize="253037376" sourceCrc="1347633092" sourceTimestamp="1652821717" patchCompressedSize="1393564" patchUncompressedSize="1425988" />
+                    <patch sourceUncompressedSize="253037376" sourceCrc="2009321304" sourceTimestamp="1653431807" patchCompressedSize="1394678" patchUncompressedSize="1427160" />
+                    <patch sourceUncompressedSize="253037536" sourceCrc="2036364547" sourceTimestamp="1651614747" patchCompressedSize="1423236" patchUncompressedSize="1455887" />
+                </file>
+                <file name="assets_x64_14.pack2" compressedSize="254204065" uncompressedSize="254203936" crc="1640741176" timestamp="1653431807" sha="4de502f59cab43dd8f635bdc22edcc71949a1cd1">
+                    <patch sourceUncompressedSize="250741024" sourceCrc="229210324" sourceTimestamp="1646700878" patchCompressedSize="5108401" patchUncompressedSize="5122360" />
+                    <patch sourceUncompressedSize="254204032" sourceCrc="3182769064" sourceTimestamp="1651614747" patchCompressedSize="379" patchUncompressedSize="250" />
+                    <patch sourceUncompressedSize="254204256" sourceCrc="452147828" sourceTimestamp="1648594013" patchCompressedSize="348358" patchUncompressedSize="353988" />
+                </file>
+                <file name="assets_x64_15.pack2" compressedSize="253598081" uncompressedSize="253597952" crc="218366930" timestamp="1656463814" sha="f6ed92c8530086447068ab9b005d4d56e27313ee">
+                    <patch sourceUncompressedSize="252120576" sourceCrc="393946332" sourceTimestamp="1648594013" patchCompressedSize="2174492" patchUncompressedSize="2238792" />
+                    <patch sourceUncompressedSize="253597952" sourceCrc="369672695" sourceTimestamp="1655249227" patchCompressedSize="13369" patchUncompressedSize="13240" />
+                    <patch sourceUncompressedSize="253597984" sourceCrc="135486130" sourceTimestamp="1651614747" patchCompressedSize="13424" patchUncompressedSize="13295" />
+                </file>
+                <file name="assets_x64_16.pack2" compressedSize="256514081" uncompressedSize="256513952" crc="1416989584" timestamp="1656463814" sha="d100d4f0cb30996ccb336d8729c2dbeb34ba27cd">
+                    <patch sourceUncompressedSize="256513952" sourceCrc="1205916646" sourceTimestamp="1651614747" patchCompressedSize="1825" patchUncompressedSize="1696" />
+                    <patch sourceUncompressedSize="256513984" sourceCrc="3482053855" sourceTimestamp="1648594013" patchCompressedSize="9067" patchUncompressedSize="8938" />
+                    <patch sourceUncompressedSize="256514016" sourceCrc="1151297490" sourceTimestamp="1643168186" patchCompressedSize="11461" patchUncompressedSize="11332" />
+                </file>
+                <file name="assets_x64_17.pack2" compressedSize="252954817" uncompressedSize="252954688" crc="1349284624" timestamp="1652821717" sha="3cf7b5f59e689ad4bc919e8dfd285b5bd37523f4">
+                    <patch sourceUncompressedSize="251491552" sourceCrc="3421520202" sourceTimestamp="1648594013" patchCompressedSize="1899891" patchUncompressedSize="2033558" />
+                    <patch sourceUncompressedSize="251781184" sourceCrc="38331919" sourceTimestamp="1649114013" patchCompressedSize="1573434" patchUncompressedSize="1584599" />
+                    <patch sourceUncompressedSize="252429472" sourceCrc="2138516839" sourceTimestamp="1651614747" patchCompressedSize="1232957" patchUncompressedSize="1241779" />
+                </file>
+                <file name="assets_x64_18.pack2" compressedSize="253594785" uncompressedSize="253594656" crc="103195041" timestamp="1656463814" sha="dd2f628ac7564721acfeb84d6d816ebfd6f095e4">
+                    <patch sourceUncompressedSize="252829376" sourceCrc="2486029477" sourceTimestamp="1655249227" patchCompressedSize="2321103" patchUncompressedSize="2335667" />
+                    <patch sourceUncompressedSize="252829408" sourceCrc="3760226722" sourceTimestamp="1653431807" patchCompressedSize="2321152" patchUncompressedSize="2335692" />
+                    <patch sourceUncompressedSize="252830240" sourceCrc="3906335129" sourceTimestamp="1655851177" patchCompressedSize="1359719" patchUncompressedSize="1361562" />
+                </file>
+                <file name="assets_x64_19.pack2" compressedSize="273414945" uncompressedSize="273414816" crc="4284669156" timestamp="1655249227" sha="4a2fcc505eddf2bc6b2c46b9d460b0e8d583b950">
+                    <patch sourceUncompressedSize="272821376" sourceCrc="4064050454" sourceTimestamp="1648594013" patchCompressedSize="21676297" patchUncompressedSize="21676168" />
+                    <patch sourceUncompressedSize="272823168" sourceCrc="1980209955" sourceTimestamp="1651614747" patchCompressedSize="17852691" patchUncompressedSize="17852562" />
+                    <patch sourceUncompressedSize="273414816" sourceCrc="1651390875" sourceTimestamp="1652821717" patchCompressedSize="1330" patchUncompressedSize="1201" />
+                </file>
+                <file name="assets_x64_2.pack2" compressedSize="253730529" uncompressedSize="253730400" crc="655835540" timestamp="1655249226" sha="fc0a46616cc27d6a27e94cc826cb713294cfbf80">
+                    <patch sourceUncompressedSize="251990624" sourceCrc="1221453981" sourceTimestamp="1649114012" patchCompressedSize="2542841" patchUncompressedSize="2670922" />
+                    <patch sourceUncompressedSize="253730400" sourceCrc="157822838" sourceTimestamp="1651614747" patchCompressedSize="212481" patchUncompressedSize="214168" />
+                    <patch sourceUncompressedSize="253730400" sourceCrc="1386003057" sourceTimestamp="1652821716" patchCompressedSize="1094" patchUncompressedSize="965" />
+                </file>
+                <file name="assets_x64_20.pack2" compressedSize="253040097" uncompressedSize="253039968" crc="2399377048" timestamp="1655249230" sha="b2a6478d06eac3dc9545c43f2099b11b0f1a924c">
+                    <patch sourceUncompressedSize="252480032" sourceCrc="276614881" sourceTimestamp="1651614750" patchCompressedSize="2047956" patchUncompressedSize="2066965" />
+                    <patch sourceUncompressedSize="253040032" sourceCrc="1879154238" sourceTimestamp="1652821718" patchCompressedSize="26586" patchUncompressedSize="30078" />
+                    <patch sourceUncompressedSize="253040032" sourceCrc="3667411185" sourceTimestamp="1653431810" patchCompressedSize="1775" patchUncompressedSize="1646" />
+                </file>
+                <file name="assets_x64_21.pack2" compressedSize="258778209" uncompressedSize="258778080" crc="1009978587" timestamp="1655851180" sha="08ba9cd1c98cfbfce28f44aeb6e0531e201fa7f0">
+                    <patch sourceUncompressedSize="252803744" sourceCrc="799984531" sourceTimestamp="1652821719" patchCompressedSize="16971488" patchUncompressedSize="17642394" />
+                    <patch sourceUncompressedSize="252804768" sourceCrc="2844465407" sourceTimestamp="1653431810" patchCompressedSize="16660749" patchUncompressedSize="17331364" />
+                    <patch sourceUncompressedSize="252805728" sourceCrc="720017194" sourceTimestamp="1655249230" patchCompressedSize="10096344" patchUncompressedSize="10613516" />
+                </file>
+                <file name="assets_x64_22.pack2" compressedSize="253249313" uncompressedSize="253249184" crc="3963899826" timestamp="1652821719" sha="87d267076ef1760e664eb384090cabb9bcc8705b">
+                    <patch sourceUncompressedSize="252749888" sourceCrc="1436273326" sourceTimestamp="1649114016" patchCompressedSize="2259571" patchUncompressedSize="2397675" />
+                    <patch sourceUncompressedSize="253249184" sourceCrc="3587657050" sourceTimestamp="1651614750" patchCompressedSize="533377" patchUncompressedSize="543763" />
+                    <patch sourceUncompressedSize="253249184" sourceCrc="4145377467" sourceTimestamp="1651706484" patchCompressedSize="250569" patchUncompressedSize="256147" />
+                </file>
+                <file name="assets_x64_23.pack2" compressedSize="253613793" uncompressedSize="253613664" crc="4286226495" timestamp="1656463815" sha="e21fc9eb77edc2fb5eab068fa9860c7c52f7f07e">
+                    <patch sourceUncompressedSize="253613664" sourceCrc="2789033652" sourceTimestamp="1651614750" patchCompressedSize="420373" patchUncompressedSize="424869" />
+                    <patch sourceUncompressedSize="253613728" sourceCrc="3098316004" sourceTimestamp="1649114016" patchCompressedSize="432380" patchUncompressedSize="437337" />
+                    <patch sourceUncompressedSize="253613760" sourceCrc="2614764095" sourceTimestamp="1648594016" patchCompressedSize="432238" patchUncompressedSize="437378" />
+                </file>
+                <file name="assets_x64_3.pack2" compressedSize="253348577" uncompressedSize="253348448" crc="431917284" timestamp="1651614747" sha="c7324e19005530418be74a2b79e437dcf924590d">
+                    <patch sourceUncompressedSize="241307104" sourceCrc="2601717992" sourceTimestamp="1638834609" patchCompressedSize="15537754" patchUncompressedSize="16587846" />
+                    <patch sourceUncompressedSize="250677216" sourceCrc="2847045847" sourceTimestamp="1643168185" patchCompressedSize="7242020" patchUncompressedSize="7477645" />
+                    <patch sourceUncompressedSize="253348448" sourceCrc="2400093682" sourceTimestamp="1648594012" patchCompressedSize="3325" patchUncompressedSize="3196" />
+                </file>
+                <file name="assets_x64_4.pack2" compressedSize="253001345" uncompressedSize="253001216" crc="336181062" timestamp="1655249226" sha="9e68e22df78052deabb3bb5e0e1d1c968e81acf3">
+                    <patch sourceUncompressedSize="251547232" sourceCrc="2917304187" sourceTimestamp="1648594012" patchCompressedSize="1810166" patchUncompressedSize="1875287" />
+                    <patch sourceUncompressedSize="253001248" sourceCrc="1057426975" sourceTimestamp="1651614747" patchCompressedSize="1616971" patchUncompressedSize="1669782" />
+                    <patch sourceUncompressedSize="253001248" sourceCrc="1352834255" sourceTimestamp="1652821717" patchCompressedSize="339" patchUncompressedSize="210" />
+                </file>
+                <file name="assets_x64_5.pack2" compressedSize="253141889" uncompressedSize="253141760" crc="3433419042" timestamp="1655249227" sha="51ec634ff1d341b5845a98cde6bdd36c7b055c05">
+                    <patch sourceUncompressedSize="251858432" sourceCrc="487998331" sourceTimestamp="1648594012" patchCompressedSize="1256526" patchUncompressedSize="1276517" />
+                    <patch sourceUncompressedSize="253141760" sourceCrc="527814040" sourceTimestamp="1651770854" patchCompressedSize="11737" patchUncompressedSize="12208" />
+                    <patch sourceUncompressedSize="253141792" sourceCrc="2975174190" sourceTimestamp="1651614747" patchCompressedSize="11778" patchUncompressedSize="12257" />
+                </file>
+                <file name="assets_x64_6.pack2" compressedSize="269562113" uncompressedSize="269561984" crc="364013321" timestamp="1656535037" sha="9e890b6ebf8cb0c6d89ade4b53512288751b3669">
+                    <patch sourceUncompressedSize="269534592" sourceCrc="3977906008" sourceTimestamp="1652821717" patchCompressedSize="13712533" patchUncompressedSize="13712404" />
+                    <patch sourceUncompressedSize="269544832" sourceCrc="2204897642" sourceTimestamp="1655249227" patchCompressedSize="13706411" patchUncompressedSize="13706282" />
+                    <patch sourceUncompressedSize="269544832" sourceCrc="2354428676" sourceTimestamp="1653431807" patchCompressedSize="13707865" patchUncompressedSize="13707736" />
+                </file>
+                <file name="assets_x64_7.pack2" compressedSize="253017729" uncompressedSize="253017600" crc="735239855" timestamp="1655851177" sha="4ea2d5c215c1b96978544bedfae70873192ec71b">
+                    <patch sourceUncompressedSize="253017600" sourceCrc="1318181752" sourceTimestamp="1652821717" patchCompressedSize="1010263" patchUncompressedSize="1021164" />
+                    <patch sourceUncompressedSize="253017632" sourceCrc="2008371086" sourceTimestamp="1651614747" patchCompressedSize="1010755" patchUncompressedSize="1021351" />
+                    <patch sourceUncompressedSize="253017664" sourceCrc="1757143635" sourceTimestamp="1649114012" patchCompressedSize="1021167" patchUncompressedSize="1031913" />
+                </file>
+                <file name="assets_x64_8.pack2" compressedSize="253154465" uncompressedSize="253154336" crc="3647701811" timestamp="1655249227" sha="0aed1a6a024cd713f818673246b779b370eb748e">
+                    <patch sourceUncompressedSize="252853088" sourceCrc="2195714272" sourceTimestamp="1649114012" patchCompressedSize="2894077" patchUncompressedSize="2978396" />
+                    <patch sourceUncompressedSize="253154336" sourceCrc="4096689282" sourceTimestamp="1652821717" patchCompressedSize="624" patchUncompressedSize="495" />
+                    <patch sourceUncompressedSize="253154400" sourceCrc="3839323829" sourceTimestamp="1651614747" patchCompressedSize="1727767" patchUncompressedSize="1777815" />
+                </file>
+                <file name="assets_x64_9.pack2" compressedSize="260997729" uncompressedSize="260997600" crc="3128666769" timestamp="1655249227" sha="1843af2290f77fcd2625a3cdff8efe3052371dfb">
+                    <patch sourceUncompressedSize="260997600" sourceCrc="1155834279" sourceTimestamp="1649114012" patchCompressedSize="1232" patchUncompressedSize="1103" />
+                    <patch sourceUncompressedSize="260997632" sourceCrc="1316608375" sourceTimestamp="1643168186" patchCompressedSize="2190" patchUncompressedSize="2061" />
+                    <patch sourceUncompressedSize="260997728" sourceCrc="3921141053" sourceTimestamp="1637124472" patchCompressedSize="3472" patchUncompressedSize="4205" />
+                </file>
+                <file name="audio_x64_0.pack2" compressedSize="188277633" uncompressedSize="188277504" crc="1422733681" timestamp="1653431806" sha="f34fedd264cc4f443cd863b0fdef203db2e36ef8">
+                    <patch sourceUncompressedSize="186386880" sourceCrc="2627893073" sourceTimestamp="1648594011" patchCompressedSize="1559117" patchUncompressedSize="1558988" />
+                    <patch sourceUncompressedSize="186735072" sourceCrc="2541803132" sourceTimestamp="1651614746" patchCompressedSize="1450034" patchUncompressedSize="1449905" />
+                    <patch sourceUncompressedSize="188277664" sourceCrc="2137099489" sourceTimestamp="1652821716" patchCompressedSize="428869" patchUncompressedSize="428740" />
+                </file>
+                <file name="audio_x64_1.pack2" compressedSize="188315393" uncompressedSize="188315264" crc="1925450038" timestamp="1653431806" sha="f245ade805021715893750fd768bcc751594083e">
+                    <patch sourceUncompressedSize="186356352" sourceCrc="4261132573" sourceTimestamp="1649114012" patchCompressedSize="1584503" patchUncompressedSize="1584374" />
+                    <patch sourceUncompressedSize="186734272" sourceCrc="1456239165" sourceTimestamp="1651614746" patchCompressedSize="1416338" patchUncompressedSize="1416209" />
+                    <patch sourceUncompressedSize="188315328" sourceCrc="371417146" sourceTimestamp="1652821716" patchCompressedSize="437680" patchUncompressedSize="437551" />
+                </file>
+                <file name="audio_x64_2.pack2" compressedSize="188271489" uncompressedSize="188271360" crc="1152315306" timestamp="1653431807" sha="23b8b429c1c17dcad2e455610a71889da2e784e0">
+                    <patch sourceUncompressedSize="186358912" sourceCrc="1487628581" sourceTimestamp="1648594012" patchCompressedSize="1708182" patchUncompressedSize="1708053" />
+                    <patch sourceUncompressedSize="186678496" sourceCrc="1506358039" sourceTimestamp="1651614747" patchCompressedSize="1569705" patchUncompressedSize="1569576" />
+                    <patch sourceUncompressedSize="188169184" sourceCrc="1211094828" sourceTimestamp="1652821716" patchCompressedSize="576368" patchUncompressedSize="576239" />
+                </file>
+                <file name="audio_x64_3.pack2" compressedSize="188213313" uncompressedSize="188213184" crc="1365831839" timestamp="1653431807" sha="8e355d9b1bafc331a2e2a9cac44a43d84d2454ba">
+                    <patch sourceUncompressedSize="186331968" sourceCrc="4222711327" sourceTimestamp="1649114012" patchCompressedSize="1803811" patchUncompressedSize="1803682" />
+                    <patch sourceUncompressedSize="186690208" sourceCrc="487525615" sourceTimestamp="1651614747" patchCompressedSize="1609173" patchUncompressedSize="1609044" />
+                    <patch sourceUncompressedSize="188094816" sourceCrc="3912295255" sourceTimestamp="1652821717" patchCompressedSize="528284" patchUncompressedSize="528155" />
+                </file>
+                <file name="audio_x64_4.pack2" compressedSize="188217153" uncompressedSize="188217024" crc="3118178818" timestamp="1653431807" sha="65f3e8521cd3253fa30a2039ce64ef398125342e">
+                    <patch sourceUncompressedSize="186357408" sourceCrc="4250074934" sourceTimestamp="1649114012" patchCompressedSize="1788854" patchUncompressedSize="1788725" />
+                    <patch sourceUncompressedSize="186688416" sourceCrc="2838806842" sourceTimestamp="1651614747" patchCompressedSize="1591396" patchUncompressedSize="1591267" />
+                    <patch sourceUncompressedSize="188128864" sourceCrc="3890531314" sourceTimestamp="1652821717" patchCompressedSize="569719" patchUncompressedSize="569590" />
+                </file>
+                <file name="Copy of Assets_211.pack" delete="yes" />
+                <file name="data_x64_0.pack2" compressedSize="8679841" uncompressedSize="8679712" crc="3815748171" timestamp="1656703269" sha="ae8f96542558a1911579e9bdcef9d85d90c6477b">
+                    <patch sourceUncompressedSize="8483360" sourceCrc="1958422211" sourceTimestamp="1655249226" patchCompressedSize="163392" patchUncompressedSize="167938" />
+                    <patch sourceUncompressedSize="8679456" sourceCrc="3786206695" sourceTimestamp="1655851176" patchCompressedSize="62438" patchUncompressedSize="63015" />
+                    <patch sourceUncompressedSize="8679712" sourceCrc="99135056" sourceTimestamp="1656463813" patchCompressedSize="3049" patchUncompressedSize="2920" />
+                </file>
+                <file name="Esamir_x64_0.pack2" compressedSize="141279809" uncompressedSize="141279680" crc="1730480294" timestamp="1621979467" sha="c8aa17f321095d2780c0936af927efdd8c1b62b2">
+                    <patch sourceUncompressedSize="140218016" sourceCrc="3051511694" sourceTimestamp="1620171303" patchCompressedSize="13472665" patchUncompressedSize="13472536" />
+                    <patch sourceUncompressedSize="140218016" sourceCrc="3997494814" sourceTimestamp="1619702918" patchCompressedSize="13477165" patchUncompressedSize="13477036" />
+                    <patch sourceUncompressedSize="140788320" sourceCrc="1845306367" sourceTimestamp="1621375630" patchCompressedSize="5459431" patchUncompressedSize="5459302" />
+                </file>
+                <file name="Esamir_x64_1.pack2" compressedSize="141542849" uncompressedSize="141542720" crc="1749779842" timestamp="1631661263" sha="fcacac4fd2c166431187bd21efaeec1c270cb9b2">
+                    <patch sourceUncompressedSize="140822944" sourceCrc="2705608680" sourceTimestamp="1621375630" patchCompressedSize="3415184" patchUncompressedSize="3427771" />
+                    <patch sourceUncompressedSize="141542720" sourceCrc="3410195384" sourceTimestamp="1627431735" patchCompressedSize="891540" patchUncompressedSize="924040" />
+                    <patch sourceUncompressedSize="141542752" sourceCrc="355079100" sourceTimestamp="1621979467" patchCompressedSize="906555" patchUncompressedSize="939498" />
+                </file>
+                <file name="Esamir_x64_2.pack2" compressedSize="142396193" uncompressedSize="142396064" crc="2894548069" timestamp="1621979467" sha="c094f7aeb32309808621ae73c9142a035fd28e01">
+                    <patch sourceUncompressedSize="140003488" sourceCrc="2258064241" sourceTimestamp="1620779035" patchCompressedSize="20975281" patchUncompressedSize="20975152" />
+                    <patch sourceUncompressedSize="140003552" sourceCrc="3047400502" sourceTimestamp="1620171303" patchCompressedSize="20975292" patchUncompressedSize="20975163" />
+                    <patch sourceUncompressedSize="142396256" sourceCrc="1217138960" sourceTimestamp="1621375631" patchCompressedSize="5495494" patchUncompressedSize="5495365" />
+                </file>
+                <file name="Esamir_x64_3.pack2" compressedSize="141885409" uncompressedSize="141885280" crc="874059847" timestamp="1631661263" sha="e98c6c3b9e7bec6fbd94f1f2ec674174ba4bec6e">
+                    <patch sourceUncompressedSize="140889088" sourceCrc="1167227924" sourceTimestamp="1621375631" patchCompressedSize="5251761" patchUncompressedSize="5251632" />
+                    <patch sourceUncompressedSize="141883200" sourceCrc="3870661121" sourceTimestamp="1627431735" patchCompressedSize="3101051" patchUncompressedSize="3112227" />
+                    <patch sourceUncompressedSize="142254656" sourceCrc="656884791" sourceTimestamp="1621979467" patchCompressedSize="3108970" patchUncompressedSize="3119909" />
+                </file>
+                <file name="Esamir_x64_4.pack2" compressedSize="141558241" uncompressedSize="141558112" crc="2358524584" timestamp="1631661263" sha="ec9655ca4b722630029aad15ded4e37c09699648">
+                    <patch sourceUncompressedSize="141558112" sourceCrc="1667927985" sourceTimestamp="1627431735" patchCompressedSize="1699274" patchUncompressedSize="1708899" />
+                    <patch sourceUncompressedSize="141558112" sourceCrc="3332692141" sourceTimestamp="1621979467" patchCompressedSize="1699435" patchUncompressedSize="1709097" />
+                    <patch sourceUncompressedSize="141558240" sourceCrc="3239613750" sourceTimestamp="1621375631" patchCompressedSize="2462802" patchUncompressedSize="2466560" />
+                </file>
+                <file name="Esamir_x64_5.pack2" compressedSize="142615201" uncompressedSize="142615072" crc="1171808657" timestamp="1631661263" sha="ac57325810eace539655e88eb3ac83241d437487">
+                    <patch sourceUncompressedSize="142615136" sourceCrc="1268861950" sourceTimestamp="1627431735" patchCompressedSize="417" patchUncompressedSize="305" />
+                    <patch sourceUncompressedSize="142615136" sourceCrc="2069711792" sourceTimestamp="1627949331" patchCompressedSize="417" patchUncompressedSize="305" />
+                    <patch sourceUncompressedSize="142615136" sourceCrc="3267726860" sourceTimestamp="1621979467" patchCompressedSize="419" patchUncompressedSize="307" />
+                </file>
+                <file name="Esamir_x64_6.pack2" compressedSize="142723393" uncompressedSize="142723264" crc="813956168" timestamp="1631661263" sha="1ee819d17adc0df8f76ad5c636b09cab919962b5">
+                    <patch sourceUncompressedSize="141215872" sourceCrc="1154439644" sourceTimestamp="1621979467" patchCompressedSize="2848821" patchUncompressedSize="2865202" />
+                    <patch sourceUncompressedSize="141216032" sourceCrc="2094607221" sourceTimestamp="1621375631" patchCompressedSize="4486669" patchUncompressedSize="4490760" />
+                    <patch sourceUncompressedSize="142723264" sourceCrc="3017172272" sourceTimestamp="1627431735" patchCompressedSize="2845305" patchUncompressedSize="2861079" />
+                </file>
+                <file name="Esamir_x64_7.pack2" compressedSize="142835105" uncompressedSize="142834976" crc="476091739" timestamp="1631661263" sha="d871fe765bd685b240ca7260c770184eb7deb183">
+                    <patch sourceUncompressedSize="140029216" sourceCrc="3137979007" sourceTimestamp="1620171303" patchCompressedSize="10931735" patchUncompressedSize="10931606" />
+                    <patch sourceUncompressedSize="141236992" sourceCrc="2593055811" sourceTimestamp="1621979467" patchCompressedSize="1588758" patchUncompressedSize="1598089" />
+                    <patch sourceUncompressedSize="141237280" sourceCrc="348980020" sourceTimestamp="1621375631" patchCompressedSize="5757337" patchUncompressedSize="5757208" />
+                </file>
+                <file name="Esamir_x64_8.pack2" compressedSize="141375297" uncompressedSize="141375168" crc="884583650" timestamp="1627431735" sha="edf5b0650e25066a66074cca2098864a3d93b186">
+                    <patch sourceUncompressedSize="141375200" sourceCrc="720461315" sourceTimestamp="1621979467" patchCompressedSize="353" patchUncompressedSize="224" />
+                    <patch sourceUncompressedSize="141375328" sourceCrc="1169280519" sourceTimestamp="1621375631" patchCompressedSize="1347524" patchUncompressedSize="1347395" />
+                    <patch sourceUncompressedSize="141375744" sourceCrc="2937902765" sourceTimestamp="1620779035" patchCompressedSize="6477137" patchUncompressedSize="6480239" />
+                </file>
+                <file name="Esamir_x64_9.pack2" compressedSize="141691169" uncompressedSize="141691040" crc="3110354515" timestamp="1621979467" sha="f77f576ab92e884cab0a1c78c23551dee2c89f93">
+                    <patch sourceUncompressedSize="140260256" sourceCrc="1650835151" sourceTimestamp="1620171303" patchCompressedSize="12038116" patchUncompressedSize="12037987" />
+                    <patch sourceUncompressedSize="140260288" sourceCrc="4274243267" sourceTimestamp="1619702918" patchCompressedSize="12037906" patchUncompressedSize="12037777" />
+                    <patch sourceUncompressedSize="141691200" sourceCrc="841438515" sourceTimestamp="1621375631" patchCompressedSize="4272127" patchUncompressedSize="4271998" />
+                </file>
+                <file name="Hossin_x64_0.pack2" compressedSize="152274497" uncompressedSize="152274368" crc="1782074039" timestamp="1648594014" sha="f3288d3c4889e796c0a45dcfc8e7e5ee4d41d5a7">
+                    <patch sourceUncompressedSize="148101152" sourceCrc="1628618142" sourceTimestamp="1556152924" patchCompressedSize="4171607" patchUncompressedSize="4171478" />
+                    <patch sourceUncompressedSize="148482720" sourceCrc="1083061658" sourceTimestamp="1583866430" patchCompressedSize="3791742" patchUncompressedSize="3791613" />
+                    <patch sourceUncompressedSize="152253632" sourceCrc="60465420" sourceTimestamp="1631661264" patchCompressedSize="3791695" patchUncompressedSize="3791566" />
+                </file>
+                <file name="Hossin_x64_1.pack2" compressedSize="149947553" uncompressedSize="149947424" crc="1830736918" timestamp="1556152924" sha="fe6206ed8854eb9ae02fb026c35f05ee106b8bca" />
+                <file name="Hossin_x64_2.pack2" compressedSize="148610209" uncompressedSize="148610080" crc="767754645" timestamp="1583866431" sha="07134a634dc1d2e3b50735e4476c2a015ba6e448">
+                    <patch sourceUncompressedSize="148610112" sourceCrc="1409386137" sourceTimestamp="1556152924" patchCompressedSize="361" patchUncompressedSize="589" />
+                </file>
+                <file name="Hossin_x64_3.pack2" compressedSize="149804001" uncompressedSize="149803872" crc="4043556690" timestamp="1631661264" sha="15e3fcc8d9055bc80933e481c43e1709f39420ad">
+                    <patch sourceUncompressedSize="149803904" sourceCrc="2945790395" sourceTimestamp="1583866431" patchCompressedSize="372" patchUncompressedSize="973" />
+                    <patch sourceUncompressedSize="149803936" sourceCrc="1040520815" sourceTimestamp="1556152924" patchCompressedSize="457" patchUncompressedSize="64991" />
+                </file>
+                <file name="Hossin_x64_4.pack2" compressedSize="148995233" uncompressedSize="148995104" crc="2992159498" timestamp="1556152924" sha="057e3e5ff5d3e8b8e6eb8e04346323345503e71d" />
+                <file name="Hossin_x64_5.pack2" compressedSize="148854369" uncompressedSize="148854240" crc="2618987380" timestamp="1583866431" sha="707c0e079d0e67e6960356cacdd3201fca28cbb4">
+                    <patch sourceUncompressedSize="148854304" sourceCrc="40127028" sourceTimestamp="1556152924" patchCompressedSize="388" patchUncompressedSize="1277" />
+                </file>
+                <file name="Hossin_x64_6.pack2" compressedSize="148767265" uncompressedSize="148767136" crc="3922568623" timestamp="1583866431" sha="47d55bc795b80e562c8d98879f763dd67179c0ff">
+                    <patch sourceUncompressedSize="148767200" sourceCrc="2001035129" sourceTimestamp="1556152925" patchCompressedSize="388" patchUncompressedSize="1283" />
+                </file>
+                <file name="Hossin_x64_7.pack2" compressedSize="149661921" uncompressedSize="149661792" crc="2297752039" timestamp="1583866431" sha="7224df28211812bcfd90f7451e68cf027aa92838">
+                    <patch sourceUncompressedSize="149661888" sourceCrc="2353036268" sourceTimestamp="1556152925" patchCompressedSize="412" patchUncompressedSize="1779" />
+                </file>
+                <file name="Hossin_x64_8.pack2" compressedSize="148811041" uncompressedSize="148810912" crc="3197747532" timestamp="1556152925" sha="5db32b935a4c9a4c45890f0bff93c87bc0ab7312" />
+                <file name="Hossin_x64_9.pack2" compressedSize="148812865" uncompressedSize="148812736" crc="24236741" timestamp="1583866432" sha="a463da1ccc64239b0bf2e92d2c2ddda050daf65b">
+                    <patch sourceUncompressedSize="148812832" sourceCrc="2631890568" sourceTimestamp="1556152925" patchCompressedSize="65872" patchUncompressedSize="67080" />
+                </file>
+                <file name="Indar_x64_0.pack2" compressedSize="174436993" uncompressedSize="174436864" crc="3162764132" timestamp="1648594014" sha="85f47fb254b5e5b2bb1eaef808afba6606522e62">
+                    <patch sourceUncompressedSize="172914688" sourceCrc="654737655" sourceTimestamp="1556901572" patchCompressedSize="17056112" patchUncompressedSize="17055983" />
+                    <patch sourceUncompressedSize="174436896" sourceCrc="3655676553" sourceTimestamp="1631661264" patchCompressedSize="365" patchUncompressedSize="236" />
+                    <patch sourceUncompressedSize="174436896" sourceCrc="4011331425" sourceTimestamp="1601514550" patchCompressedSize="365" patchUncompressedSize="236" />
+                </file>
+                <file name="Indar_x64_1.pack2" compressedSize="176847393" uncompressedSize="176847264" crc="2919273804" timestamp="1601514550" sha="0bd4b6ab9a36d7398d8a2bf36ba253528ea3f74a">
+                    <patch sourceUncompressedSize="171685216" sourceCrc="495655353" sourceTimestamp="1556152924" patchCompressedSize="19810861" patchUncompressedSize="19918842" />
+                    <patch sourceUncompressedSize="172965024" sourceCrc="1759687071" sourceTimestamp="1556901572" patchCompressedSize="17959146" patchUncompressedSize="17965805" />
+                </file>
+                <file name="Indar_x64_2.pack2" compressedSize="174549121" uncompressedSize="174548992" crc="364240412" timestamp="1601514550" sha="37c5588dd7c1863c515b603bb486cd18b36b9608">
+                    <patch sourceUncompressedSize="171647328" sourceCrc="3024641485" sourceTimestamp="1556152924" patchCompressedSize="20333287" patchUncompressedSize="20333158" />
+                    <patch sourceUncompressedSize="173242720" sourceCrc="1887640823" sourceTimestamp="1556901572" patchCompressedSize="18275787" patchUncompressedSize="18275658" />
+                </file>
+                <file name="Indar_x64_3.pack2" compressedSize="176035777" uncompressedSize="176035648" crc="968969858" timestamp="1601514550" sha="62ce50413ac9f2aba2edb97e4264a8ecd09fb0ac">
+                    <patch sourceUncompressedSize="171762784" sourceCrc="1012905006" sourceTimestamp="1556152924" patchCompressedSize="15990960" patchUncompressedSize="16120262" />
+                    <patch sourceUncompressedSize="172937056" sourceCrc="916663729" sourceTimestamp="1556901572" patchCompressedSize="14118656" patchUncompressedSize="14118527" />
+                </file>
+                <file name="Indar_x64_4.pack2" compressedSize="175650721" uncompressedSize="175650592" crc="1336481628" timestamp="1648594014" sha="ce8de08a8de850610b5994f4836fcc46371789fe">
+                    <patch sourceUncompressedSize="172005856" sourceCrc="1948225577" sourceTimestamp="1556152924" patchCompressedSize="16830717" patchUncompressedSize="16832676" />
+                    <patch sourceUncompressedSize="173232960" sourceCrc="301699625" sourceTimestamp="1556901572" patchCompressedSize="14408057" patchUncompressedSize="14407928" />
+                    <patch sourceUncompressedSize="174045440" sourceCrc="2330284638" sourceTimestamp="1601514551" patchCompressedSize="1605470" patchUncompressedSize="1605341" />
+                </file>
+                <file name="Indar_x64_5.pack2" compressedSize="175858593" uncompressedSize="175858464" crc="1060978188" timestamp="1601514551" sha="4a27f2ee142475bed332c7dfad85be9ff3630ee6">
+                    <patch sourceUncompressedSize="172119872" sourceCrc="2288676457" sourceTimestamp="1556152924" patchCompressedSize="23380563" patchUncompressedSize="23380434" />
+                    <patch sourceUncompressedSize="172950496" sourceCrc="31175459" sourceTimestamp="1583866431" patchCompressedSize="22845449" patchUncompressedSize="22845320" />
+                    <patch sourceUncompressedSize="172950496" sourceCrc="3901087691" sourceTimestamp="1556901572" patchCompressedSize="22877693" patchUncompressedSize="22877564" />
+                </file>
+                <file name="Indar_x64_6.pack2" compressedSize="174553313" uncompressedSize="174553184" crc="2590137867" timestamp="1601514551" sha="ea1fdbd0ecc684bc28ece50ab35109ab0251d24d">
+                    <patch sourceUncompressedSize="171639584" sourceCrc="2068966466" sourceTimestamp="1556152924" patchCompressedSize="17243402" patchUncompressedSize="17243273" />
+                    <patch sourceUncompressedSize="172887616" sourceCrc="2382990681" sourceTimestamp="1583866431" patchCompressedSize="16669512" patchUncompressedSize="16669383" />
+                    <patch sourceUncompressedSize="172887616" sourceCrc="4119297002" sourceTimestamp="1556901573" patchCompressedSize="16701926" patchUncompressedSize="16701797" />
+                </file>
+                <file name="Indar_x64_7.pack2" compressedSize="174408065" uncompressedSize="174407936" crc="1465611576" timestamp="1601514551" sha="bc5304646b98b1321e5e8f61c29e869c28c835d5">
+                    <patch sourceUncompressedSize="171754976" sourceCrc="4263652626" sourceTimestamp="1556152925" patchCompressedSize="18606054" patchUncompressedSize="18605925" />
+                    <patch sourceUncompressedSize="172847360" sourceCrc="3237128186" sourceTimestamp="1556901573" patchCompressedSize="15517553" patchUncompressedSize="15517424" />
+                    <patch sourceUncompressedSize="172847360" sourceCrc="3437775746" sourceTimestamp="1583866431" patchCompressedSize="15485395" patchUncompressedSize="15485266" />
+                </file>
+                <file name="Indar_x64_8.pack2" compressedSize="174208929" uncompressedSize="174208800" crc="2245958967" timestamp="1601514551" sha="443aacb3524ed35fa24b26542e048ae062b89b98">
+                    <patch sourceUncompressedSize="172182496" sourceCrc="3874041217" sourceTimestamp="1556152925" patchCompressedSize="14476549" patchUncompressedSize="14476420" />
+                    <patch sourceUncompressedSize="172978144" sourceCrc="4189828984" sourceTimestamp="1556901573" patchCompressedSize="13080430" patchUncompressedSize="13080301" />
+                </file>
+                <file name="Indar_x64_9.pack2" compressedSize="174560929" uncompressedSize="174560800" crc="1745009857" timestamp="1601514551" sha="831b49c2928999f2a30b2b998f1c9a104e6d553d">
+                    <patch sourceUncompressedSize="171866112" sourceCrc="3710842232" sourceTimestamp="1556152925" patchCompressedSize="13756467" patchUncompressedSize="13756338" />
+                    <patch sourceUncompressedSize="172852000" sourceCrc="2225075898" sourceTimestamp="1583866432" patchCompressedSize="13350717" patchUncompressedSize="13350588" />
+                    <patch sourceUncompressedSize="172852000" sourceCrc="3053581215" sourceTimestamp="1556901573" patchCompressedSize="13383478" patchUncompressedSize="13383349" />
+                </file>
+                <file name="locale_de_DE_x64_0.pack2" compressedSize="39309089" uncompressedSize="39308960" crc="3054967219" timestamp="1556152926" sha="974cfe61df0e96cb3e872ee57b8fe528d36b5861" />
+                <file name="locale_de_DE_x64_1.pack2" compressedSize="39297793" uncompressedSize="39297664" crc="555372076" timestamp="1556152926" sha="91c90d86f6622065e60e15730a7314fb8e9b61b8" />
+                <file name="locale_de_DE_x64_2.pack2" compressedSize="39301217" uncompressedSize="39301088" crc="2579029821" timestamp="1556152926" sha="f07a3f124a567b76acbc922d6cd1ca295dcb0800" />
+                <file name="locale_es_ES_x64_0.pack2" compressedSize="35883969" uncompressedSize="35883840" crc="1949956081" timestamp="1556152926" sha="cd7833ebbc433d64d0ad44d42992f347993805fb" />
+                <file name="locale_es_ES_x64_1.pack2" compressedSize="35885313" uncompressedSize="35885184" crc="1759640538" timestamp="1556152926" sha="22e8c9e759dbb2f878fd101e49389b18bb54add6" />
+                <file name="locale_es_ES_x64_2.pack2" compressedSize="35883105" uncompressedSize="35882976" crc="3488195527" timestamp="1556152926" sha="f9ffb07a93b3fce94ad6b8d50349ea57d160f047" />
+                <file name="locale_fr_FR_x64_0.pack2" compressedSize="33096449" uncompressedSize="33096320" crc="2292049498" timestamp="1556152926" sha="ee53dfc354f7c194451c604e1ef59d0c5f5628bc" />
+                <file name="locale_fr_FR_x64_1.pack2" compressedSize="33097153" uncompressedSize="33097024" crc="3288852882" timestamp="1556152926" sha="d3f0801c381577f3f1aa3b1473d566ee4c2daf84" />
+                <file name="locale_fr_FR_x64_2.pack2" compressedSize="33102241" uncompressedSize="33102112" crc="3297197624" timestamp="1556152926" sha="2c6b15d46b1487e87dea0c8f81c74f810f64d53b" />
+                <file name="locale_it_IT_x64_0.pack2" compressedSize="36681185" uncompressedSize="36681056" crc="788974686" timestamp="1556152926" sha="ff43e5cb31e5c38ca4cd05b3bef3d94024dbe8e1" />
+                <file name="locale_it_IT_x64_1.pack2" compressedSize="36687361" uncompressedSize="36687232" crc="2291879859" timestamp="1556152926" sha="f2bb937c25c69c5d7868c38ece7f815131e01dbc" />
+                <file name="locale_it_IT_x64_2.pack2" compressedSize="36679041" uncompressedSize="36678912" crc="2200066981" timestamp="1556152926" sha="8318d38dfbb581415867cca17e6c39841be1850c" />
+                <file name="locale_ru_RU_x64_0.pack2" compressedSize="32217441" uncompressedSize="32217312" crc="780180461" timestamp="1592344719" sha="38ffa78ea9354884afebaf5a068c110193a4cb7c" />
+                <file name="locale_ru_RU_x64_1.pack2" compressedSize="32211617" uncompressedSize="32211488" crc="3804085304" timestamp="1592344719" sha="5f30b39851d7c9a3a0d27bde3c9c9de02e2ef21a" />
+                <file name="locale_ru_RU_x64_2.pack2" compressedSize="32214849" uncompressedSize="32214720" crc="3906042359" timestamp="1592344719" sha="ac233425e98c774e4d02b8107dc1933e5f63ca1a" />
+                <file name="locale_zh_CN_x64_0.pack2" compressedSize="30246465" uncompressedSize="30246336" crc="1499310546" timestamp="1592344719" sha="20c7ae04afd7d9ae630f72aab90604e00d10c08f" />
+                <file name="locale_zh_CN_x64_1.pack2" compressedSize="30252449" uncompressedSize="30252320" crc="283656241" timestamp="1592344719" sha="0a1d624259088636d363066eb79d1415720dc999" />
+                <file name="locale_zh_CN_x64_2.pack2" compressedSize="30245089" uncompressedSize="30244960" crc="2443719613" timestamp="1592344719" sha="9f4555a03f1061f8585f18a9751c583aaea44bb5" />
+                <file name="Nexus_x64_0.pack2" compressedSize="42938017" uncompressedSize="42937888" crc="2537721186" timestamp="1590712724" sha="347c00817ac42ca378d2101824cba948c4ba91e6" />
+                <file name="Nexus_x64_1.pack2" compressedSize="43721537" uncompressedSize="43721408" crc="114926201" timestamp="1590712724" sha="485cddb1be235748a6fc4289dffd4171bf09557b" />
+                <file name="Nexus_x64_2.pack2" compressedSize="45076033" uncompressedSize="45075904" crc="1983133067" timestamp="1590712724" sha="fdc6a41776457ed2e057f1b85304479874b1e985" />
+                <file name="Nexus_x64_3.pack2" compressedSize="49796161" uncompressedSize="49796032" crc="2997154938" timestamp="1590712725" sha="df7716ededa0e3b1a0b3290170f18fdec8c2dcf6" />
+                <file name="Nexus_x64_4.pack2" compressedSize="38527617" uncompressedSize="38527488" crc="1903643984" timestamp="1590712725" sha="7f5f02c9db694b5257024c4ff5342208b7116d89" />
+                <file name="Oshur_x64_0.pack2" compressedSize="319514497" uncompressedSize="319514368" crc="2375531818" timestamp="1648594017" sha="636458ac080a549ca6f1410fb6ed9066dc4d15ea">
+                    <patch sourceUncompressedSize="316281792" sourceCrc="28764406" sourceTimestamp="1643760979" patchCompressedSize="208278147" patchUncompressedSize="208278018" />
+                    <patch sourceUncompressedSize="317575904" sourceCrc="132757858" sourceTimestamp="1644365259" patchCompressedSize="208278398" patchUncompressedSize="208278269" />
+                    <patch sourceUncompressedSize="318136704" sourceCrc="2433144479" sourceTimestamp="1646700882" patchCompressedSize="199946856" patchUncompressedSize="199946727" />
+                </file>
+                <file name="Oshur_x64_1.pack2" compressedSize="319442849" uncompressedSize="319442720" crc="2856302137" timestamp="1648594017" sha="c854867f7dd7219879c5720f020649783ade0809">
+                    <patch sourceUncompressedSize="317265312" sourceCrc="21699943" sourceTimestamp="1643760979" patchCompressedSize="201648742" patchUncompressedSize="201648613" />
+                    <patch sourceUncompressedSize="317626528" sourceCrc="1564985164" sourceTimestamp="1644365259" patchCompressedSize="201639804" patchUncompressedSize="201639675" />
+                    <patch sourceUncompressedSize="319443104" sourceCrc="3064448348" sourceTimestamp="1646700882" patchCompressedSize="196211553" patchUncompressedSize="196211424" />
+                </file>
+                <file name="Oshur_x64_2.pack2" compressedSize="319534977" uncompressedSize="319534848" crc="2483977878" timestamp="1648594017" sha="34ef2c5178dc20f2af901e134d9938ef923951ae">
+                    <patch sourceUncompressedSize="317025856" sourceCrc="2939390485" sourceTimestamp="1643760979" patchCompressedSize="197819927" patchUncompressedSize="197819798" />
+                    <patch sourceUncompressedSize="317547808" sourceCrc="1873195008" sourceTimestamp="1644365259" patchCompressedSize="197840730" patchUncompressedSize="197840601" />
+                    <patch sourceUncompressedSize="318153024" sourceCrc="2859334657" sourceTimestamp="1646700882" patchCompressedSize="185320916" patchUncompressedSize="185320787" />
+                </file>
+                <file name="Oshur_x64_3.pack2" compressedSize="319462241" uncompressedSize="319462112" crc="2224593350" timestamp="1651614751" sha="095689a35d883f36e58a004c5c15b5d57e3e0f21">
+                    <patch sourceUncompressedSize="316702464" sourceCrc="162424447" sourceTimestamp="1644365259" patchCompressedSize="225210674" patchUncompressedSize="225210545" />
+                    <patch sourceUncompressedSize="318115424" sourceCrc="2365101204" sourceTimestamp="1646700882" patchCompressedSize="215282165" patchUncompressedSize="215282036" />
+                    <patch sourceUncompressedSize="319462112" sourceCrc="3778972970" sourceTimestamp="1648594017" patchCompressedSize="1313201" patchUncompressedSize="1313072" />
+                </file>
+                <file name="Oshur_x64_4.pack2" compressedSize="319539009" uncompressedSize="319538880" crc="1414403598" timestamp="1648594017" sha="377ba6a864fc1f28c1a4696001f8a712fe7d677c">
+                    <patch sourceUncompressedSize="316181760" sourceCrc="3131642871" sourceTimestamp="1643760979" patchCompressedSize="197781015" patchUncompressedSize="197780886" />
+                    <patch sourceUncompressedSize="317354272" sourceCrc="1484706376" sourceTimestamp="1644365259" patchCompressedSize="197779790" patchUncompressedSize="197779661" />
+                    <patch sourceUncompressedSize="318190080" sourceCrc="2577708754" sourceTimestamp="1646700882" patchCompressedSize="187784847" patchUncompressedSize="187784718" />
+                </file>
+                <file name="OutfitWars_x64_0.pack2" compressedSize="196279713" uncompressedSize="196279584" crc="2878215895" timestamp="1612836196" sha="8aa600dcd0ebb13b9200dc7e4537003de80500f0" />
+                <file name="OutfitWars_x64_1.pack2" compressedSize="195911329" uncompressedSize="195911200" crc="3950561866" timestamp="1612836196" sha="cf57931329c9ccf7f696eff125f9746b4e9e255e" />
+                <file name="OutfitWars_x64_2.pack2" compressedSize="193893761" uncompressedSize="193893632" crc="1045474950" timestamp="1612836196" sha="e5056831eb1f5318eeefbcda419239d3c233cd1e" />
+                <file name="OutfitWars_x64_3.pack2" compressedSize="194373121" uncompressedSize="194372992" crc="1852407224" timestamp="1612836196" sha="63ba86263ddb94de288db8847c2a776da587d2d1" />
+                <file name="OutfitWars_x64_4.pack2" compressedSize="196018753" uncompressedSize="196018624" crc="641770904" timestamp="1612836196" sha="231c5bd00fef6956034f82a92205ef62ab90ece2" />
+                <file name="OutfitWars_x64_5.pack2" compressedSize="196050017" uncompressedSize="196049888" crc="2607597379" timestamp="1612836197" sha="2968f75242fb29b92f26291125c2c9e30a1fe822" />
+                <file name="OutfitWars_x64_6.pack2" compressedSize="194123841" uncompressedSize="194123712" crc="3700580686" timestamp="1612836197" sha="415a881fc6333fe844f0c85a76607b0e485f06aa" />
+                <file name="OutfitWars_x64_7.pack2" compressedSize="195784737" uncompressedSize="195784608" crc="296251641" timestamp="1612836197" sha="bef957d23ac2674ec4990235dca1b00459c85500" />
+                <file name="OutfitWars_x64_8.pack2" compressedSize="197647105" uncompressedSize="197646976" crc="3321613617" timestamp="1612836197" sha="d81d9877bd7a365dba0b23c04e9669877b69c6de" />
+                <file name="OutfitWars_x64_9.pack2" compressedSize="198032641" uncompressedSize="198032512" crc="3568656106" timestamp="1612836197" sha="693895c44e44174d2e87c7c11bdf94af2232c442" />
+                <file name="quickload_x64_0.pack2" compressedSize="90787393" uncompressedSize="90787264" crc="3175915210" timestamp="1601514551" sha="40a4f85552882be2c910165cc8ad76fc23450c92">
+                    <patch sourceUncompressedSize="89113248" sourceCrc="3862127620" sourceTimestamp="1556152925" patchCompressedSize="10082191" patchUncompressedSize="10082062" />
+                </file>
+                <file name="quickload_x64_1.pack2" compressedSize="90650273" uncompressedSize="90650144" crc="725526311" timestamp="1601514551" sha="2ea74e2bc73cb9e3d96cc595e4b8d3b79994af94">
+                    <patch sourceUncompressedSize="88835328" sourceCrc="1541089872" sourceTimestamp="1556152925" patchCompressedSize="8852405" patchUncompressedSize="8852276" />
+                </file>
+                <file name="quickload_x64_2.pack2" compressedSize="90840161" uncompressedSize="90840032" crc="821585073" timestamp="1631661265" sha="0002898650612ea2c51878026ebf4a541ba255ef">
+                    <patch sourceUncompressedSize="90008512" sourceCrc="3584958241" sourceTimestamp="1556152926" patchCompressedSize="7278013" patchUncompressedSize="7277884" />
+                    <patch sourceUncompressedSize="90840032" sourceCrc="2035103177" sourceTimestamp="1601514551" patchCompressedSize="182643" patchUncompressedSize="182514" />
+                </file>
+                <file name="quickload_x64_3.pack2" compressedSize="90302209" uncompressedSize="90302080" crc="2500101479" timestamp="1601514551" sha="5bbb39fa8263a4e4ff8302de9b499be717b1f571">
+                    <patch sourceUncompressedSize="89399520" sourceCrc="3939470566" sourceTimestamp="1556152926" patchCompressedSize="4763460" patchUncompressedSize="4780475" />
+                </file>
+                <file name="quickload_x64_4.pack2" compressedSize="90885281" uncompressedSize="90885152" crc="3755205426" timestamp="1601514551" sha="77c58c5fbdf5ee495b07cd2866a1941aad7d7fbf">
+                    <patch sourceUncompressedSize="89962784" sourceCrc="3052126012" sourceTimestamp="1556152926" patchCompressedSize="5323900" patchUncompressedSize="5323771" />
+                </file>
+                <file name="Sanctuary_x64_0.pack2" compressedSize="1390241" uncompressedSize="1390112" crc="1203955296" timestamp="1648594015" sha="f413a77abde6b7577a5e458d01ce132a9e96266f">
+                    <patch sourceUncompressedSize="1390048" sourceCrc="1474365699" sourceTimestamp="1646700881" patchCompressedSize="539603" patchUncompressedSize="542833" />
+                    <patch sourceUncompressedSize="1390048" sourceCrc="2776146076" sourceTimestamp="1643168189" patchCompressedSize="539601" patchUncompressedSize="542831" />
+                    <patch sourceUncompressedSize="1390048" sourceCrc="4124574911" sourceTimestamp="1642031943" patchCompressedSize="539636" patchUncompressedSize="542832" />
+                </file>
+                <file name="Sanctuary_x64_1.pack2" compressedSize="1993249" uncompressedSize="1993120" crc="663800210" timestamp="1648594015" sha="3c5d91c4a809310efbff69c7eeebc5bddd953491">
+                    <patch sourceUncompressedSize="1805728" sourceCrc="3663414075" sourceTimestamp="1631661265" patchCompressedSize="1146781" patchUncompressedSize="1153303" />
+                    <patch sourceUncompressedSize="1993120" sourceCrc="655921412" sourceTimestamp="1632874378" patchCompressedSize="1150331" patchUncompressedSize="1156846" />
+                    <patch sourceUncompressedSize="1993120" sourceCrc="1339913355" sourceTimestamp="1637124474" patchCompressedSize="1134666" patchUncompressedSize="1140796" />
+                </file>
+                <file name="Sanctuary_x64_2.pack2" compressedSize="1403105" uncompressedSize="1402976" crc="3775862439" timestamp="1631661265" sha="be2106d86590186e32bde5eb28212d8738902cf8">
+                    <patch sourceUncompressedSize="1403072" sourceCrc="2436573962" sourceTimestamp="1604529661" patchCompressedSize="360" patchUncompressedSize="544" />
+                    <patch sourceUncompressedSize="1403072" sourceCrc="3959979031" sourceTimestamp="1602639392" patchCompressedSize="360" patchUncompressedSize="544" />
+                    <patch sourceUncompressedSize="1403104" sourceCrc="2865337486" sourceTimestamp="1601514551" patchCompressedSize="411" patchUncompressedSize="19910" />
+                </file>
+                <file name="Sanctuary_x64_3.pack2" compressedSize="1964161" uncompressedSize="1964032" crc="3627920573" timestamp="1648594016" sha="b29a501d8183d84f3178fba91119f2f025046d16">
+                    <patch sourceUncompressedSize="1964096" sourceCrc="992927035" sourceTimestamp="1638834613" patchCompressedSize="638227" patchUncompressedSize="641505" />
+                    <patch sourceUncompressedSize="1964128" sourceCrc="1857078490" sourceTimestamp="1637124474" patchCompressedSize="638175" patchUncompressedSize="641512" />
+                    <patch sourceUncompressedSize="1964128" sourceCrc="4047159724" sourceTimestamp="1632874378" patchCompressedSize="637200" patchUncompressedSize="640398" />
+                </file>
+                <file name="Tutorial_x64_0.pack2" compressedSize="16428673" uncompressedSize="16428544" crc="928725198" timestamp="1556152925" sha="d4d69ce3014ce0f09791b79ec11f0c3d98d47aa9" />
+                <file name="Tutorial_x64_1.pack2" compressedSize="17182369" uncompressedSize="17182240" crc="855026371" timestamp="1556152925" sha="27d83d74c3bfd38c7e05d49de4a32ae2fcd83a61" />
+                <file name="ui_x64_0.pack2" compressedSize="62832577" uncompressedSize="62832448" crc="2938975141" timestamp="1656463813" sha="9040bd4cb050dca5ba4107c1e712f710782d13a1">
+                    <patch sourceUncompressedSize="62119360" sourceCrc="4097568780" sourceTimestamp="1646700877" patchCompressedSize="696544" patchUncompressedSize="710583" />
+                    <patch sourceUncompressedSize="62832448" sourceCrc="688178810" sourceTimestamp="1655249226" patchCompressedSize="323827" patchUncompressedSize="327188" />
+                    <patch sourceUncompressedSize="62832448" sourceCrc="1515790859" sourceTimestamp="1655860688" patchCompressedSize="148795" patchUncompressedSize="149651" />
+                </file>
+                <file name="ui_x64_1.pack2" compressedSize="63134241" uncompressedSize="63134112" crc="2062159716" timestamp="1656463813" sha="50e564ae7a53fffeae2fdd6c206fae4cce4836ef">
+                    <patch sourceUncompressedSize="62528224" sourceCrc="2472099235" sourceTimestamp="1653431806" patchCompressedSize="2115120" patchUncompressedSize="2133511" />
+                    <patch sourceUncompressedSize="62788736" sourceCrc="339971385" sourceTimestamp="1655860688" patchCompressedSize="586941" patchUncompressedSize="592252" />
+                    <patch sourceUncompressedSize="62788736" sourceCrc="3218265543" sourceTimestamp="1655249226" patchCompressedSize="1078265" patchUncompressedSize="1085789" />
+                </file>
+                <file name="ui_x64_2.pack2" compressedSize="68821025" uncompressedSize="68820896" crc="857414746" timestamp="1656463813" sha="30412848e479addab9fa0e6100bf1d84ca7cd8db">
+                    <patch sourceUncompressedSize="68820928" sourceCrc="4210469421" sourceTimestamp="1655249226" patchCompressedSize="341" patchUncompressedSize="212" />
+                    <patch sourceUncompressedSize="68820960" sourceCrc="4074181244" sourceTimestamp="1653431806" patchCompressedSize="363" patchUncompressedSize="234" />
+                    <patch sourceUncompressedSize="68820992" sourceCrc="1370080717" sourceTimestamp="1652821716" patchCompressedSize="384" patchUncompressedSize="255" />
+                </file>
+                <file name="ui_x64_3.pack2" compressedSize="62810113" uncompressedSize="62809984" crc="2897623846" timestamp="1655249226" sha="c941881ebe19a1c41faf12835fd7f43946a17b07">
+                    <patch sourceUncompressedSize="62110240" sourceCrc="3149480640" sourceTimestamp="1646700877" patchCompressedSize="882101" patchUncompressedSize="892547" />
+                    <patch sourceUncompressedSize="62198688" sourceCrc="330669180" sourceTimestamp="1644365254" patchCompressedSize="13525759" patchUncompressedSize="13663683" />
+                    <patch sourceUncompressedSize="62198688" sourceCrc="2663759125" sourceTimestamp="1643760974" patchCompressedSize="13525078" patchUncompressedSize="13663721" />
+                </file>
+                <file name="VR_x64_0.pack2" compressedSize="63366849" uncompressedSize="63366720" crc="1934971264" timestamp="1556152926" sha="671c0e88d155985ea9baba631eb2d8ac41a06b94" />
+                <file name="VR_x64_1.pack2" compressedSize="63507169" uncompressedSize="63507040" crc="3913735795" timestamp="1556152926" sha="e7ea40538a61c458ed098722dd1907f1a2ffe93d" />
+                <file name="VRTutorial2_x64_0.pack2" compressedSize="33287873" uncompressedSize="33287744" crc="4007590306" timestamp="1632182295" sha="98643c08b1e53e0143f50ef164fbec66a78ba300">
+                    <patch sourceUncompressedSize="32515104" sourceCrc="3252932587" sourceTimestamp="1631661266" patchCompressedSize="887169" patchUncompressedSize="887040" />
+                </file>
+                <file name="VRTutorial2_x64_1.pack2" compressedSize="33064033" uncompressedSize="33063904" crc="3188623133" timestamp="1632182295" sha="38bbbeb403a953e6133c8c6afa6acc394bb43621">
+                    <patch sourceUncompressedSize="32261824" sourceCrc="3290826005" sourceTimestamp="1631661266" patchCompressedSize="2831530" patchUncompressedSize="2831401" />
+                </file>
+                <file name="VRTutorial2_x64_2.pack2" compressedSize="32613313" uncompressedSize="32613184" crc="1865381777" timestamp="1632182295" sha="fb81ba66cb04fb78d9b859c3a078b317783e9b29">
+                    <patch sourceUncompressedSize="32613248" sourceCrc="2699399421" sourceTimestamp="1631661266" patchCompressedSize="1668376" patchUncompressedSize="1679186" />
+                </file>
+                <file name="VRTutorial2_x64_3.pack2" compressedSize="32871425" uncompressedSize="32871296" crc="590784839" timestamp="1632182295" sha="b97427a1453271548e0599c80b3b12a2fcc15948">
+                    <patch sourceUncompressedSize="32097408" sourceCrc="3571796770" sourceTimestamp="1631661266" patchCompressedSize="1364169" patchUncompressedSize="1366190" />
+                </file>
+            </folder>
+        </folder>
+    </folder>
+</digest>

@@ -41,4 +41,29 @@ public record Item
     int MaxStackSize,
     bool IsAccountScoped,
     bool IsVehicleWeapon
-);
+)
+{
+    /// <summary>
+    /// Gets the default <see cref="Item"/>.
+    /// </summary>
+    public static Item Default => new
+    (
+        0,
+        0,
+        0,
+        FactionDefinition.All,
+        LocaleString.Default,
+        LocaleString.Default,
+        null,
+        null,
+        null,
+        null,
+        0,
+        0,
+        string.Empty,
+        null,
+        0,
+        false,
+        false
+    );
+}

@@ -15,16 +15,25 @@ namespace Sanctuary.Census.Common.Objects.CommonModels;
 public record LocaleString
 (
     uint ID,
-    [property: JsonPropertyName("en")]
-    string? English,
-    [property: JsonPropertyName("de")]
-    string? German,
-    [property: JsonPropertyName("fr")]
-    string? French,
-    [property: JsonPropertyName("it")]
-    string? Italian,
-    [property: JsonPropertyName("es")]
-    string? Spanish,
-    [property: JsonPropertyName("tr")]
-    string? Turkish
-);
+    [property: JsonPropertyName("en")] string? English,
+    [property: JsonPropertyName("de")] string? German,
+    [property: JsonPropertyName("fr")] string? French,
+    [property: JsonPropertyName("it")] string? Italian,
+    [property: JsonPropertyName("es")] string? Spanish,
+    [property: JsonPropertyName("tr")] string? Turkish
+)
+{
+    /// <summary>
+    /// Gets the default <see cref="LocaleString"/>.
+    /// </summary>
+    public static LocaleString Default => new
+    (
+        0,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null
+    );
+}

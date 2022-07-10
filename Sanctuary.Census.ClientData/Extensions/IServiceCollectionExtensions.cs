@@ -29,7 +29,11 @@ public static class IServiceCollectionExtensions
         services.TryAddTransient<IDatasheetLoaderService, DatasheetLoaderService>();
 
         services.AddCommonServices();
-        services.RegisterDataContributor<ItemProfileDataContributor>();
+
+        services.RegisterDataContributor
+        (
+            (s, e) => new ItemProfileDataContributor(s.GetRequiredService<IDatasheetLoaderService>(), e)
+        );
 
         return services;
     }

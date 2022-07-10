@@ -4,7 +4,7 @@
 /// Represents the result of a contribution to an item.
 /// </summary>
 /// <typeparam name="TContributedTo">The type that was contributed to.</typeparam>
-public readonly struct ContributionResult<TContributedTo>
+public readonly record struct ContributionResult<TContributedTo>
     where TContributedTo : class
 {
     /// <summary>

@@ -15,7 +15,6 @@ using Sanctuary.Census.ClientData.Objects;
 using Sanctuary.Census.ClientData.Objects.ClientDataModels;
 using Sanctuary.Census.ClientData.Util;
 using Sanctuary.Census.Common.Objects;
-using System.Diagnostics;
 
 namespace Sanctuary.Census.Controllers;
 

@@ -1,13 +1,14 @@
-﻿using System;
+﻿using Sanctuary.Census.ClientData.Abstractions.Services;
+using Sanctuary.Census.ClientData.Objects;
+using Sanctuary.Census.Common.Objects;
+using SevenZip.Compression.LZMA;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Xml;
-using Sanctuary.Census.ClientData.Abstractions.Services;
-using Sanctuary.Census.ClientData.Objects;
-using Sanctuary.Census.Common.Objects;
 
 namespace Sanctuary.Census.ClientData.Services;
 
@@ -100,9 +101,38 @@ public class ManifestService : IManifestService
 
         // We must copy to a MemoryStream so that the data is seekable
         MemoryStream ms = new();
-        await manifestData.CopyToAsync(ms, ct).ConfigureAwait(false);
-        ms.Seek(0, SeekOrigin.Begin);
 
+        if (file.CompressedSize < file.UncompressedSize)
+           LMZADecompress(file.CompressedSize, manifestData, ms);
+        else
+            await manifestData.CopyToAsync(ms, ct).ConfigureAwait(false);
+
+        ms.Seek(0, SeekOrigin.Begin);
         return ms;
+    }
+
+    private static void LMZADecompress(long inputStreamLength, Stream inputStream, Stream outputStream)
+    {
+        Decoder decoder = new();
+
+        byte[] properties = new byte[5];
+        int amountRead = inputStream.Read(properties, 0, 5);
+        if (amountRead != 5)
+            throw new Exception("Input is too short");
+
+        long outSize = 0;
+        for (int i = 0; i < 8; i++)
+        {
+            int v = inputStream.ReadByte();
+            if (v < 0)
+                throw new Exception("Input stream is too short");
+
+            outSize |= (long)(byte)v << (8 * i);
+            amountRead++;
+        }
+
+        decoder.SetDecoderProperties(properties);
+        long compressedSize = inputStreamLength - amountRead;
+        decoder.Code(inputStream, outputStream, compressedSize, outSize, null!);
     }
 }

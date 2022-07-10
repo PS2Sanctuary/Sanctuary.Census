@@ -131,3 +131,9 @@ csharp_style_namespace_declarations=file_scoped:warning
 [*.{cs,vb}]
 end_of_line=crlf
 dotnet_style_require_accessibility_modifiers=for_non_interface_members:error
+
+[/Sanctuary.Census.ClientData/7zip/**]
+dotnet_diagnostic.CS1570.severity = none
+dotnet_diagnostic.CS8618.severity = none
+dotnet_diagnostic.CS8625.severity = none
+dotnet_diagnostic.CS1591.severity = none

@@ -83,7 +83,7 @@ public static class DatasheetSerializer
             if (header[i] is null)
                 continue;
 
-            string cleaned = header[i]!.Replace("_", string.Empty).ToLower();
+            string cleaned = header[i]!.Trim('*').Replace("_", string.Empty).ToLower();
             int ctorIndex = Array.IndexOf(ctorParamLowerNames, cleaned);
 
             if (ctorIndex > -1)

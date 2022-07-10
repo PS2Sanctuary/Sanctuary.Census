@@ -31,7 +31,8 @@ public static class IServiceCollectionExtensions
         services.AddCommonServices();
 
         services.RegisterDataContributor<ItemProfileDataContributor>()
-            .RegisterDataContributor<ClientItemDefinitionDataContributor>();
+            .RegisterDataContributor<ClientItemDefinitionDataContributor>()
+            .RegisterDataContributor<ImageSetMappingDataContributor>(1);
 
         return services;
     }

@@ -65,8 +65,6 @@ public class ClientItemDefinitionDataContributor : BaseDataContributor<ClientIte
             PassiveAbilitySetID = definition.PassiveAbilitySetID == 0 ? null : definition.PassiveAbilitySetID,
             SkillSetID = definition.SkillSetID == 0 ? null : definition.SkillSetID,
             ImageSetID = definition.ImageSetID == -1 ? null : (uint)definition.ImageSetID,
-            ImageID = definition.ImageSetID == -1 ? null : 0, // TODO
-            ImagePath = definition.ImageSetID == -1 ? null : string.Empty, // TODO,
             HudImageSetID = definition.HudImageSetID == 0 ? null : definition.HudImageSetID,
             MaxStackSize = definition.MaxStackSize,
             IsAccountScoped = definition.FlagAccountScope,

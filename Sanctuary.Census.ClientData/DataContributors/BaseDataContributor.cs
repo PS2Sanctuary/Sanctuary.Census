@@ -76,11 +76,11 @@ public abstract class BaseDataContributor<TContributeFrom> : IDataContributor
         where TContributeTo : class;
 
     /// <inheritdoc />
-    public bool CanContributeTo<TContributeTo>()
+    public virtual bool CanContributeTo<TContributeTo>()
         => TypeIDBindings.ContainsKey(typeof(TContributeTo));
 
     /// <inheritdoc />
-    public async ValueTask<IReadOnlyList<uint>> GetContributableIDsAsync<TContributeTo>(CancellationToken ct = default)
+    public virtual async ValueTask<IReadOnlyList<uint>> GetContributableIDsAsync<TContributeTo>(CancellationToken ct = default)
     {
         if (!CanContributeTo<TContributeTo>())
             throw GetTypeNotSupportedException<TContributeTo>();

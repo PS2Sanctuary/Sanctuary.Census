@@ -19,8 +19,9 @@ public interface IDataContributor
     bool CanContributeTo<TContributeTo>();
 
     /// <summary>
-    /// Request the list of IDs that this contributor can source data for, for
-    /// the given <typeparamref name="TContributeTo"/>.
+    /// Request the list of IDs that this contributor KNOWS that it can source data for, for
+    /// the given <typeparamref name="TContributeTo"/>. The contributor may also be able to
+    /// contribute data to the type, based on other properties of the type.
     /// </summary>
     /// <typeparam name="TContributeTo">The type to contribute to.</typeparam>
     /// <param name="ct"></param>

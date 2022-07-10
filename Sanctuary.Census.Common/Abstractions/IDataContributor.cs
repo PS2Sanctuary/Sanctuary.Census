@@ -8,8 +8,7 @@ namespace Sanctuary.Census.Common.Abstractions;
 /// <summary>
 /// Represents an object that can contribute data of a particular type.
 /// </summary>
-/// <typeparam name="TContributeFrom">The type of object that this contributor provides data from.</typeparam>
-public interface IDataContributor<TContributeFrom>
+public interface IDataContributor
 {
     /// <summary>
     /// Gets a value indicating whether this contributor can contribute
@@ -37,12 +36,17 @@ public interface IDataContributor<TContributeFrom>
     /// <returns>A <see cref="ContributionResult{TContributedTo}"/>.</returns>
     ValueTask<ContributionResult<TContributeTo>> ContributeAsync<TContributeTo>(TContributeTo item, CancellationToken ct = default)
         where TContributeTo : class;
+}
 
-    // /// <summary>
-    // /// Gets a source data item.
-    // /// </summary>
-    // /// <param name="id">The ID of the item.</param>
-    // /// <param name="ct">A <see cref="CancellationToken"/> that can be used to stop the operation.</param>
-    // /// <returns>A source data item.</returns>
-    // ValueTask<TContributeFrom> GetDataAsync(uint id, CancellationToken ct = default);
+/// <inheritdoc />
+/// <typeparam name="TContributeFrom">The type of object that this contributor provides data from.</typeparam>
+public interface IDataContributor<TContributeFrom> : IDataContributor
+{
+    /// <summary>
+    /// Gets a source data item.
+    /// </summary>
+    /// <param name="id">The ID of the item.</param>
+    /// <param name="ct">A <see cref="CancellationToken"/> that can be used to stop the operation.</param>
+    /// <returns>A source data item.</returns>
+    ValueTask<TContributeFrom> GetSourceDataAsync(uint id, CancellationToken ct = default);
 }

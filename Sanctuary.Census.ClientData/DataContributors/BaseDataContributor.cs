@@ -14,7 +14,8 @@ namespace Sanctuary.Census.ClientData.DataContributors;
 /// <inheritdoc />
 /// This abstract contributor is designed to source data from a packed datasheet.
 /// </summary>
-public abstract class BaseDataContributor<TContributeFrom> : IDataContributor<TContributeFrom>
+/// <typeparam name="TContributeFrom">The model of the source datasheet.</typeparam>
+public abstract class BaseDataContributor<TContributeFrom> : IDataContributor
 {
     private readonly IDatasheetLoaderService _datasheetLoader;
 
@@ -34,7 +35,7 @@ public abstract class BaseDataContributor<TContributeFrom> : IDataContributor<TC
     /// A dictionary of methods that will retrieve the ID value for which the given
     /// key type expects data to be contributed.
     /// </summary>
-    protected Dictionary<Type, Func<TContributeFrom, uint>> TypeIDBindings { get; }
+    protected IReadOnlyDictionary<Type, Func<TContributeFrom, uint>> TypeIDBindings { get; }
 
     /// <summary>
     /// The type-indexed data store. Call <see cref="CacheRecordsAsync"/>
@@ -57,7 +58,7 @@ public abstract class BaseDataContributor<TContributeFrom> : IDataContributor<TC
         IDatasheetLoaderService datasheetLoader,
         PackedFileInfo sourceDatasheet,
         PS2Environment environment,
-        Dictionary<Type, Func<TContributeFrom, uint>> typeIDBindings
+        IReadOnlyDictionary<Type, Func<TContributeFrom, uint>> typeIDBindings
     )
     {
         _datasheetLoader = datasheetLoader;
@@ -87,13 +88,6 @@ public abstract class BaseDataContributor<TContributeFrom> : IDataContributor<TC
         await CacheRecordsAsync(ct).ConfigureAwait(false);
         return IndexedStore[typeof(TContributeTo)].Keys.ToList();
     }
-
-    // /// <inheritdoc />
-    // public async ValueTask<TContributeFrom> GetDataAsync(uint id, CancellationToken ct = default)
-    // {
-    //     await CacheRecordsAsync(ct).ConfigureAwait(false);
-    //     return IndexedStore[typeof(TContributeFrom)][id];
-    // }
 
     /// <summary>
     /// Caches all records from the datasheet. Call this to ensure

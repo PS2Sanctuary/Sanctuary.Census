@@ -32,7 +32,7 @@ public static class Program
     {
         WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
-        builder.Services.AddClientDataService(AppDataDirectory);
+        builder.Services.AddClientDataServices(AppDataDirectory);
 
         builder.Services.AddControllers();
 

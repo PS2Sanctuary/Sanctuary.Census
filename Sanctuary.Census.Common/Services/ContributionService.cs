@@ -1,4 +1,5 @@
-﻿using Sanctuary.Census.Common.Abstractions;
+﻿using Microsoft.Extensions.DependencyInjection;
+using Sanctuary.Census.Common.Abstractions;
 using Sanctuary.Census.Common.Abstractions.Services;
 using Sanctuary.Census.Common.Objects;
 using System;
@@ -22,7 +23,7 @@ public class ContributionService : IContributionService
     public ContributionService(IServiceProvider services, IDataContributorTypeRepository contributorRepo)
     {
         _contributors = contributorRepo.GetContributors()
-            .Select(t => contributorRepo.BuildContributor(t, services, PS2Environment.Live))
+            .Select(t => (IDataContributor)services.GetRequiredService(t))
             .ToList();
     }
 

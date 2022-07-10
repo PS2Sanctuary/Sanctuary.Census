@@ -3,7 +3,6 @@ using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Options;
 using Sanctuary.Census.Common.Abstractions;
 using Sanctuary.Census.Common.Abstractions.Services;
-using Sanctuary.Census.Common.Objects;
 using Sanctuary.Census.Common.Services;
 using System;
 
@@ -26,7 +25,8 @@ public static class IServiceCollectionExtensions
             s => s.GetRequiredService<IOptions<DataContributorTypeRepository>>().Value
         );
 
-        services.TryAddTransient<IContributionService, ContributionService>();
+        services.TryAddScoped<EnvironmentContextProvider>();
+        services.TryAddScoped<IContributionService, ContributionService>();
 
         return services;
     }
@@ -41,11 +41,16 @@ public static class IServiceCollectionExtensions
     public static IServiceCollection RegisterDataContributor<TContributor>
     (
         this IServiceCollection services,
-        Func<IServiceProvider, PS2Environment, TContributor> implementationFactory
+        Func<IServiceProvider, TContributor>? implementationFactory = null
     )
         where TContributor : class, IDataContributor
     {
-        services.Configure<DataContributorTypeRepository>(r => r.RegisterContributer<TContributor>(implementationFactory));
+        if (implementationFactory is null)
+            services.TryAddScoped<TContributor>();
+        else
+            services.TryAddScoped(implementationFactory);
+
+        services.Configure<DataContributorTypeRepository>(r => r.RegisterContributer<TContributor>());
         return services;
     }
 }

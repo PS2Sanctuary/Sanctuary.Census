@@ -4,6 +4,7 @@ using Sanctuary.Census.ClientData.Objects.ClientDataModels;
 using Sanctuary.Census.Common.Objects;
 using Sanctuary.Census.Common.Objects.CommonModels;
 using Sanctuary.Census.Common.Objects.DtoModels;
+using Sanctuary.Census.Common.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -25,13 +26,13 @@ public class ItemProfileDataContributor : BaseDataContributor<ItemProfile>
     public ItemProfileDataContributor
     (
         IDatasheetLoaderService datasheetLoader,
-        PS2Environment environment
+        EnvironmentContextProvider environment
     )
     : base
     (
         datasheetLoader,
         new PackedFileInfo("ItemProfiles.txt", "data_x64_0.pack2"),
-        environment,
+        environment.Environment,
         new Dictionary<Type, Func<ItemProfile, uint>> {
             { typeof(Item), ip => ip.ItemID }
         }

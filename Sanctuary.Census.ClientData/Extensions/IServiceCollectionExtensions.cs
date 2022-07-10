@@ -30,15 +30,8 @@ public static class IServiceCollectionExtensions
 
         services.AddCommonServices();
 
-        services.RegisterDataContributor
-        (
-            (s, e) => new ItemProfileDataContributor(s.GetRequiredService<IDatasheetLoaderService>(), e)
-        );
-
-        services.RegisterDataContributor
-        (
-            (s, e) => new ClientItemDefinitionDataContributor(s.GetRequiredService<IDatasheetLoaderService>(), e)
-        );
+        services.RegisterDataContributor<ItemProfileDataContributor>()
+            .RegisterDataContributor<ClientItemDefinitionDataContributor>();
 
         return services;
     }

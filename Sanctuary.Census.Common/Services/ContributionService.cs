@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using Sanctuary.Census.Common.Abstractions;
 using Sanctuary.Census.Common.Abstractions.Services;
 using Sanctuary.Census.Common.Objects;
@@ -13,15 +14,23 @@ namespace Sanctuary.Census.Common.Services;
 /// <inheritdoc />
 public class ContributionService : IContributionService
 {
+    private readonly ILogger<ContributionService> _logger;
     private readonly IReadOnlyList<IDataContributor> _contributors;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="ContributionService"/> class.
     /// </summary>
+    /// <param name="logger">The logging interface to use.</param>
     /// <param name="services">The service provider.</param>
     /// <param name="contributorRepo">The contributor repository.</param>
-    public ContributionService(IServiceProvider services, IDataContributorTypeRepository contributorRepo)
+    public ContributionService
+    (
+        ILogger<ContributionService> logger,
+        IServiceProvider services,
+        IDataContributorTypeRepository contributorRepo
+    )
     {
+        _logger = logger;
         _contributors = contributorRepo.GetContributors()
             .Select(t => (IDataContributor)services.GetRequiredService(t))
             .ToList();
@@ -42,10 +51,24 @@ public class ContributionService : IContributionService
             if (!contributor.CanContributeTo<T>())
                 continue;
 
+            try
+            {
+                IReadOnlyList<uint> ids = await contributor.GetContributableIDsAsync<T>(ct).ConfigureAwait(false);
+                foreach (uint id in ids)
+                    idsToRetrieve.Add(id);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError
+                (
+                    ex,
+                    "Failed to get contributable IDs. The {ContributorName} contributor will not be used",
+                    contributor.GetType().Name
+                );
+                continue;
+            }
+
             validContributors.Add(contributor);
-            IReadOnlyList<uint> ids = await contributor.GetContributableIDsAsync<T>(ct).ConfigureAwait(false);
-            foreach (uint id in ids)
-                idsToRetrieve.Add(id);
         }
 
         List<T> builtTypes = new();
@@ -54,16 +77,29 @@ public class ContributionService : IContributionService
             T toBuild = typeCreationFactory(id);
             bool typeCompleted = true;
 
-            foreach (IDataContributor contributor in validContributors)
+            try
             {
-                ContributionResult<T> result = await contributor.ContributeAsync(toBuild, ct).ConfigureAwait(false);
-                toBuild = result.Item;
-
-                if (!result.WasContributedTo)
+                foreach (IDataContributor contributor in validContributors)
                 {
-                    typeCompleted = false;
-                    break;
+                    ContributionResult<T> result = await contributor.ContributeAsync(toBuild, ct).ConfigureAwait(false);
+                    toBuild = result.Item;
+
+                    if (!result.WasContributedTo)
+                    {
+                        typeCompleted = false;
+                        break;
+                    }
                 }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError
+                (
+                    ex,
+                    "A contributor failed to contribute ID {ID} to the {TypeName} collection",
+                    id,
+                    typeof(T).Name
+                );
             }
 
             if (typeCompleted)

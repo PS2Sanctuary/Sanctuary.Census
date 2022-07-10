@@ -36,11 +36,16 @@ public static class IServiceCollectionExtensions
     /// </summary>
     /// <typeparam name="TContributor">The contributor type.</typeparam>
     /// <param name="services">The service collection.</param>
+    /// <param name="order">
+    /// The order value of the contributor. Higher-order contributors
+    /// will be executed after lower-order contributors.
+    /// </param>
     /// <param name="implementationFactory">A factory that can create the contributor.</param>
     /// <returns>The <see cref="IServiceCollection"/> instance, so that calls may be chained.</returns>
     public static IServiceCollection RegisterDataContributor<TContributor>
     (
         this IServiceCollection services,
+        int order = 0,
         Func<IServiceProvider, TContributor>? implementationFactory = null
     )
         where TContributor : class, IDataContributor
@@ -50,7 +55,7 @@ public static class IServiceCollectionExtensions
         else
             services.TryAddScoped(implementationFactory);
 
-        services.Configure<DataContributorTypeRepository>(r => r.RegisterContributer<TContributor>());
+        services.Configure<DataContributorTypeRepository>(r => r.RegisterContributer<TContributor>(order));
         return services;
     }
 }

@@ -12,7 +12,11 @@ public interface IDataContributorTypeRepository
     /// Registers a contributor to the container.
     /// </summary>
     /// <typeparam name="TContributor">The type of the contributor.</typeparam>
-    void RegisterContributer<TContributor>()
+    /// <param name="order">
+    /// The order value of the contributor. Higher-order contributors
+    /// will be executed after lower-order contributors.
+    /// </param>
+    void RegisterContributer<TContributor>(int order)
         where TContributor : class, IDataContributor;
 
     /// <summary>

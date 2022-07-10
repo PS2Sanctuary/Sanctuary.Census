@@ -78,11 +78,4 @@ public class ManifestController : ControllerBase
             return StatusCode(500);
         }
     }
-
-    [HttpGet("locale")]
-    public async Task<Stream> GetLocale(CancellationToken ct)
-    {
-        ManifestFile file = await _manifestService.GetFileAsync("en_us_data.dat", PS2Environment.Live, ct);
-        return await _manifestService.GetFileDataAsync(file, ct);
-    }
 }

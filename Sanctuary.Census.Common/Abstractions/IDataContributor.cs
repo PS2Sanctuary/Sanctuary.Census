@@ -38,16 +38,3 @@ public interface IDataContributor
     ValueTask<ContributionResult<TContributeTo>> ContributeAsync<TContributeTo>(TContributeTo item, CancellationToken ct = default)
         where TContributeTo : class;
 }
-
-/// <inheritdoc />
-/// <typeparam name="TContributeFrom">The type of object that this contributor provides data from.</typeparam>
-public interface IDataContributor<TContributeFrom> : IDataContributor
-{
-    /// <summary>
-    /// Gets a source data item.
-    /// </summary>
-    /// <param name="id">The ID of the item.</param>
-    /// <param name="ct">A <see cref="CancellationToken"/> that can be used to stop the operation.</param>
-    /// <returns>A source data item.</returns>
-    ValueTask<TContributeFrom> GetSourceDataAsync(uint id, CancellationToken ct = default);
-}

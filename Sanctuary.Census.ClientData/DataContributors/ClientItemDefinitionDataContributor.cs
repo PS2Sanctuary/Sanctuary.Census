@@ -17,15 +17,19 @@ namespace Sanctuary.Census.ClientData.DataContributors;
 /// </summary>
 public class ClientItemDefinitionDataContributor : BaseDataContributor<ClientItemDefinition>
 {
+    private readonly ILocaleService _localeService;
+
     /// <summary>
     /// Initializes a new instance of the <see cref="ClientItemDefinitionDataContributor"/> class.
     /// </summary>
     /// <param name="datasheetLoader">The datasheet loader service.</param>
     /// <param name="environment">The environment to source data from.</param>
+    /// <param name="localeService">The locale service.</param>
     public ClientItemDefinitionDataContributor
     (
         IDatasheetLoaderService datasheetLoader,
-        EnvironmentContextProvider environment
+        EnvironmentContextProvider environment,
+        ILocaleService localeService
     )
     : base
     (
@@ -37,6 +41,7 @@ public class ClientItemDefinitionDataContributor : BaseDataContributor<ClientIte
         }
     )
     {
+        _localeService = localeService;
     }
 
     /// <inheritdoc />
@@ -54,12 +59,20 @@ public class ClientItemDefinitionDataContributor : BaseDataContributor<ClientIte
         if (!IndexedStore[typeof(TContributeTo)].TryGetValue(i.ItemID, out ClientItemDefinition? definition))
             return new ContributionResult<TContributeTo>(false, item);
 
+        LocaleString? name = definition.NameID == -1
+            ? null
+            : await _localeService.GetLocaleStringAsync((uint)definition.NameID, ct).ConfigureAwait(false);
+
+        LocaleString? description = definition.DescriptionID == -1
+            ? null
+            : await _localeService.GetLocaleStringAsync((uint)definition.DescriptionID, ct).ConfigureAwait(false);
+
         Item contributed = i with
         {
             ItemTypeID = definition.ItemType,
             ItemCategoryID = definition.CategoryID,
-            Name = definition.NameID == -1 ? null : LocaleString.Default, // TODO
-            Description = definition.DescriptionID == -1 ? null : LocaleString.Default,
+            Name = name,
+            Description = description,
             ActivatableAbilityID = definition.ActivatableAbilityID == 0 ? null : definition.ActivatableAbilityID,
             PassiveAbilityID = definition.PassiveAbilityID == 0 ? null : definition.PassiveAbilityID,
             PassiveAbilitySetID = definition.PassiveAbilitySetID == 0 ? null : definition.PassiveAbilitySetID,

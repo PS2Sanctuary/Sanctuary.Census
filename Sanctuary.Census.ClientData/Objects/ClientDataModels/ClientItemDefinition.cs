@@ -80,9 +80,9 @@ public record ClientItemDefinition
 (
     uint ID,
     string CodeFactoryName,
-    int NameID,
-    int DescriptionID,
-    int ImageSetID,
+    long NameID,
+    long DescriptionID,
+    long ImageSetID,
     uint ActivatableAbilityID,
     uint PassiveAbilityID,
     int Cost,

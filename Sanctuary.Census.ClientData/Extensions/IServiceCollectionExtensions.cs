@@ -26,9 +26,10 @@ public static class IServiceCollectionExtensions
         services.AddHttpClient<IManifestService, CachingManifestService>(h => new CachingManifestService(h, AppDataDirectory));
 #endif
 
-        services.TryAddTransient<IDatasheetLoaderService, DatasheetLoaderService>();
-
         services.AddCommonServices();
+        services.TryAddTransient<IDatasheetLoaderService, DatasheetLoaderService>();
+        services.TryAddScoped<ILocaleService, LocaleService>();
+
 
         services.RegisterDataContributor<ItemProfileDataContributor>()
             .RegisterDataContributor<ClientItemDefinitionDataContributor>()

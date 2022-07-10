@@ -15,7 +15,6 @@
 /// <param name="ClipSize">The clip size of the weapon.</param>
 /// <param name="RangeStringID">The locale ID of the general range category that the weapon falls into.</param>
 /// <param name="MinConeOfFire">The weapon's starting cone of fire.</param>
-[DataFile("ClientItemDatasheetData.txt")]
 public record ClientItemDatasheetData
 (
     uint ItemID,

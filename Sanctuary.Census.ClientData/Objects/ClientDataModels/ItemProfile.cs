@@ -10,7 +10,6 @@ namespace Sanctuary.Census.ClientData.Objects.ClientDataModels;
 /// <param name="ProfileNameID">The locale ID of the profile.</param>
 /// <param name="FactionID">The faction that this item/profile combination may be used on.</param>
 /// <param name="LoadoutID">The loadout that this item/profile combination may be used on.</param>
-[DataFile("ItemProfiles.txt")]
 public record ItemProfile
 (
     uint ItemID,

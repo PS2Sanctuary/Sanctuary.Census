@@ -14,7 +14,6 @@
 /// <param name="MaxDamageIndRadius">The maximum radius at which the fire mode will deals its <paramref name="MaxDamageInd"/>.</param>
 /// <param name="MinDamageInd">The minimum indirect damage of the fire mode.</param>
 /// <param name="MinDamageIndRadius">The radius at, and beyond which the fire mode will deal its <paramref name="MinDamageInd"/>.</param>
-[DataFile("FireModeDisplayStats.txt")]
 public record FireModeDisplayStat
 (
     uint ID,

@@ -5,7 +5,6 @@ using Sanctuary.Census.Common.Objects;
 using Sanctuary.Census.Common.Objects.CommonModels;
 using Sanctuary.Census.Common.Objects.DtoModels;
 using Sanctuary.Census.Common.Services;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
@@ -18,6 +17,8 @@ namespace Sanctuary.Census.ClientData.DataContributors;
 /// </summary>
 public class ItemProfileDataContributor : BaseDataContributor<ItemProfile>
 {
+    private readonly Dictionary<uint, FactionDefinition> _itemFactionMap;
+
     /// <summary>
     /// Initializes a new instance of the <see cref="ItemProfileDataContributor"/> class.
     /// </summary>
@@ -32,12 +33,24 @@ public class ItemProfileDataContributor : BaseDataContributor<ItemProfile>
     (
         datasheetLoader,
         new PackedFileInfo("ItemProfiles.txt", "data_x64_0.pack2"),
-        environment.Environment,
-        new Dictionary<Type, Func<ItemProfile, uint>> {
-            { typeof(Item), ip => ip.ItemID }
-        }
+        environment
     )
     {
+        _itemFactionMap = new Dictionary<uint, FactionDefinition>();
+    }
+
+    /// <inheritdoc />
+    public override bool CanContributeTo<TContributeTo>()
+        => typeof(TContributeTo) == typeof(Item);
+
+    /// <inheritdoc />
+    public override async ValueTask<IReadOnlyList<uint>> GetContributableIDsAsync<TContributeTo>(CancellationToken ct = default)
+    {
+        if (typeof(TContributeTo) != typeof(Item))
+            throw GetTypeNotSupportedException<TContributeTo>();
+
+        await CacheRecordsAsync(ct).ConfigureAwait(false);
+        return _itemFactionMap.Keys.ToList();
     }
 
     /// <inheritdoc />
@@ -47,15 +60,12 @@ public class ItemProfileDataContributor : BaseDataContributor<ItemProfile>
         CancellationToken ct = default
     ) where TContributeTo : class
     {
-        await CacheRecordsAsync(ct).ConfigureAwait(false);
-
         if (item is not Item i)
             throw GetTypeNotSupportedException<TContributeTo>();
 
-        FactionDefinition faction = FactionDefinition.All;
-        if (IndexedStore[typeof(TContributeTo)].TryGetValue(i.ItemID, out ItemProfile? profile))
-            faction = profile.FactionID;
+        await CacheRecordsAsync(ct).ConfigureAwait(false);
 
+        _itemFactionMap.TryGetValue(i.ItemID, out FactionDefinition faction);
         return new ContributionResult<TContributeTo>
         (
             true,
@@ -66,18 +76,11 @@ public class ItemProfileDataContributor : BaseDataContributor<ItemProfile>
     /// <inheritdoc />
     protected override void StoreRecords(IEnumerable<ItemProfile> records)
     {
-        List<ItemProfile> enumerated = records.ToList();
-        base.StoreRecords(enumerated);
-
-        // Update the Item-indexed store to ensure that items with
-        // cross-faction profiles are appropriately stored.
-        Dictionary<uint, ItemProfile> store = IndexedStore[typeof(Item)];
-        foreach (ItemProfile p in enumerated)
+        foreach (ItemProfile profile in records)
         {
-            ItemProfile storedProfile = store[p.ItemID];
-
-            if (storedProfile.FactionID != p.FactionID)
-                store[p.ItemID] = storedProfile with { FactionID = FactionDefinition.All };
+            _itemFactionMap.TryAdd(profile.ItemID, profile.FactionID);
+            if (_itemFactionMap[profile.ItemID] != profile.FactionID)
+                _itemFactionMap[profile.ItemID] = FactionDefinition.All;
         }
     }
 }

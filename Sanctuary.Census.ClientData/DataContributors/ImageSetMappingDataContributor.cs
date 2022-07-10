@@ -6,7 +6,6 @@ using Sanctuary.Census.Common.Objects.DtoModels;
 using Sanctuary.Census.Common.Services;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -17,6 +16,8 @@ namespace Sanctuary.Census.ClientData.DataContributors;
 /// </summary>
 public class ImageSetMappingDataContributor : BaseDataContributor<ImageSetMapping>
 {
+    private readonly Dictionary<uint, uint> _imageSetToPrimaryImageMap;
+
     /// <summary>
     /// Initializes a new instance of the <see cref="ImageSetMappingDataContributor"/> class.
     /// </summary>
@@ -31,13 +32,15 @@ public class ImageSetMappingDataContributor : BaseDataContributor<ImageSetMappin
     (
         datasheetLoader,
         new PackedFileInfo("ImageSetMappings.txt", "data_x64_0.pack2"),
-        environment.Environment,
-        new Dictionary<Type, Func<ImageSetMapping, uint>> {
-            { typeof(Item), ism => ism.ImageSetID }
-        }
+        environment
     )
     {
+        _imageSetToPrimaryImageMap = new Dictionary<uint, uint>();
     }
+
+    /// <inheritdoc />
+    public override bool CanContributeTo<TContributeTo>()
+        => typeof(TContributeTo) == typeof(Item);
 
     /// <inheritdoc />
     public override ValueTask<IReadOnlyList<uint>> GetContributableIDsAsync<TContributeTo>(CancellationToken ct = default)
@@ -50,23 +53,23 @@ public class ImageSetMappingDataContributor : BaseDataContributor<ImageSetMappin
         CancellationToken ct = default
     ) where TContributeTo : class
     {
-        await CacheRecordsAsync(ct).ConfigureAwait(false);
-
         if (item is not Item i)
             throw GetTypeNotSupportedException<TContributeTo>();
 
         if (i.ImageSetID is null)
             return new ContributionResult<TContributeTo>(true, item);
 
+        await CacheRecordsAsync(ct).ConfigureAwait(false);
+
         // If we don't have a requisite mapping it's not a huge deal for this data
         // Return true so we don't botch the build
-        if(!IndexedStore[typeof(Item)].TryGetValue(i.ImageSetID.Value, out ImageSetMapping? mapping))
+        if(!_imageSetToPrimaryImageMap.TryGetValue(i.ImageSetID.Value, out uint imageID))
             return new ContributionResult<TContributeTo>(true, item);
 
         Item contributed = i with
         {
-            ImageID = mapping.ImageID,
-            ImagePath = $"/files/ps2/images/static/{mapping.ImageID}.png"
+            ImageID = imageID,
+            ImagePath = $"/files/ps2/images/static/{imageID}.png"
         };
 
         return new ContributionResult<TContributeTo>
@@ -79,20 +82,12 @@ public class ImageSetMappingDataContributor : BaseDataContributor<ImageSetMappin
     /// <inheritdoc />
     protected override void StoreRecords(IEnumerable<ImageSetMapping> records)
     {
-        List<ImageSetMapping> enumerated = records.ToList();
-        base.StoreRecords(enumerated);
-
-        // Update the Item-indexed store to ensure that only
-        // the large-size image mappings are stored
-        Dictionary<uint, ImageSetMapping> store = IndexedStore[typeof(Item)];
-        foreach (ImageSetMapping p in enumerated)
+        foreach (ImageSetMapping mapping in records)
         {
-            if (p.ImageType is not ImageSetType.Large)
+            if (mapping.ImageType is not ImageSetType.Large)
                 continue;
 
-            ImageSetMapping storedProfile = store[p.ImageSetID];
-            if (storedProfile.ImageType != p.ImageType)
-                store[p.ImageSetID] = p;
+            _imageSetToPrimaryImageMap[mapping.ImageSetID] = mapping.ImageID;
         }
     }
 }

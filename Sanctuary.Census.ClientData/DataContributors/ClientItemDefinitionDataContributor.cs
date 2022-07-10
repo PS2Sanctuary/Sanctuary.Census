@@ -7,6 +7,7 @@ using Sanctuary.Census.Common.Objects.DtoModels;
 using Sanctuary.Census.Common.Services;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -18,6 +19,7 @@ namespace Sanctuary.Census.ClientData.DataContributors;
 public class ClientItemDefinitionDataContributor : BaseDataContributor<ClientItemDefinition>
 {
     private readonly ILocaleService _localeService;
+    private readonly Dictionary<uint, ClientItemDefinition> _itemDefs;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="ClientItemDefinitionDataContributor"/> class.
@@ -35,13 +37,25 @@ public class ClientItemDefinitionDataContributor : BaseDataContributor<ClientIte
     (
         datasheetLoader,
         new PackedFileInfo("ClientItemDefinitions.txt", "data_x64_0.pack2"),
-        environment.Environment,
-        new Dictionary<Type, Func<ClientItemDefinition, uint>> {
-            { typeof(Item), cid => cid.ID }
-        }
+        environment
     )
     {
         _localeService = localeService;
+        _itemDefs = new Dictionary<uint, ClientItemDefinition>();
+    }
+
+    /// <inheritdoc />
+    public override bool CanContributeTo<TContributeTo>()
+        => typeof(TContributeTo) == typeof(Item);
+
+    /// <inheritdoc />
+    public override async ValueTask<IReadOnlyList<uint>> GetContributableIDsAsync<TContributeTo>(CancellationToken ct = default)
+    {
+        if (typeof(TContributeTo) != typeof(Item))
+            throw GetTypeNotSupportedException<TContributeTo>();
+
+        await CacheRecordsAsync(ct).ConfigureAwait(false);
+        return _itemDefs.Keys.ToList();
     }
 
     /// <inheritdoc />
@@ -51,12 +65,12 @@ public class ClientItemDefinitionDataContributor : BaseDataContributor<ClientIte
         CancellationToken ct = default
     ) where TContributeTo : class
     {
-        await CacheRecordsAsync(ct).ConfigureAwait(false);
-
         if (item is not Item i)
             throw GetTypeNotSupportedException<TContributeTo>();
 
-        if (!IndexedStore[typeof(TContributeTo)].TryGetValue(i.ItemID, out ClientItemDefinition? definition))
+        await CacheRecordsAsync(ct).ConfigureAwait(false);
+
+        if (!_itemDefs.TryGetValue(i.ItemID, out ClientItemDefinition? definition))
             return new ContributionResult<TContributeTo>(false, item);
 
         LocaleString? name = definition.NameID == -1
@@ -89,5 +103,12 @@ public class ClientItemDefinitionDataContributor : BaseDataContributor<ClientIte
             true,
             (contributed as TContributeTo)!
         );
+    }
+
+    /// <inheritdoc />
+    protected override void StoreRecords(IEnumerable<ClientItemDefinition> records)
+    {
+        foreach (ClientItemDefinition itemDef in records)
+            _itemDefs[itemDef.ID] = itemDef;
     }
 }

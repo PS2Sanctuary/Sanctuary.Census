@@ -49,7 +49,7 @@ public class ContributionController
             IReadOnlyList<Item> builtItems = await _contributionService.BuildThroughContributions(id => Item.Default with { ItemID = id }, ct)
                 .ConfigureAwait(false);
 
-            return new ActionResult<IEnumerable<Item>>(builtItems.TakeLast(10));
+            return new ActionResult<IEnumerable<Item>>(builtItems.Take(10));
         }
         catch (Exception ex)
         {

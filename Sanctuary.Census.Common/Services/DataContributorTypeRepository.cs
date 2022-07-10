@@ -1,8 +1,9 @@
 ﻿using Sanctuary.Census.Common.Abstractions;
+using Sanctuary.Census.Common.Abstractions.Services;
 using System;
 using System.Collections.Generic;
 
-namespace Sanctuary.Census.Common;
+namespace Sanctuary.Census.Common.Services;
 
 /// <inheritdoc />
 public class DataContributorTypeRepository : IDataContributorTypeRepository

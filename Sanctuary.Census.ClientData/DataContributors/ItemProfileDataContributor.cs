@@ -60,7 +60,6 @@ public class ItemProfileDataContributor : BaseDataContributor<ItemProfile>
             true,
             (i with { FactionID = faction } as TContributeTo)!
         );
-
     }
 
     /// <inheritdoc />

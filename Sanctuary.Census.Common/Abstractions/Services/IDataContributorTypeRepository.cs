@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Sanctuary.Census.Common.Abstractions;
+namespace Sanctuary.Census.Common.Abstractions.Services;
 
 /// <summary>
 /// Represents a repository of <see cref="IDataContributor{TContributeFrom}"/> types.

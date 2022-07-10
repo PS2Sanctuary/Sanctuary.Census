@@ -4,7 +4,7 @@ using System.Collections.Generic;
 namespace Sanctuary.Census.Common.Abstractions.Services;
 
 /// <summary>
-/// Represents a repository of <see cref="IDataContributor{TContributeFrom}"/> types.
+/// Represents a repository of <see cref="IDataContributor"/> types.
 /// </summary>
 public interface IDataContributorTypeRepository
 {

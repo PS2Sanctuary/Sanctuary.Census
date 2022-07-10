@@ -5,7 +5,6 @@ using Sanctuary.Census.Common.Objects;
 using Sanctuary.Census.Common.Objects.CommonModels;
 using Sanctuary.Census.Common.Objects.DtoModels;
 using Sanctuary.Census.Common.Services;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
@@ -94,8 +93,7 @@ public class ClientItemDefinitionDataContributor : BaseDataContributor<ClientIte
             ImageSetID = definition.ImageSetID == -1 ? null : (uint)definition.ImageSetID,
             HudImageSetID = definition.HudImageSetID == 0 ? null : definition.HudImageSetID,
             MaxStackSize = definition.MaxStackSize,
-            IsAccountScoped = definition.FlagAccountScope,
-            IsVehicleWeapon = false // TODO
+            IsAccountScoped = definition.FlagAccountScope
         };
 
         return new ContributionResult<TContributeTo>

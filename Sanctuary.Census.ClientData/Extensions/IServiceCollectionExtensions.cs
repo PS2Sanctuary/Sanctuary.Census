@@ -35,6 +35,11 @@ public static class IServiceCollectionExtensions
             (s, e) => new ItemProfileDataContributor(s.GetRequiredService<IDatasheetLoaderService>(), e)
         );
 
+        services.RegisterDataContributor
+        (
+            (s, e) => new ClientItemDefinitionDataContributor(s.GetRequiredService<IDatasheetLoaderService>(), e)
+        );
+
         return services;
     }
 }

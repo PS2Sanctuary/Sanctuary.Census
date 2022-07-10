@@ -4,6 +4,7 @@ using Sanctuary.Census.Common.Abstractions.Services;
 using Sanctuary.Census.Common.Objects.DtoModels;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -48,7 +49,7 @@ public class ContributionController
             IReadOnlyList<Item> builtItems = await _contributionService.BuildThroughContributions(id => Item.Default with { ItemID = id }, ct)
                 .ConfigureAwait(false);
 
-            return new ActionResult<IEnumerable<Item>>(builtItems);
+            return new ActionResult<IEnumerable<Item>>(builtItems.Take(10));
         }
         catch (Exception ex)
         {

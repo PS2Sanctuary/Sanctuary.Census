@@ -6,6 +6,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Sanctuary.Census.ClientData.Extensions;
 using Sanctuary.Census.Json;
+using Sanctuary.Census.ServerData.Extensions;
+using Sanctuary.Census.ServerData.Objects;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json.Serialization;
@@ -34,7 +36,11 @@ public static class Program
     {
         WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
+        builder.Services.Configure<LoginClientOptions>(builder.Configuration.GetSection(nameof(LoginClientOptions)));
+        builder.Services.Configure<GatewayClientOptions>(builder.Configuration.GetSection(nameof(GatewayClientOptions)));
+
         builder.Services.AddClientDataServices(AppDataDirectory);
+        builder.Services.AddServerDataServices(AppDataDirectory);
 
         builder.Services.AddControllers()
             .AddJsonOptions(options =>

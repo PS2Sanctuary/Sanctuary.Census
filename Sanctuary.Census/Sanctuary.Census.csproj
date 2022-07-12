@@ -1,11 +1,17 @@
 <Project Sdk="Microsoft.NET.Sdk.Web">
 
+    <PropertyGroup>
+        <EnablePreviewFeatures>True</EnablePreviewFeatures>
+        <UserSecretsId>2050798e-fa3f-481d-a063-94f938d68b1f</UserSecretsId>
+    </PropertyGroup>
+
     <ItemGroup>
         <PackageReference Include="Swashbuckle.AspNetCore" Version="6.3.1" />
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\Sanctuary.Census.ClientData\Sanctuary.Census.ClientData.csproj" />
+        <ProjectReference Include="..\Sanctuary.Census.ClientData\Sanctuary.Census.ClientData.csproj" />
+        <ProjectReference Include="..\Sanctuary.Census.ServerData\Sanctuary.Census.ServerData.csproj" />
     </ItemGroup>
 
 </Project>

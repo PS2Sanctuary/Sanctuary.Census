@@ -12,7 +12,7 @@
 
     <ItemGroup>
         <ProjectReference Include="..\Sanctuary.Census.ClientData\Sanctuary.Census.ClientData.csproj" />
-        <ProjectReference Include="..\Sanctuary.Census.ServerData\Sanctuary.Census.ServerData.csproj" />
+        <ProjectReference Include="..\Sanctuary.Census.ServerData.Internal\Sanctuary.Census.ServerData.Internal.csproj" />
     </ItemGroup>
 
 </Project>

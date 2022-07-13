@@ -1,17 +1,17 @@
-using System;
-using System.IO;
-using System.Reflection;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Sanctuary.Census.ClientData.Extensions;
 using Sanctuary.Census.Json;
-using Sanctuary.Census.ServerData.Extensions;
-using Sanctuary.Census.ServerData.Objects;
+using Sanctuary.Census.ServerData.Internal.Extensions;
+using Sanctuary.Census.ServerData.Internal.Objects;
 using Serilog;
 using Serilog.Events;
+using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Text.Json.Serialization;
 
 namespace Sanctuary.Census;
@@ -52,7 +52,7 @@ public static class Program
             .Configure<GatewayClientOptions>(builder.Configuration.GetSection(nameof(GatewayClientOptions)));
 
         builder.Services.AddClientDataServices()
-            .AddServerDataServices();
+            .AddInternalServerDataServices();
 
         builder.Services.AddControllers()
             .AddJsonOptions(options =>

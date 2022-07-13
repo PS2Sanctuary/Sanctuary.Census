@@ -4,6 +4,7 @@ using Mandible.Pack2;
 using Mandible.Services;
 using Mandible.Util;
 using Sanctuary.Census.ClientData.Abstractions;
+using Sanctuary.Census.ClientData.Abstractions.Services;
 using Sanctuary.Census.ClientData.Objects.ClientDataModels;
 using Sanctuary.Census.ClientData.Util;
 using Sanctuary.Census.Common.Abstractions.Services;

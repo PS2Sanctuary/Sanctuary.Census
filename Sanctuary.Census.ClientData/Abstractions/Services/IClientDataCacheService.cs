@@ -1,11 +1,10 @@
 ﻿using Sanctuary.Census.ClientData.Objects.ClientDataModels;
-using Sanctuary.Census.Common.Objects;
 using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Sanctuary.Census.ClientData.Abstractions;
+namespace Sanctuary.Census.ClientData.Abstractions.Services;
 
 /// <summary>
 /// Represents a cache of client data.

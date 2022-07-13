@@ -1,7 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Sanctuary.Census.ClientData.Abstractions.Services;
-using Sanctuary.Census.ClientData.DataContributors;
 using Sanctuary.Census.ClientData.Services;
 using Sanctuary.Census.Common.Extensions;
 
@@ -20,12 +19,7 @@ public static class IServiceCollectionExtensions
     public static IServiceCollection AddClientDataServices(this IServiceCollection services)
     {
         services.AddCommonServices();
-        services.TryAddTransient<IDatasheetLoaderService, DatasheetLoaderService>();
         services.TryAddScoped<IClientDataCacheService, ClientDataCacheService>();
-
-        services.RegisterDataContributor<ItemProfileDataContributor>()
-            .RegisterDataContributor<ClientItemDefinitionDataContributor>()
-            .RegisterDataContributor<ImageSetMappingDataContributor>(1);
 
         return services;
     }

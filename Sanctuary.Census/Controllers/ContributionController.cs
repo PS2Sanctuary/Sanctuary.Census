@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using Sanctuary.Census.ClientData.Abstractions;
+using Sanctuary.Census.ClientData.Abstractions.Services;
 using Sanctuary.Census.ClientData.Objects.ClientDataModels;
 using Sanctuary.Census.Common.Abstractions.Services;
 using Sanctuary.Census.Common.Objects.CommonModels;

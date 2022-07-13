@@ -45,8 +45,8 @@ public record Weapon
     float? MeleeDetectWidth,
     float? MeleeDetectHeight,
     string? AnimationWieldTypeName,
-    float MinViewPitch,
-    float MaxViewPitch
+    float? MinViewPitch,
+    float? MaxViewPitch
 )
 {
     /// <summary>
@@ -72,7 +72,7 @@ public record Weapon
         null,
         null,
         null,
-        0,
-        0
+        null,
+        null
     );
 }

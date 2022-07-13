@@ -19,7 +19,7 @@ public class CachingManifestServiceTests
     [Fact]
     public async Task TestGetFileDataAsync()
     {
-        ManifestFile file = new("manifest.xml", 0, 1, 0, DateTimeOffset.Now, "abcdefgh", PS2Environment.Live);
+        ManifestFile file = new("manifest.xml", 2, 1, 0, DateTimeOffset.Now, "abcdefgh", PS2Environment.Live);
         MockFileSystem fileSystem = new();
         CachingManifestService ms = GetManifestService(out Mock<HttpMessageHandler> handler, fileSystem);
 
@@ -37,7 +37,7 @@ public class CachingManifestServiceTests
                 ItExpr.IsAny<CancellationToken>()
             );
         Assert.True(fileSystem.Directory.Exists(ms.CacheDirectory));
-        Assert.True(fileSystem.File.Exists(fileSystem.Path.Combine(ms.CacheDirectory, "manifest.xml")));
+        Assert.True(fileSystem.File.Exists(fileSystem.Path.Combine(ms.CacheDirectory, file.Environment.ToString(), "manifest.xml")));
 
         // Assert that the file is not retrieved from the manifest source again
         ms = GetManifestService(out handler, fileSystem);

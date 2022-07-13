@@ -57,7 +57,7 @@ public class ManifestServiceTests
     [Fact]
     public async Task TestGetFileDataAsync()
     {
-        ManifestFile file = new("manifest.xml", 0, 1, 0, DateTimeOffset.Now, "abcdefgh", PS2Environment.Live);
+        ManifestFile file = new("manifest.xml", 2, 1, 0, DateTimeOffset.Now, "abcdefgh", PS2Environment.Live);
         ManifestService ms = GetManifestService(out Mock<HttpMessageHandler> handler);
         Stream fileData = await ms.GetFileDataAsync(file, CancellationToken.None);
 

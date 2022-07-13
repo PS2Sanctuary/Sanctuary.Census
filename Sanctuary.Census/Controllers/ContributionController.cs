@@ -7,10 +7,8 @@ using Sanctuary.Census.Common.Objects.CommonModels;
 using Sanctuary.Census.Common.Objects.DtoModels;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Threading;
-using System.Threading.Tasks;
 
 namespace Sanctuary.Census.Controllers;
 
@@ -23,7 +21,6 @@ namespace Sanctuary.Census.Controllers;
 public class ContributionController
 {
     private readonly ILogger<ContributionController> _logger;
-    private readonly IContributionService _contributionService;
     private readonly IClientDataCacheService _clientDataCache;
     private readonly ILocaleService _localeService;
 
@@ -31,41 +28,16 @@ public class ContributionController
     /// Initializes a new instance of the <see cref="ContributionController"/> class.
     /// </summary>
     /// <param name="logger">The logging interface to use.</param>
-    /// <param name="contributionService">The contribution service.</param>
     public ContributionController
     (
         ILogger<ContributionController> logger,
-        IContributionService contributionService,
         IClientDataCacheService clientDataCache,
         ILocaleService localeService
     )
     {
         _logger = logger;
-        _contributionService = contributionService;
         _clientDataCache = clientDataCache;
         _localeService = localeService;
-    }
-
-    /// <summary>
-    /// Builds the Item collection.
-    /// </summary>
-    /// <param name="ct">A <see cref="CancellationToken"/> that can be used to stop the operation.</param>
-    /// <returns>The built collection.</returns>
-    [HttpGet]
-    public async Task<ActionResult<IEnumerable<Item>>> GetAsync(CancellationToken ct)
-    {
-        try
-        {
-            IReadOnlyList<Item> builtItems = await _contributionService.BuildThroughContributions(id => Item.Default with { ItemID = id }, ct)
-                .ConfigureAwait(false);
-
-            return new ActionResult<IEnumerable<Item>>(builtItems.Take(10));
-        }
-        catch (Exception ex)
-        {
-            _logger.LogError(ex, "Failed to build type");
-            return new StatusCodeResult(500);
-        }
     }
 
     /// <summary>
@@ -73,7 +45,7 @@ public class ContributionController
     /// </summary>
     /// <param name="ct">A <see cref="CancellationToken"/> that can be used to stop the operation.</param>
     /// <returns>The built collection.</returns>
-    [HttpGet("cache")]
+    [HttpGet("client-cache")]
     public async IAsyncEnumerable<Item> GetFromCacheServiceAsync([EnumeratorCancellation] CancellationToken ct)
     {
         int counter = 0;

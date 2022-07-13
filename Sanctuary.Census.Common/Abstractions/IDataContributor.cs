@@ -24,7 +24,7 @@ public interface IDataContributor
     /// contribute data to the type, based on other properties of the type.
     /// </summary>
     /// <typeparam name="TContributeTo">The type to contribute to.</typeparam>
-    /// <param name="ct"></param>
+    /// <param name="ct">A <see cref="CancellationToken"/> that can be used to stop the operation.</param>
     /// <returns>A <see cref="ValueTask{TResult}"/> representing the potentially asynchronous operation.</returns>
     ValueTask<IReadOnlyList<uint>> GetContributableIDsAsync<TContributeTo>(CancellationToken ct = default);
 

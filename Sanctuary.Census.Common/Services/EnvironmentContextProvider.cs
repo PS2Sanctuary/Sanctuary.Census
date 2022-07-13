@@ -10,5 +10,5 @@ public class EnvironmentContextProvider
     /// <summary>
     /// The current environment.
     /// </summary>
-    public PS2Environment Environment { get; set; } = PS2Environment.Live;
+    public PS2Environment Environment { get; set; } = PS2Environment.PTS;
 }

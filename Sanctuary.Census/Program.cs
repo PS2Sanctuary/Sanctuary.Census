@@ -8,6 +8,8 @@ using Sanctuary.Census.ClientData.Extensions;
 using Sanctuary.Census.Json;
 using Sanctuary.Census.ServerData.Extensions;
 using Sanctuary.Census.ServerData.Objects;
+using Serilog;
+using Serilog.Events;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json.Serialization;
@@ -35,6 +37,16 @@ public static class Program
     public static void Main(string[] args)
     {
         WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
+
+        Log.Logger = new LoggerConfiguration()
+            .MinimumLevel.Verbose()
+            .MinimumLevel.Override("Microsoft", LogEventLevel.Information)
+            .MinimumLevel.Override("Microsoft.AspNetCore", LogEventLevel.Warning)
+            .MinimumLevel.Override("System.Net.Http.HttpClient", LogEventLevel.Warning)
+            .Enrich.FromLogContext()
+            .WriteTo.Console(outputTemplate: "[{Timestamp:HH:mm:ss} {Level:u3}] [{SourceContext}] {Message:lj}{NewLine}{Exception}")
+            .CreateLogger();
+        builder.Host.UseSerilog();
 
         builder.Services.Configure<LoginClientOptions>(builder.Configuration.GetSection(nameof(LoginClientOptions)));
         builder.Services.Configure<GatewayClientOptions>(builder.Configuration.GetSection(nameof(GatewayClientOptions)));
@@ -65,6 +77,7 @@ public static class Program
         });
 
         WebApplication app = builder.Build();
+        app.UseSerilogRequestLogging();
 
         // Configure the HTTP request pipeline.
         if (app.Environment.IsDevelopment())

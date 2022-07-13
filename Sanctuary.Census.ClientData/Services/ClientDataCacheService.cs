@@ -68,7 +68,7 @@ public class ClientDataCacheService : IClientDataCacheService
     }
 
     /// <inheritdoc />
-    public async Task Repopulate(CancellationToken ct = default)
+    public async Task RepopulateAsync(CancellationToken ct = default)
     {
         ManifestFile dataPackManifest = await _manifestService.GetFileAsync
         (

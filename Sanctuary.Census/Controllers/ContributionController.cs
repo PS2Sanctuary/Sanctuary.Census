@@ -5,8 +5,10 @@ using Sanctuary.Census.ClientData.Objects.ClientDataModels;
 using Sanctuary.Census.Common.Abstractions.Services;
 using Sanctuary.Census.Common.Objects.CommonModels;
 using Sanctuary.Census.Common.Objects.DtoModels;
-using System;
+using Sanctuary.Census.ServerData.Internal.Abstractions.Services;
+using Sanctuary.Zone.Packets.ReferenceData;
 using System.Collections.Generic;
+using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Threading;
 
@@ -22,6 +24,7 @@ public class ContributionController
 {
     private readonly ILogger<ContributionController> _logger;
     private readonly IClientDataCacheService _clientDataCache;
+    private readonly IServerDataCacheService _serverDataCache;
     private readonly ILocaleService _localeService;
 
     /// <summary>
@@ -32,11 +35,13 @@ public class ContributionController
     (
         ILogger<ContributionController> logger,
         IClientDataCacheService clientDataCache,
+        IServerDataCacheService serverDataCache,
         ILocaleService localeService
     )
     {
         _logger = logger;
         _clientDataCache = clientDataCache;
+        _serverDataCache = serverDataCache;
         _localeService = localeService;
     }
 
@@ -50,8 +55,8 @@ public class ContributionController
     {
         int counter = 0;
 
-        if (_clientDataCache.LastPopulated < DateTimeOffset.UtcNow.AddMinutes(5))
-            await _clientDataCache.Repopulate(ct).ConfigureAwait(false);
+        await _clientDataCache.RepopulateAsync(ct).ConfigureAwait(false);
+        await _localeService.RepopulateAsync(ct).ConfigureAwait(false);
 
         Dictionary<uint, FactionDefinition> itemFactionMap = new();
         foreach (ItemProfile profile in _clientDataCache.ItemProfiles)
@@ -72,13 +77,8 @@ public class ContributionController
 
         foreach (ClientItemDefinition definition in _clientDataCache.ClientItemDefinitions)
         {
-            LocaleString? name = definition.NameID == -1
-                ? null
-                : await _localeService.GetLocaleStringAsync((uint)definition.NameID, ct).ConfigureAwait(false);
-
-            LocaleString? description = definition.DescriptionID == -1
-                ? null
-                : await _localeService.GetLocaleStringAsync((uint)definition.DescriptionID, ct).ConfigureAwait(false);
+            _localeService.TryGetLocaleString(definition.NameID, out LocaleString? name);
+            _localeService.TryGetLocaleString(definition.DescriptionID, out LocaleString? description);
 
             if (!itemFactionMap.TryGetValue(definition.ID, out FactionDefinition faction))
                 faction = FactionDefinition.All;
@@ -110,6 +110,69 @@ public class ContributionController
                 definition.HudImageSetID == 0 ? null : definition.HudImageSetID,
                 definition.MaxStackSize,
                 definition.FlagAccountScope
+            );
+
+            if (counter++ >= 100)
+                break;
+        }
+    }
+
+    /// <summary>
+    /// Builds the Weapon collection using the <see cref="IServerDataCacheService"/>.
+    /// </summary>
+    /// <param name="ct">A <see cref="CancellationToken"/> that can be used to stop the operation.</param>
+    /// <returns>The built collection.</returns>
+    [HttpGet("server-cache")]
+    public async IAsyncEnumerable<Weapon> GetFromServerCacheServiceAsync([EnumeratorCancellation] CancellationToken ct)
+    {
+        int counter = 0;
+
+        await _serverDataCache.RepopulateAsync(ct).ConfigureAwait(false);
+        await _localeService.RepopulateAsync(ct).ConfigureAwait(false);
+
+        if (_serverDataCache.WeaponDefinitions is null)
+            yield break;
+
+        foreach (WeaponDefinition definition in _serverDataCache.WeaponDefinitions.Definitions)
+        {
+            _localeService.TryGetLocaleString(definition.RangeDescriptionID, out LocaleString? rangeDescription);
+
+            string? animWieldTypeName = definition.AnimationWieldTypeName.Length == 0
+                ? null
+                : definition.AnimationWieldTypeName;
+
+            Weapon.AmmoSlot[] ammoSlots = definition.AmmoSlots.Where(s => s.AmmoID != 0)
+                .Select(s => new Weapon.AmmoSlot
+                (
+                    s.ClipSize,
+                    s.Capacity,
+                    s.ClipModelName.Length == 0 ? null : s.ClipModelName
+                ))
+                .ToArray();
+
+            yield return new Weapon
+            (
+                definition.WeaponID,
+                definition.GroupID == 0 ? null : definition.GroupID,
+                definition.EquipMs,
+                definition.UnequipMs,
+                definition.ToIronSightsMs,
+                definition.FromIronSightsMs,
+                definition.ToIronSightsAnimMs,
+                definition.FromIronSightsAnimMs,
+                definition.SprintRecoveryMs,
+                definition.NextUseDelayMs,
+                definition.TurnRateModifier,
+                definition.MoveSpeedModifier,
+                definition.HeatBleedoffRate == 0 ? null : definition.HeatBleedoffRate,
+                definition.HeatOverheatPenaltyMs == 0 ? null : definition.HeatBleedoffRate,
+                rangeDescription,
+                definition.MeleeDetectWidth == 0 ? null : definition.MeleeDetectWidth,
+                definition.MeleeDetectHeight == 0 ? null : definition.MeleeDetectHeight,
+                animWieldTypeName,
+                definition.MinPitch == 0 ? null : definition.MinPitch,
+                definition.MaxPitch == 0 ? null : definition.MaxPitch,
+                ammoSlots
             );
 
             if (counter++ >= 100)

@@ -2,7 +2,9 @@
 using Sanctuary.Census.Common.Abstractions.Services;
 using Sanctuary.Census.Common.Objects;
 using Sanctuary.Census.Common.Objects.CommonModels;
+using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
@@ -26,7 +28,8 @@ public class LocaleService : ILocaleService
     private readonly Dictionary<uint, string> _spanish = new();
     private readonly Dictionary<uint, string> _turkish = new();
 
-    private bool _isCached;
+    /// <inheritdoc />
+    public DateTimeOffset LastPopulated { get; private set; }
 
     /// <summary>
     /// Initializes a new instance of the <see cref="LocaleService"/>
@@ -44,21 +47,23 @@ public class LocaleService : ILocaleService
     }
 
     /// <inheritdoc />
-    public async ValueTask<LocaleString?> GetLocaleStringAsync(uint stringID, CancellationToken ct = default)
+    public bool TryGetLocaleString(long stringID, [NotNullWhen(true)] out LocaleString? localeString)
     {
-        await CacheLocaleAsync(ct).ConfigureAwait(false);
-        stringID = Jenkins.GetItemLocaleID(stringID);
+        localeString = null;
+        if (stringID is < 0 or > uint.MaxValue)
+            return false;
 
-        _chinese.TryGetValue(stringID, out string? chinese);
-        _english.TryGetValue(stringID, out string? english);
-        _french.TryGetValue(stringID, out string? french);
-        _german.TryGetValue(stringID, out string? german);
-        _italian.TryGetValue(stringID, out string? italian);
-        _korean.TryGetValue(stringID, out string? korean);
-        _portuguese.TryGetValue(stringID, out string? portuguese);
-        _russian.TryGetValue(stringID, out string? russian);
-        _spanish.TryGetValue(stringID, out string? spanish);
-        _turkish.TryGetValue(stringID, out string? turkish);
+        uint actualID = Jenkins.GetItemLocaleID((uint)stringID);
+        _chinese.TryGetValue(actualID, out string? chinese);
+        _english.TryGetValue(actualID, out string? english);
+        _french.TryGetValue(actualID, out string? french);
+        _german.TryGetValue(actualID, out string? german);
+        _italian.TryGetValue(actualID, out string? italian);
+        _korean.TryGetValue(actualID, out string? korean);
+        _portuguese.TryGetValue(actualID, out string? portuguese);
+        _russian.TryGetValue(actualID, out string? russian);
+        _spanish.TryGetValue(actualID, out string? spanish);
+        _turkish.TryGetValue(actualID, out string? turkish);
 
         bool isNotValid = chinese is null
                           && english is null
@@ -69,13 +74,14 @@ public class LocaleService : ILocaleService
                           && portuguese is null
                           && russian is null
                           && spanish is null
-                            && turkish is null;
-        if (isNotValid)
-            return null;
+                          && turkish is null;
 
-        return new LocaleString
+        if (isNotValid)
+            return false;
+
+        localeString = new LocaleString
         (
-            stringID,
+            actualID,
             german,
             english,
             spanish,
@@ -87,13 +93,12 @@ public class LocaleService : ILocaleService
             turkish,
             chinese
         );
+        return true;
     }
 
-    private async ValueTask CacheLocaleAsync(CancellationToken ct)
+    /// <inheritdoc />
+    public async Task RepopulateAsync(CancellationToken ct)
     {
-        if (_isCached)
-            return;
-
         (string, Dictionary<uint, string>)[] localePacks = {
             ("de_de_data.dat", _german),
             ("en_us_data.dat", _english),
@@ -122,7 +127,7 @@ public class LocaleService : ILocaleService
             await StoreLocaleDataAsync(fileData, store, ct).ConfigureAwait(false);
         }
 
-        _isCached = true;
+        LastPopulated = DateTimeOffset.UtcNow;
     }
 
     private static async Task StoreLocaleDataAsync(Stream fileData, Dictionary<uint, string> store, CancellationToken ct)

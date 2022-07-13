@@ -1,19 +1,18 @@
 ﻿using Sanctuary.Census.Common.Objects.CommonModels;
-using System.Threading;
-using System.Threading.Tasks;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Sanctuary.Census.Common.Abstractions.Services;
 
 /// <summary>
 /// Represents a service for retrieving locale strings.
 /// </summary>
-public interface ILocaleService
+public interface ILocaleService : IDataCacheService
 {
     /// <summary>
-    /// Gets a locale string.
+    /// Attempts to retrieve a locale string.
     /// </summary>
-    /// <param name="stringID">The ID of the string.</param>
-    /// <param name="ct">A <see cref="CancellationToken"/> that can be used to stop the operation.</param>
-    /// <returns>A locale string, or <c>null</c> if the <paramref name="stringID"/> is invalid.</returns>
-    ValueTask<LocaleString?> GetLocaleStringAsync(uint stringID, CancellationToken ct = default);
+    /// <param name="stringID">The code ID of the string.</param>
+    /// <param name="localeString">The locale string, or <c>null</c> if the <paramref name="stringID"/> is invalid.</param>
+    /// <returns><c>True</c> if the given <paramref name="stringID"/> pointed to a valid locale string.</returns>
+    bool TryGetLocaleString(long stringID, [NotNullWhen(true)] out LocaleString? localeString);
 }

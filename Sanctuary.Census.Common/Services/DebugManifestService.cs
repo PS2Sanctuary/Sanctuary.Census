@@ -31,7 +31,7 @@ public class DebugManifestService : CachingManifestService
         CancellationToken ct = default
     )
     {
-        string filePath = Path.Combine(CacheDirectory, fileName);
+        string filePath = Path.Combine(CacheDirectory, ps2Environment.ToString(), fileName);
         FileInfo info = new(filePath);
         if (!info.Exists)
             return await base.GetFileAsync(fileName, ps2Environment, ct);

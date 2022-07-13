@@ -1,21 +1,14 @@
 ﻿using Sanctuary.Census.ClientData.Objects.ClientDataModels;
-using System;
+using Sanctuary.Census.Common.Abstractions.Services;
 using System.Collections.Generic;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace Sanctuary.Census.ClientData.Abstractions.Services;
 
 /// <summary>
 /// Represents a cache of client data.
 /// </summary>
-public interface IClientDataCacheService
+public interface IClientDataCacheService : IDataCacheService
 {
-    /// <summary>
-    /// Gets the time in UTC at which the cache was last populated.
-    /// </summary>
-    DateTimeOffset LastPopulated { get; }
-
     /// <summary>
     /// Gets the cached <see cref="ClientItemDatasheetData"/> objects.
     /// </summary>
@@ -45,11 +38,4 @@ public interface IClientDataCacheService
     /// Gets the cached <see cref="ResourceType"/> objects.
     /// </summary>
     List<ResourceType> ResourceTypes { get; }
-
-    /// <summary>
-    /// Repopulates the cache.
-    /// </summary>
-    /// <param name="ct">A <see cref="CancellationToken"/> that can be used to stop the operation.</param>
-    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-    Task Repopulate(CancellationToken ct = default);
 }

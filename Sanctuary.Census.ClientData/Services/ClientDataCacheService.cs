@@ -3,7 +3,6 @@ using Mandible.Abstractions.Pack2;
 using Mandible.Pack2;
 using Mandible.Services;
 using Mandible.Util;
-using Sanctuary.Census.ClientData.Abstractions;
 using Sanctuary.Census.ClientData.Abstractions.Services;
 using Sanctuary.Census.ClientData.Objects.ClientDataModels;
 using Sanctuary.Census.ClientData.Util;
@@ -29,22 +28,22 @@ public class ClientDataCacheService : IClientDataCacheService
     public DateTimeOffset LastPopulated { get; private set; }
 
     /// <inheritdoc />
-    public List<ClientItemDatasheetData> ClientItemDatasheetDatas { get; private set; }
+    public IReadOnlyList<ClientItemDatasheetData> ClientItemDatasheetDatas { get; private set; }
 
     /// <inheritdoc />
-    public List<ClientItemDefinition> ClientItemDefinitions { get; private set; }
+    public IReadOnlyList<ClientItemDefinition> ClientItemDefinitions { get; private set; }
 
     /// <inheritdoc />
-    public List<FireModeDisplayStat> FireModeDisplayStats { get; private set; }
+    public IReadOnlyList<FireModeDisplayStat> FireModeDisplayStats { get; private set; }
 
     /// <inheritdoc />
-    public List<ImageSetMapping> ImageSetMappings { get; private set; }
+    public IReadOnlyList<ImageSetMapping> ImageSetMappings { get; private set; }
 
     /// <inheritdoc />
-    public List<ItemProfile> ItemProfiles { get; private set; }
+    public IReadOnlyList<ItemProfile> ItemProfiles { get; private set; }
 
     /// <inheritdoc />
-    public List<ResourceType> ResourceTypes { get; private set; }
+    public IReadOnlyList<ResourceType> ResourceTypes { get; private set; }
 
     /// <summary>
     /// Initializes a new instance of the <see cref="ClientDataCacheService"/> class.

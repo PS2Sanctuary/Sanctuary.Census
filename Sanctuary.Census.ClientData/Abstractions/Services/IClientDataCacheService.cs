@@ -12,30 +12,30 @@ public interface IClientDataCacheService : IDataCacheService
     /// <summary>
     /// Gets the cached <see cref="ClientItemDatasheetData"/> objects.
     /// </summary>
-    List<ClientItemDatasheetData> ClientItemDatasheetDatas { get; }
+    IReadOnlyList<ClientItemDatasheetData> ClientItemDatasheetDatas { get; }
 
     /// <summary>
     /// Gets the cached <see cref="ClientItemDefinition"/> objects.
     /// </summary>
-    List<ClientItemDefinition> ClientItemDefinitions { get; }
+    IReadOnlyList<ClientItemDefinition> ClientItemDefinitions { get; }
 
     /// <summary>
     /// Gets the cached <see cref="FireModeDisplayStats"/> objects.
     /// </summary>
-    List<FireModeDisplayStat> FireModeDisplayStats { get; }
+    IReadOnlyList<FireModeDisplayStat> FireModeDisplayStats { get; }
 
     /// <summary>
     /// Gets the cached <see cref="ImageSetMapping"/> objects.
     /// </summary>
-    List<ImageSetMapping> ImageSetMappings { get; }
+    IReadOnlyList<ImageSetMapping> ImageSetMappings { get; }
 
     /// <summary>
     /// Gets the cached <see cref="ItemProfile"/> objects.
     /// </summary>
-    List<ItemProfile> ItemProfiles { get; }
+    IReadOnlyList<ItemProfile> ItemProfiles { get; }
 
     /// <summary>
     /// Gets the cached <see cref="ResourceType"/> objects.
     /// </summary>
-    List<ResourceType> ResourceTypes { get; }
+    IReadOnlyList<ResourceType> ResourceTypes { get; }
 }

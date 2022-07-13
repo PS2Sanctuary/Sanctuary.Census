@@ -3,9 +3,7 @@ using Microsoft.Extensions.DependencyInjection.Extensions;
 using Sanctuary.Census.ClientData.Abstractions.Services;
 using Sanctuary.Census.ClientData.DataContributors;
 using Sanctuary.Census.ClientData.Services;
-using Sanctuary.Census.Common.Abstractions.Services;
 using Sanctuary.Census.Common.Extensions;
-using Sanctuary.Census.Common.Services;
 
 namespace Sanctuary.Census.ClientData.Extensions;
 
@@ -22,16 +20,8 @@ public static class IServiceCollectionExtensions
     /// <returns>The service collection, so that calls may be chained.</returns>
     public static IServiceCollection AddClientDataServices(this IServiceCollection services, string appDataDirectory)
     {
-#if DEBUG
-        services.AddHttpClient<IManifestService, DebugManifestService>(h => new DebugManifestService(h, appDataDirectory));
-#else
-        services.AddHttpClient<IManifestService, CachingManifestService>(h => new CachingManifestService(h, AppDataDirectory));
-#endif
-
-        services.AddCommonServices();
+        services.AddCommonServices(appDataDirectory);
         services.TryAddTransient<IDatasheetLoaderService, DatasheetLoaderService>();
-        services.TryAddScoped<ILocaleService, LocaleService>();
-
 
         services.RegisterDataContributor<ItemProfileDataContributor>()
             .RegisterDataContributor<ClientItemDefinitionDataContributor>()

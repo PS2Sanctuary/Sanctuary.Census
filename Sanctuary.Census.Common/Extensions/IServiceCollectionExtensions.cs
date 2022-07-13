@@ -17,16 +17,24 @@ public static class IServiceCollectionExtensions
     /// Adds services common Sanctuary.Census services to the service collection.
     /// </summary>
     /// <param name="services">The service collection.</param>
+    /// <param name="appDataDirectory">The app data directory that various services may use.</param>
     /// <returns>The <see cref="IServiceCollection"/> instance, so that calls may be chained.</returns>
-    public static IServiceCollection AddCommonServices(this IServiceCollection services)
+    public static IServiceCollection AddCommonServices(this IServiceCollection services, string appDataDirectory)
     {
         services.TryAddSingleton<IDataContributorTypeRepository>
         (
             s => s.GetRequiredService<IOptions<DataContributorTypeRepository>>().Value
         );
 
-        services.TryAddScoped<EnvironmentContextProvider>();
+#if DEBUG
+        services.AddHttpClient<IManifestService, DebugManifestService>(h => new DebugManifestService(h, appDataDirectory));
+#else
+        services.AddHttpClient<IManifestService, CachingManifestService>(h => new CachingManifestService(h, AppDataDirectory));
+#endif
+
         services.TryAddScoped<IContributionService, ContributionService>();
+        services.TryAddScoped<ILocaleService, LocaleService>();
+        services.TryAddScoped<EnvironmentContextProvider>();
 
         return services;
     }

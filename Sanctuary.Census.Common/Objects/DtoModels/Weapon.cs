@@ -1,4 +1,5 @@
 ﻿using Sanctuary.Census.Common.Objects.CommonModels;
+using System;
 
 namespace Sanctuary.Census.Common.Objects.DtoModels;
 
@@ -46,7 +47,8 @@ public record Weapon
     float? MeleeDetectHeight,
     string? AnimationWieldTypeName,
     float? MinViewPitch,
-    float? MaxViewPitch
+    float? MaxViewPitch,
+    Weapon.AmmoSlot[] AmmoSlots
 )
 {
     /// <summary>
@@ -73,6 +75,20 @@ public record Weapon
         null,
         null,
         null,
-        null
+        null,
+        Array.Empty<AmmoSlot>()
+    );
+
+    /// <summary>
+    /// Represents data about a weapon's ammo slot.
+    /// </summary>
+    /// <param name="ClipSize">The size of a single clip of this ammo slot.</param>
+    /// <param name="Capacity">The size of the reserve ammunition capacity of this ammo slot.</param>
+    /// <param name="ClipModelName">The name of the model that represents this clip.</param>
+    public record AmmoSlot
+    (
+        ushort ClipSize,
+        ushort Capacity,
+        string? ClipModelName
     );
 }

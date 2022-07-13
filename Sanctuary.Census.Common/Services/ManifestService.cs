@@ -85,7 +85,8 @@ public class ManifestService : IManifestService
                 uncompressedSize,
                 crc,
                 DateTimeOffset.FromUnixTimeSeconds(timestamp),
-                sha
+                sha,
+                ps2Environment
             );
         }
 

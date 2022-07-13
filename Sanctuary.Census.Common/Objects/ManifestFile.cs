@@ -11,6 +11,7 @@ namespace Sanctuary.Census.Common.Objects;
 /// <param name="Crc32">A CRC-32 hash of the file contents.</param>
 /// <param name="Timestamp">The time at which the file was last updated.</param>
 /// <param name="SHA">A SHA hash that can be used to identify and download the file entry.</param>
+/// <param name="Environment">The environment that this file was sourced from.</param>
 public record ManifestFile
 (
     string FileName,
@@ -18,5 +19,6 @@ public record ManifestFile
     int UncompressedSize,
     uint Crc32,
     DateTimeOffset Timestamp,
-    string SHA
+    string SHA,
+    PS2Environment Environment
 );

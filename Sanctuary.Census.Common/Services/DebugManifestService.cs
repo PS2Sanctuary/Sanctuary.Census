@@ -43,7 +43,8 @@ public class DebugManifestService : CachingManifestService
             (int)info.Length,
             0,
             info.LastWriteTimeUtc,
-            string.Empty
+            string.Empty,
+            ps2Environment
         );
     }
 }

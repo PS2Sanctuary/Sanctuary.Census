@@ -37,7 +37,12 @@ public class CachingManifestService : ManifestService
     /// <param name="httpClient">The HTTP client to use.</param>
     /// <param name="appDataDirectory">The path to the app data directory to use.</param>
     /// <param name="fileSystem">The file system implementation to use.</param>
-    public CachingManifestService(HttpClient httpClient, string appDataDirectory, IFileSystem fileSystem)
+    public CachingManifestService
+    (
+        HttpClient httpClient,
+        string appDataDirectory,
+        IFileSystem fileSystem
+    )
         : base(httpClient)
     {
         FileSystem = fileSystem;
@@ -47,10 +52,11 @@ public class CachingManifestService : ManifestService
     /// <inheritdoc />
     public override async Task<Stream> GetFileDataAsync(ManifestFile file, CancellationToken ct = default)
     {
-        if (!FileSystem.Directory.Exists(CacheDirectory))
-            FileSystem.Directory.CreateDirectory(CacheDirectory);
+        string cacheDirectory = Path.Combine(CacheDirectory, file.Environment.ToString());
+        if (!FileSystem.Directory.Exists(cacheDirectory))
+            FileSystem.Directory.CreateDirectory(cacheDirectory);
 
-        string filePath = FileSystem.Path.Combine(CacheDirectory, file.FileName);
+        string filePath = FileSystem.Path.Combine(cacheDirectory, file.FileName);
         IFileInfo fileInfo = FileSystem.FileInfo.FromFileName(filePath);
 
         if (fileInfo.Exists && fileInfo.LastWriteTimeUtc >= file.Timestamp)

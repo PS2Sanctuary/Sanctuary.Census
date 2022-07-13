@@ -65,8 +65,11 @@ public static class DatasheetSerializer
 
         if (!TypeCtorLowerCaseParamNames.TryGetValue(tType, out string[]? ctorParamLowerNames))
         {
-            ParameterInfo[] ctorParams = typeof(T).GetConstructors()[0]
-                .GetParameters()
+            ConstructorInfo[] ctors = typeof(T).GetConstructors();
+            if (ctors.Length == 0)
+                throw new InvalidOperationException("Cannot deserialize to a type with no constructors: " + typeof(T).Name);
+
+            ParameterInfo[] ctorParams = ctors[0].GetParameters()
                 .Where(p => p.Name is not null)
                 .OrderBy(p => p.Position)
                 .ToArray();

@@ -1,7 +1,5 @@
 ﻿using Moq;
 using Moq.Protected;
-using Sanctuary.Census.ClientData.Objects;
-using Sanctuary.Census.ClientData.Services;
 using Sanctuary.Census.Common.Objects;
 using Sanctuary.Census.Common.Services;
 using System;
@@ -59,7 +57,7 @@ public class ManifestServiceTests
     [Fact]
     public async Task TestGetFileDataAsync()
     {
-        ManifestFile file = new("manifest.xml", 0, 1, 0, DateTimeOffset.Now, "abcdefgh");
+        ManifestFile file = new("manifest.xml", 0, 1, 0, DateTimeOffset.Now, "abcdefgh", PS2Environment.Live);
         ManifestService ms = GetManifestService(out Mock<HttpMessageHandler> handler);
         Stream fileData = await ms.GetFileDataAsync(file, CancellationToken.None);
 

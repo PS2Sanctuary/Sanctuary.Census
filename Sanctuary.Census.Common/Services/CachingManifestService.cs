@@ -1,11 +1,11 @@
-﻿using Sanctuary.Census.ClientData.Objects;
+﻿using Sanctuary.Census.Common.Objects;
 using System.IO;
 using System.IO.Abstractions;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Sanctuary.Census.ClientData.Services;
+namespace Sanctuary.Census.Common.Services;
 
 /// <inheritdoc />
 /// <remarks>This service will cache manifest files in local appdata.</remarks>

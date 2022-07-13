@@ -1,15 +1,13 @@
 ﻿using Mandible.Util;
-using Sanctuary.Census.ClientData.Abstractions.Services;
-using Sanctuary.Census.ClientData.Objects;
+using Sanctuary.Census.Common.Abstractions.Services;
 using Sanctuary.Census.Common.Objects;
 using Sanctuary.Census.Common.Objects.CommonModels;
-using Sanctuary.Census.Common.Services;
 using System.Collections.Generic;
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Sanctuary.Census.ClientData.Services;
+namespace Sanctuary.Census.Common.Services;
 
 /// <inheritdoc />
 public class LocaleService : ILocaleService

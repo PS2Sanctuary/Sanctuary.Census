@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Sanctuary.Census.ClientData.Objects;
+namespace Sanctuary.Census.Common.Objects;
 
 /// <summary>
 /// Represents a file object in a PlanetSide patch manifest.

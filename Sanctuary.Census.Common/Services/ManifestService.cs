@@ -1,5 +1,4 @@
-﻿using Sanctuary.Census.ClientData.Abstractions.Services;
-using Sanctuary.Census.ClientData.Objects;
+﻿using Sanctuary.Census.Common.Abstractions.Services;
 using Sanctuary.Census.Common.Objects;
 using SevenZip.Compression.LZMA;
 using System;
@@ -10,7 +9,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Xml;
 
-namespace Sanctuary.Census.ClientData.Services;
+namespace Sanctuary.Census.Common.Services;
 
 /// <inheritdoc />
 public class ManifestService : IManifestService

@@ -3,6 +3,7 @@ using Moq.Protected;
 using Sanctuary.Census.ClientData.Objects;
 using Sanctuary.Census.ClientData.Services;
 using Sanctuary.Census.Common.Objects;
+using Sanctuary.Census.Common.Services;
 using System;
 using System.Collections.Generic;
 using System.IO;

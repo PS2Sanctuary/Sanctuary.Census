@@ -1,11 +1,10 @@
-﻿using Sanctuary.Census.ClientData.Objects;
-using Sanctuary.Census.Common.Objects;
+﻿using Sanctuary.Census.Common.Objects;
 using System.IO;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Sanctuary.Census.ClientData.Services;
+namespace Sanctuary.Census.Common.Services;
 
 /// <inheritdoc />
 /// <remarks>

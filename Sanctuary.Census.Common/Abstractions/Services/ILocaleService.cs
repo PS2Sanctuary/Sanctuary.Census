@@ -2,7 +2,7 @@
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Sanctuary.Census.ClientData.Abstractions.Services;
+namespace Sanctuary.Census.Common.Abstractions.Services;
 
 /// <summary>
 /// Represents a service for retrieving locale strings.

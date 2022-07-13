@@ -22,22 +22,22 @@ public class ManifestService : IManifestService
         { PS2Environment.PTS, "http://manifest.patch.daybreakgames.com/patch/sha/manifest/planetside2/planetside2-testcommon/livenext/planetside2-testcommon.sha.soe.txt" }
     };
 
-    private readonly HttpClient _httpClient;
+    private readonly IHttpClientFactory _clientFactory;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="ManifestService"/> class.
     /// </summary>
-    /// <param name="httpClient">The HTTP client to use.</param>
-    public ManifestService(HttpClient httpClient)
+    /// <param name="clientFactory">The HTTP client to use.</param>
+    public ManifestService(IHttpClientFactory clientFactory)
     {
-        _httpClient = httpClient;
+        _clientFactory = clientFactory;
     }
 
     /// <inheritdoc />
     public virtual async Task<ManifestFile> GetFileAsync(string fileName, PS2Environment ps2Environment, CancellationToken ct = default)
     {
-        await using Stream manifestData = await _httpClient
-            .GetStreamAsync(ManifestUrls[ps2Environment], ct)
+        HttpClient client = _clientFactory.CreateClient(nameof(ManifestService));
+        await using Stream manifestData = await client.GetStreamAsync(ManifestUrls[ps2Environment], ct)
             .ConfigureAwait(false);
 
         using XmlReader reader = XmlReader.Create
@@ -97,7 +97,8 @@ public class ManifestService : IManifestService
     public virtual async Task<Stream> GetFileDataAsync(ManifestFile file, CancellationToken ct = default)
     {
         string downloadPath = $"{ROOT_DOWNLOAD_URL}{file.SHA[..2]}/{file.SHA[2..5]}/{file.SHA[5..]}";
-        await using Stream manifestData = await _httpClient.GetStreamAsync(downloadPath, ct).ConfigureAwait(false);
+        HttpClient client = _clientFactory.CreateClient(nameof(ManifestService));
+        await using Stream manifestData = await client.GetStreamAsync(downloadPath, ct).ConfigureAwait(false);
 
         // We must copy to a MemoryStream so that the data is seekable
         MemoryStream ms = new();

@@ -48,11 +48,11 @@ public static class Program
             .CreateLogger();
         builder.Host.UseSerilog();
 
-        builder.Services.Configure<LoginClientOptions>(builder.Configuration.GetSection(nameof(LoginClientOptions)));
-        builder.Services.Configure<GatewayClientOptions>(builder.Configuration.GetSection(nameof(GatewayClientOptions)));
+        builder.Services.Configure<LoginClientOptions>(builder.Configuration.GetSection(nameof(LoginClientOptions)))
+            .Configure<GatewayClientOptions>(builder.Configuration.GetSection(nameof(GatewayClientOptions)));
 
-        builder.Services.AddClientDataServices(AppDataDirectory);
-        builder.Services.AddServerDataServices(AppDataDirectory);
+        builder.Services.AddClientDataServices()
+            .AddServerDataServices();
 
         builder.Services.AddControllers()
             .AddJsonOptions(options =>

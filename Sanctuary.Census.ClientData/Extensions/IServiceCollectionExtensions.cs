@@ -16,11 +16,10 @@ public static class IServiceCollectionExtensions
     /// Adds services relevant to retrieving client data to the service collection.
     /// </summary>
     /// <param name="services">The service collection.</param>
-    /// <param name="appDataDirectory">The app data directory that various services may use.</param>
     /// <returns>The service collection, so that calls may be chained.</returns>
-    public static IServiceCollection AddClientDataServices(this IServiceCollection services, string appDataDirectory)
+    public static IServiceCollection AddClientDataServices(this IServiceCollection services)
     {
-        services.AddCommonServices(appDataDirectory);
+        services.AddCommonServices();
         services.TryAddTransient<IDatasheetLoaderService, DatasheetLoaderService>();
 
         services.RegisterDataContributor<ItemProfileDataContributor>()

@@ -1,5 +1,7 @@
-﻿using Sanctuary.Census.Common.Objects;
+﻿using Microsoft.Extensions.Options;
+using Sanctuary.Census.Common.Objects;
 using System.IO;
+using System.IO.Abstractions;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
@@ -16,10 +18,15 @@ public class DebugManifestService : CachingManifestService
     /// <summary>
     /// Initializes a new instance of the <see cref="DebugManifestService"/> class.
     /// </summary>
-    /// <param name="httpClient">The HTTP client to use.</param>
-    /// <param name="appDataDirectory">The path to the app data directory to use.</param>
-    public DebugManifestService(HttpClient httpClient, string appDataDirectory)
-        : base(httpClient, appDataDirectory)
+    /// <param name="clientFactory">The HTTP client to use.</param>
+    /// <param name="commonOptions">The configured common options.</param>
+    /// <param name="fileSystem">The filesystem to use.</param>
+    public DebugManifestService
+    (
+        IHttpClientFactory clientFactory,
+        IOptions<CommonOptions> commonOptions,
+        IFileSystem fileSystem
+    ) : base(clientFactory, commonOptions, fileSystem)
     {
     }
 

@@ -1,4 +1,5 @@
-﻿using Sanctuary.Census.Common.Objects;
+﻿using Microsoft.Extensions.Options;
+using Sanctuary.Census.Common.Objects;
 using System.IO;
 using System.IO.Abstractions;
 using System.Net.Http;
@@ -24,29 +25,18 @@ public class CachingManifestService : ManifestService
     /// <summary>
     /// Initializes a new instance of the <see cref="CachingManifestService"/> class.
     /// </summary>
-    /// <param name="httpClient">The HTTP client to use.</param>
-    /// <param name="appDataDirectory">The path to the app data directory to use.</param>
-    public CachingManifestService(HttpClient httpClient, string appDataDirectory)
-        : this(httpClient, appDataDirectory, new FileSystem())
-    {
-    }
-
-    /// <summary>
-    /// Initializes a new instance of the <see cref="CachingManifestService"/> class.
-    /// </summary>
-    /// <param name="httpClient">The HTTP client to use.</param>
-    /// <param name="appDataDirectory">The path to the app data directory to use.</param>
+    /// <param name="clientFactory">The HTTP client to use.</param>
+    /// <param name="commonOptions">The configured common options.</param>
     /// <param name="fileSystem">The file system implementation to use.</param>
     public CachingManifestService
     (
-        HttpClient httpClient,
-        string appDataDirectory,
+        IHttpClientFactory clientFactory,
+        IOptions<CommonOptions> commonOptions,
         IFileSystem fileSystem
-    )
-        : base(httpClient)
+    ) : base(clientFactory)
     {
         FileSystem = fileSystem;
-        CacheDirectory = FileSystem.Path.Combine(appDataDirectory, "ManifestCache");
+        CacheDirectory = FileSystem.Path.Combine(commonOptions.Value.AppDataDirectory, "ManifestCache");
     }
 
     /// <inheritdoc />

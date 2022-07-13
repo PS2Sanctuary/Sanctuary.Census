@@ -3,8 +3,11 @@ using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Options;
 using Sanctuary.Census.Common.Abstractions;
 using Sanctuary.Census.Common.Abstractions.Services;
+using Sanctuary.Census.Common.Objects;
 using Sanctuary.Census.Common.Services;
 using System;
+using System.IO.Abstractions;
+using System.Net.Http;
 
 namespace Sanctuary.Census.Common.Extensions;
 
@@ -17,19 +20,20 @@ public static class IServiceCollectionExtensions
     /// Adds services common Sanctuary.Census services to the service collection.
     /// </summary>
     /// <param name="services">The service collection.</param>
-    /// <param name="appDataDirectory">The app data directory that various services may use.</param>
     /// <returns>The <see cref="IServiceCollection"/> instance, so that calls may be chained.</returns>
-    public static IServiceCollection AddCommonServices(this IServiceCollection services, string appDataDirectory)
+    public static IServiceCollection AddCommonServices(this IServiceCollection services)
     {
+        services.TryAddSingleton<IFileSystem, FileSystem>();
         services.TryAddSingleton<IDataContributorTypeRepository>
         (
             s => s.GetRequiredService<IOptions<DataContributorTypeRepository>>().Value
         );
 
+        services.AddHttpClient(nameof(ManifestService));
 #if DEBUG
-        services.AddHttpClient<IManifestService, DebugManifestService>(h => new DebugManifestService(h, appDataDirectory));
+        services.TryAddSingleton<IManifestService, DebugManifestService>();
 #else
-        services.AddHttpClient<IManifestService, CachingManifestService>(h => new CachingManifestService(h, AppDataDirectory));
+        services.TryAddSingleton<IManifestService, CachingManifestService>();
 #endif
 
         services.TryAddScoped<IContributionService, ContributionService>();

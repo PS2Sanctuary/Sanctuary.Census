@@ -5,6 +5,7 @@ using Sanctuary.Census.ClientData.Extensions;
 using Sanctuary.Census.Json;
 using Sanctuary.Census.ServerData.Internal.Extensions;
 using Sanctuary.Census.ServerData.Internal.Objects;
+using Sanctuary.Census.Workers;
 using Serilog;
 using Serilog.Events;
 using System;
@@ -21,15 +22,6 @@ namespace Sanctuary.Census;
 /// </summary>
 public static class Program
 {
-    /// <summary>
-    /// Gets the directory under which any app data should be stored.
-    /// </summary>
-    public static readonly string AppDataDirectory = Path.Combine
-    (
-        Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
-        "Sanctuary.Census"
-    );
-
     /// <summary>
     /// The entry point of the application.
     /// </summary>
@@ -53,6 +45,9 @@ public static class Program
 
         builder.Services.AddClientDataServices()
             .AddInternalServerDataServices();
+
+        builder.Services.AddSingleton<CollectionsContext>();
+        builder.Services.AddHostedService<CollectionBuildWorker>();
 
         builder.Services.AddControllers()
             .AddJsonOptions(options =>

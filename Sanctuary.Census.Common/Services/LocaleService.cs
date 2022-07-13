@@ -12,6 +12,9 @@ namespace Sanctuary.Census.Common.Services;
 /// <inheritdoc />
 public class LocaleService : ILocaleService
 {
+    private readonly IManifestService _manifestService;
+    private readonly EnvironmentContextProvider _environmentContextProvider;
+
     private readonly Dictionary<uint, string> _chinese = new();
     private readonly Dictionary<uint, string> _english = new();
     private readonly Dictionary<uint, string> _french = new();
@@ -23,24 +26,21 @@ public class LocaleService : ILocaleService
     private readonly Dictionary<uint, string> _spanish = new();
     private readonly Dictionary<uint, string> _turkish = new();
 
-    private readonly IManifestService _manifestService;
-    private readonly PS2Environment _environment;
-
     private bool _isCached;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="LocaleService"/>
     /// </summary>
     /// <param name="manifestService">The manifest service.</param>
-    /// <param name="environment">The environment to source data from.</param>
+    /// <param name="environmentContextProvider">The environment to source data from.</param>
     public LocaleService
     (
         IManifestService manifestService,
-        EnvironmentContextProvider environment
+        EnvironmentContextProvider environmentContextProvider
     )
     {
         _manifestService = manifestService;
-        _environment = environment.Environment;
+        _environmentContextProvider = environmentContextProvider;
     }
 
     /// <inheritdoc />
@@ -112,7 +112,7 @@ public class LocaleService : ILocaleService
             ManifestFile manifestFile = await _manifestService.GetFileAsync
             (
                 packName,
-                _environment,
+                _environmentContextProvider.Environment,
                 ct
             ).ConfigureAwait(false);
 

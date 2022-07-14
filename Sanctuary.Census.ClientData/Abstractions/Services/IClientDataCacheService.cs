@@ -25,6 +25,11 @@ public interface IClientDataCacheService : IDataCacheService
     IReadOnlyList<Currency> Currencies { get; }
 
     /// <summary>
+    /// Gets the cached <see cref="Experience"/> objects.
+    /// </summary>
+    IReadOnlyList<Experience> Experiences { get; }
+
+    /// <summary>
     /// Gets the cached <see cref="Faction"/> objects.
     /// </summary>
     IReadOnlyList<Faction> Factions { get; }

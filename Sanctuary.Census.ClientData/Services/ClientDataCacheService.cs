@@ -37,6 +37,9 @@ public class ClientDataCacheService : IClientDataCacheService
     public IReadOnlyList<Currency> Currencies { get; private set; }
 
     /// <inheritdoc />
+    public IReadOnlyList<Experience> Experiences { get; private set; }
+
+    /// <inheritdoc />
     public IReadOnlyList<Faction> Factions { get; private set; }
 
     /// <inheritdoc />
@@ -68,6 +71,8 @@ public class ClientDataCacheService : IClientDataCacheService
         ClientItemDatasheetDatas = new List<ClientItemDatasheetData>();
         ClientItemDefinitions = new List<ClientItemDefinition>();
         Currencies = new List<Currency>();
+        Experiences = new List<Experience>();
+        Factions = new List<Faction>();
         FireModeDisplayStats = new List<FireModeDisplayStat>();
         ImageSetMappings = new List<ImageSetMapping>();
         ItemProfiles = new List<ItemProfile>();
@@ -110,6 +115,14 @@ public class ClientDataCacheService : IClientDataCacheService
         Currencies = await ExtractDatasheet<Currency>
         (
             "Currency.txt",
+            assetHeaders,
+            reader,
+            ct
+        );
+
+        Experiences = await ExtractDatasheet<Experience>
+        (
+            "Experience.txt",
             assetHeaders,
             reader,
             ct

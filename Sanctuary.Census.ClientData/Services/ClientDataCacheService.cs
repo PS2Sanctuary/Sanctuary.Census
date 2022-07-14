@@ -37,6 +37,9 @@ public class ClientDataCacheService : IClientDataCacheService
     public IReadOnlyList<Currency> Currencies { get; private set; }
 
     /// <inheritdoc />
+    public IReadOnlyList<Faction> Factions { get; private set; }
+
+    /// <inheritdoc />
     public IReadOnlyList<FireModeDisplayStat> FireModeDisplayStats { get; private set; }
 
     /// <inheritdoc />
@@ -107,6 +110,14 @@ public class ClientDataCacheService : IClientDataCacheService
         Currencies = await ExtractDatasheet<Currency>
         (
             "Currency.txt",
+            assetHeaders,
+            reader,
+            ct
+        );
+
+        Factions = await ExtractDatasheet<Faction>
+        (
+            "Factions.txt",
             assetHeaders,
             reader,
             ct

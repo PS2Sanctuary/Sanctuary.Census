@@ -20,9 +20,14 @@ public interface IClientDataCacheService : IDataCacheService
     IReadOnlyList<ClientItemDefinition> ClientItemDefinitions { get; }
 
     /// <summary>
-    /// Gets the cache <see cref="Currency"/> objects.
+    /// Gets the cached <see cref="Currency"/> objects.
     /// </summary>
     IReadOnlyList<Currency> Currencies { get; }
+
+    /// <summary>
+    /// Gets the cached <see cref="Faction"/> objects.
+    /// </summary>
+    IReadOnlyList<Faction> Factions { get; }
 
     /// <summary>
     /// Gets the cached <see cref="FireModeDisplayStats"/> objects.

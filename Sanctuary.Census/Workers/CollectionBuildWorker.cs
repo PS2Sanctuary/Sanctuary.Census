@@ -93,6 +93,7 @@ public class CollectionBuildWorker : BackgroundService
                 new FireModeCollectionBuilder(),
                 new FireModeToProjectileCollectionBuilder(),
                 new ItemCollectionBuilder(),
+                new ItemCategoryCollectionBuilder(),
                 new WeaponCollectionBuilder(),
                 new WorldCollectionBuilder()
             };

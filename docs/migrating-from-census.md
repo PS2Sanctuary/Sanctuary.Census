@@ -8,9 +8,11 @@ when it comes to the provided collections, this isn't possible
 This section lists the Collections provided by Sanctuary.Census, and compares them to Census itself.
 Many collections also add additional data on top of the base Census data, but this is not documented here.
 
+⚠️ If a Census collection is not listed here, it is missing.
+
 ### 🌠 Gold Tier Collections
 
-These collections provide the same data as their Census equivalents. The shape is not guaranteed, but likely to
+These collections provide the same data as their Census equivalents. The shape is not guaranteed to match, but is likely to
 be very similar.
 
 - Currency
@@ -18,6 +20,7 @@ be very similar.
 - Faction
 - FireGroup
 - FireModeToProjectile
+- ItemCategory
 - World
 
 ### 🌟 Silver Tier Collections

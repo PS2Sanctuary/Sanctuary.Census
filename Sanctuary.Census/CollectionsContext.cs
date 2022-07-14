@@ -44,6 +44,11 @@ public class CollectionsContext
     public IReadOnlyDictionary<uint, Item> Items { get; set; }
 
     /// <summary>
+    /// Gets the ItemCategory collection, indexed by <see cref="ItemCategory.ItemCategoryID"/>.
+    /// </summary>
+    public IReadOnlyDictionary<uint, ItemCategory> ItemCategories { get; set; }
+
+    /// <summary>
     /// Gets the Weapon collection, indexed by <see cref="Weapon.WeaponID"/>.
     /// </summary>
     public IReadOnlyDictionary<uint, Weapon> Weapons { get; set; }
@@ -59,8 +64,13 @@ public class CollectionsContext
     public CollectionsContext()
     {
         Currencies = new Dictionary<uint, Currency>();
+        Experiences = new Dictionary<uint, Experience>();
         Factions = new Dictionary<uint, Faction>();
+        FireGroups = new Dictionary<uint, FireGroup>();
+        FireModes = new Dictionary<uint, FireMode>();
+        FireModeToProjectileMap = new Dictionary<uint, FireModeToProjectile>();
         Items = new Dictionary<uint, Item>();
+        ItemCategories = new Dictionary<uint, ItemCategory>();
         Weapons = new Dictionary<uint, Weapon>();
         Worlds = new Dictionary<uint, World>();
     }

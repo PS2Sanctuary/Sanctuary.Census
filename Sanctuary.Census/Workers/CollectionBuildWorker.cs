@@ -1,9 +1,12 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using Sanctuary.Census.ClientData.Abstractions.Services;
 using Sanctuary.Census.CollectionBuilders;
 using Sanctuary.Census.Common.Abstractions.Services;
+using Sanctuary.Census.Common.Objects;
+using Sanctuary.Census.Common.Services;
 using Sanctuary.Census.Controllers;
 using Sanctuary.Census.ServerData.Internal.Abstractions.Services;
 using System;
@@ -19,6 +22,7 @@ public class CollectionBuildWorker : BackgroundService
 {
     private readonly ILogger<CollectionBuildWorker> _logger;
     private readonly IServiceScopeFactory _serviceScopeFactory;
+    private readonly CommonOptions _options;
     private readonly CollectionsContext _collectionsContext;
 
     /// <summary>
@@ -26,16 +30,19 @@ public class CollectionBuildWorker : BackgroundService
     /// </summary>
     /// <param name="logger">The logging interface to use.</param>
     /// <param name="serviceScopeFactory">The service provider.</param>
+    /// <param name="options">The configured common options.</param>
     /// <param name="collectionsContext">The collections context.</param>
     public CollectionBuildWorker
     (
         ILogger<CollectionBuildWorker> logger,
         IServiceScopeFactory serviceScopeFactory,
+        IOptions<CommonOptions> options,
         CollectionsContext collectionsContext
     )
     {
         _logger = logger;
         _serviceScopeFactory = serviceScopeFactory;
+        _options = options.Value;
         _collectionsContext = collectionsContext;
     }
 
@@ -48,6 +55,7 @@ public class CollectionBuildWorker : BackgroundService
         {
             await using AsyncServiceScope serviceScope = _serviceScopeFactory.CreateAsyncScope();
             IServiceProvider services = serviceScope.ServiceProvider;
+            services.GetRequiredService<EnvironmentContextProvider>().Environment = _options.DataSourceEnvironment;
 
             IClientDataCacheService _clientDataCache = services.GetRequiredService<IClientDataCacheService>();
             IServerDataCacheService _serverDataCache = services.GetRequiredService<IServerDataCacheService>();

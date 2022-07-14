@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Sanctuary.Census.ClientData.Extensions;
+using Sanctuary.Census.Common.Objects;
 using Sanctuary.Census.Json;
 using Sanctuary.Census.ServerData.Internal.Extensions;
 using Sanctuary.Census.ServerData.Internal.Objects;
@@ -40,7 +41,8 @@ public static class Program
             .CreateLogger();
         builder.Host.UseSerilog();
 
-        builder.Services.Configure<LoginClientOptions>(builder.Configuration.GetSection(nameof(LoginClientOptions)))
+        builder.Services.Configure<CommonOptions>(builder.Configuration.GetSection(nameof(CommonOptions)))
+            .Configure<LoginClientOptions>(builder.Configuration.GetSection(nameof(LoginClientOptions)))
             .Configure<GatewayClientOptions>(builder.Configuration.GetSection(nameof(GatewayClientOptions)));
 
         builder.Services.AddClientDataServices()

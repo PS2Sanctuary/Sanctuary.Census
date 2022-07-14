@@ -42,6 +42,8 @@ public class CollectionBuildWorker : BackgroundService
     /// <inheritdoc />
     protected override async Task ExecuteAsync(CancellationToken ct)
     {
+        // TODO: Quick-update collections? E.g. the world collection could be updated every 5m to better represent lock state.
+
         while (!ct.IsCancellationRequested)
         {
             await using AsyncServiceScope serviceScope = _serviceScopeFactory.CreateAsyncScope();
@@ -66,7 +68,8 @@ public class CollectionBuildWorker : BackgroundService
             ICollectionBuilder[] collectionBuilders =
             {
                 new ItemCollectionBuilder(),
-                new WeaponCollectionBuilder()
+                new WeaponCollectionBuilder(),
+                new WorldCollectionBuilder()
             };
 
             foreach (ICollectionBuilder collectionBuilder in collectionBuilders)

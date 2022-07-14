@@ -19,11 +19,17 @@ public class CollectionsContext
     public IReadOnlyDictionary<uint, Weapon> Weapons { get; set; }
 
     /// <summary>
+    /// Gets the World collection, indexed by <see cref="World.WorldID"/>.
+    /// </summary>
+    public IReadOnlyDictionary<uint, World> Worlds { get; set; }
+
+    /// <summary>
     /// Initializes a new instance of the <see cref="CollectionsContext"/> class.
     /// </summary>
     public CollectionsContext()
     {
         Items = new Dictionary<uint, Item>();
         Weapons = new Dictionary<uint, Weapon>();
+        Worlds = new Dictionary<uint, World>();
     }
 }

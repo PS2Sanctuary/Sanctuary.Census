@@ -90,7 +90,17 @@ public static class DatasheetSerializer
             int ctorIndex = Array.IndexOf(ctorParamLowerNames, cleaned);
 
             if (ctorIndex > -1)
+            {
                 map[i] = ctorIndex;
+            }
+            else
+            {
+                throw new InvalidOperationException
+                (
+                    $"The {typeof(T)} type does not have a valid ctor param for the header " +
+                    $"labelled {cleaned}"
+                );
+            }
         }
 
         return map;

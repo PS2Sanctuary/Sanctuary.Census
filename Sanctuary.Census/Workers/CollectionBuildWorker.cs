@@ -50,6 +50,7 @@ public class CollectionBuildWorker : BackgroundService
     protected override async Task ExecuteAsync(CancellationToken ct)
     {
         // TODO: Quick-update collections? E.g. the world collection could be updated every 5m to better represent lock state.
+        int dataCacheFailureCount = 0;
 
         while (!ct.IsCancellationRequested)
         {
@@ -66,11 +67,20 @@ public class CollectionBuildWorker : BackgroundService
                 await _clientDataCache.RepopulateAsync(ct).ConfigureAwait(false);
                 await _serverDataCache.RepopulateAsync(ct).ConfigureAwait(false);
                 await _localeService.RepopulateAsync(ct).ConfigureAwait(false);
+                dataCacheFailureCount = 0;
                 _logger.LogInformation("Caches updated successfully!");
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Failed to cache data");
+                if (++dataCacheFailureCount >= 5)
+                {
+                    _logger.LogCritical(ex, "Failed to cache data five times in a row! Collection builder is stopping");
+                    return;
+                }
+
+                _logger.LogError(ex, "Failed to cache data. Will retry in 15s...");
+                await Task.Delay(TimeSpan.FromSeconds(15), ct).ConfigureAwait(false);
+                continue;
             }
 
             ICollectionBuilder[] collectionBuilders =

@@ -90,6 +90,7 @@ public class CollectionBuildWorker : BackgroundService
                 new FactionCollectionBuilder(),
                 new FireGroupCollectionBuilder(),
                 new FireModeCollectionBuilder(),
+                new FireModeToProjectileCollectionBuilder(),
                 new ItemCollectionBuilder(),
                 new WeaponCollectionBuilder(),
                 new WorldCollectionBuilder()

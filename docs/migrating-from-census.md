@@ -17,6 +17,7 @@ be very similar.
 - Experience
 - Faction
 - FireGroup
+- FireModeToProjectile
 - World
 
 ### 🌟 Silver Tier Collections

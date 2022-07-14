@@ -34,6 +34,11 @@ public class CollectionsContext
     public IReadOnlyDictionary<uint, FireMode> FireModes { get; set; }
 
     /// <summary>
+    /// Gets the FireModeToProjectile collection, indexed by <see cref="FireModeToProjectile.FireModeID"/>.
+    /// </summary>
+    public IReadOnlyDictionary<uint, FireModeToProjectile> FireModeToProjectileMap { get; set; }
+
+    /// <summary>
     /// Gets the Item collection, indexed by <see cref="Item.ItemID"/>.
     /// </summary>
     public IReadOnlyDictionary<uint, Item> Items { get; set; }

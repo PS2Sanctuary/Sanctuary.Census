@@ -88,6 +88,7 @@ public class CollectionBuildWorker : BackgroundService
                 new CurrencyCollectionBuilder(),
                 new ExperienceCollectionBuilder(),
                 new FactionCollectionBuilder(),
+                new FireGroupCollectionBuilder(),
                 new ItemCollectionBuilder(),
                 new WeaponCollectionBuilder(),
                 new WorldCollectionBuilder()

@@ -24,6 +24,11 @@ public class CollectionsContext
     public IReadOnlyDictionary<uint, Faction> Factions { get; set; }
 
     /// <summary>
+    /// Gets the FireGroup collection, indexed by <see cref="FireGroup.FireGroupID"/>.
+    /// </summary>
+    public IReadOnlyDictionary<uint, FireGroup> FireGroups { get; set; }
+
+    /// <summary>
     /// Gets the Item collection, indexed by <see cref="Item.ItemID"/>.
     /// </summary>
     public IReadOnlyDictionary<uint, Item> Items { get; set; }

@@ -10,12 +10,13 @@ Many collections also add additional data on top of the base Census data, but th
 
 ### 🌠 Gold Tier Collections
 
-These collections provide the same data than their Census equivalents. The shape is not guaranteed, but likely to
+These collections provide the same data as their Census equivalents. The shape is not guaranteed, but likely to
 be very similar.
 
 - Currency
 - Experience
 - Faction
+- FireGroup
 - World
 
 ### 🌟 Silver Tier Collections

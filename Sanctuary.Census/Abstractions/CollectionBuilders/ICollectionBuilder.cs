@@ -2,7 +2,7 @@
 using Sanctuary.Census.Common.Abstractions.Services;
 using Sanctuary.Census.ServerData.Internal.Abstractions.Services;
 
-namespace Sanctuary.Census.CollectionBuilders;
+namespace Sanctuary.Census.Abstractions.CollectionBuilders;
 
 /// <summary>
 /// Represents a collection builder.

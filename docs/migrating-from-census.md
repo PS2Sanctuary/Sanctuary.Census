@@ -45,7 +45,29 @@ Missing the `state` field. This is partially replaced by the `is_locked` field.
 
 These collections are missing significant amounts of data, or are shaped very differently.
 
+- fire_group_to_fire_mode
+- FireMode
 - weapon_ammo_slot
+
+#### fire_group_to_fire_mode
+
+This Census collection has been removed, in favour of a `fire_modes` array on the `FireGroup` collection model.
+
+#### FireMode
+
+Missing the follow fields:
+- `damage_direct_effect_id`
+- `lockon_acquire_close_ms`
+- `lockon_acquire_far_ms`
+- `lockon_acquire_ms`
+- `lockon_angle`
+- `lockon_lose_ms`
+- `lockon_maintain`
+- `lockon_radius`
+- `lockon_range`
+- `lockon_range_close`
+- `lockon_range_far`
+- `lockon_required`
 
 #### weapon_ammo_slot
 

@@ -81,7 +81,7 @@ public class ContributionController : ControllerBase
     /// <param name="start">The position in the collection at which to start listing weapons from.</param>
     /// <returns>The selected weapons.</returns>
     [HttpGet("test")]
-    public ActionResult<IEnumerable<Faction>> TestGet
+    public ActionResult<IEnumerable<FireMode>> TestGet
     (
         [FromQuery(Name = "world_id")] uint? id = null,
         [FromQuery(Name = "c:start")] int start = 0
@@ -91,10 +91,10 @@ public class ContributionController : ControllerBase
             return BadRequest("c:start must be non-negative");
 
         if (id is null)
-            return new ActionResult<IEnumerable<Faction>>(_collectionsContext.Factions.Values.Skip(start).Take(100));
+            return new ActionResult<IEnumerable<FireMode>>(_collectionsContext.FireModes.Values.Skip(start).Take(100));
 
-        if (_collectionsContext.Factions.ContainsKey(id.Value))
-            return new[] { _collectionsContext.Factions[id.Value] };
+        if (_collectionsContext.FireModes.ContainsKey(id.Value))
+            return new[] { _collectionsContext.FireModes[id.Value] };
 
         return NotFound();
     }

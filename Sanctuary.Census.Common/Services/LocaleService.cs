@@ -50,7 +50,7 @@ public class LocaleService : ILocaleService
     public bool TryGetLocaleString(long stringID, [NotNullWhen(true)] out LocaleString? localeString)
     {
         localeString = null;
-        if (stringID is < 0 or > uint.MaxValue)
+        if (stringID is < 1 or > uint.MaxValue)
             return false;
 
         uint actualID = Jenkins.GetItemLocaleID((uint)stringID);

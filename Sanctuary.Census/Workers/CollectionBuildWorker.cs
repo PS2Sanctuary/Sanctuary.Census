@@ -75,6 +75,7 @@ public class CollectionBuildWorker : BackgroundService
 
             ICollectionBuilder[] collectionBuilders =
             {
+                new CurrencyCollectionBuilder(),
                 new ItemCollectionBuilder(),
                 new WeaponCollectionBuilder(),
                 new WorldCollectionBuilder()

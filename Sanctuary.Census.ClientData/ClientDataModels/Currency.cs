@@ -5,7 +5,7 @@
 /// </summary>
 /// <param name="ID">The ID of the currency.</param>
 /// <param name="NameID">The locale string ID of the currency's name.</param>
-/// <param name="DescriptionID">The locale string ID of the currency's name.</param>
+/// <param name="DescriptionID">The locale string ID of the currency's description.</param>
 /// <param name="IconID">The image set ID of the currency's icon.</param>
 /// <param name="MapIconID">The image set ID of the currency's map icon.</param>
 /// <param name="ValueMax">The maximum amount of this currency a character may have.</param>

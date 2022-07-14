@@ -2,7 +2,7 @@
 using Sanctuary.Census.ClientData.Objects.ClientDataModels;
 using Sanctuary.Census.Common.Abstractions.Services;
 using Sanctuary.Census.Common.Objects.CommonModels;
-using Sanctuary.Census.Common.Objects.DtoModels;
+using Sanctuary.Census.Models;
 using Sanctuary.Census.ServerData.Internal.Abstractions.Services;
 using System.Collections.Generic;
 

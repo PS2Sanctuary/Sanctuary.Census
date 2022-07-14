@@ -1,6 +1,6 @@
 ﻿using Sanctuary.Census.Common.Objects.CommonModels;
 
-namespace Sanctuary.Census.Common.Objects.DtoModels;
+namespace Sanctuary.Census.Models;
 
 /// <summary>
 /// Represents an item definition.
@@ -39,28 +39,4 @@ public record Item
     uint? HudImageSetID,
     int MaxStackSize,
     bool IsAccountScoped
-)
-{
-    /// <summary>
-    /// Gets the default <see cref="Item"/>.
-    /// </summary>
-    public static Item Default => new
-    (
-        0,
-        0,
-        0,
-        FactionDefinition.All,
-        null,
-        null,
-        null,
-        null,
-        null,
-        null,
-        null,
-        null,
-        null,
-        null,
-        0,
-        false
-    );
-}
+);

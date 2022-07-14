@@ -1,7 +1,6 @@
 ﻿using Sanctuary.Census.Common.Objects.CommonModels;
-using System;
 
-namespace Sanctuary.Census.Common.Objects.DtoModels;
+namespace Sanctuary.Census.Models;
 
 /// <summary>
 /// Represents weapon data.
@@ -26,6 +25,7 @@ namespace Sanctuary.Census.Common.Objects.DtoModels;
 /// <param name="AnimationWieldTypeName">The name of this weapon's animation type.</param>
 /// <param name="MinViewPitch">The minimum view pitch that this weapon can be used at.</param>
 /// <param name="MaxViewPitch">The maximum view pitch that this weapon can be used at.</param>
+/// <param name="AmmoSlots">The ammo slots that this weapon supports.</param>
 public record Weapon
 (
     uint WeaponID,
@@ -51,34 +51,6 @@ public record Weapon
     Weapon.AmmoSlot[] AmmoSlots
 )
 {
-    /// <summary>
-    /// Gets the default <see cref="Item"/>.
-    /// </summary>
-    public static Weapon Default => new
-    (
-        0,
-        null,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        null,
-        null,
-        null,
-        null,
-        null,
-        null,
-        null,
-        null,
-        Array.Empty<AmmoSlot>()
-    );
-
     /// <summary>
     /// Represents data about a weapon's ammo slot.
     /// </summary>

@@ -9,9 +9,14 @@ namespace Sanctuary.Census;
 public class CollectionsContext
 {
     /// <summary>
-    /// Gets the currency collection, indexed by <see cref="Currency.CurrencyID"/>.
+    /// Gets the Currency collection, indexed by <see cref="Currency.CurrencyID"/>.
     /// </summary>
     public IReadOnlyDictionary<uint, Currency> Currencies { get; set; }
+
+    /// <summary>
+    /// Gets the Faction collection, indexed by <see cref="Faction.FactionID"/>.
+    /// </summary>
+    public IReadOnlyDictionary<uint, Faction> Factions { get; set; }
 
     /// <summary>
     /// Gets the Item collection, indexed by <see cref="Item.ItemID"/>.
@@ -34,6 +39,7 @@ public class CollectionsContext
     public CollectionsContext()
     {
         Currencies = new Dictionary<uint, Currency>();
+        Factions = new Dictionary<uint, Faction>();
         Items = new Dictionary<uint, Item>();
         Weapons = new Dictionary<uint, Weapon>();
         Worlds = new Dictionary<uint, World>();

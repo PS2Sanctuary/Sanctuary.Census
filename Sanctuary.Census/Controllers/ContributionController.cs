@@ -73,4 +73,29 @@ public class ContributionController : ControllerBase
 
         return NotFound();
     }
+
+    /// <summary>
+    /// Retrieves data from the Weapon collection.
+    /// </summary>
+    /// <param name="id">The ID of the weapon to retrieve.</param>
+    /// <param name="start">The position in the collection at which to start listing weapons from.</param>
+    /// <returns>The selected weapons.</returns>
+    [HttpGet("test")]
+    public ActionResult<IEnumerable<Faction>> TestGet
+    (
+        [FromQuery(Name = "world_id")] uint? id = null,
+        [FromQuery(Name = "c:start")] int start = 0
+    )
+    {
+        if (start < 0)
+            return BadRequest("c:start must be non-negative");
+
+        if (id is null)
+            return new ActionResult<IEnumerable<Faction>>(_collectionsContext.Factions.Values.Skip(start).Take(100));
+
+        if (_collectionsContext.Factions.ContainsKey(id.Value))
+            return new[] { _collectionsContext.Factions[id.Value] };
+
+        return NotFound();
+    }
 }

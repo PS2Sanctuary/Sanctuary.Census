@@ -63,8 +63,10 @@ public class ItemCollectionBuilder : ICollectionBuilder
             if (definition.ImageSetID > 0)
             {
                 if (imageSetToPrimaryImageMap.ContainsKey((uint)definition.ImageSetID))
+                {
                     imageID = imageSetToPrimaryImageMap[(uint)definition.ImageSetID];
-                imagePath = $"/files/ps2/images/static/{imageID}.png";
+                    imagePath = $"/files/ps2/images/static/{imageID}.png";
+                }
             }
 
             Item built = new

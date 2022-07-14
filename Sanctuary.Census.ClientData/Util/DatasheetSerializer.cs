@@ -13,7 +13,7 @@ namespace Sanctuary.Census.ClientData.Util;
 /// </summary>
 public static class DatasheetSerializer
 {
-    private static readonly byte[] HeaderIdentifier = { (byte)'#', (byte)'*' };
+    private const byte HeaderIdentifier = (byte)'#';
     private static readonly Dictionary<Type, Func<string, object>[]> TypeCtorParamValueConverters = new();
     private static readonly Dictionary<Type, string[]> TypeCtorLowerCaseParamNames = new();
 
@@ -155,13 +155,7 @@ public static class DatasheetSerializer
     private static IReadOnlyList<string?> GetLineContents(ref MemoryReader<byte> reader, out bool hadHeaderIndicator)
     {
         List<string?> elements = new();
-        hadHeaderIndicator = false;
-
-        if (reader.IsNext(HeaderIdentifier))
-        {
-            hadHeaderIndicator = true;
-            reader.Advance(HeaderIdentifier.Length);
-        }
+        hadHeaderIndicator = reader.IsNext(HeaderIdentifier, true);
 
         while (reader.TryReadTo(out ReadOnlyMemory<byte> element, (byte) '^'))
         {

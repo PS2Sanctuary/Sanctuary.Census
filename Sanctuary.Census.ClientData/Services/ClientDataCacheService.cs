@@ -4,7 +4,7 @@ using Mandible.Pack2;
 using Mandible.Services;
 using Mandible.Util;
 using Sanctuary.Census.ClientData.Abstractions.Services;
-using Sanctuary.Census.ClientData.Objects.ClientDataModels;
+using Sanctuary.Census.ClientData.ClientDataModels;
 using Sanctuary.Census.ClientData.Util;
 using Sanctuary.Census.Common.Abstractions.Services;
 using Sanctuary.Census.Common.Objects;
@@ -34,6 +34,9 @@ public class ClientDataCacheService : IClientDataCacheService
     public IReadOnlyList<ClientItemDefinition> ClientItemDefinitions { get; private set; }
 
     /// <inheritdoc />
+    public IReadOnlyList<Currency> Currencies { get; private set; }
+
+    /// <inheritdoc />
     public IReadOnlyList<FireModeDisplayStat> FireModeDisplayStats { get; private set; }
 
     /// <inheritdoc />
@@ -61,6 +64,7 @@ public class ClientDataCacheService : IClientDataCacheService
 
         ClientItemDatasheetDatas = new List<ClientItemDatasheetData>();
         ClientItemDefinitions = new List<ClientItemDefinition>();
+        Currencies = new List<Currency>();
         FireModeDisplayStats = new List<FireModeDisplayStat>();
         ImageSetMappings = new List<ImageSetMapping>();
         ItemProfiles = new List<ItemProfile>();
@@ -99,6 +103,14 @@ public class ClientDataCacheService : IClientDataCacheService
             reader,
             ct
         ).ConfigureAwait(false);
+
+        Currencies = await ExtractDatasheet<Currency>
+        (
+            "Currency.txt",
+            assetHeaders,
+            reader,
+            ct
+        );
 
         FireModeDisplayStats = await ExtractDatasheet<FireModeDisplayStat>
         (

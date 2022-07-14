@@ -1,4 +1,4 @@
-﻿using Sanctuary.Census.ClientData.Objects.ClientDataModels;
+﻿using Sanctuary.Census.ClientData.ClientDataModels;
 using Sanctuary.Census.Common.Abstractions.Services;
 using System.Collections.Generic;
 
@@ -18,6 +18,11 @@ public interface IClientDataCacheService : IDataCacheService
     /// Gets the cached <see cref="ClientItemDefinition"/> objects.
     /// </summary>
     IReadOnlyList<ClientItemDefinition> ClientItemDefinitions { get; }
+
+    /// <summary>
+    /// Gets the cache <see cref="Currency"/> objects.
+    /// </summary>
+    IReadOnlyList<Currency> Currencies { get; }
 
     /// <summary>
     /// Gets the cached <see cref="FireModeDisplayStats"/> objects.

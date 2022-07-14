@@ -1,4 +1,4 @@
-﻿namespace Sanctuary.Census.ClientData.Objects.ClientDataModels;
+﻿namespace Sanctuary.Census.ClientData.ClientDataModels;
 
 /// <summary>
 /// Enumerates the various image set types.

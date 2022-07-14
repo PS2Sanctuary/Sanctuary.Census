@@ -1,6 +1,6 @@
 ﻿using Sanctuary.Census.Common.Objects.CommonModels;
 
-namespace Sanctuary.Census.ClientData.Objects.ClientDataModels;
+namespace Sanctuary.Census.ClientData.ClientDataModels;
 
 /// <summary>
 /// Represents a client item profile

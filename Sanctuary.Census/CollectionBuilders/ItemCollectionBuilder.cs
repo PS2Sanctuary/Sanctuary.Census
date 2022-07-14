@@ -1,7 +1,8 @@
 ﻿using Sanctuary.Census.ClientData.Abstractions.Services;
-using Sanctuary.Census.ClientData.Objects.ClientDataModels;
+using Sanctuary.Census.ClientData.ClientDataModels;
 using Sanctuary.Census.Common.Abstractions.Services;
 using Sanctuary.Census.Common.Objects.CommonModels;
+using Sanctuary.Census.Exceptions;
 using Sanctuary.Census.Models;
 using Sanctuary.Census.ServerData.Internal.Abstractions.Services;
 using System.Collections.Generic;
@@ -22,6 +23,15 @@ public class ItemCollectionBuilder : ICollectionBuilder
         CollectionsContext context
     )
     {
+        if (clientDataCache.ClientItemDefinitions.Count == 0)
+            throw new MissingCacheDataException(typeof(ClientItemDefinition));
+
+        if (clientDataCache.ItemProfiles.Count == 0)
+            throw new MissingCacheDataException(typeof(ItemProfile));
+
+        if (clientDataCache.ImageSetMappings.Count == 0)
+            throw new MissingCacheDataException(typeof(ImageSetMapping));
+
         Dictionary<uint, FactionDefinition> itemFactionMap = new();
         foreach (ItemProfile profile in clientDataCache.ItemProfiles)
         {

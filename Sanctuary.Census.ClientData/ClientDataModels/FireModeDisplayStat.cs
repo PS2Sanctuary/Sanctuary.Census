@@ -1,4 +1,4 @@
-﻿namespace Sanctuary.Census.ClientData.Objects.ClientDataModels;
+﻿namespace Sanctuary.Census.ClientData.ClientDataModels;
 
 /// <summary>
 /// Represents client fire mode stats.

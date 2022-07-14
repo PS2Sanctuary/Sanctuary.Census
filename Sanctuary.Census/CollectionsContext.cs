@@ -14,6 +14,11 @@ public class CollectionsContext
     public IReadOnlyDictionary<uint, Currency> Currencies { get; set; }
 
     /// <summary>
+    /// Gets the Experience collection, indexed by <see cref="Experience.ExperienceID"/>.
+    /// </summary>
+    public IReadOnlyDictionary<uint, Experience> Experiences { get; set; }
+
+    /// <summary>
     /// Gets the Faction collection, indexed by <see cref="Faction.FactionID"/>.
     /// </summary>
     public IReadOnlyDictionary<uint, Faction> Factions { get; set; }

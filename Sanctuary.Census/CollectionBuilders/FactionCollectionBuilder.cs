@@ -23,7 +23,7 @@ public class FactionCollectionBuilder : ICollectionBuilder
         CollectionsContext context
     )
     {
-        if (clientDataCache.ClientItemDefinitions.Count == 0)
+        if (clientDataCache.Factions.Count == 0)
             throw new MissingCacheDataException(typeof(CFaction));
 
         if (clientDataCache.ImageSetMappings.Count == 0)

@@ -4,6 +4,7 @@ using Microsoft.Extensions.Hosting;
 using Sanctuary.Census.ClientData.Extensions;
 using Sanctuary.Census.Common.Objects;
 using Sanctuary.Census.Json;
+using Sanctuary.Census.Middleware;
 using Sanctuary.Census.ServerData.Internal.Extensions;
 using Sanctuary.Census.ServerData.Internal.Objects;
 using Sanctuary.Census.Workers;
@@ -88,6 +89,8 @@ public static class Program
         }
 
         app.UseHttpsRedirection();
+        app.UseMiddleware<ServiceIDMiddleware>();
+        app.UseRouting();
         app.UseAuthorization();
         app.MapControllers();
 

@@ -94,6 +94,7 @@ public class CollectionBuildWorker : BackgroundService
                 new FireModeToProjectileCollectionBuilder(),
                 new ItemCollectionBuilder(),
                 new ItemCategoryCollectionBuilder(),
+                new ItemToWeaponCollectionBuilder(),
                 new WeaponCollectionBuilder(),
                 new WorldCollectionBuilder()
             };

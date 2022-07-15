@@ -26,6 +26,7 @@ namespace Sanctuary.Census.Models.Collections;
 /// <param name="MinViewPitch">The minimum view pitch that this weapon can be used at.</param>
 /// <param name="MaxViewPitch">The maximum view pitch that this weapon can be used at.</param>
 /// <param name="AmmoSlots">The ammo slots that this weapon supports.</param>
+/// <param name="FireGroupIDs">The IDs of the fire groups that this weapon uses.</param>
 public record Weapon
 (
     uint WeaponID,
@@ -48,7 +49,8 @@ public record Weapon
     string? AnimationWieldTypeName,
     float? MinViewPitch,
     float? MaxViewPitch,
-    Weapon.AmmoSlot[] AmmoSlots
+    Weapon.AmmoSlot[] AmmoSlots,
+    uint[] FireGroupIDs
 )
 {
     /// <summary>

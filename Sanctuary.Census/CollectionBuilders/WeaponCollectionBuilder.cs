@@ -68,7 +68,8 @@ public class WeaponCollectionBuilder : ICollectionBuilder
                 animWieldTypeName,
                 definition.MinPitch == 0 ? null : definition.MinPitch,
                 definition.MaxPitch == 0 ? null : definition.MaxPitch,
-                ammoSlots
+                ammoSlots,
+                definition.FireGroups
             );
             builtWeapons.TryAdd(built.WeaponID, built);
         }

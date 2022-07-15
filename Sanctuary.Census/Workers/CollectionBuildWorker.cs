@@ -64,8 +64,11 @@ public class CollectionBuildWorker : BackgroundService
 
             try
             {
+                _logger.LogDebug("Populating client data cache...");
                 await _clientDataCache.RepopulateAsync(ct).ConfigureAwait(false);
+                _logger.LogDebug("Populating server data cache...");
                 await _serverDataCache.RepopulateAsync(ct).ConfigureAwait(false);
+                _logger.LogDebug("Populating locale data cache...");
                 await _localeService.RepopulateAsync(ct).ConfigureAwait(false);
                 dataCacheFailureCount = 0;
                 _logger.LogInformation("Caches updated successfully!");

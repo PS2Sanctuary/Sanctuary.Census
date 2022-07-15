@@ -56,7 +56,12 @@ public class CollectionsContext
     public IReadOnlyDictionary<uint, ItemCategory> ItemCategories { get; set; }
 
     /// <summary>
-    /// Gets the Weapon collection, indexed by <see cref="Weapon.WeaponID"/>.
+    /// Gets the ItemToWeapon collection, indexed by <see cref="ItemToWeapon.ItemId"/>.
+    /// </summary>
+    public IReadOnlyDictionary<uint, ItemToWeapon> ItemsToWeapon { get; set; }
+
+    /// <summary>
+    /// Gets the Weapon collection, indexed by <see cref="Weapon.WeaponId"/>.
     /// </summary>
     public IReadOnlyDictionary<uint, Weapon> Weapons { get; set; }
 
@@ -79,6 +84,7 @@ public class CollectionsContext
         FireModeToProjectileMap = new Dictionary<uint, FireModeToProjectile>();
         Items = new Dictionary<uint, Item>();
         ItemCategories = new Dictionary<uint, ItemCategory>();
+        ItemsToWeapon = new Dictionary<uint, ItemToWeapon>();
         Weapons = new Dictionary<uint, Weapon>();
         Worlds = new Dictionary<uint, World>();
     }
@@ -108,6 +114,7 @@ public class CollectionsContext
         AddCollection(FireModeToProjectileMap);
         AddCollection(Items);
         AddCollection(ItemCategories);
+        AddCollection(ItemsToWeapon);
         AddCollection(Weapons);
         AddCollection(Worlds);
 

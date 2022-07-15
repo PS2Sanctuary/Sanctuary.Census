@@ -3,6 +3,15 @@
 Sanctuary.Census aims to provide as similar of an interface to Daybreak Game's Census as possible. However, particularly
 when it comes to the provided collections, this isn't always achievable.
 
+⚠ Only the `ps2` environment is supported at this time, despite what the api-doc pages might tell you.
+
+## Response Shape
+
+Responses aim to be very similar in shape to Census. Notable differences include:
+
+- Number, boolean and `null` values are represented appropriately, rather than as strings.
+- The error response format is not consistent.
+
 ## Collections
 
 This section lists the Collections provided by Sanctuary.Census, and compares them to Census itself.

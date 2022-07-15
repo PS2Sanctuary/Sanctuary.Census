@@ -42,7 +42,7 @@ public class CollectionsContext
     public IReadOnlyDictionary<uint, IReadOnlyList<FireGroupToFireMode>> FireGroupsToFireModes { get; set; }
 
     /// <summary>
-    /// Gets the FireMode collection, indexed by <see cref="FireMode2.FireModeID"/>.
+    /// Gets the FireMode2 collection, indexed by <see cref="FireMode2.FireModeID"/>.
     /// </summary>
     public IReadOnlyDictionary<uint, FireMode2> FireModes { get; set; }
 
@@ -65,6 +65,11 @@ public class CollectionsContext
     /// Gets the ItemToWeapon collection, indexed by <see cref="ItemToWeapon.ItemId"/>.
     /// </summary>
     public IReadOnlyDictionary<uint, ItemToWeapon> ItemsToWeapon { get; set; }
+
+    /// <summary>
+    /// Gets the PlayerStateGroup2 collection, indexed by <see cref="PlayerStateGroup2.PlayerStateGroupId"/>.
+    /// </summary>
+    public IReadOnlyDictionary<uint, IReadOnlyList<PlayerStateGroup2>> PlayerStateGroups { get; set; }
 
     /// <summary>
     /// Gets the Weapon collection, indexed by <see cref="Weapon.WeaponId"/>.
@@ -97,6 +102,7 @@ public class CollectionsContext
         Items = new Dictionary<uint, Item>();
         ItemCategories = new Dictionary<uint, ItemCategory>();
         ItemsToWeapon = new Dictionary<uint, ItemToWeapon>();
+        PlayerStateGroups = new Dictionary<uint, IReadOnlyList<PlayerStateGroup2>>();
         Weapons = new Dictionary<uint, Weapon>();
         WeaponAmmoSlots = new Dictionary<uint, IReadOnlyList<WeaponAmmoSlot>>();
         Worlds = new Dictionary<uint, World>();
@@ -134,6 +140,7 @@ public class CollectionsContext
         AddCollection(Items);
         AddCollection(ItemCategories);
         AddCollection(ItemsToWeapon);
+        AddCollection(PlayerStateGroups);
         AddCollection(Weapons);
         AddCollection(WeaponAmmoSlots);
         AddCollection(Worlds);

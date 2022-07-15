@@ -1,8 +1,5 @@
 # Migrating from Census
 
-Sanctuary.Census aims to provide as similar of an interface to Daybreak Game's Census as possible. However, particularly
-when it comes to the provided collections, this isn't always achievable.
-
 ## Queries
 
 The basic structure of a query is supported. Submitting a service ID is optional, and it's not logged in any way if you do.
@@ -46,6 +43,7 @@ be very similar.
 - fire_mode_to_projectile
 - item_category
 - item_to_weapon
+- player_state_group_2
 
 ### 🌟 Silver Tier Collections
 

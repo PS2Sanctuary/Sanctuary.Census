@@ -3,7 +3,19 @@
 Sanctuary.Census aims to provide as similar of an interface to Daybreak Game's Census as possible. However, particularly
 when it comes to the provided collections, this isn't always achievable.
 
+## Queries
+
+The basic structure of a query is supported. Submitting a service ID is optional, and rest assured it's not logged in any way if you do.
+
+Both the `get` and `count` verbs are supported.
+
 ⚠ Only the `ps2` environment is supported at this time, despite what the api-doc pages might tell you.
+
+Querying itself is extremely limited at the moment:
+
+- The only supported Census commands are `c:start` and `c:limit`.
+- A collection can only be filtered on its ID field.
+- A collection cannot be filtered by multiple values (e.g. `item_id=1,2`)
 
 ## Response Shape
 
@@ -13,6 +25,8 @@ Responses aim to be very similar in shape to Census. Notable differences include
 - The error response format is not consistent.
 
 ## Collections
+
+ℹ️ Please see the [collection model definitions here](https://github.com/carlst99/Sanctuary.Census/tree/main/Sanctuary.Census/Models/Collections).
 
 This section lists the Collections provided by Sanctuary.Census, and compares them to Census itself.
 Many collections also add additional data on top of the base Census data, but this is not documented here.

@@ -70,6 +70,9 @@ public class CollectionController : ControllerBase
         [FromQuery(Name = "c:limit")] int limit = 100
     )
     {
+        if (environment is not PS2Environment.PS2)
+            return GetInvalidEnvironmentResult();
+
         if (start < 0)
             return BadRequest("c:start may not be less than zero");
 
@@ -112,6 +115,40 @@ public class CollectionController : ControllerBase
         };
     }
 
+    /// <summary>
+    /// Retrieves data from a collection.
+    /// </summary>
+    /// <param name="environment">The environment to retrieve the collection from.</param>
+    /// <param name="collectionName">The name of the collection to retrieve data from.</param>
+    /// <returns>Elements of the collection.</returns>
+    [HttpGet("count/{environment}/{collectionName}")]
+    public ActionResult<CollectionCount> CountCollection
+    (
+        PS2Environment environment,
+        string collectionName
+    )
+    {
+        if (environment is not PS2Environment.PS2)
+            return GetInvalidEnvironmentResult();
+
+        return collectionName switch {
+            "currency" => (CollectionCount)_collectionsContext.Currencies.Count,
+            "experience" => (CollectionCount)_collectionsContext.Experiences.Count,
+            "faction" => (CollectionCount)_collectionsContext.Factions.Count,
+            "fire_group" => (CollectionCount)_collectionsContext.FireGroups.Count,
+            "fire_group_to_fire_mode" => (CollectionCount)_collectionsContext.FireGroupsToFireModes.Count,
+            "fire_mode_2" => (CollectionCount)_collectionsContext.FireModes.Count,
+            "fire_mode_to_projectile" => (CollectionCount)_collectionsContext.FireModeToProjectileMap.Count,
+            "item" => (CollectionCount)_collectionsContext.Items.Count,
+            "item_category" => (CollectionCount)_collectionsContext.ItemCategories.Count,
+            "item_to_weapon" => (CollectionCount)_collectionsContext.ItemsToWeapon.Count,
+            "weapon" => (CollectionCount)_collectionsContext.Weapons.Count,
+            "weapon_ammo_slot" => (CollectionCount)_collectionsContext.WeaponAmmoSlots.Count,
+            "world" => (CollectionCount)_collectionsContext.Worlds.Count,
+            _ => NotFound()
+        };
+    }
+
     private static DataResponse<object> ConvertCollection<TValue>
     (
         IReadOnlyDictionary<uint, TValue> collection,
@@ -121,30 +158,40 @@ public class CollectionController : ControllerBase
         string dataTypeName
     ) where TValue : notnull
     {
+        IReadOnlyList<object> filtered = FilterCollection(collection, id, start, limit);
+        return new DataResponse<object>(filtered, dataTypeName);
+    }
+
+    private static IReadOnlyList<object> FilterCollection<TValue>
+    (
+        IReadOnlyDictionary<uint, TValue> collection,
+        uint? id,
+        int start,
+        int limit
+    ) where TValue : notnull
+    {
         if (typeof(TValue).IsGenericType && typeof(TValue).GetGenericTypeDefinition() == typeof(IReadOnlyList<>))
         {
             if (id is not null)
             {
                 return !collection.ContainsKey(id.Value)
-                    ? new DataResponse<object>(Array.Empty<TValue>(), dataTypeName)
-                    : new DataResponse<object>((IReadOnlyList<object>)collection[id.Value], dataTypeName);
+                    ? Array.Empty<object>()
+                    : (IReadOnlyList<object>)collection[id.Value];
             }
 
-            List<object> elements = collection.Values
+            return collection.Values
                 .Cast<IReadOnlyList<object>>()
                 .SelectMany(o => o)
                 .Skip(start)
                 .Take(limit)
                 .ToList();
-
-            return new DataResponse<object>(elements, dataTypeName);
         }
 
         if (id is not null)
         {
             return !collection.ContainsKey(id.Value)
-                ? new DataResponse<object>(Array.Empty<TValue>(), dataTypeName)
-                : new DataResponse<object>(collection[id.Value], dataTypeName);
+                ? Array.Empty<object>()
+                : new object[] { collection[id.Value] };
         }
 
         List<object> elements2 = collection.Values
@@ -153,7 +200,7 @@ public class CollectionController : ControllerBase
             .Cast<object>()
             .ToList();
 
-        return new DataResponse<object>(elements2, dataTypeName);
+        return elements2;
     }
 
     private NotFoundObjectResult GetInvalidEnvironmentResult()

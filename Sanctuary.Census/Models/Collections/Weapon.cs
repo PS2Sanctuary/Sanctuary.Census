@@ -26,23 +26,23 @@ namespace Sanctuary.Census.Models.Collections;
 /// <param name="MinViewPitch">The minimum view pitch that this weapon can be used at.</param>
 /// <param name="MaxViewPitch">The maximum view pitch that this weapon can be used at.</param>
 /// <param name="AmmoSlots">The ammo slots that this weapon supports.</param>
-/// <param name="FireGroupIDs">The IDs of the fire groups that this weapon uses.</param>
+/// <param name="FireGroupIds">The IDs of the fire groups that this weapon uses.</param>
 public record Weapon
 (
-    uint WeaponID,
-    uint? WeaponGroupID,
-    ushort EquipMS,
-    ushort UnequipMS,
-    ushort ToIronSightsMS,
-    ushort FromIronSightsMS,
-    ushort ToIronSightsAnimMS,
-    ushort FromIronSightsAnimMS,
-    ushort SprintRecoveryMS,
-    uint NextUseDelayMS,
+    uint WeaponId,
+    uint? WeaponGroupId,
+    ushort EquipMs,
+    ushort UnequipMs,
+    ushort ToIronSightsMs,
+    ushort FromIronSightsMs,
+    ushort ToIronSightsAnimMs,
+    ushort FromIronSightsAnimMs,
+    ushort SprintRecoveryMs,
+    uint NextUseDelayMs,
     float TurnModifier,
     float MoveModifier,
     ushort? HeatBleedOffRate,
-    ushort? HeatOverheatPenaltyMS,
+    ushort? HeatOverheatPenaltyMs,
     LocaleString? RangeDescription,
     float? MeleeDetectWidth,
     float? MeleeDetectHeight,
@@ -50,7 +50,7 @@ public record Weapon
     float? MinViewPitch,
     float? MaxViewPitch,
     Weapon.AmmoSlot[] AmmoSlots,
-    uint[] FireGroupIDs
+    uint[] FireGroupIds
 )
 {
     /// <summary>

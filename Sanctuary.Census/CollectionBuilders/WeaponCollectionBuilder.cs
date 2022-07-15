@@ -71,7 +71,7 @@ public class WeaponCollectionBuilder : ICollectionBuilder
                 ammoSlots,
                 definition.FireGroups
             );
-            builtWeapons.TryAdd(built.WeaponID, built);
+            builtWeapons.TryAdd(built.WeaponId, built);
         }
 
         context.Weapons = builtWeapons;

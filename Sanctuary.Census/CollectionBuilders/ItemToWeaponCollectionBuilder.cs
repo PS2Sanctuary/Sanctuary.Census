@@ -30,7 +30,7 @@ public class ItemToWeaponCollectionBuilder : ICollectionBuilder
         foreach (ClientItemDatasheetData cidd in clientDataCache.ClientItemDatasheetDatas)
         {
             ItemToWeapon built = new(cidd.ItemID, cidd.WeaponID);
-            builtItemsToWeapon.TryAdd(built.ItemId, built);
+            builtItemsToWeapon.Add(built.ItemId, built);
         }
 
         context.ItemsToWeapon = builtItemsToWeapon;

@@ -33,7 +33,6 @@ public class FireGroupCollectionBuilder : ICollectionBuilder
             MFireGroup built = new
             (
                 fireGroup.FireGroupID,
-                fireGroup.FireModes,
                 fireGroup.ChamberDurationMs == 0 ? null : fireGroup.ChamberDurationMs,
                 fireGroup.TransitionDurationMs == 0 ? null : fireGroup.TransitionDurationMs,
                 fireGroup.SpoolUpTimeMs == 0 ? null : fireGroup.SpoolUpTimeMs,

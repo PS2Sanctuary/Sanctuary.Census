@@ -90,6 +90,7 @@ public class CollectionBuildWorker : BackgroundService
                 new ExperienceCollectionBuilder(),
                 new FactionCollectionBuilder(),
                 new FireGroupCollectionBuilder(),
+                new FireGroupToFireModeCollectionBuilder(),
                 new FireModeCollectionBuilder(),
                 new FireModeToProjectileCollectionBuilder(),
                 new ItemCollectionBuilder(),

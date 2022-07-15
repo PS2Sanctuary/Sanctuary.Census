@@ -1,6 +1,7 @@
 ﻿using Sanctuary.Census.Json;
 using Sanctuary.Census.Models;
 using Sanctuary.Census.Models.Collections;
+using System;
 using System.Collections.Generic;
 
 namespace Sanctuary.Census;
@@ -34,6 +35,11 @@ public class CollectionsContext
     /// Gets the FireGroup collection, indexed by <see cref="FireGroup.FireGroupID"/>.
     /// </summary>
     public IReadOnlyDictionary<uint, FireGroup> FireGroups { get; set; }
+
+    /// <summary>
+    /// Gets the FireGroupToFireMode collection, indexed by <see cref="FireGroupToFireMode.FireGroupId"/>.
+    /// </summary>
+    public IReadOnlyDictionary<uint, List<FireGroupToFireMode>> FireGroupsToFireModes { get; set; }
 
     /// <summary>
     /// Gets the FireMode collection, indexed by <see cref="FireMode.FireModeID"/>.
@@ -80,6 +86,7 @@ public class CollectionsContext
         Experiences = new Dictionary<uint, Experience>();
         Factions = new Dictionary<uint, Faction>();
         FireGroups = new Dictionary<uint, FireGroup>();
+        FireGroupsToFireModes = new Dictionary<uint, List<FireGroupToFireMode>>();
         FireModes = new Dictionary<uint, FireMode>();
         FireModeToProjectileMap = new Dictionary<uint, FireModeToProjectile>();
         Items = new Dictionary<uint, Item>();
@@ -98,9 +105,14 @@ public class CollectionsContext
         List<CollectionInfo> collectionInfos = new();
         void AddCollection<T>(IReadOnlyDictionary<uint, T> collection)
         {
+            Type tType = typeof(T);
+            string typeName = tType.IsGenericType
+                ? tType.GenericTypeArguments[0].Name
+                : tType.Name;
+
             CollectionInfo info = new
             (
-                nameConverter.ConvertName(typeof(T).Name),
+                nameConverter.ConvertName(typeName),
                 collection.Count
             );
             collectionInfos.Add(info);
@@ -110,6 +122,7 @@ public class CollectionsContext
         AddCollection(Experiences);
         AddCollection(Factions);
         AddCollection(FireGroups);
+        AddCollection(FireGroupsToFireModes);
         AddCollection(FireModes);
         AddCollection(FireModeToProjectileMap);
         AddCollection(Items);

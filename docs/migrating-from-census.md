@@ -15,33 +15,35 @@ Many collections also add additional data on top of the base Census data, but th
 These collections provide the same data as their Census equivalents. The shape is not guaranteed to match, but is likely to
 be very similar.
 
-- Currency
-- Experience
-- Faction
-- FireGroup
-- FireModeToProjectile
-- ItemCategory
-- World
+- currency
+- experience
+- faction
+- fire_group
+- fire_group_to_fire_mode
+- fire_mode_to_projectile
+- item_category
+- item_to_weapon
+- world
 
 ### 🌟 Silver Tier Collections
 
 These collections are missing small amounts of data as compared to their Census equivalents, or are shaped differently
 in such a way that retrieving certain data may not be immediately obvious.
 
-- Item
-- Weapon
-- World
+- item
+- weapon
+- world
 
-#### Item
+#### item
 
 Missing the `is_vehicle_weapon` and `is_default_attachment` fields. The former can be replaced by checking
 if the `item_category_id` matches or inherits from ItemCategory `104 - Vehicle Weapons`.
 
-#### Weapon
+#### weapon
 
 Missing the `heat_capacity` field.
 
-#### World
+#### world
 
 Missing the `state` field. This is partially replaced by the `is_locked` field.
 
@@ -49,15 +51,10 @@ Missing the `state` field. This is partially replaced by the `is_locked` field.
 
 These collections are missing significant amounts of data, or are shaped very differently.
 
-- fire_group_to_fire_mode
-- FireMode
+- fire_mode
 - weapon_ammo_slot
 
-#### fire_group_to_fire_mode
-
-This Census collection has been removed, in favour of a `fire_modes` array on the `FireGroup` collection model.
-
-#### FireMode
+#### fire_mode
 
 Missing the follow fields:
 - `damage_direct_effect_id`

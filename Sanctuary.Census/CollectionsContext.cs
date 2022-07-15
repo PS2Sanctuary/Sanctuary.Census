@@ -1,4 +1,4 @@
-﻿using Sanctuary.Census.Models;
+﻿using Sanctuary.Census.CollectionModels;
 using System.Collections.Generic;
 
 namespace Sanctuary.Census;

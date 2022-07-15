@@ -5,7 +5,7 @@ using Sanctuary.Census.Exceptions;
 using Sanctuary.Census.ServerData.Internal.Abstractions.Services;
 using Sanctuary.Zone.Packets.ReferenceData;
 using System.Collections.Generic;
-using MFireGroup = Sanctuary.Census.Models.FireGroup;
+using MFireGroup = Sanctuary.Census.CollectionModels.FireGroup;
 using SFireGroup = Sanctuary.Zone.Packets.ReferenceData.FireGroup;
 
 namespace Sanctuary.Census.CollectionBuilders;

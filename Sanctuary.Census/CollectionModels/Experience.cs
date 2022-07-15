@@ -1,6 +1,6 @@
 ﻿using Sanctuary.Census.Common.Objects.CommonModels;
 
-namespace Sanctuary.Census.Models;
+namespace Sanctuary.Census.CollectionModels;
 
 /// <summary>
 /// Represents experience data.

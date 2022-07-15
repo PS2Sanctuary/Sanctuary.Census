@@ -7,7 +7,7 @@ using Sanctuary.Census.Exceptions;
 using Sanctuary.Census.ServerData.Internal.Abstractions.Services;
 using Sanctuary.Zone.Packets.ReferenceData;
 using System.Collections.Generic;
-using MFireMode = Sanctuary.Census.Models.FireMode;
+using MFireMode = Sanctuary.Census.CollectionModels.FireMode;
 
 namespace Sanctuary.Census.CollectionBuilders;
 

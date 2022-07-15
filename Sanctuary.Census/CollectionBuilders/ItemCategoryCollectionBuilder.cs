@@ -7,12 +7,12 @@ using Sanctuary.Census.ServerData.Internal.Abstractions.Services;
 using Sanctuary.Zone.Packets.ReferenceData;
 using System.Collections.Generic;
 using System.Linq;
-using MItemCategory = Sanctuary.Census.Models.ItemCategory;
+using MItemCategory = Sanctuary.Census.CollectionModels.ItemCategory;
 
 namespace Sanctuary.Census.CollectionBuilders;
 
 /// <summary>
-/// Builds the <see cref="Models.ItemCategory"/> collection.
+/// Builds the <see cref="CollectionModels.ItemCategory"/> collection.
 /// </summary>
 public class ItemCategoryCollectionBuilder : ICollectionBuilder
 {

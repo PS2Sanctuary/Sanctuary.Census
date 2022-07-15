@@ -1,4 +1,4 @@
-﻿namespace Sanctuary.Census.Models;
+﻿namespace Sanctuary.Census.CollectionModels;
 
 /// <summary>
 /// Represents a mapping between a fire mode and a projectile.

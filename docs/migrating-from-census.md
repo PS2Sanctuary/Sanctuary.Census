@@ -1,7 +1,7 @@
 # Migrating from Census
 
 Sanctuary.Census aims to provide as similar of an interface to Daybreak Game's Census as possible. However, particularly
-when it comes to the provided collections, this isn't possible
+when it comes to the provided collections, this isn't always achievable.
 
 ## Collections
 

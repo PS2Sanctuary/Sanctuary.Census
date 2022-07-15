@@ -63,6 +63,8 @@ public static class Program
         builder.Services.AddEndpointsApiExplorer();
         builder.Services.AddSwaggerGen(options =>
         {
+            options.SchemaFilter<EnumSchemaFilter>();
+
             IEnumerable<Assembly> assems = AppDomain.CurrentDomain
                 .GetAssemblies()
                 .Where(a => a.FullName?.StartsWith("Sanctuary.Census") == true);

@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Primitives;
 using Sanctuary.Census.Common.Objects;
 using Sanctuary.Census.Models;
@@ -36,7 +37,11 @@ public class CollectionController : ControllerBase
     /// </summary>
     /// <param name="environment">The environment to retrieve the collections of.</param>
     /// <returns>The available collections.</returns>
+    /// <response code="200">Returns the list of collections.</response>
+    /// <response code="400">If the given environment is invalid.</response>
     [HttpGet("get/{environment}")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public ActionResult<DataResponse<Datatype>> GetCollectionInfos(PS2Environment environment)
         => environment is not PS2Environment.PS2
             ? GetInvalidEnvironmentResult()
@@ -47,7 +52,11 @@ public class CollectionController : ControllerBase
     /// </summary>
     /// <param name="environment">The environment to retrieve the collections of.</param>
     /// <returns>The collection count.</returns>
+    /// <response code="200">Returns the number of collections.</response>
+    /// <response code="400">If the given environment is invalid.</response>
     [HttpGet("count/{environment}")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public ActionResult<CollectionCount> CountCollectionInfos(PS2Environment environment) =>
         environment is not PS2Environment.PS2
             ? GetInvalidEnvironmentResult()
@@ -61,7 +70,13 @@ public class CollectionController : ControllerBase
     /// <param name="start">The index into the collection at which to start returning elements.</param>
     /// <param name="limit">The maximum number of elements to return from the collection.</param>
     /// <returns>Elements of the collection.</returns>
+    /// <response code="200">Returns the elements of the collection.</response>
+    /// <response code="400">If the given environment or provided query parameters are invalid.</response>
+    /// <response code="404">If the given collection does not exist.</response>
     [HttpGet("get/{environment}/{collectionName}")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
     public ActionResult<DataResponse<object>> GetCollection
     (
         PS2Environment environment,
@@ -121,7 +136,13 @@ public class CollectionController : ControllerBase
     /// <param name="environment">The environment to retrieve the collection from.</param>
     /// <param name="collectionName">The name of the collection to retrieve data from.</param>
     /// <returns>Elements of the collection.</returns>
+    /// <response code="200">Returns the count of the collection.</response>
+    /// <response code="400">If the given environment or provided query parameters are invalid.</response>
+    /// <response code="404">If the given collection does not exist.</response>
     [HttpGet("count/{environment}/{collectionName}")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
     public ActionResult<CollectionCount> CountCollection
     (
         PS2Environment environment,
@@ -203,6 +224,6 @@ public class CollectionController : ControllerBase
         return elements2;
     }
 
-    private NotFoundObjectResult GetInvalidEnvironmentResult()
-        => NotFound("Valid environments are " + PS2Environment.PS2);
+    private BadRequestObjectResult GetInvalidEnvironmentResult()
+        => BadRequest("Valid environments are " + PS2Environment.PS2);
 }

@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Sanctuary.Census.ClientData.Extensions;
@@ -81,18 +82,26 @@ public static class Program
         app.UseSerilogRequestLogging();
 
         // Configure the HTTP request pipeline.
-        if (app.Environment.IsDevelopment())
+        if (!app.Environment.IsDevelopment())
         {
-            app.UseSwagger();
-            app.UseSwaggerUI(options =>
-            {
-                options.SwaggerEndpoint("/swagger/v1/swagger.json", "v1");
-                options.RoutePrefix = "api-doc";
-            });
+            app.UseExceptionHandler("/error");
         }
+
+        app.UseSwagger();
+        app.UseSwaggerUI(options =>
+        {
+            options.SwaggerEndpoint("/swagger/v1/swagger.json", "v1");
+            options.RoutePrefix = "api-doc";
+        });
 
         app.UseHttpsRedirection();
         app.UseMiddleware<ServiceIDMiddleware>();
+
+        app.MapGet("/", delegate(HttpContext context)
+        {
+            context.Response.Redirect("https://github.com/carlst99/Sanctuary.Census");
+        });
+
         app.UseRouting();
         app.UseAuthorization();
         app.MapControllers();

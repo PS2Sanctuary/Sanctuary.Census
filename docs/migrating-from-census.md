@@ -5,7 +5,7 @@ when it comes to the provided collections, this isn't always achievable.
 
 ## Queries
 
-The basic structure of a query is supported. Submitting a service ID is optional, and rest assured it's not logged in any way if you do.
+The basic structure of a query is supported. Submitting a service ID is optional, and it's not logged in any way if you do.
 
 Both the `get` and `count` verbs are supported.
 

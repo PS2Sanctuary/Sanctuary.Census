@@ -6,7 +6,7 @@ using System;
 namespace Sanctuary.Census.Middleware;
 
 /// <summary>
-/// An Swagger filter to show enums by their name.
+/// A Swagger filter to show enums by their name.
 /// </summary>
 public class EnumSchemaFilter : ISchemaFilter
 {

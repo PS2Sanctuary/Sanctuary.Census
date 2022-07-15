@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using System;
+using System.Net;
 using System.Threading.Tasks;
 
 namespace Sanctuary.Census.Middleware;
@@ -39,6 +40,14 @@ public class ServiceIDMiddleware
         if (pathValue.StartsWith("/s:"))
         {
             int serviceIdEndIndex = pathValue.IndexOf('/', 1);
+            if (serviceIdEndIndex < 0)
+            {
+                context.Request.PathBase.Add(context.Request.Path);
+                context.Request.Path = string.Empty;
+                context.Response.StatusCode = (int)HttpStatusCode.NotFound;
+                return;
+            }
+
             context.Request.PathBase.Add(pathValue[..serviceIdEndIndex]);
             context.Request.Path = new PathString(pathValue[serviceIdEndIndex..]);
         }

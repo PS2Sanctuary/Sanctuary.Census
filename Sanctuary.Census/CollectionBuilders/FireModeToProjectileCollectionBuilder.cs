@@ -1,8 +1,8 @@
 ﻿using Sanctuary.Census.Abstractions.CollectionBuilders;
 using Sanctuary.Census.ClientData.Abstractions.Services;
-using Sanctuary.Census.CollectionModels;
 using Sanctuary.Census.Common.Abstractions.Services;
 using Sanctuary.Census.Exceptions;
+using Sanctuary.Census.Models.Collections;
 using Sanctuary.Census.ServerData.Internal.Abstractions.Services;
 using Sanctuary.Zone.Packets.ReferenceData;
 using System.Collections.Generic;

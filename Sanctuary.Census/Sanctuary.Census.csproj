@@ -15,4 +15,8 @@
         <ProjectReference Include="..\Sanctuary.Census.ServerData.Internal\Sanctuary.Census.ServerData.Internal.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Folder Include="Models" />
+    </ItemGroup>
+
 </Project>

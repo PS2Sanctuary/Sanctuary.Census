@@ -6,7 +6,7 @@ using Sanctuary.Census.Exceptions;
 using Sanctuary.Census.ServerData.Internal.Abstractions.Services;
 using System.Collections.Generic;
 using CFaction = Sanctuary.Census.ClientData.ClientDataModels.Faction;
-using MFaction = Sanctuary.Census.CollectionModels.Faction;
+using MFaction = Sanctuary.Census.Models.Collections.Faction;
 
 namespace Sanctuary.Census.CollectionBuilders;
 

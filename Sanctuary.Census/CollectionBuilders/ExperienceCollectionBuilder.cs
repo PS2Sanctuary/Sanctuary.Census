@@ -6,7 +6,7 @@ using Sanctuary.Census.Exceptions;
 using Sanctuary.Census.ServerData.Internal.Abstractions.Services;
 using System.Collections.Generic;
 using CExperience = Sanctuary.Census.ClientData.ClientDataModels.Experience;
-using MExperience = Sanctuary.Census.CollectionModels.Experience;
+using MExperience = Sanctuary.Census.Models.Collections.Experience;
 
 namespace Sanctuary.Census.CollectionBuilders;
 

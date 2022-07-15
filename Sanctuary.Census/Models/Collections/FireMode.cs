@@ -1,6 +1,6 @@
 ﻿using Sanctuary.Census.Common.Objects.CommonModels;
 
-namespace Sanctuary.Census.CollectionModels;
+namespace Sanctuary.Census.Models.Collections;
 
 #pragma warning disable CS1591
 public record FireMode

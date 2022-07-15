@@ -6,7 +6,7 @@ using Sanctuary.Census.Exceptions;
 using Sanctuary.Census.ServerData.Internal.Abstractions.Services;
 using System.Collections.Generic;
 using CCurrency = Sanctuary.Census.ClientData.ClientDataModels.Currency;
-using MCurrency = Sanctuary.Census.CollectionModels.Currency;
+using MCurrency = Sanctuary.Census.Models.Collections.Currency;
 
 namespace Sanctuary.Census.CollectionBuilders;
 

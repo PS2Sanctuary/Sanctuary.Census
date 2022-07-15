@@ -1,5 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Sanctuary.Census.CollectionModels;
+using Sanctuary.Census.Models.Collections;
 using System.Collections.Generic;
 using System.Linq;
 

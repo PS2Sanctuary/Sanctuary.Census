@@ -23,7 +23,6 @@ be very similar.
 - fire_mode_to_projectile
 - item_category
 - item_to_weapon
-- world
 
 ### 🌟 Silver Tier Collections
 
@@ -32,16 +31,21 @@ in such a way that retrieving certain data may not be immediately obvious.
 
 - item
 - weapon
+- weapon_ammo_slot
 - world
 
 #### item
 
 Missing the `is_vehicle_weapon` and `is_default_attachment` fields. The former can be replaced by checking
-if the `item_category_id` matches or inherits from ItemCategory `104 - Vehicle Weapons`.
+if the `item_category_id` matches or inherits from **item_category** `104 - Vehicle Weapons`.
 
 #### weapon
 
 Missing the `heat_capacity` field.
+
+#### weapon_ammo_slot
+
+Missing the `refill_ammo_rate` and `refill_ammo_delay_ms` fields.
 
 #### world
 
@@ -52,7 +56,6 @@ Missing the `state` field. This is partially replaced by the `is_locked` field.
 These collections are missing significant amounts of data, or are shaped very differently.
 
 - fire_mode
-- weapon_ammo_slot
 
 #### fire_mode
 
@@ -69,9 +72,3 @@ Missing the follow fields:
 - `lockon_range_close`
 - `lockon_range_far`
 - `lockon_required`
-
-#### weapon_ammo_slot
-
-This Census collection has been removed, in favour of an `ammo_slots` array on the `Weapon` collection model.
-The AmmoSlot model is missing the `refill_ammo_rate` and `refill_ammo_delay_ms` fields, and the
-`weapon_slot_index` field is replaced by the index of the AmmoSlot within the `Weapon#ammo_slots` field.

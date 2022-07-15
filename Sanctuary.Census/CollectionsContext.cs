@@ -135,6 +135,7 @@ public class CollectionsContext
         AddCollection(ItemCategories);
         AddCollection(ItemsToWeapon);
         AddCollection(Weapons);
+        AddCollection(WeaponAmmoSlots);
         AddCollection(Worlds);
 
         CollectionInfos = collectionInfos;

@@ -29,10 +29,10 @@ public class CollectionController : ControllerBase
     /// <param name="environment">The environment to retrieve the collections of.</param>
     /// <returns>The available collections.</returns>
     [HttpGet("get/{environment}")]
-    public ActionResult<IReadOnlyList<CollectionInfo>> GetCollectionInfos(PS2Environment environment)
+    public ActionResult<IReadOnlyList<Datatype>> GetCollectionInfos(PS2Environment environment)
         => environment is not PS2Environment.PS2
             ? GetInvalidEnvironmentResult()
-            : new ActionResult<IReadOnlyList<CollectionInfo>>(_collectionsContext.CollectionInfos);
+            : new ActionResult<IReadOnlyList<Datatype>>(_collectionsContext.Datatypes);
 
     /// <summary>
     /// Counts the number of a available collections.
@@ -43,7 +43,7 @@ public class CollectionController : ControllerBase
     public ActionResult<CollectionCount> CountCollectionInfos(PS2Environment environment) =>
         environment is not PS2Environment.PS2
             ? GetInvalidEnvironmentResult()
-            : new ActionResult<CollectionCount>(_collectionsContext.CollectionInfos.Count);
+            : new ActionResult<CollectionCount>(_collectionsContext.Datatypes.Count);
 
     private NotFoundObjectResult GetInvalidEnvironmentResult()
         => NotFound("Valid environments are " + PS2Environment.PS2);

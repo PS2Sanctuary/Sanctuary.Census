@@ -5,7 +5,7 @@
 /// </summary>
 /// <param name="Name">The name of the collection.</param>
 /// <param name="Count">The number of elements in the collection.</param>
-public record CollectionInfo
+public record Datatype
 (
     string Name,
     int Count

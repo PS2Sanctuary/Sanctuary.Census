@@ -14,7 +14,7 @@ public class CollectionsContext
     /// <summary>
     /// Gets the collection information.
     /// </summary>
-    public IReadOnlyList<CollectionInfo> CollectionInfos { get; set; }
+    public IReadOnlyList<Datatype> Datatypes { get; set; }
 
     /// <summary>
     /// Gets the Currency collection, indexed by <see cref="Currency.CurrencyID"/>.
@@ -86,7 +86,7 @@ public class CollectionsContext
     /// </summary>
     public CollectionsContext()
     {
-        CollectionInfos = new List<CollectionInfo>();
+        Datatypes = new List<Datatype>();
         Currencies = new Dictionary<uint, Currency>();
         Experiences = new Dictionary<uint, Experience>();
         Factions = new Dictionary<uint, Faction>();
@@ -103,12 +103,12 @@ public class CollectionsContext
     }
 
     /// <summary>
-    /// Builds the <see cref="CollectionInfos"/> list.
+    /// Builds the <see cref="Datatypes"/> list.
     /// </summary>
     public void BuildCollectionInfos()
     {
         SnakeCaseJsonNamingPolicy nameConverter = new();
-        List<CollectionInfo> collectionInfos = new();
+        List<Datatype> collectionInfos = new();
         void AddCollection<T>(IReadOnlyDictionary<uint, T> collection)
         {
             Type tType = typeof(T);
@@ -116,7 +116,7 @@ public class CollectionsContext
                 ? tType.GenericTypeArguments[0].Name
                 : tType.Name;
 
-            CollectionInfo info = new
+            Datatype info = new
             (
                 nameConverter.ConvertName(typeName),
                 collection.Count
@@ -138,6 +138,6 @@ public class CollectionsContext
         AddCollection(WeaponAmmoSlots);
         AddCollection(Worlds);
 
-        CollectionInfos = collectionInfos;
+        Datatypes = collectionInfos;
     }
 }

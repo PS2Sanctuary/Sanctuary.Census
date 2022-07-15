@@ -1,7 +1,7 @@
 ﻿namespace Sanctuary.Census.Models.Collections;
 
 /// <summary>
-/// Represents a mapping between a <see cref="FireGroup"/> and a <see cref="FireMode"/>.
+/// Represents a mapping between a <see cref="FireGroup"/> and a <see cref="FireMode2"/>.
 /// </summary>
 /// <param name="FireGroupId">The ID of the fire group.</param>
 /// <param name="FireModeId">The ID of the fire mode.</param>

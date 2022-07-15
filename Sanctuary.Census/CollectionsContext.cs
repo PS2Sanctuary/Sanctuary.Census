@@ -42,9 +42,9 @@ public class CollectionsContext
     public IReadOnlyDictionary<uint, IReadOnlyList<FireGroupToFireMode>> FireGroupsToFireModes { get; set; }
 
     /// <summary>
-    /// Gets the FireMode collection, indexed by <see cref="FireMode.FireModeID"/>.
+    /// Gets the FireMode collection, indexed by <see cref="FireMode2.FireModeID"/>.
     /// </summary>
-    public IReadOnlyDictionary<uint, FireMode> FireModes { get; set; }
+    public IReadOnlyDictionary<uint, FireMode2> FireModes { get; set; }
 
     /// <summary>
     /// Gets the FireModeToProjectile collection, indexed by <see cref="FireModeToProjectile.FireModeID"/>.
@@ -92,7 +92,7 @@ public class CollectionsContext
         Factions = new Dictionary<uint, Faction>();
         FireGroups = new Dictionary<uint, FireGroup>();
         FireGroupsToFireModes = new Dictionary<uint, IReadOnlyList<FireGroupToFireMode>>();
-        FireModes = new Dictionary<uint, FireMode>();
+        FireModes = new Dictionary<uint, FireMode2>();
         FireModeToProjectileMap = new Dictionary<uint, FireModeToProjectile>();
         Items = new Dictionary<uint, Item>();
         ItemCategories = new Dictionary<uint, ItemCategory>();

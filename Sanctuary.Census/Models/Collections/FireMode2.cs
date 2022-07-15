@@ -3,7 +3,7 @@
 namespace Sanctuary.Census.Models.Collections;
 
 #pragma warning disable CS1591
-public record FireMode
+public record FireMode2
 (
     uint FireModeID,
     byte FireModeTypeID,

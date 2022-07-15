@@ -100,7 +100,7 @@ public class CollectionController : ControllerBase
             "faction" => ConvertCollection(_collectionsContext.Factions, id, start, limit, "faction"),
             "fire_group" => ConvertCollection(_collectionsContext.FireGroups, id, start, limit, "fire_group"),
             "fire_group_to_fire_mode" => ConvertCollection(_collectionsContext.FireGroupsToFireModes, id, start, limit, "fire_group_to_fire_mode"),
-            "fire_mode" => ConvertCollection(_collectionsContext.FireModes, id, start, limit, "fire_mode"),
+            "fire_mode_2" => ConvertCollection(_collectionsContext.FireModes, id, start, limit, "fire_mode_2"),
             "fire_mode_to_projectile" => ConvertCollection(_collectionsContext.FireModeToProjectileMap, id, start, limit, "fire_mode_to_projectile"),
             "item" => ConvertCollection(_collectionsContext.Items, id, start, limit, "item"),
             "item_category" => ConvertCollection(_collectionsContext.ItemCategories, id, start, limit, "item_category"),

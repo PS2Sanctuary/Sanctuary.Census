@@ -8,7 +8,6 @@ using Sanctuary.Census.CollectionBuilders;
 using Sanctuary.Census.Common.Abstractions.Services;
 using Sanctuary.Census.Common.Objects;
 using Sanctuary.Census.Common.Services;
-using Sanctuary.Census.Controllers;
 using Sanctuary.Census.ServerData.Internal.Abstractions.Services;
 using System;
 using System.Threading;
@@ -27,7 +26,7 @@ public class CollectionBuildWorker : BackgroundService
     private readonly CollectionsContext _collectionsContext;
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="ContributionController"/> class.
+    /// Initializes a new instance of the <see cref="CollectionBuildWorker"/> class.
     /// </summary>
     /// <param name="logger">The logging interface to use.</param>
     /// <param name="serviceScopeFactory">The service provider.</param>

@@ -37,6 +37,13 @@ public class SnakeCaseJsonNamingPolicy : JsonNamingPolicy
                 wordBoundaries.Enqueue(lastAddedBoundary);
             }
 
+            // Split on the first of a sequence of digits
+            if (letter is >= '1' and <= '9' && previousLetter is <= '1' or >= '9')
+            {
+                lastAddedBoundary = i;
+                wordBoundaries.Enqueue(lastAddedBoundary);
+            }
+
             previousLetter = letter;
         }
 

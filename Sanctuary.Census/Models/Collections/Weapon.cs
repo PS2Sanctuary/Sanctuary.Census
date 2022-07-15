@@ -25,7 +25,6 @@ namespace Sanctuary.Census.Models.Collections;
 /// <param name="AnimationWieldTypeName">The name of this weapon's animation type.</param>
 /// <param name="MinViewPitch">The minimum view pitch that this weapon can be used at.</param>
 /// <param name="MaxViewPitch">The maximum view pitch that this weapon can be used at.</param>
-/// <param name="AmmoSlots">The ammo slots that this weapon supports.</param>
 /// <param name="FireGroupIds">The IDs of the fire groups that this weapon uses.</param>
 public record Weapon
 (
@@ -49,20 +48,5 @@ public record Weapon
     string? AnimationWieldTypeName,
     float? MinViewPitch,
     float? MaxViewPitch,
-    Weapon.AmmoSlot[] AmmoSlots,
     uint[] FireGroupIds
-)
-{
-    /// <summary>
-    /// Represents data about a weapon's ammo slot.
-    /// </summary>
-    /// <param name="ClipSize">The size of a single clip of this ammo slot.</param>
-    /// <param name="Capacity">The size of the reserve ammunition capacity of this ammo slot.</param>
-    /// <param name="ClipModelName">The name of the model that represents this clip.</param>
-    public record AmmoSlot
-    (
-        ushort ClipSize,
-        ushort Capacity,
-        string? ClipModelName
-    );
-}
+);

@@ -39,7 +39,7 @@ public class CollectionsContext
     /// <summary>
     /// Gets the FireGroupToFireMode collection, indexed by <see cref="FireGroupToFireMode.FireGroupId"/>.
     /// </summary>
-    public IReadOnlyDictionary<uint, List<FireGroupToFireMode>> FireGroupsToFireModes { get; set; }
+    public IReadOnlyDictionary<uint, IReadOnlyList<FireGroupToFireMode>> FireGroupsToFireModes { get; set; }
 
     /// <summary>
     /// Gets the FireMode collection, indexed by <see cref="FireMode.FireModeID"/>.
@@ -72,6 +72,11 @@ public class CollectionsContext
     public IReadOnlyDictionary<uint, Weapon> Weapons { get; set; }
 
     /// <summary>
+    /// Gets the WeaponAmmoSlot collection, indexed by <see cref="Weapon.WeaponId"/>.
+    /// </summary>
+    public IReadOnlyDictionary<uint, IReadOnlyList<WeaponAmmoSlot>> WeaponAmmoSlots { get; set; }
+
+    /// <summary>
     /// Gets the World collection, indexed by <see cref="World.WorldID"/>.
     /// </summary>
     public IReadOnlyDictionary<uint, World> Worlds { get; set; }
@@ -86,13 +91,14 @@ public class CollectionsContext
         Experiences = new Dictionary<uint, Experience>();
         Factions = new Dictionary<uint, Faction>();
         FireGroups = new Dictionary<uint, FireGroup>();
-        FireGroupsToFireModes = new Dictionary<uint, List<FireGroupToFireMode>>();
+        FireGroupsToFireModes = new Dictionary<uint, IReadOnlyList<FireGroupToFireMode>>();
         FireModes = new Dictionary<uint, FireMode>();
         FireModeToProjectileMap = new Dictionary<uint, FireModeToProjectile>();
         Items = new Dictionary<uint, Item>();
         ItemCategories = new Dictionary<uint, ItemCategory>();
         ItemsToWeapon = new Dictionary<uint, ItemToWeapon>();
         Weapons = new Dictionary<uint, Weapon>();
+        WeaponAmmoSlots = new Dictionary<uint, IReadOnlyList<WeaponAmmoSlot>>();
         Worlds = new Dictionary<uint, World>();
     }
 

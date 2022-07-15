@@ -7,7 +7,6 @@ using Sanctuary.Census.Models.Collections;
 using Sanctuary.Census.ServerData.Internal.Abstractions.Services;
 using Sanctuary.Zone.Packets.ReferenceData;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace Sanctuary.Census.CollectionBuilders;
 
@@ -37,15 +36,6 @@ public class WeaponCollectionBuilder : ICollectionBuilder
                 ? null
                 : definition.AnimationWieldTypeName;
 
-            Weapon.AmmoSlot[] ammoSlots = definition.AmmoSlots.Where(s => s.AmmoID != 0)
-                .Select(s => new Weapon.AmmoSlot
-                (
-                    s.ClipSize,
-                    s.Capacity,
-                    s.ClipModelName.Length == 0 ? null : s.ClipModelName
-                ))
-                .ToArray();
-
             Weapon built = new
             (
                 definition.WeaponID,
@@ -68,7 +58,6 @@ public class WeaponCollectionBuilder : ICollectionBuilder
                 animWieldTypeName,
                 definition.MinPitch == 0 ? null : definition.MinPitch,
                 definition.MaxPitch == 0 ? null : definition.MaxPitch,
-                ammoSlots,
                 definition.FireGroups
             );
             builtWeapons.TryAdd(built.WeaponId, built);

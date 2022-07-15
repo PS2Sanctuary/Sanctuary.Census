@@ -6,14 +6,13 @@ using Sanctuary.Census.Models.Collections;
 using Sanctuary.Census.ServerData.Internal.Abstractions.Services;
 using Sanctuary.Zone.Packets.ReferenceData;
 using System.Collections.Generic;
-using FireGroup = Sanctuary.Zone.Packets.ReferenceData.FireGroup;
 
 namespace Sanctuary.Census.CollectionBuilders;
 
 /// <summary>
-/// Builds the <see cref="FireGroupToFireMode"/> collection.
+/// Builds the <see cref="WeaponAmmoSlot"/> collection.
 /// </summary>
-public class FireGroupToFireModeCollectionBuilder : ICollectionBuilder
+public class WeaponAmmoSlotCollectionBuilder : ICollectionBuilder
 {
     /// <inheritdoc />
     public void Build
@@ -27,24 +26,27 @@ public class FireGroupToFireModeCollectionBuilder : ICollectionBuilder
         if (serverDataCache.WeaponDefinitions is null)
             throw new MissingCacheDataException(typeof(WeaponDefinitions));
 
-        Dictionary<uint, IReadOnlyList<FireGroupToFireMode>> builtMaps = new();
-        foreach (FireGroup fireGroup in serverDataCache.WeaponDefinitions.FireGroups)
+        Dictionary<uint, IReadOnlyList<WeaponAmmoSlot>> builtAmmoSlots = new();
+        foreach (WeaponDefinition weapon in serverDataCache.WeaponDefinitions.Definitions)
         {
-            List<FireGroupToFireMode> map = new();
+            List<WeaponAmmoSlot> map = new();
 
-            for (uint i = 0; i < fireGroup.FireModes.Length; i++)
+            for (uint i = 0; i < weapon.AmmoSlots.Length; i++)
             {
-                map.Add(new FireGroupToFireMode
+                WeaponDefinitionAmmoSlot slot = weapon.AmmoSlots[i];
+                map.Add(new WeaponAmmoSlot
                 (
-                    fireGroup.FireGroupID,
-                    fireGroup.FireModes[i],
-                    i
+                    weapon.WeaponID,
+                    i,
+                    slot.ClipSize,
+                    slot.Capacity,
+                    slot.ClipModelName.Length == 0 ? null : slot.ClipModelName
                 ));
             }
 
-            builtMaps.Add(fireGroup.FireGroupID, map);
+            builtAmmoSlots.Add(weapon.WeaponID, map);
         }
 
-        context.FireGroupsToFireModes = builtMaps;
+        context.WeaponAmmoSlots = builtAmmoSlots;
     }
 }

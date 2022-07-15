@@ -99,6 +99,7 @@ public class CollectionBuildWorker : BackgroundService
                 new ItemCategoryCollectionBuilder(),
                 new ItemToWeaponCollectionBuilder(),
                 new PlayerStateGroup2CollectionBuilder(),
+                new ProjectileCollectionBuilder(),
                 new WeaponCollectionBuilder(),
                 new WeaponAmmoSlotCollectionBuilder(),
                 new WorldCollectionBuilder()

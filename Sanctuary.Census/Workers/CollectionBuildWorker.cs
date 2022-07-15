@@ -110,6 +110,7 @@ public class CollectionBuildWorker : BackgroundService
                     _logger.LogError(ex, "Failed to run the {CollectionBuilder}", collectionBuilder);
                 }
             }
+            _collectionsContext.BuildCollectionInfos();
 
             await Task.Delay(TimeSpan.FromHours(1), ct).ConfigureAwait(false);
         }

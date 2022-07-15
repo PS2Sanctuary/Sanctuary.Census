@@ -1,4 +1,6 @@
-﻿using Sanctuary.Census.Models.Collections;
+﻿using Sanctuary.Census.Json;
+using Sanctuary.Census.Models;
+using Sanctuary.Census.Models.Collections;
 using System.Collections.Generic;
 
 namespace Sanctuary.Census;
@@ -8,6 +10,11 @@ namespace Sanctuary.Census;
 /// </summary>
 public class CollectionsContext
 {
+    /// <summary>
+    /// Gets the collection information.
+    /// </summary>
+    public IReadOnlyList<CollectionInfo> CollectionInfos { get; set; }
+
     /// <summary>
     /// Gets the Currency collection, indexed by <see cref="Currency.CurrencyID"/>.
     /// </summary>
@@ -63,6 +70,7 @@ public class CollectionsContext
     /// </summary>
     public CollectionsContext()
     {
+        CollectionInfos = new List<CollectionInfo>();
         Currencies = new Dictionary<uint, Currency>();
         Experiences = new Dictionary<uint, Experience>();
         Factions = new Dictionary<uint, Faction>();
@@ -73,5 +81,36 @@ public class CollectionsContext
         ItemCategories = new Dictionary<uint, ItemCategory>();
         Weapons = new Dictionary<uint, Weapon>();
         Worlds = new Dictionary<uint, World>();
+    }
+
+    /// <summary>
+    /// Builds the <see cref="CollectionInfos"/> list.
+    /// </summary>
+    public void BuildCollectionInfos()
+    {
+        SnakeCaseJsonNamingPolicy nameConverter = new();
+        List<CollectionInfo> collectionInfos = new();
+        void AddCollection<T>(IReadOnlyDictionary<uint, T> collection)
+        {
+            CollectionInfo info = new
+            (
+                nameConverter.ConvertName(typeof(T).Name),
+                collection.Count
+            );
+            collectionInfos.Add(info);
+        }
+
+        AddCollection(Currencies);
+        AddCollection(Experiences);
+        AddCollection(Factions);
+        AddCollection(FireGroups);
+        AddCollection(FireModes);
+        AddCollection(FireModeToProjectileMap);
+        AddCollection(Items);
+        AddCollection(ItemCategories);
+        AddCollection(Weapons);
+        AddCollection(Worlds);
+
+        CollectionInfos = collectionInfos;
     }
 }

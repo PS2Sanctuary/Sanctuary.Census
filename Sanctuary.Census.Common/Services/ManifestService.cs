@@ -18,7 +18,7 @@ public class ManifestService : IManifestService
 
     private static readonly Dictionary<PS2Environment, string> ManifestUrls = new()
     {
-        { PS2Environment.Live, "http://manifest.patch.daybreakgames.com/patch/sha/manifest/planetside2/planetside2-livecommon/livenext/planetside2-livecommon.sha.soe.txt" },
+        { PS2Environment.PS2, "http://manifest.patch.daybreakgames.com/patch/sha/manifest/planetside2/planetside2-livecommon/livenext/planetside2-livecommon.sha.soe.txt" },
         { PS2Environment.PTS, "http://manifest.patch.daybreakgames.com/patch/sha/manifest/planetside2/planetside2-testcommon/livenext/planetside2-testcommon.sha.soe.txt" }
     };
 

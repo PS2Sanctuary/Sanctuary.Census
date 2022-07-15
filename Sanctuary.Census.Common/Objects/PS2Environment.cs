@@ -8,7 +8,7 @@ public enum PS2Environment
     /// <summary>
     /// The live PS2 environment.
     /// </summary>
-    Live,
+    PS2,
 
     /// <summary>
     /// The PTS PS2 environment.

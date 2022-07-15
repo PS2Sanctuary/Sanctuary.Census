@@ -4,7 +4,6 @@ namespace Sanctuary.Census.Models.Collections;
 
 #pragma warning disable CS1591
 public record FireMode
-#pragma warning restore CS1591
 (
     uint FireModeID,
     byte FireModeTypeID,
@@ -85,3 +84,4 @@ public record FireMode
     float? SwayPeriodY,
     float ZoomDefault
 );
+#pragma warning restore CS1591

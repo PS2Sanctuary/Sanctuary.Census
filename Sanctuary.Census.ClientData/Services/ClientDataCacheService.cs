@@ -11,6 +11,7 @@ using Sanctuary.Census.Common.Objects;
 using Sanctuary.Census.Common.Services;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
 using System.Threading;
@@ -67,16 +68,7 @@ public class ClientDataCacheService : IClientDataCacheService
     {
         _manifestService = manifestService;
         _environmentContextProvider = environmentContextProvider;
-
-        ClientItemDatasheetDatas = new List<ClientItemDatasheetData>();
-        ClientItemDefinitions = new List<ClientItemDefinition>();
-        Currencies = new List<Currency>();
-        Experiences = new List<Experience>();
-        Factions = new List<Faction>();
-        FireModeDisplayStats = new List<FireModeDisplayStat>();
-        ImageSetMappings = new List<ImageSetMapping>();
-        ItemProfiles = new List<ItemProfile>();
-        ResourceTypes = new List<ResourceType>();
+        Clear();
     }
 
     /// <inheritdoc />
@@ -169,6 +161,30 @@ public class ClientDataCacheService : IClientDataCacheService
         ).ConfigureAwait(false);
 
         LastPopulated = DateTimeOffset.UtcNow;
+    }
+
+    /// <inheritdoc />
+    [MemberNotNull(nameof(ClientItemDatasheetDatas))]
+    [MemberNotNull(nameof(ClientItemDefinitions))]
+    [MemberNotNull(nameof(Currencies))]
+    [MemberNotNull(nameof(Experiences))]
+    [MemberNotNull(nameof(Factions))]
+    [MemberNotNull(nameof(FireModeDisplayStats))]
+    [MemberNotNull(nameof(ImageSetMappings))]
+    [MemberNotNull(nameof(ItemProfiles))]
+    [MemberNotNull(nameof(ResourceTypes))]
+    public void Clear()
+    {
+        LastPopulated = DateTimeOffset.MinValue;
+        ClientItemDatasheetDatas = new List<ClientItemDatasheetData>();
+        ClientItemDefinitions = new List<ClientItemDefinition>();
+        Currencies = new List<Currency>();
+        Experiences = new List<Experience>();
+        Factions = new List<Faction>();
+        FireModeDisplayStats = new List<FireModeDisplayStat>();
+        ImageSetMappings = new List<ImageSetMapping>();
+        ItemProfiles = new List<ItemProfile>();
+        ResourceTypes = new List<ResourceType>();
     }
 
     private static async Task<List<TDataType>> ExtractDatasheet<TDataType>

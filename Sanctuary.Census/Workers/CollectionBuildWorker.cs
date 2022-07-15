@@ -112,6 +112,11 @@ public class CollectionBuildWorker : BackgroundService
             }
             _collectionsContext.BuildCollectionInfos();
 
+            _clientDataCache.Clear();
+            _serverDataCache.Clear();
+            _localeService.Clear();
+            _logger.LogDebug("Data caches cleared");
+
             await Task.Delay(TimeSpan.FromHours(1), ct).ConfigureAwait(false);
         }
     }

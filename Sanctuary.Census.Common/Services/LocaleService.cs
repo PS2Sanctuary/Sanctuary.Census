@@ -130,6 +130,22 @@ public class LocaleService : ILocaleService
         LastPopulated = DateTimeOffset.UtcNow;
     }
 
+    /// <inheritdoc />
+    public void Clear()
+    {
+        LastPopulated = DateTimeOffset.MinValue;
+        _german.Clear();
+        _english.Clear();
+        _spanish.Clear();
+        _french.Clear();
+        _italian.Clear();
+        _korean.Clear();
+        _portuguese.Clear();
+        _russian.Clear();
+        _turkish.Clear();
+        _chinese.Clear();
+    }
+
     private static async Task StoreLocaleDataAsync(Stream fileData, Dictionary<uint, string> store, CancellationToken ct)
     {
         using StreamReader sr = new(fileData);

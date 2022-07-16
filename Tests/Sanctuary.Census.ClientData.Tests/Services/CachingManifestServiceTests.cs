@@ -1,4 +1,5 @@
-﻿using Moq;
+﻿using Microsoft.Extensions.Options;
+using Moq;
 using Moq.Protected;
 using Sanctuary.Census.Common.Objects;
 using Sanctuary.Census.Common.Services;
@@ -19,7 +20,7 @@ public class CachingManifestServiceTests
     [Fact]
     public async Task TestGetFileDataAsync()
     {
-        ManifestFile file = new("manifest.xml", 2, 1, 0, DateTimeOffset.Now, "abcdefgh", PS2Environment.Live);
+        ManifestFile file = new("manifest.xml", 2, 1, 0, DateTimeOffset.Now, "abcdefgh", PS2Environment.PS2);
         MockFileSystem fileSystem = new();
         CachingManifestService ms = GetManifestService(out Mock<HttpMessageHandler> handler, fileSystem);
 
@@ -74,10 +75,14 @@ public class CachingManifestServiceTests
             )
             .Verifiable();
 
+        Mock<IHttpClientFactory> factoryMock = new();
+        factoryMock.Setup(c => c.CreateClient(nameof(ManifestService)))
+            .Returns(new HttpClient(handlerMock.Object));
+
         return new CachingManifestService
         (
-            new HttpClient(handlerMock.Object),
-            "AppData",
+            factoryMock.Object,
+            Options.Create(new CommonOptions { AppDataDirectory = "AppData" }),
             fileSystem
         );
     }

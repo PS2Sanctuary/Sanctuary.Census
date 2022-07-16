@@ -19,7 +19,7 @@ public class ManifestServiceTests
     public async Task TestGetFileAsync()
     {
         ManifestService ms = GetManifestService(out Mock<HttpMessageHandler> handler);
-        ManifestFile file = await ms.GetFileAsync("data_x64_0.pack2", PS2Environment.Live, CancellationToken.None);
+        ManifestFile file = await ms.GetFileAsync("data_x64_0.pack2", PS2Environment.PS2, CancellationToken.None);
 
         Uri expectedUri = new("http://manifest.patch.daybreakgames.com/patch/sha/manifest/planetside2/planetside2-livecommon/livenext/planetside2-livecommon.sha.soe.txt");
         handler.Protected()
@@ -50,14 +50,14 @@ public class ManifestServiceTests
 
         await Assert.ThrowsAsync<KeyNotFoundException>
         (
-            async () => await ms.GetFileAsync("this_file_doesnt_exist", PS2Environment.Live, CancellationToken.None)
+            async () => await ms.GetFileAsync("this_file_doesnt_exist", PS2Environment.PS2, CancellationToken.None)
         );
     }
 
     [Fact]
     public async Task TestGetFileDataAsync()
     {
-        ManifestFile file = new("manifest.xml", 2, 1, 0, DateTimeOffset.Now, "abcdefgh", PS2Environment.Live);
+        ManifestFile file = new("manifest.xml", 2, 1, 0, DateTimeOffset.Now, "abcdefgh", PS2Environment.PS2);
         ManifestService ms = GetManifestService(out Mock<HttpMessageHandler> handler);
         Stream fileData = await ms.GetFileDataAsync(file, CancellationToken.None);
 
@@ -101,6 +101,10 @@ public class ManifestServiceTests
             )
             .Verifiable();
 
-        return new ManifestService(new HttpClient(handlerMock.Object));
+        Mock<IHttpClientFactory> factoryMock = new();
+        factoryMock.Setup(c => c.CreateClient(nameof(ManifestService)))
+            .Returns(new HttpClient(handlerMock.Object));
+
+        return new ManifestService(factoryMock.Object);
     }
 }

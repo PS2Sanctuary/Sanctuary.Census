@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Sanctuary.Census.ClientData.Extensions;
@@ -34,6 +35,9 @@ public static class Program
     public static void Main(string[] args)
     {
         WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
+
+        if (!builder.Environment.IsDevelopment() && OperatingSystem.IsLinux())
+            builder.Host.UseSystemd();
 
         string? seqIngestionEndpoint = builder.Configuration.GetSection(LOGGING_OPTIONS_NAME).GetSection("SeqIngestionEndpoint").Value;
         string? seqApiKey = builder.Configuration.GetSection(LOGGING_OPTIONS_NAME).GetSection("SeqApiKey").Value;
@@ -76,13 +80,19 @@ public static class Program
         });
 
         WebApplication app = builder.Build();
+
+        app.UseForwardedHeaders(new ForwardedHeadersOptions
+        {
+            ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto
+        });
+
         app.UseSerilogRequestLogging();
 
         // Configure the HTTP request pipeline.
         if (!app.Environment.IsDevelopment())
-        {
             app.UseExceptionHandler("/error");
-        }
+        else
+            app.UseDeveloperExceptionPage();
 
         app.UseSwagger();
         app.UseSwaggerUI(options =>

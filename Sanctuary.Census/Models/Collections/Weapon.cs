@@ -25,7 +25,6 @@ namespace Sanctuary.Census.Models.Collections;
 /// <param name="AnimationWieldTypeName">The name of this weapon's animation type.</param>
 /// <param name="MinViewPitch">The minimum view pitch that this weapon can be used at.</param>
 /// <param name="MaxViewPitch">The maximum view pitch that this weapon can be used at.</param>
-/// <param name="FireGroupIds">The IDs of the fire groups that this weapon uses.</param>
 public record Weapon
 (
     uint WeaponId,
@@ -47,6 +46,5 @@ public record Weapon
     float? MeleeDetectHeight,
     string? AnimationWieldTypeName,
     float? MinViewPitch,
-    float? MaxViewPitch,
-    uint[] FireGroupIds
+    float? MaxViewPitch
 );

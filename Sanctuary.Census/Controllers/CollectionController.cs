@@ -130,7 +130,7 @@ public class CollectionController : ControllerBase
             "weapon" => ConvertCollection(_collectionsContext.Weapons, id, start, limit, "weapon"),
             "weapon_ammo_slot" => ConvertCollection(_collectionsContext.WeaponAmmoSlots, id, start, limit, "weapon_ammo_slot"),
             "world" => ConvertCollection(_collectionsContext.Worlds, id, start, limit, "world"),
-            _ => NotFound()
+            _ => GetRedirectToCensusResult()
         };
     }
 
@@ -230,6 +230,15 @@ public class CollectionController : ControllerBase
             .ToList();
 
         return elements2;
+    }
+
+    private RedirectResult GetRedirectToCensusResult()
+    {
+        string url = "http://census.daybreakgames.com";
+        if (HttpContext.Items.TryGetValue("ServiceId", out object? serviceId))
+            url += (string)serviceId!;
+
+        return Redirect(url + HttpContext.Request.Path + HttpContext.Request.QueryString);
     }
 
     private BadRequestObjectResult GetInvalidEnvironmentResult()

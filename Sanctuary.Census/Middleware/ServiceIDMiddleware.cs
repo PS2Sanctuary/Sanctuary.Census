@@ -48,7 +48,9 @@ public class ServiceIDMiddleware
                 return;
             }
 
-            context.Request.PathBase.Add(pathValue[..serviceIdEndIndex]);
+            string serviceId = pathValue[..serviceIdEndIndex];
+            context.Items["ServiceId"] = serviceId;
+            context.Request.PathBase.Add(serviceId);
             context.Request.Path = new PathString(pathValue[serviceIdEndIndex..]);
         }
 

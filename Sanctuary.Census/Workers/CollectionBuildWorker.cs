@@ -110,7 +110,7 @@ public class CollectionBuildWorker : BackgroundService
                 try
                 {
                     collectionBuilder.Build(_clientDataCache, _serverDataCache, localeDataCache, _collectionsContext);
-                    _logger.LogInformation("Successfully ran the {CollectionBuilder}", collectionBuilder);
+                    _logger.LogDebug("Successfully ran the {CollectionBuilder}", collectionBuilder);
                 }
                 catch (Exception ex)
                 {

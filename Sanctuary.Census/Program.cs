@@ -25,6 +25,8 @@ namespace Sanctuary.Census;
 /// </summary>
 public static class Program
 {
+    private const string LOGGING_OPTIONS_NAME = "LoggingOptions";
+
     /// <summary>
     /// The entry point of the application.
     /// </summary>
@@ -33,14 +35,9 @@ public static class Program
     {
         WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
-        Log.Logger = new LoggerConfiguration()
-            .MinimumLevel.Verbose()
-            .MinimumLevel.Override("Microsoft", LogEventLevel.Information)
-            .MinimumLevel.Override("Microsoft.AspNetCore", LogEventLevel.Warning)
-            .MinimumLevel.Override("System.Net.Http.HttpClient", LogEventLevel.Warning)
-            .Enrich.FromLogContext()
-            .WriteTo.Console(outputTemplate: "[{Timestamp:HH:mm:ss} {Level:u3}] [{SourceContext}] {Message:lj}{NewLine}{Exception}")
-            .CreateLogger();
+        string? seqIngestionEndpoint = builder.Configuration.GetSection(LOGGING_OPTIONS_NAME).GetSection("SeqIngestionEndpoint").Value;
+        string? seqApiKey = builder.Configuration.GetSection(LOGGING_OPTIONS_NAME).GetSection("SeqApiKey").Value;
+        SetupLogger(seqIngestionEndpoint, seqApiKey);
         builder.Host.UseSerilog();
 
         builder.Services.Configure<CommonOptions>(builder.Configuration.GetSection(nameof(CommonOptions)))
@@ -107,5 +104,29 @@ public static class Program
         app.MapControllers();
 
         app.Run();
+    }
+
+    // ReSharper disable twice UnusedParameter.Local
+    private static void SetupLogger(string? seqIngestionEndpoint, string? seqApiKey)
+    {
+        LoggerConfiguration loggerConfig = new LoggerConfiguration()
+            .MinimumLevel.Verbose()
+            .MinimumLevel.Override("Microsoft", LogEventLevel.Information)
+            .MinimumLevel.Override("Microsoft.AspNetCore", LogEventLevel.Warning)
+            .MinimumLevel.Override("System.Net.Http.HttpClient", LogEventLevel.Warning)
+            .Enrich.FromLogContext()
+            .WriteTo.Console(
+                outputTemplate: "[{Timestamp:HH:mm:ss} {Level:u3}] [{SourceContext}] {Message:lj}{NewLine}{Exception}");
+
+#if !DEBUG
+        if (!string.IsNullOrEmpty(seqIngestionEndpoint) && !string.IsNullOrEmpty(seqApiKey))
+        {
+            Serilog.Core.LoggingLevelSwitch levelSwitch = new();
+            loggerConfig.MinimumLevel.ControlledBy(levelSwitch)
+                .WriteTo.Seq(seqIngestionEndpoint, apiKey: seqApiKey, controlLevelSwitch: levelSwitch);
+        }
+#endif
+
+        Log.Logger = loggerConfig.CreateLogger();
     }
 }

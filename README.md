@@ -1,11 +1,11 @@
 ﻿# Sanctuary.Census
 
-An unofficial supplement for Daybreak Game Company's Census API, which uses alternative data sources to present up-to-date PlanetSide 2 data.
-Sanctuary.Census pulls data from both client files and the game servers, using automated processes for both.
+An unofficial supplement to Daybreak Game Company's Census API, which uses alternative data sources to present up-to-date static PlanetSide 2 data.
+Data from both client files and the game servers, using automated processes for both.
 
 ## Getting Started
 
-An instance of Sanctuary.Census can be found at [https://census.lithafalcon.cc/](https://census.lithafalcon.cc/). It uses the same query structure
+An instance of Sanctuary.Census can be found at `https://census.lithafalcon.cc/`. It uses the same query structure
 (or at least, hopes to eventually) as the official Census, so make sure you're familiar with using it.
 
 Jump right in by heading to [https://census.lithafalcon.cc/get/ps2](https://census.lithafalcon.cc/get/ps2) to view the available collections.

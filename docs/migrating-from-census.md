@@ -103,6 +103,6 @@ Missing the follow fields:
 - `lockon_range_far`
 - `lockon_required`
 
-### profile
+#### profile
 Missing the `movement_speed`, `backpedal_speed_modifier`, `sprint_speed_modifier` and `strafe_speed_modifier` fields.
 

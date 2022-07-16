@@ -129,6 +129,7 @@ public class CollectionController : ControllerBase
             "projectile" => ConvertCollection(_collectionsContext.Projectiles, id, start, limit, "projectile"),
             "weapon" => ConvertCollection(_collectionsContext.Weapons, id, start, limit, "weapon"),
             "weapon_ammo_slot" => ConvertCollection(_collectionsContext.WeaponAmmoSlots, id, start, limit, "weapon_ammo_slot"),
+            "weapon_to_fire_group" => ConvertCollection(_collectionsContext.WeaponToFireGroup, id, start, limit, "weapon_to_fire_group"),
             "world" => ConvertCollection(_collectionsContext.Worlds, id, start, limit, "world"),
             _ => GetRedirectToCensusResult()
         };
@@ -161,20 +162,21 @@ public class CollectionController : ControllerBase
             "experience" => (CollectionCount)_collectionsContext.Experiences.Count,
             "faction" => (CollectionCount)_collectionsContext.Factions.Count,
             "fire_group" => (CollectionCount)_collectionsContext.FireGroups.Count,
-            "fire_group_to_fire_mode" => (CollectionCount)_collectionsContext.FireGroupsToFireModes.Count,
+            "fire_group_to_fire_mode" => (CollectionCount)_collectionsContext.FireGroupsToFireModes.Values.SelectMany(f => f).Count(),
             "fire_mode_2" => (CollectionCount)_collectionsContext.FireModes.Count,
             "fire_mode_to_projectile" => (CollectionCount)_collectionsContext.FireModeToProjectileMap.Count,
             "item" => (CollectionCount)_collectionsContext.Items.Count,
             "item_category" => (CollectionCount)_collectionsContext.ItemCategories.Count,
             "item_to_weapon" => (CollectionCount)_collectionsContext.ItemsToWeapon.Count,
-            "player_state_group_2" => (CollectionCount)_collectionsContext.PlayerStateGroups.Count,
+            "player_state_group_2" => (CollectionCount)_collectionsContext.PlayerStateGroups.Values.SelectMany(f => f).Count(),
             "profile" => (CollectionCount)_collectionsContext.Profiles.Count,
             "profile_2" => (CollectionCount)_collectionsContext.Profiles.Count,
             "projectile" => (CollectionCount)_collectionsContext.Projectiles.Count,
             "weapon" => (CollectionCount)_collectionsContext.Weapons.Count,
-            "weapon_ammo_slot" => (CollectionCount)_collectionsContext.WeaponAmmoSlots.Count,
+            "weapon_ammo_slot" => (CollectionCount)_collectionsContext.WeaponAmmoSlots.Values.SelectMany(f => f).Count(),
+            "weapon_to_fire_group" => (CollectionCount)_collectionsContext.WeaponToFireGroup.Values.SelectMany(f => f).Count(),
             "world" => (CollectionCount)_collectionsContext.Worlds.Count,
-            _ => NotFound()
+            _ => GetRedirectToCensusResult()
         };
     }
 

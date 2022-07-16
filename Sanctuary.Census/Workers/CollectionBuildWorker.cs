@@ -102,6 +102,7 @@ public class CollectionBuildWorker : BackgroundService
                 new ProjectileCollectionBuilder(),
                 new WeaponCollectionBuilder(),
                 new WeaponAmmoSlotCollectionBuilder(),
+                new WeaponToFireGroupCollectionBuilder(),
                 new WorldCollectionBuilder()
             };
 

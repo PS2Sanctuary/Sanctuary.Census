@@ -51,6 +51,7 @@ be very similar.
 - item_to_weapon
 - player_state_group_2
 - profile_2 (redirects to profile)
+- weapon_to_fire_group
 
 ### 🌟 Silver Tier Collections
 

@@ -92,6 +92,11 @@ public class CollectionsContext
     public IReadOnlyDictionary<uint, IReadOnlyList<WeaponAmmoSlot>> WeaponAmmoSlots { get; set; }
 
     /// <summary>
+    /// Gets the WeaponToFireGroup collection, indexed by <see cref="Weapon.WeaponId"/>.
+    /// </summary>
+    public IReadOnlyDictionary<uint, IReadOnlyList<WeaponToFireGroup>> WeaponToFireGroup { get; set; }
+
+    /// <summary>
     /// Gets the World collection, indexed by <see cref="World.WorldID"/>.
     /// </summary>
     public IReadOnlyDictionary<uint, World> Worlds { get; set; }
@@ -117,6 +122,7 @@ public class CollectionsContext
         Projectiles = new Dictionary<uint, Projectile>();
         Weapons = new Dictionary<uint, Weapon>();
         WeaponAmmoSlots = new Dictionary<uint, IReadOnlyList<WeaponAmmoSlot>>();
+        WeaponToFireGroup = new Dictionary<uint, IReadOnlyList<WeaponToFireGroup>>();
         Worlds = new Dictionary<uint, World>();
     }
 
@@ -158,6 +164,7 @@ public class CollectionsContext
         AddCollection(Projectiles);
         AddCollection(Weapons);
         AddCollection(WeaponAmmoSlots);
+        AddCollection(WeaponToFireGroup);
         AddCollection(Worlds);
 
         Datatypes = collectionInfos;

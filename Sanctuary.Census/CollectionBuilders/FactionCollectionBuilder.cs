@@ -1,11 +1,11 @@
 ﻿using Sanctuary.Census.Abstractions.CollectionBuilders;
 using Sanctuary.Census.ClientData.Abstractions.Services;
+using Sanctuary.Census.ClientData.ClientDataModels;
 using Sanctuary.Census.Common.Abstractions.Services;
 using Sanctuary.Census.Common.Objects.CommonModels;
 using Sanctuary.Census.Exceptions;
 using Sanctuary.Census.ServerData.Internal.Abstractions.Services;
 using System.Collections.Generic;
-using CFaction = Sanctuary.Census.ClientData.ClientDataModels.Faction;
 using MFaction = Sanctuary.Census.Models.Collections.Faction;
 
 namespace Sanctuary.Census.CollectionBuilders;
@@ -25,17 +25,22 @@ public class FactionCollectionBuilder : ICollectionBuilder
     )
     {
         if (clientDataCache.Factions.Count == 0)
-            throw new MissingCacheDataException(typeof(CFaction));
+            throw new MissingCacheDataException(typeof(Faction));
 
         if (clientDataCache.ImageSetMappings.Count == 0)
-            throw new MissingCacheDataException(typeof(ClientData.ClientDataModels.ImageSetMapping));
+            throw new MissingCacheDataException(typeof(ImageSetMapping));
 
         Dictionary<uint, uint> imageSetToPrimaryImageMap = new();
-        foreach (ClientData.ClientDataModels.ImageSetMapping mapping in clientDataCache.ImageSetMappings)
+        foreach (ImageSetMapping mapping in clientDataCache.ImageSetMappings)
+        {
+            if (mapping.ImageType is not ImageSetType.Massive)
+                continue;
+
             imageSetToPrimaryImageMap[mapping.ImageSetID] = mapping.ImageID;
+        }
 
         Dictionary<uint, MFaction> builtItems = new();
-        foreach (CFaction faction in clientDataCache.Factions)
+        foreach (Faction faction in clientDataCache.Factions)
         {
             localeService.TryGetLocaleString(faction.NameID, out LocaleString? name);
             localeService.TryGetLocaleString(faction.DescriptionTextID, out LocaleString? description);

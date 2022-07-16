@@ -72,6 +72,11 @@ public class CollectionsContext
     public IReadOnlyDictionary<uint, IReadOnlyList<PlayerStateGroup2>> PlayerStateGroups { get; set; }
 
     /// <summary>
+    /// Gets the Profile collection, indexed by <see cref="Profile.ProfileId"/>.
+    /// </summary>
+    public IReadOnlyDictionary<uint, Profile> Profiles { get; set; }
+
+    /// <summary>
     /// Gets the Projectile collection, indexed by <see cref="Projectile.ProjectileId"/>.
     /// </summary>
     public IReadOnlyDictionary<uint, Projectile> Projectiles { get; set; }
@@ -108,6 +113,7 @@ public class CollectionsContext
         ItemCategories = new Dictionary<uint, ItemCategory>();
         ItemsToWeapon = new Dictionary<uint, ItemToWeapon>();
         PlayerStateGroups = new Dictionary<uint, IReadOnlyList<PlayerStateGroup2>>();
+        Profiles = new Dictionary<uint, Profile>();
         Projectiles = new Dictionary<uint, Projectile>();
         Weapons = new Dictionary<uint, Weapon>();
         WeaponAmmoSlots = new Dictionary<uint, IReadOnlyList<WeaponAmmoSlot>>();
@@ -147,6 +153,7 @@ public class CollectionsContext
         AddCollection(ItemCategories);
         AddCollection(ItemsToWeapon);
         AddCollection(PlayerStateGroups);
+        AddCollection(Profiles);
         AddCollection(Projectiles);
         AddCollection(Weapons);
         AddCollection(WeaponAmmoSlots);

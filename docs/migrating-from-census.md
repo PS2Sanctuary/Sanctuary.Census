@@ -8,6 +8,8 @@ Both the `get` and `count` verbs are supported.
 
 ⚠ Only the `ps2` environment is supported at this time, despite what the api-doc pages might tell you.
 
+Note that the default value of the `c:limit` command is 100, rather than 1.
+
 Querying itself is extremely limited at the moment:
 
 - The only supported Census commands are `c:start` and `c:limit`.
@@ -44,6 +46,7 @@ be very similar.
 - item_category
 - item_to_weapon
 - player_state_group_2
+- profile_2 (redirects to profile)
 
 ### 🌟 Silver Tier Collections
 
@@ -82,6 +85,7 @@ Missing the `state` field. This is partially replaced by the `is_locked` field.
 These collections are missing significant amounts of data, or are shaped very differently.
 
 - fire_mode
+- profile
 
 #### fire_mode
 
@@ -98,3 +102,7 @@ Missing the follow fields:
 - `lockon_range_close`
 - `lockon_range_far`
 - `lockon_required`
+
+### profile
+Missing the `movement_speed`, `backpedal_speed_modifier`, `sprint_speed_modifier` and `strafe_speed_modifier` fields.
+

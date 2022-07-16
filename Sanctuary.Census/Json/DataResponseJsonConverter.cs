@@ -59,10 +59,7 @@ public class DataResponseJsonConverter : JsonConverterFactory
             JsonSerializerOptions options
         )
         {
-            string name = value.DataTypeName;
-            if (options.PropertyNamingPolicy is not null)
-                name = options.PropertyNamingPolicy.ConvertName(name);
-            name += "_list";
+            string name = value.DataTypeName + "_list";
 
             writer.WriteStartObject();
             writer.WritePropertyName(name);

@@ -1,6 +1,5 @@
 ﻿using Sanctuary.Census.Abstractions.CollectionBuilders;
 using Sanctuary.Census.ClientData.Abstractions.Services;
-using Sanctuary.Census.Common.Abstractions.Services;
 using Sanctuary.Census.Common.Objects.CommonModels;
 using Sanctuary.Census.Exceptions;
 using Sanctuary.Census.ServerData.Internal.Abstractions.Services;
@@ -20,7 +19,7 @@ public class ExperienceCollectionBuilder : ICollectionBuilder
     (
         IClientDataCacheService clientDataCache,
         IServerDataCacheService serverDataCache,
-        ILocaleService localeService,
+        ILocaleDataCacheService localeDataCache,
         CollectionsContext context
     )
     {
@@ -30,7 +29,7 @@ public class ExperienceCollectionBuilder : ICollectionBuilder
         Dictionary<uint, MExperience> builtItems = new();
         foreach (CExperience experience in clientDataCache.Experiences)
         {
-            localeService.TryGetLocaleString(experience.StringID, out LocaleString? name);
+            localeDataCache.TryGetLocaleString(experience.StringID, out LocaleString? name);
 
             MExperience built = new
             (

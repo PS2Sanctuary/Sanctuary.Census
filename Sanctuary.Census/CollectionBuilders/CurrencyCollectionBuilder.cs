@@ -1,6 +1,5 @@
 ﻿using Sanctuary.Census.Abstractions.CollectionBuilders;
 using Sanctuary.Census.ClientData.Abstractions.Services;
-using Sanctuary.Census.Common.Abstractions.Services;
 using Sanctuary.Census.Common.Objects.CommonModels;
 using Sanctuary.Census.Exceptions;
 using Sanctuary.Census.ServerData.Internal.Abstractions.Services;
@@ -20,7 +19,7 @@ public class CurrencyCollectionBuilder : ICollectionBuilder
     (
         IClientDataCacheService clientDataCache,
         IServerDataCacheService serverDataCache,
-        ILocaleService localeService,
+        ILocaleDataCacheService localeDataCache,
         CollectionsContext context
     )
     {
@@ -30,8 +29,8 @@ public class CurrencyCollectionBuilder : ICollectionBuilder
         Dictionary<uint, MCurrency> builtCurrencies = new();
         foreach (CCurrency currency in clientDataCache.Currencies)
         {
-            localeService.TryGetLocaleString(currency.NameID, out LocaleString? name);
-            localeService.TryGetLocaleString(currency.DescriptionID, out LocaleString? description);
+            localeDataCache.TryGetLocaleString(currency.NameID, out LocaleString? name);
+            localeDataCache.TryGetLocaleString(currency.DescriptionID, out LocaleString? description);
 
             MCurrency built = new
             (

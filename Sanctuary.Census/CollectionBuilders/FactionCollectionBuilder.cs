@@ -1,7 +1,6 @@
 ﻿using Sanctuary.Census.Abstractions.CollectionBuilders;
 using Sanctuary.Census.ClientData.Abstractions.Services;
 using Sanctuary.Census.ClientData.ClientDataModels;
-using Sanctuary.Census.Common.Abstractions.Services;
 using Sanctuary.Census.Common.Objects.CommonModels;
 using Sanctuary.Census.Exceptions;
 using Sanctuary.Census.ServerData.Internal.Abstractions.Services;
@@ -20,7 +19,7 @@ public class FactionCollectionBuilder : ICollectionBuilder
     (
         IClientDataCacheService clientDataCache,
         IServerDataCacheService serverDataCache,
-        ILocaleService localeService,
+        ILocaleDataCacheService localeDataCache,
         CollectionsContext context
     )
     {
@@ -42,9 +41,9 @@ public class FactionCollectionBuilder : ICollectionBuilder
         Dictionary<uint, MFaction> builtItems = new();
         foreach (Faction faction in clientDataCache.Factions)
         {
-            localeService.TryGetLocaleString(faction.NameID, out LocaleString? name);
-            localeService.TryGetLocaleString(faction.DescriptionTextID, out LocaleString? description);
-            localeService.TryGetLocaleString(faction.ShortNameID, out LocaleString? shortName);
+            localeDataCache.TryGetLocaleString(faction.NameID, out LocaleString? name);
+            localeDataCache.TryGetLocaleString(faction.DescriptionTextID, out LocaleString? description);
+            localeDataCache.TryGetLocaleString(faction.ShortNameID, out LocaleString? shortName);
 
             uint? imageID = null;
             string? imagePath = null;

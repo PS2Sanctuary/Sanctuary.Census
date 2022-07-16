@@ -19,6 +19,7 @@ public static class IServiceCollectionExtensions
     public static IServiceCollection AddClientDataServices(this IServiceCollection services)
     {
         services.AddCommonServices();
+        services.TryAddScoped<ILocaleDataCacheService, LocaleDataCacheService>();
         services.TryAddScoped<IClientDataCacheService, ClientDataCacheService>();
 
         return services;

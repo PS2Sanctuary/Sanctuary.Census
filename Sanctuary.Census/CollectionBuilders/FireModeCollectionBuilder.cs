@@ -1,7 +1,6 @@
 ﻿using Sanctuary.Census.Abstractions.CollectionBuilders;
 using Sanctuary.Census.ClientData.Abstractions.Services;
 using Sanctuary.Census.ClientData.ClientDataModels;
-using Sanctuary.Census.Common.Abstractions.Services;
 using Sanctuary.Census.Common.Objects.CommonModels;
 using Sanctuary.Census.Exceptions;
 using Sanctuary.Census.Models.Collections;
@@ -21,7 +20,7 @@ public class FireModeCollectionBuilder : ICollectionBuilder
     (
         IClientDataCacheService clientDataCache,
         IServerDataCacheService serverDataCache,
-        ILocaleService localeService,
+        ILocaleDataCacheService localeDataCache,
         CollectionsContext context
     )
     {
@@ -38,7 +37,7 @@ public class FireModeCollectionBuilder : ICollectionBuilder
         Dictionary<uint, FireMode2> builtFireModes = new();
         foreach (FireMode fireMode in serverDataCache.WeaponDefinitions.FireModes)
         {
-            localeService.TryGetLocaleString(fireMode.TypeDescriptionID, out LocaleString? description);
+            localeDataCache.TryGetLocaleString(fireMode.TypeDescriptionID, out LocaleString? description);
             clientDisplayStats.TryGetValue(fireMode.ID, out FireModeDisplayStat? displayStats);
 
             FireMode2 built = new

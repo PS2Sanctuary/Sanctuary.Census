@@ -1,12 +1,13 @@
-﻿using Sanctuary.Census.Common.Objects.CommonModels;
+﻿using Sanctuary.Census.Common.Abstractions.Services;
+using Sanctuary.Census.Common.Objects.CommonModels;
 using System.Diagnostics.CodeAnalysis;
 
-namespace Sanctuary.Census.Common.Abstractions.Services;
+namespace Sanctuary.Census.ClientData.Abstractions.Services;
 
 /// <summary>
 /// Represents a service for retrieving locale strings.
 /// </summary>
-public interface ILocaleService : IDataCacheService
+public interface ILocaleDataCacheService : IDataCacheService
 {
     /// <summary>
     /// Attempts to retrieve a locale string.

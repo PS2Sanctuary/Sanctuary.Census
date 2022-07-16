@@ -19,7 +19,6 @@ public static class IServiceCollectionExtensions
     public static IServiceCollection AddCommonServices(this IServiceCollection services)
     {
         services.TryAddSingleton<IFileSystem, FileSystem>();
-        services.TryAddScoped<ILocaleService, LocaleService>();
         services.TryAddScoped<EnvironmentContextProvider>();
 
         services.AddHttpClient(nameof(ManifestService));

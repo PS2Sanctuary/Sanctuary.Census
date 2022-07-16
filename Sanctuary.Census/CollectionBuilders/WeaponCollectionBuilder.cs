@@ -1,6 +1,5 @@
 ﻿using Sanctuary.Census.Abstractions.CollectionBuilders;
 using Sanctuary.Census.ClientData.Abstractions.Services;
-using Sanctuary.Census.Common.Abstractions.Services;
 using Sanctuary.Census.Common.Objects.CommonModels;
 using Sanctuary.Census.Exceptions;
 using Sanctuary.Census.Models.Collections;
@@ -20,7 +19,7 @@ public class WeaponCollectionBuilder : ICollectionBuilder
     (
         IClientDataCacheService clientDataCache,
         IServerDataCacheService serverDataCache,
-        ILocaleService localeService,
+        ILocaleDataCacheService localeDataCache,
         CollectionsContext context
     )
     {
@@ -30,7 +29,7 @@ public class WeaponCollectionBuilder : ICollectionBuilder
         Dictionary<uint, Weapon> builtWeapons = new();
         foreach (WeaponDefinition definition in serverDataCache.WeaponDefinitions.Definitions)
         {
-            localeService.TryGetLocaleString(definition.RangeDescriptionID, out LocaleString? rangeDescription);
+            localeDataCache.TryGetLocaleString(definition.RangeDescriptionID, out LocaleString? rangeDescription);
 
             string? animWieldTypeName = definition.AnimationWieldTypeName.Length == 0
                 ? null

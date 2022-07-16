@@ -1,6 +1,5 @@
 ﻿using Sanctuary.Census.Abstractions.CollectionBuilders;
 using Sanctuary.Census.ClientData.Abstractions.Services;
-using Sanctuary.Census.Common.Abstractions.Services;
 using Sanctuary.Census.Common.Objects.CommonModels;
 using Sanctuary.Census.Exceptions;
 using Sanctuary.Census.Models.Collections;
@@ -20,7 +19,7 @@ public class WorldCollectionBuilder : ICollectionBuilder
     (
         IClientDataCacheService clientDataCache,
         IServerDataCacheService serverDataCache,
-        ILocaleService localeService,
+        ILocaleDataCacheService localeDataCache,
         CollectionsContext context
     )
     {
@@ -30,7 +29,7 @@ public class WorldCollectionBuilder : ICollectionBuilder
         Dictionary<uint, World> builtWorlds = new();
         foreach (ServerUpdate server in serverDataCache.ServerListResponse.Servers)
         {
-            if (!localeService.TryGetLocaleString(server.NameID, out LocaleString? name))
+            if (!localeDataCache.TryGetLocaleString(server.NameID, out LocaleString? name))
                 name = LocaleString.Default;
 
             World built = new

@@ -5,7 +5,6 @@ using Microsoft.Extensions.Options;
 using Sanctuary.Census.Abstractions.CollectionBuilders;
 using Sanctuary.Census.ClientData.Abstractions.Services;
 using Sanctuary.Census.CollectionBuilders;
-using Sanctuary.Census.Common.Abstractions.Services;
 using Sanctuary.Census.Common.Objects;
 using Sanctuary.Census.Common.Services;
 using Sanctuary.Census.ServerData.Internal.Abstractions.Services;
@@ -60,7 +59,7 @@ public class CollectionBuildWorker : BackgroundService
 
             IClientDataCacheService _clientDataCache = services.GetRequiredService<IClientDataCacheService>();
             IServerDataCacheService _serverDataCache = services.GetRequiredService<IServerDataCacheService>();
-            ILocaleService _localeService = services.GetRequiredService<ILocaleService>();
+            ILocaleDataCacheService localeDataCache = services.GetRequiredService<ILocaleDataCacheService>();
 
             try
             {
@@ -69,7 +68,7 @@ public class CollectionBuildWorker : BackgroundService
                 _logger.LogDebug("Populating server data cache...");
                 await _serverDataCache.RepopulateAsync(ct).ConfigureAwait(false);
                 _logger.LogDebug("Populating locale data cache...");
-                await _localeService.RepopulateAsync(ct).ConfigureAwait(false);
+                await localeDataCache.RepopulateAsync(ct).ConfigureAwait(false);
                 dataCacheFailureCount = 0;
                 _logger.LogInformation("Caches updated successfully!");
             }
@@ -110,7 +109,7 @@ public class CollectionBuildWorker : BackgroundService
             {
                 try
                 {
-                    collectionBuilder.Build(_clientDataCache, _serverDataCache, _localeService, _collectionsContext);
+                    collectionBuilder.Build(_clientDataCache, _serverDataCache, localeDataCache, _collectionsContext);
                     _logger.LogInformation("Successfully ran the {CollectionBuilder}", collectionBuilder);
                 }
                 catch (Exception ex)
@@ -122,7 +121,7 @@ public class CollectionBuildWorker : BackgroundService
 
             _clientDataCache.Clear();
             _serverDataCache.Clear();
-            _localeService.Clear();
+            localeDataCache.Clear();
             _logger.LogDebug("Data caches cleared");
 
             await Task.Delay(TimeSpan.FromHours(1), ct).ConfigureAwait(false);

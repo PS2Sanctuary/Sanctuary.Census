@@ -1,7 +1,9 @@
 ﻿using Mandible.Util;
+using Sanctuary.Census.ClientData.Abstractions.Services;
 using Sanctuary.Census.Common.Abstractions.Services;
 using Sanctuary.Census.Common.Objects;
 using Sanctuary.Census.Common.Objects.CommonModels;
+using Sanctuary.Census.Common.Services;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
@@ -9,10 +11,10 @@ using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Sanctuary.Census.Common.Services;
+namespace Sanctuary.Census.ClientData.Services;
 
 /// <inheritdoc />
-public class LocaleService : ILocaleService
+public class LocaleDataCacheService : ILocaleDataCacheService
 {
     private readonly IManifestService _manifestService;
     private readonly EnvironmentContextProvider _environmentContextProvider;
@@ -32,11 +34,11 @@ public class LocaleService : ILocaleService
     public DateTimeOffset LastPopulated { get; private set; }
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="LocaleService"/>
+    /// Initializes a new instance of the <see cref="LocaleDataCacheService"/>
     /// </summary>
     /// <param name="manifestService">The manifest service.</param>
     /// <param name="environmentContextProvider">The environment to source data from.</param>
-    public LocaleService
+    public LocaleDataCacheService
     (
         IManifestService manifestService,
         EnvironmentContextProvider environmentContextProvider

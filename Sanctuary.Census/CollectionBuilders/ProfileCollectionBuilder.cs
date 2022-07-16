@@ -1,7 +1,6 @@
 ﻿using Sanctuary.Census.Abstractions.CollectionBuilders;
 using Sanctuary.Census.ClientData.Abstractions.Services;
 using Sanctuary.Census.ClientData.ClientDataModels;
-using Sanctuary.Census.Common.Abstractions.Services;
 using Sanctuary.Census.Common.Objects.CommonModels;
 using Sanctuary.Census.Exceptions;
 using Sanctuary.Census.ServerData.Internal.Abstractions.Services;
@@ -21,7 +20,7 @@ public class ProfileCollectionBuilder : ICollectionBuilder
     (
         IClientDataCacheService clientDataCache,
         IServerDataCacheService serverDataCache,
-        ILocaleService localeService,
+        ILocaleDataCacheService localeDataCache,
         CollectionsContext context
     )
     {
@@ -51,8 +50,8 @@ public class ProfileCollectionBuilder : ICollectionBuilder
         Dictionary<uint, MProfile> builtProfiles = new();
         foreach (Profile profile in serverDataCache.ProfileDefinitions.Profiles)
         {
-            localeService.TryGetLocaleString(profile.NameID, out LocaleString? name);
-            localeService.TryGetLocaleString(profile.DescriptionID, out LocaleString? description);
+            localeDataCache.TryGetLocaleString(profile.NameID, out LocaleString? name);
+            localeDataCache.TryGetLocaleString(profile.DescriptionID, out LocaleString? description);
 
             bool hasFaction = profileFactionMap.TryGetValue(profile.ProfileID, out FactionDefinition factionId);
             bool hasImage = imageSetToPrimaryImageMap.TryGetValue(profile.ImageSetID, out uint imageId);

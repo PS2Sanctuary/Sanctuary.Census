@@ -154,6 +154,7 @@ public class CollectionsContext
         AddCollection(ItemsToWeapon);
         AddCollection(PlayerStateGroups);
         AddCollection(Profiles);
+        collectionInfos.Add(new Datatype("profile_2", Profiles.Count));
         AddCollection(Projectiles);
         AddCollection(Weapons);
         AddCollection(WeaponAmmoSlots);

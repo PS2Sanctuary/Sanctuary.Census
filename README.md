@@ -1,7 +1,8 @@
 ﻿# Sanctuary.Census
 
-An unofficial supplement to Daybreak Game Company's Census API, which uses alternative data sources to present up-to-date static PlanetSide 2 data.
-Data from both client files and the game servers, using automated processes for both.
+An unofficial supplement to Daybreak Game Company's Census API, which aims to present up-to-date static PlanetSide 2 data.
+Data is sourced automatically from both client files and the game servers. Hence, Sanctuary.Census will keep itself up-to-date
+until the structure of the data it depends on, or the methods required to retrieve it, change.
 
 ## Getting Started
 

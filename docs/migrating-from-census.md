@@ -1,8 +1,12 @@
 # Migrating from Census
 
+ℹ️ Requests to collections that Sanctuary.Census doesn't serve will be forwarded to the official Census.
+
 ## Queries
 
 The basic structure of a query is supported. Submitting a service ID is optional, and it's not logged in any way if you do.
+However, if you wish to use Sanctuary.Census as a drop-in layer, ensure you provide a service ID as it will be used
+when requests are forwarded to the official Census.
 
 Both the `get` and `count` verbs are supported.
 

@@ -15,6 +15,8 @@ Jump right in by heading to [https://census.lithafalcon.cc/get/ps2](https://cens
 
 ⚠ The API should be considered unstable, although hopefully only in a manner that features are being added in a non-disruptive way.
 
+ℹ️ Requests to collections that Sanctuary.Census doesn't serve will be forwarded to the official Census.
+
 ## Roadmap
 
 I'd really like to get my hands on facility and map region data, and although I'm actively looking it's proving elusive.

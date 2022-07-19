@@ -2,9 +2,7 @@
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using MongoDB.Bson;
 using MongoDB.Bson.Serialization;
-using MongoDB.Bson.Serialization.Serializers;
 using MongoDB.Driver;
 using Sanctuary.Census.Abstractions.CollectionBuilders;
 using Sanctuary.Census.ClientData.Abstractions.Services;
@@ -16,7 +14,10 @@ using Sanctuary.Census.Json;
 using Sanctuary.Census.Models.Collections;
 using Sanctuary.Census.ServerData.Internal.Abstractions.Services;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
+using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -27,6 +28,8 @@ namespace Sanctuary.Census.Workers;
 /// </summary>
 public class CollectionBuildWorker : BackgroundService
 {
+    private static readonly JsonNamingPolicy DbNameConverter = new SnakeCaseJsonNamingPolicy();
+
     private readonly ILogger<CollectionBuildWorker> _logger;
     private readonly IServiceScopeFactory _serviceScopeFactory;
     private readonly CommonOptions _options;
@@ -142,26 +145,61 @@ public class CollectionBuildWorker : BackgroundService
 
             BsonClassMap.RegisterClassMap<LocaleString>(cm =>
             {
-                cm.MapIdProperty(c => c.ID).SetSerializer(new UInt32Serializer(BsonType.Int64));
-                AutoMap(cm);
-            });
-
-            BsonClassMap.RegisterClassMap<Currency>(cm =>
-            {
-                cm.MapIdProperty(c => c.CurrencyID);
-                AutoMap(cm);
+                cm.UnmapProperty(x => x.ID);
+                cm.MapProperty(x => x.German).SetElementName("de");
+                cm.MapProperty(x => x.English).SetElementName("en");
+                cm.MapProperty(x => x.Spanish).SetElementName("es");
+                cm.MapProperty(x => x.French).SetElementName("fr");
+                cm.MapProperty(x => x.Italian).SetElementName("it");
+                cm.MapProperty(x => x.Korean).SetElementName("ko");
+                cm.MapProperty(x => x.Portuguese).SetElementName("pt");
+                cm.MapProperty(x => x.Russian).SetElementName("ru");
+                cm.MapProperty(x => x.Turkish).SetElementName("tr");
+                cm.MapProperty(x => x.Chinese).SetElementName("zh");
             });
 
             IMongoDatabase db = _mongoClient.GetDatabase(_options.DataSourceEnvironment + "-collections");
-            IMongoCollection<Currency> currencyCollection = db.GetCollection<Currency>(namePolicy.ConvertName(nameof(Currency)));
 
-            UpdateOptions uo = new() { IsUpsert = true };
-            foreach (Currency element in _collectionsContext.Currencies.Values)
-            {
-                BsonDocument filter = new("_id", element.CurrencyID);
-                BsonDocument update = element.ToBsonDocument();
-                await currencyCollection.UpdateOneAsync(filter, update, uo, ct).ConfigureAwait(false);
-            }
+            BsonClassMap.RegisterClassMap<Currency>(AutoMap);
+            await UpdateDbCollectionAsync
+            (
+                db,
+                _collectionsContext.Currencies.Values,
+                e => Builders<Currency>.Filter.Where(x => x.CurrencyID == e.CurrencyID),
+                ct,
+                new CreateIndexModel<Currency>
+                (
+                    Builders<Currency>.IndexKeys.Ascending(x => x.CurrencyID),
+                    new CreateIndexOptions { Unique = true }
+                )
+            );
+
+            BsonClassMap.RegisterClassMap<FireGroup>(AutoMap);
+            await UpdateDbCollectionAsync
+            (
+                db,
+                _collectionsContext.FireGroups.Values,
+                e => Builders<FireGroup>.Filter.Where(x => x.FireGroupID == e.FireGroupID),
+                ct,
+                new CreateIndexModel<FireGroup>
+                (
+                    Builders<FireGroup>.IndexKeys.Ascending(x => x.FireGroupID),
+                    new CreateIndexOptions { Unique = true }
+                )
+            );
+
+            BsonClassMap.RegisterClassMap<FireGroupToFireMode>(AutoMap);
+            await UpdateDbCollectionAsync
+            (
+                db,
+                _collectionsContext.FireGroupsToFireModes.Values.SelectMany(x => x),
+                e => Builders<FireGroupToFireMode>.Filter.Where(x => x.FireGroupId == e.FireGroupId && x.FireModeId == e.FireModeId),
+                ct,
+                new [] {
+                    new CreateIndexModel<FireGroupToFireMode>(Builders<FireGroupToFireMode>.IndexKeys.Ascending(x => x.FireGroupId)),
+                    new CreateIndexModel<FireGroupToFireMode>(Builders<FireGroupToFireMode>.IndexKeys.Ascending(x => x.FireModeId))
+                }
+            );
 
             _clientDataCache.Clear();
             _serverDataCache.Clear();
@@ -170,5 +208,50 @@ public class CollectionBuildWorker : BackgroundService
 
             await Task.Delay(TimeSpan.FromHours(1), ct).ConfigureAwait(false);
         }
+    }
+
+    private static async Task UpdateDbCollectionAsync<T>
+    (
+        IMongoDatabase database,
+        IEnumerable<T> data,
+        Func<T, FilterDefinition<T>> elementFilter,
+        CancellationToken ct,
+        CreateIndexModel<T>? indexModel = null
+    ) => await UpdateDbCollectionAsync
+    (
+        database,
+        data,
+        elementFilter,
+        ct,
+        indexModel is null
+            ? null
+            : new[] { indexModel }
+    );
+
+    private static async Task UpdateDbCollectionAsync<T>
+    (
+        IMongoDatabase database,
+        IEnumerable<T> data,
+        Func<T, FilterDefinition<T>> elementFilter,
+        CancellationToken ct,
+        IEnumerable<CreateIndexModel<T>>? indexModels = null
+    )
+    {
+        IMongoCollection<T> collection = database.GetCollection<T>(DbNameConverter.ConvertName(typeof(T).Name));
+
+        if (indexModels is not null)
+            await collection.Indexes.CreateManyAsync(indexModels, ct);
+
+        List<WriteModel<T>> upserts = new();
+        foreach (T element in data)
+        {
+            ReplaceOneModel<T> upsertModel = new(elementFilter(element), element)
+            {
+                IsUpsert = true
+            };
+            upserts.Add(upsertModel);
+        }
+
+        await collection.BulkWriteAsync(upserts, null, ct);
     }
 }

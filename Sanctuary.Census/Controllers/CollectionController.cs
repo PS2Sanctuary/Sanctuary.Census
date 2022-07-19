@@ -1,11 +1,14 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Primitives;
+using MongoDB.Bson;
+using MongoDB.Driver;
 using Sanctuary.Census.Common.Objects;
 using Sanctuary.Census.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace Sanctuary.Census.Controllers;
 
@@ -22,14 +25,16 @@ public class CollectionController : ControllerBase
     public const int MAX_LIMIT = 10000;
 
     private readonly CollectionsContext _collectionsContext;
+    private readonly MongoClient _mongoClient;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="CollectionController"/> class.
     /// </summary>
     /// <param name="collectionsContext">The collections context.</param>
-    public CollectionController(CollectionsContext collectionsContext)
+    public CollectionController(CollectionsContext collectionsContext, MongoClient mongoClient)
     {
         _collectionsContext = collectionsContext;
+        _mongoClient = mongoClient;
     }
 
     /// <summary>
@@ -178,6 +183,65 @@ public class CollectionController : ControllerBase
             "world" => (CollectionCount)_collectionsContext.Worlds.Count,
             _ => GetRedirectToCensusResult()
         };
+    }
+
+    [HttpGet("/get/{environment}/test")]
+    public async Task<DataResponse<BsonDocument>> Test
+    (
+        PS2Environment environment,
+        [FromQuery(Name = "c:start")] int start = 0,
+        [FromQuery(Name = "c:limit")] int limit = 100,
+        [FromQuery(Name = "c:show")] IEnumerable<string>? show = null,
+        [FromQuery(Name = "c:hide")] IEnumerable<string>? hide = null,
+        [FromQuery(Name = "c:sort")] IEnumerable<string>? sortList = null,
+        [FromQuery(Name = "c:has")] IEnumerable<string>? has = null
+    )
+    {
+        IMongoDatabase db = _mongoClient.GetDatabase(environment + "-collections");
+        IMongoCollection<BsonDocument> coll = db.GetCollection<BsonDocument>("currency");
+
+        ProjectionDefinition<BsonDocument>? projection = Builders<BsonDocument>.Projection
+            .Exclude("_id");
+
+        if (show is not null)
+        {
+            foreach (string value in show.SelectMany(s => s.Split(',')))
+                projection = projection.Include(value);
+        }
+
+        if (hide is not null)
+        {
+            foreach (string value in hide.SelectMany(h => h.Split(',')))
+                projection = projection.Exclude(value);
+        }
+
+        FilterDefinitionBuilder<BsonDocument> filterBuilder = Builders<BsonDocument>.Filter;
+        FilterDefinition<BsonDocument> filter = filterBuilder.Empty;
+        if (has is not null)
+        {
+            foreach (string value in has.SelectMany(s => s.Split(',')))
+                filter &= filterBuilder.Ne(value, BsonNull.Value);
+        }
+
+        IFindFluent<BsonDocument, BsonDocument> findBuilder = coll.Find(filter)
+            .Project(projection).Skip(start).Limit(limit);
+
+        if (sortList is not null)
+        {
+            foreach (string value in sortList.SelectMany(s => s.Split(',')))
+            {
+                string[] components = value.Split(':');
+                int sortDirection = 1;
+
+                if (components.Length == 2 && components[1] == "-1")
+                    sortDirection = -1;
+
+                findBuilder = findBuilder.Sort(new BsonDocument(components[0], sortDirection));
+            }
+        }
+
+        List<BsonDocument> records = await findBuilder.ToListAsync();
+        return new DataResponse<BsonDocument>(records, "currency");
     }
 
     private static DataResponse<object> ConvertCollection<TValue>

@@ -1,6 +1,4 @@
-﻿using MongoDB.Bson;
-using MongoDB.Bson.Serialization.Attributes;
-using Sanctuary.Census.Common.Objects.CommonModels;
+﻿using Sanctuary.Census.Common.Objects.CommonModels;
 
 namespace Sanctuary.Census.Models.Collections;
 
@@ -15,14 +13,10 @@ namespace Sanctuary.Census.Models.Collections;
 /// <param name="InventoryCap">The maximum amount of this currency a character may have.</param>
 public record Currency
 (
-    [property: BsonRepresentation(BsonType.Int64)]
     uint CurrencyID,
     LocaleString Name,
     LocaleString? Description,
-    [property: BsonRepresentation(BsonType.Int64)]
     uint IconImageSetID,
-    [property: BsonRepresentation(BsonType.Int64)]
     uint MapIconImageSetID,
-    [property: BsonRepresentation(BsonType.Int64)]
     uint? InventoryCap
 );

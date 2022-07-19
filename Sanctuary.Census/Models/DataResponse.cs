@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace Sanctuary.Census.Models;
 
@@ -9,11 +10,13 @@ namespace Sanctuary.Census.Models;
 /// <param name="Data">The data.</param>
 /// <param name="Returned">The number of elements returned in the response.</param>
 /// <param name="DataTypeName">The name of the data type.</param>
+/// <param name="Timing">The time taken to generate the response.</param>
 public record DataResponse<TDataType>
 (
     IEnumerable<TDataType> Data,
     int Returned,
-    string DataTypeName
+    string DataTypeName,
+    TimeSpan? Timing
 )
 {
     /// <summary>
@@ -21,8 +24,9 @@ public record DataResponse<TDataType>
     /// </summary>
     /// <param name="data">The data.</param>
     /// <param name="dataTypeName">The name of the data type.</param>
-    public DataResponse(IReadOnlyCollection<TDataType> data, string dataTypeName)
-        : this(data, data.Count, dataTypeName)
+    /// <param name="timing">The time taken to generate the response.</param>
+    public DataResponse(IReadOnlyCollection<TDataType> data, string dataTypeName, TimeSpan? timing)
+        : this(data, data.Count, dataTypeName, timing)
     {
     }
 
@@ -31,8 +35,9 @@ public record DataResponse<TDataType>
     /// </summary>
     /// <param name="data">The data.</param>
     /// <param name="dataTypeName">The name of the data type.</param>
-    public DataResponse(TDataType data, string dataTypeName)
-        : this(new[] { data }, 1, dataTypeName)
+    /// <param name="timing">The time taken to generate the response.</param>
+    public DataResponse(TDataType data, string dataTypeName, TimeSpan? timing)
+        : this(new[] { data }, 1, dataTypeName, timing)
     {
     }
 }

@@ -7,6 +7,7 @@ using Sanctuary.Census.Common.Objects;
 using Sanctuary.Census.Models;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -50,7 +51,7 @@ public class CollectionController : ControllerBase
     public ActionResult<DataResponse<Datatype>> GetCollectionInfos(PS2Environment environment)
         => environment is not PS2Environment.PS2
             ? GetInvalidEnvironmentResult()
-            : new DataResponse<Datatype>(_collectionsContext.Datatypes, "datatype");
+            : new DataResponse<Datatype>(_collectionsContext.Datatypes, "datatype", null);
 
     /// <summary>
     /// Counts the number of a available collections.
@@ -194,7 +195,8 @@ public class CollectionController : ControllerBase
         [FromQuery(Name = "c:show")] IEnumerable<string>? show = null,
         [FromQuery(Name = "c:hide")] IEnumerable<string>? hide = null,
         [FromQuery(Name = "c:sort")] IEnumerable<string>? sortList = null,
-        [FromQuery(Name = "c:has")] IEnumerable<string>? has = null
+        [FromQuery(Name = "c:has")] IEnumerable<string>? has = null,
+        [FromQuery(Name = "c:timing")] bool timing = false
     )
     {
         IMongoDatabase db = _mongoClient.GetDatabase(environment + "-collections");
@@ -240,8 +242,16 @@ public class CollectionController : ControllerBase
             }
         }
 
+        Stopwatch st = new();
+        st.Start();
         List<BsonDocument> records = await findBuilder.ToListAsync();
-        return new DataResponse<BsonDocument>(records, "currency");
+        st.Stop();
+        return new DataResponse<BsonDocument>
+        (
+            records,
+            "currency",
+            timing ? st.Elapsed : null
+        );
     }
 
     private static DataResponse<object> ConvertCollection<TValue>
@@ -254,7 +264,7 @@ public class CollectionController : ControllerBase
     ) where TValue : notnull
     {
         IReadOnlyList<object> filtered = FilterCollection(collection, id, start, limit);
-        return new DataResponse<object>(filtered, dataTypeName);
+        return new DataResponse<object>(filtered, dataTypeName, null);
     }
 
     private static IReadOnlyList<object> FilterCollection<TValue>

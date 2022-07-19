@@ -29,13 +29,12 @@ public class WorldCollectionBuilder : ICollectionBuilder
         Dictionary<uint, World> builtWorlds = new();
         foreach (ServerUpdate server in serverDataCache.ServerListResponse.Servers)
         {
-            if (!localeDataCache.TryGetLocaleString(server.NameID, out LocaleString? name))
-                name = LocaleString.Default;
+            localeDataCache.TryGetLocaleString(server.NameID, out LocaleString? name);
 
             World built = new
             (
                 (uint)server.ServerID,
-                name,
+                name!,
                 server.Islocked,
                 server.AllowedAccess
             );

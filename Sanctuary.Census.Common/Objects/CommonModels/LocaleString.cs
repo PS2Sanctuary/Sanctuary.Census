@@ -29,23 +29,4 @@ public record LocaleString
     [property: JsonPropertyName("ru")] string? Russian,
     [property: JsonPropertyName("tr")] string? Turkish,
     [property: JsonPropertyName("zh")] string? Chinese
-)
-{
-    /// <summary>
-    /// Gets the default <see cref="LocaleString"/>.
-    /// </summary>
-    public static LocaleString Default => new
-    (
-        0,
-        null,
-        "Unknown",
-        null,
-        null,
-        null,
-        null,
-        null,
-        null,
-        null,
-        null
-    );
-}
+);

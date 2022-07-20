@@ -1,18 +1,12 @@
 # Migrating from Census
 
-ℹ️ Requests to collections that Sanctuary.Census doesn't serve will be forwarded to the official Census.
-
 ## Queries
 
 The basic structure of a query is supported. Submitting a service ID is optional, and it's not logged in any way if you do.
-However, if you wish to use Sanctuary.Census as a drop-in layer, ensure you provide a service ID as it will be used
-when requests are forwarded to the official Census.
 
 Both the `get` and `count` verbs are supported.
 
-⚠ Only the `ps2` environment is supported at this time, despite what the api-doc pages might tell you.
-
-Note that the default value of the `c:limit` command is 100, rather than 1.
+Note that the default value of the `c:limit` command is 100.
 
 Querying itself is extremely limited at the moment:
 
@@ -50,7 +44,7 @@ be very similar.
 - item_category
 - item_to_weapon
 - player_state_group_2
-- profile_2 (redirects to profile)
+- ⚠ profile_2 - please query on `profile` instead, which contains all the data of this collection
 - weapon_to_fire_group
 
 ### 🌟 Silver Tier Collections

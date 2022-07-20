@@ -14,11 +14,6 @@ public class CommonOptions
     public string AppDataDirectory { get; set; }
 
     /// <summary>
-    /// Gets or sets the environment to source data from.
-    /// </summary>
-    public PS2Environment DataSourceEnvironment { get; set; }
-
-    /// <summary>
     /// Initializes a new instance of the <see cref="CommonOptions"/> class.
     /// </summary>
     public CommonOptions()
@@ -28,6 +23,5 @@ public class CommonOptions
             Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
             "Sanctuary.Census"
         );
-        DataSourceEnvironment = PS2Environment.PTS;
     }
 }

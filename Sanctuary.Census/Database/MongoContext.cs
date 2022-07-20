@@ -1,6 +1,7 @@
 ﻿using MongoDB.Bson.Serialization;
 using MongoDB.Driver;
 using Sanctuary.Census.Abstractions.Database;
+using Sanctuary.Census.Common.Objects;
 using Sanctuary.Census.Common.Objects.CommonModels;
 using Sanctuary.Census.Common.Services;
 using Sanctuary.Census.Json;
@@ -46,8 +47,8 @@ public class MongoContext : IMongoContext
     }
 
     /// <inheritdoc />
-    public IMongoDatabase GetDatabase()
-        => _mongoClient.GetDatabase(_environmentContextProvider.Environment + "-collections");
+    public IMongoDatabase GetDatabase(PS2Environment? environment = null)
+        => _mongoClient.GetDatabase((environment ?? _environmentContextProvider.Environment) + "-collections");
 
     /// <inheritdoc />
     public async Task ScaffoldAsync(CancellationToken ct = default)

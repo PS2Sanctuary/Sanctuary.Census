@@ -54,10 +54,9 @@ public static class Program
         builder.Services.AddClientDataServices()
             .AddInternalServerDataServices();
 
-        builder.Services.AddSingleton<CollectionsContext>();
-        builder.Services.AddHostedService<CollectionBuildWorker>();
         builder.Services.AddSingleton(new MongoClient("mongodb://localhost:27017"))
-            .AddScoped<IMongoContext, MongoContext>();
+            .AddScoped<IMongoContext, MongoContext>()
+            .AddHostedService<CollectionBuildWorker>();
 
         builder.Services.AddControllers()
             .AddJsonOptions(options =>

@@ -1,4 +1,5 @@
 ﻿using MongoDB.Driver;
+using Sanctuary.Census.Common.Objects;
 using Sanctuary.Census.Models.Collections;
 using System;
 using System.Collections.Generic;
@@ -15,8 +16,9 @@ public interface IMongoContext
     /// <summary>
     /// Gets a connection to the database.
     /// </summary>
+    /// <param name="environment">The environment to retrieve the database from.</param>
     /// <returns>The database.</returns>
-    IMongoDatabase GetDatabase();
+    IMongoDatabase GetDatabase(PS2Environment? environment = null);
 
     /// <summary>
     /// Ensures that the database structure is prepared.

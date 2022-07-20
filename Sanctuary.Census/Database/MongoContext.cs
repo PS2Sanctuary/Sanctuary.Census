@@ -60,24 +60,23 @@ public class MongoContext : IMongoContext
         await CreateUniqueKeyIndex<FireMode2>(x => x.FireModeID, ct).ConfigureAwait(false);
         await CreateNonUniqueKeyIndexs<FireModeToProjectile>(ct, x => x.FireModeID, x => x.ProjectileID);
         await CreateUniqueKeyIndex<Item>(x => x.ItemID, ct).ConfigureAwait(false);
-        // TODO: Test
         await CreateNonUniqueKeyIndexs<Item>
         (
             ct,
-            x => x.Name.Chinese,
-            x => x.Name.English,
-            x => x.Name.French,
-            x => x.Name.German,
-            x => x.Name.Italian,
-            x => x.Name.Korean,
-            x => x.Name.Portuguese,
-            x => x.Name.Russian,
-            x => x.Name.Spanish,
-            x => x.Name.Turkish
+            x => x.Name!.Chinese!,
+            x => x.Name!.English!,
+            x => x.Name!.French!,
+            x => x.Name!.German!,
+            x => x.Name!.Italian!,
+            x => x.Name!.Korean!,
+            x => x.Name!.Portuguese!,
+            x => x.Name!.Russian!,
+            x => x.Name!.Spanish!,
+            x => x.Name!.Turkish!
         );
         await CreateUniqueKeyIndex<ItemCategory>(x => x.ItemCategoryID, ct).ConfigureAwait(false);
         await CreateNonUniqueKeyIndexs<ItemToWeapon>(ct, x => x.ItemId, x => x.WeaponId).ConfigureAwait(false);
-        await CreateUniqueKeyIndex<PlayerStateGroup2>(x => x.PlayerStateGroupId, ct).ConfigureAwait(false);
+        await CreateNonUniqueKeyIndexs<PlayerStateGroup2>(ct, x => x.PlayerStateGroupId, x => x.PlayerStateId).ConfigureAwait(false);
         await CreateUniqueKeyIndex<Profile>(x => x.ProfileId, ct).ConfigureAwait(false);
         await CreateUniqueKeyIndex<Projectile>(x => x.ProjectileId, ct).ConfigureAwait(false);
         await CreateUniqueKeyIndex<Weapon>(x => x.WeaponId, ct).ConfigureAwait(false);
@@ -204,7 +203,7 @@ public class MongoContext : IMongoContext
         => await UpsertCollectionAsync
         (
             collection,
-            e => Builders<PlayerStateGroup2>.Filter.Eq(x => x.PlayerStateGroupId, e.PlayerStateGroupId),
+            e => Builders<PlayerStateGroup2>.Filter.Where(x => x.PlayerStateGroupId == e.PlayerStateGroupId && x.PlayerStateId == e.PlayerStateId),
             ct
         ).ConfigureAwait(false);
 

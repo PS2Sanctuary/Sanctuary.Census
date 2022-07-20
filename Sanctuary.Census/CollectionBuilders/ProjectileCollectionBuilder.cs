@@ -1,10 +1,13 @@
 ﻿using Sanctuary.Census.Abstractions.CollectionBuilders;
+using Sanctuary.Census.Abstractions.Database;
 using Sanctuary.Census.ClientData.Abstractions.Services;
 using Sanctuary.Census.Exceptions;
 using Sanctuary.Census.Models.Collections;
 using Sanctuary.Census.ServerData.Internal.Abstractions.Services;
 using Sanctuary.Zone.Packets.ReferenceData;
 using System.Collections.Generic;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace Sanctuary.Census.CollectionBuilders;
 
@@ -14,12 +17,13 @@ namespace Sanctuary.Census.CollectionBuilders;
 public class ProjectileCollectionBuilder : ICollectionBuilder
 {
     /// <inheritdoc />
-    public void Build
+    public async Task BuildAsync
     (
         IClientDataCacheService clientDataCache,
         IServerDataCacheService serverDataCache,
         ILocaleDataCacheService localeDataCache,
-        CollectionsContext context
+        IMongoContext dbContext,
+        CancellationToken ct
     )
     {
         if (serverDataCache.ProjectileDefinitions is null)
@@ -53,6 +57,6 @@ public class ProjectileCollectionBuilder : ICollectionBuilder
             builtProjectiles.Add(built.ProjectileId, built);
         }
 
-        context.Projectiles = builtProjectiles;
+        await dbContext.UpsertProjectilesAsync(builtProjectiles.Values, ct);
     }
 }

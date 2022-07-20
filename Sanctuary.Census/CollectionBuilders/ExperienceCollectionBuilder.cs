@@ -1,9 +1,12 @@
 ﻿using Sanctuary.Census.Abstractions.CollectionBuilders;
+using Sanctuary.Census.Abstractions.Database;
 using Sanctuary.Census.ClientData.Abstractions.Services;
 using Sanctuary.Census.Common.Objects.CommonModels;
 using Sanctuary.Census.Exceptions;
 using Sanctuary.Census.ServerData.Internal.Abstractions.Services;
 using System.Collections.Generic;
+using System.Threading;
+using System.Threading.Tasks;
 using CExperience = Sanctuary.Census.ClientData.ClientDataModels.Experience;
 using MExperience = Sanctuary.Census.Models.Collections.Experience;
 
@@ -15,12 +18,13 @@ namespace Sanctuary.Census.CollectionBuilders;
 public class ExperienceCollectionBuilder : ICollectionBuilder
 {
     /// <inheritdoc />
-    public void Build
+    public async Task BuildAsync
     (
         IClientDataCacheService clientDataCache,
         IServerDataCacheService serverDataCache,
         ILocaleDataCacheService localeDataCache,
-        CollectionsContext context
+        IMongoContext dbContext,
+        CancellationToken ct
     )
     {
         if (clientDataCache.Experiences.Count == 0)
@@ -42,6 +46,6 @@ public class ExperienceCollectionBuilder : ICollectionBuilder
             builtItems.TryAdd(built.ExperienceID, built);
         }
 
-        context.Experiences = builtItems;
+        await dbContext.UpsertExperiencesAsync(builtItems.Values, ct);
     }
 }

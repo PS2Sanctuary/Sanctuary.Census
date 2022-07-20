@@ -1,4 +1,5 @@
 ﻿using Sanctuary.Census.Abstractions.CollectionBuilders;
+using Sanctuary.Census.Abstractions.Database;
 using Sanctuary.Census.ClientData.Abstractions.Services;
 using Sanctuary.Census.ClientData.ClientDataModels;
 using Sanctuary.Census.Common.Objects.CommonModels;
@@ -6,6 +7,8 @@ using Sanctuary.Census.Exceptions;
 using Sanctuary.Census.ServerData.Internal.Abstractions.Services;
 using Sanctuary.Zone.Packets.ReferenceData;
 using System.Collections.Generic;
+using System.Threading;
+using System.Threading.Tasks;
 using MProfile = Sanctuary.Census.Models.Collections.Profile;
 
 namespace Sanctuary.Census.CollectionBuilders;
@@ -16,12 +19,13 @@ namespace Sanctuary.Census.CollectionBuilders;
 public class ProfileCollectionBuilder : ICollectionBuilder
 {
     /// <inheritdoc />
-    public void Build
+    public async Task BuildAsync
     (
         IClientDataCacheService clientDataCache,
         IServerDataCacheService serverDataCache,
         ILocaleDataCacheService localeDataCache,
-        CollectionsContext context
+        IMongoContext dbContext,
+        CancellationToken ct
     )
     {
         if (serverDataCache.ProfileDefinitions is null)
@@ -71,6 +75,6 @@ public class ProfileCollectionBuilder : ICollectionBuilder
             builtProfiles.Add(built.ProfileId, built);
         }
 
-        context.Profiles = builtProfiles;
+        await dbContext.UpsertProfilesAsync(builtProfiles.Values, ct);
     }
 }

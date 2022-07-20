@@ -9,6 +9,7 @@ using Sanctuary.Census.CollectionBuilders;
 using Sanctuary.Census.Common.Objects;
 using Sanctuary.Census.Common.Services;
 using Sanctuary.Census.ServerData.Internal.Abstractions.Services;
+using Sanctuary.Census.ServerData.Internal.Exceptions;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
@@ -59,85 +60,92 @@ public class CollectionBuildWorker : BackgroundService
         int dataCacheFailureCount = 0;
         while (!ct.IsCancellationRequested)
         {
-            await using AsyncServiceScope serviceScope = _serviceScopeFactory.CreateAsyncScope();
-            IServiceProvider services = serviceScope.ServiceProvider;
-            services.GetRequiredService<EnvironmentContextProvider>().Environment = _options.DataSourceEnvironment;
-
-            IClientDataCacheService clientDataCache = services.GetRequiredService<IClientDataCacheService>();
-            IServerDataCacheService serverDataCache = services.GetRequiredService<IServerDataCacheService>();
-            ILocaleDataCacheService localeDataCache = services.GetRequiredService<ILocaleDataCacheService>();
-            IMongoContext mongoContext = services.GetRequiredService<IMongoContext>();
-
-            try
+            foreach (PS2Environment env in Enum.GetValues<PS2Environment>())
             {
-                _logger.LogDebug("Populating client data cache...");
-                await clientDataCache.RepopulateAsync(ct).ConfigureAwait(false);
-                _logger.LogDebug("Populating server data cache...");
-                await serverDataCache.RepopulateAsync(ct).ConfigureAwait(false);
-                _logger.LogDebug("Populating locale data cache...");
-                await localeDataCache.RepopulateAsync(ct).ConfigureAwait(false);
-                dataCacheFailureCount = 0;
-                _logger.LogInformation("Caches updated successfully!");
-            }
-            catch (Exception ex)
-            {
-                if (++dataCacheFailureCount >= 5)
-                {
-                    _logger.LogCritical(ex, "Failed to cache data five times in a row! Collection builder is stopping");
-                    return;
-                }
+                await using AsyncServiceScope serviceScope = _serviceScopeFactory.CreateAsyncScope();
+                IServiceProvider services = serviceScope.ServiceProvider;
+                services.GetRequiredService<EnvironmentContextProvider>().Environment = env;
 
-                _logger.LogError(ex, "Failed to cache data. Will retry in 15s...");
-                await Task.Delay(TimeSpan.FromSeconds(15), ct).ConfigureAwait(false);
-                continue;
-            }
+                IClientDataCacheService clientDataCache = services.GetRequiredService<IClientDataCacheService>();
+                IServerDataCacheService serverDataCache = services.GetRequiredService<IServerDataCacheService>();
+                ILocaleDataCacheService localeDataCache = services.GetRequiredService<ILocaleDataCacheService>();
+                IMongoContext mongoContext = services.GetRequiredService<IMongoContext>();
 
-            ICollectionBuilder[] collectionBuilders =
-            {
-                new CurrencyCollectionBuilder(),
-                new ExperienceCollectionBuilder(),
-                new FactionCollectionBuilder(),
-                new FireGroupCollectionBuilder(),
-                new FireGroupToFireModeCollectionBuilder(),
-                new FireModeCollectionBuilder(),
-                new FireModeToProjectileCollectionBuilder(),
-                new ItemCollectionBuilder(),
-                new ItemCategoryCollectionBuilder(),
-                new ItemToWeaponCollectionBuilder(),
-                new PlayerStateGroup2CollectionBuilder(),
-                new ProfileCollectionBuilder(),
-                new ProjectileCollectionBuilder(),
-                new WeaponCollectionBuilder(),
-                new WeaponAmmoSlotCollectionBuilder(),
-                new WeaponToFireGroupCollectionBuilder(),
-                new WorldCollectionBuilder()
-            };
-
-            foreach (ICollectionBuilder collectionBuilder in collectionBuilders)
-            {
                 try
                 {
-                    await collectionBuilder.BuildAsync
-                    (
-                        clientDataCache,
-                        serverDataCache,
-                        localeDataCache,
-                        mongoContext,
-                        ct
-                    );
-                    _logger.LogDebug("Successfully ran the {CollectionBuilder}", collectionBuilder);
+                    _logger.LogDebug("[{Environment}] Populating client data cache...", env);
+                    await clientDataCache.RepopulateAsync(ct).ConfigureAwait(false);
+                    _logger.LogDebug("[{Environment}] Populating server data cache...", env);
+                    await serverDataCache.RepopulateAsync(ct).ConfigureAwait(false);
+                    _logger.LogDebug("[{Environment}] Populating locale data cache...", env);
+                    await localeDataCache.RepopulateAsync(ct).ConfigureAwait(false);
+                    dataCacheFailureCount = 0;
+                    _logger.LogInformation("[{Environment}] Caches updated successfully", env);
+                }
+                catch (ServerLockedException)
+                {
+                    _logger.LogWarning("[{Environment}] Servers are locked. Collection build could not complete", env);
+                    continue;
                 }
                 catch (Exception ex)
                 {
-                    _logger.LogError(ex, "Failed to run the {CollectionBuilder}", collectionBuilder);
-                }
-            }
-            _logger.LogInformation("Collections build complete");
+                    if (++dataCacheFailureCount >= 5)
+                    {
+                        _logger.LogCritical(ex, "Failed to cache data five times in a row! Collection builder is stopping");
+                        return;
+                    }
 
-            clientDataCache.Clear();
-            serverDataCache.Clear();
-            localeDataCache.Clear();
-            _logger.LogDebug("Data caches cleared");
+                    _logger.LogError(ex, "[{Environment}] Failed to cache data!", env);
+                    continue;
+                }
+
+                ICollectionBuilder[] collectionBuilders =
+                {
+                    new CurrencyCollectionBuilder(),
+                    new ExperienceCollectionBuilder(),
+                    new FactionCollectionBuilder(),
+                    new FireGroupCollectionBuilder(),
+                    new FireGroupToFireModeCollectionBuilder(),
+                    new FireModeCollectionBuilder(),
+                    new FireModeToProjectileCollectionBuilder(),
+                    new ItemCollectionBuilder(),
+                    new ItemCategoryCollectionBuilder(),
+                    new ItemToWeaponCollectionBuilder(),
+                    new PlayerStateGroup2CollectionBuilder(),
+                    new ProfileCollectionBuilder(),
+                    new ProjectileCollectionBuilder(),
+                    new WeaponCollectionBuilder(),
+                    new WeaponAmmoSlotCollectionBuilder(),
+                    new WeaponToFireGroupCollectionBuilder(),
+                    new WorldCollectionBuilder()
+                };
+
+                _logger.LogInformation("[{Environment}] Collection build starting...", env);
+                foreach (ICollectionBuilder collectionBuilder in collectionBuilders)
+                {
+                    try
+                    {
+                        await collectionBuilder.BuildAsync
+                        (
+                            clientDataCache,
+                            serverDataCache,
+                            localeDataCache,
+                            mongoContext,
+                            ct
+                        );
+                        _logger.LogDebug("[{Environment}] Successfully ran the {CollectionBuilder}", env, collectionBuilder);
+                    }
+                    catch (Exception ex)
+                    {
+                        _logger.LogError(ex, "[{Environment}] Failed to run the {CollectionBuilder}", env, collectionBuilder);
+                    }
+                }
+                _logger.LogInformation("[{Environment}] Collection build complete", env);
+
+                clientDataCache.Clear();
+                serverDataCache.Clear();
+                localeDataCache.Clear();
+            }
 
             await Task.Delay(TimeSpan.FromHours(1), ct).ConfigureAwait(false);
         }

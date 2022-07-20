@@ -88,6 +88,7 @@ public class CollectionBuildWorker : BackgroundService
                     _logger.LogDebug("[{Environment}] Populating locale data cache...", env);
                     await localeDataCache.RepopulateAsync(ct).ConfigureAwait(false);
                     _logger.LogDebug("[{Environment}] Populating patch data cache...", env);
+                    await patchDataCache.RepopulateAsync(ct).ConfigureAwait(false);
                     dataCacheFailureCount = 0;
                     _logger.LogInformation("[{Environment}] Caches updated successfully", env);
                 }

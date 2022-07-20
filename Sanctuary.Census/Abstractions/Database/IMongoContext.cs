@@ -59,6 +59,14 @@ public interface IMongoContext
     Task UpsertExperiencesAsync(IEnumerable<Experience> collection, CancellationToken ct = default);
 
     /// <summary>
+    /// Upserts the <see cref="FacilityLink"/> collection.
+    /// </summary>
+    /// <param name="collection">The collection.</param>
+    /// <param name="ct">A <see cref="CancellationToken"/> that can be used to stop the operation.</param>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    Task UpsertFacilityLinksAsync(IEnumerable<FacilityLink> collection, CancellationToken ct = default);
+
+    /// <summary>
     /// Upserts the <see cref="Faction"/> collection.
     /// </summary>
     /// <param name="collection">The collection.</param>

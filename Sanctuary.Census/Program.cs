@@ -142,6 +142,7 @@ public static class Program
 
         return services.RegisterCollectionBuilder<CurrencyCollectionBuilder>()
             .RegisterCollectionBuilder<ExperienceCollectionBuilder>()
+            .RegisterCollectionBuilder<FacilityLinkCollectionBuilder>()
             .RegisterCollectionBuilder<FactionCollectionBuilder>()
             .RegisterCollectionBuilder<FireGroupCollectionBuilder>()
             .RegisterCollectionBuilder<FireGroupToFireModeCollectionBuilder>()

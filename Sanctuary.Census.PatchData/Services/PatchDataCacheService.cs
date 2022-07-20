@@ -1,6 +1,7 @@
 ﻿using Sanctuary.Census.PatchData.Abstractions.Services;
 using Sanctuary.Census.PatchData.PatchDataModels;
 using System.Diagnostics.CodeAnalysis;
+using System.Reflection;
 using System.Text.Json;
 
 namespace Sanctuary.Census.PatchData.Services;
@@ -8,6 +9,8 @@ namespace Sanctuary.Census.PatchData.Services;
 /// <inheritdoc />
 public class PatchDataCacheService : IPatchDataCacheService
 {
+    private static readonly JsonSerializerOptions JsonOptions = new(JsonSerializerDefaults.Web);
+
     /// <inheritdoc />
     public DateTimeOffset LastPopulated { get; private set; }
 
@@ -25,8 +28,19 @@ public class PatchDataCacheService : IPatchDataCacheService
     /// <inheritdoc />
     public async Task RepopulateAsync(CancellationToken ct = default)
     {
-        await using FileStream linkStream = new("Data\\facility_link.json", FileMode.Open);
-        List<FacilityLinkPatch>? links = await JsonSerializer.DeserializeAsync<List<FacilityLinkPatch>>(linkStream, cancellationToken: ct);
+        string basePath = Path.Combine
+        (
+            Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)!,
+            "Data"
+        );
+
+        await using FileStream linkStream = new(Path.Combine(basePath, "facility_link.json"), FileMode.Open);
+        List<FacilityLinkPatch>? links = await JsonSerializer.DeserializeAsync<List<FacilityLinkPatch>>
+        (
+            linkStream,
+            JsonOptions,
+            ct
+        );
         FacilityLinks = links ?? throw new Exception("Failed to deserialize facility links");
     }
 

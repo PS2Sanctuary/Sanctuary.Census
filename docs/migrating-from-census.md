@@ -37,6 +37,7 @@ be very similar.
 
 - currency
 - experience
+- facility_link
 - faction
 - fire_group
 - fire_group_to_fire_mode

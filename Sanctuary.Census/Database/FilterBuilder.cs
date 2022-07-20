@@ -129,33 +129,62 @@ public class FilterBuilder
     {
         FilterDefinitionBuilder<BsonDocument> filterBuilder = Builders<BsonDocument>.Filter;
 
+        Dictionary<string, Dictionary<FilterType, List<Filter>>> buckets = new();
         foreach (Filter f in _filters)
         {
-            appendTo &= f.Type switch {
-                FilterType.LessThan => filterBuilder.Lt(f.FieldName, f.Value),
-                FilterType.LessThanOrEqual => filterBuilder.Lte(f.FieldName, f.Value),
-                FilterType.GreaterThan => filterBuilder.Gt(f.FieldName, f.Value),
-                FilterType.GreaterThanOrEqual => filterBuilder.Gte(f.FieldName, f.Value),
-                FilterType.StartsWith => filterBuilder.Regex
-                    (
-                        f.FieldName,
-                        caseInsensitiveRegex ? new BsonRegularExpression($"^{f.Value}", "i") : new BsonRegularExpression($"^{f.Value}")
-                    ),
-                FilterType.Contains => filterBuilder.Regex
-                    (
-                        f.FieldName,
-                        caseInsensitiveRegex ? new BsonRegularExpression((string)f.Value, "i") : new BsonRegularExpression((string)f.Value)
-                    ),
-                FilterType.NotEquals => filterBuilder.Ne(f.FieldName, f.Value),
-                _ when f.Value is string value && caseInsensitiveRegex => filterBuilder.Regex
-                    (
-                        f.FieldName,
-                        new BsonRegularExpression(value, "i")
-                    ),
-                _ => filterBuilder.Eq(f.FieldName, f.Value)
-            };
+            if (!buckets.ContainsKey(f.FieldName))
+                buckets[f.FieldName] = new Dictionary<FilterType, List<Filter>>();
+
+            if (!buckets[f.FieldName].ContainsKey(f.Type))
+                buckets[f.FieldName][f.Type] = new List<Filter>();
+
+            buckets[f.FieldName][f.Type].Add(f);
+        }
+
+        foreach ((string fieldName, Dictionary<FilterType, List<Filter>> bucket) in buckets)
+        {
+            foreach ((FilterType type, List<Filter> filters) in bucket)
+            {
+                FilterDefinition<BsonDocument> orFilter = GetFilter(filterBuilder, fieldName, type, filters[0].Value, caseInsensitiveRegex);
+                for (int i = 1; i < filters.Count; i++)
+                    orFilter |= GetFilter(filterBuilder, fieldName, type, filters[i].Value, caseInsensitiveRegex);
+
+                appendTo &= orFilter;
+            }
         }
     }
+
+    private FilterDefinition<BsonDocument> GetFilter
+    (
+        FilterDefinitionBuilder<BsonDocument> filterBuilder,
+        string fieldName,
+        FilterType type,
+        object filterValue,
+        bool caseInsensitiveRegex
+    ) => type switch
+    {
+        FilterType.LessThan => filterBuilder.Lt(fieldName, filterValue),
+        FilterType.LessThanOrEqual => filterBuilder.Lte(fieldName, filterValue),
+        FilterType.GreaterThan => filterBuilder.Gt(fieldName, filterValue),
+        FilterType.GreaterThanOrEqual => filterBuilder.Gte(fieldName, filterValue),
+        FilterType.StartsWith => filterBuilder.Regex
+        (
+            fieldName,
+            caseInsensitiveRegex ? new BsonRegularExpression($"^{filterValue}", "i") : new BsonRegularExpression($"^{filterValue}")
+        ),
+        FilterType.Contains => filterBuilder.Regex
+        (
+            fieldName,
+            caseInsensitiveRegex ? new BsonRegularExpression((string)filterValue, "i") : new BsonRegularExpression((string)filterValue)
+        ),
+        FilterType.NotEquals => filterBuilder.Ne(fieldName, filterValue),
+        _ when filterValue is string value && caseInsensitiveRegex => filterBuilder.Regex
+        (
+            fieldName,
+            new BsonRegularExpression(value, "i")
+        ),
+        _ => filterBuilder.Eq(fieldName, filterValue)
+    };
 
     private static (FilterType, object) GetTermValue(string fieldName, ReadOnlySpan<char> term, Func<string, object> converter)
     {

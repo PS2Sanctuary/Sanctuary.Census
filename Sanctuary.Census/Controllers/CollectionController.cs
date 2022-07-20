@@ -219,6 +219,7 @@ public class CollectionController : ControllerBase
                 dataTypes.Add(new Datatype(collName, (int)count));
             }
         }
+        dataTypes.Sort((d1, d2) => string.Compare(d1.Name, d2.Name, StringComparison.Ordinal));
 
         _memoryCache.Set((typeof(Datatype), environment), dataTypes, TimeSpan.FromHours(1));
         return dataTypes;

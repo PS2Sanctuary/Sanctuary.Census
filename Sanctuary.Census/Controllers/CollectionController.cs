@@ -6,6 +6,7 @@ using MongoDB.Bson;
 using MongoDB.Driver;
 using Sanctuary.Census.Abstractions.Database;
 using Sanctuary.Census.Common.Objects;
+using Sanctuary.Census.Database;
 using Sanctuary.Census.Models;
 using System;
 using System.Collections.Generic;
@@ -71,8 +72,17 @@ public class CollectionController : ControllerBase
     public async Task<CollectionCount> CountDatatypesAsync(PS2Environment environment, CancellationToken ct = default)
         => (await GetAndCacheDatatypeListAsync(environment, ct)).Count;
 
+    /// <summary>
+    /// Queries a collection.
+    /// </summary>
+    /// <param name="environment">The environment to retrieve the collection from.</param>
+    /// <param name="collectionName">The name of the collection to query.</param>
+    /// <param name="queryParams">The query parameters.</param>
+    /// <returns>The results of the query.</returns>
+    /// <response code="200">Returns the result of the query.</response>
     [HttpGet("/get/{environment}/{collectionName}")]
     [Produces("application/json", Type = typeof(object))]
+    [ProducesResponseType(StatusCodes.Status200OK)]
     public async Task<DataResponse<BsonDocument>> QueryCollectionAsync
     (
         PS2Environment environment,
@@ -111,26 +121,8 @@ public class CollectionController : ControllerBase
             if (paramName.AsSpan().StartsWith(QueryCommandIdentifier))
                 continue;
 
-            foreach (string value in paramValues.SelectMany(s => s.Split(',')))
-            {
-                if (value.Length == 0)
-                    continue;
-
-                if (value[0] is '<' or '[' or '>' or ']' or '^' or '*' or '!' && value.Length < 2)
-                    continue;
-
-                // TODO: Need to convert value to correct type
-                filter &= value[0] switch {
-                    '<' => filterBuilder.Lt(paramName, value[1..]),
-                    '[' => filterBuilder.Lte(paramName, value[1..]),
-                    '>' => filterBuilder.Gt(paramName, value[1..]),
-                    ']' => filterBuilder.Gte(paramName, value[1..]),
-                    '^' => filterBuilder.Regex(paramName, value),
-                    '*' => filterBuilder.Regex(paramName, value[1..]),
-                    '!' => filterBuilder.Ne(paramName, value[1..]),
-                    _ => filterBuilder.Eq(paramName, value)
-                };
-            }
+            FilterBuilder fb = FilterBuilder.Parse(collectionName, paramName, string.Join(',', paramValues));
+            fb.Build(ref filter, !queryParams.IsCaseSensitive);
         }
 
         IAggregateFluent<BsonDocument> aggregate = coll.Aggregate()
@@ -192,8 +184,8 @@ public class CollectionController : ControllerBase
         );
 
         aggregate = aggregate.Skip(queryParams.Start)
-            .Limit(queryParams.Limit)
-            .AppendStage<BsonDocument>(lookup);
+            .Limit(queryParams.Limit);
+            //.AppendStage<BsonDocument>(lookup);
 
         Stopwatch st = new();
         st.Start();

@@ -1,4 +1,5 @@
-﻿using Sanctuary.Census.Common.Objects.CommonModels;
+﻿using Sanctuary.Census.Attributes;
+using Sanctuary.Census.Common.Objects.CommonModels;
 
 namespace Sanctuary.Census.Models.Collections;
 
@@ -11,6 +12,7 @@ namespace Sanctuary.Census.Models.Collections;
 /// The IDs of this category's parents, ordered such that the immediate
 /// parent/s are the first items in the collection.
 /// </param>
+[Collection]
 public record ItemCategory
 (
     uint ItemCategoryID,

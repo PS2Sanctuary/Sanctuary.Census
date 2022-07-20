@@ -1,4 +1,5 @@
-﻿using Sanctuary.Census.Common.Objects.CommonModels;
+﻿using Sanctuary.Census.Attributes;
+using Sanctuary.Census.Common.Objects.CommonModels;
 
 namespace Sanctuary.Census.Models.Collections;
 
@@ -25,6 +26,7 @@ namespace Sanctuary.Census.Models.Collections;
 /// <param name="AnimationWieldTypeName">The name of this weapon's animation type.</param>
 /// <param name="MinViewPitch">The minimum view pitch that this weapon can be used at.</param>
 /// <param name="MaxViewPitch">The maximum view pitch that this weapon can be used at.</param>
+[Collection]
 public record Weapon
 (
     uint WeaponId,

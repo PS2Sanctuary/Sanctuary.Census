@@ -1,4 +1,6 @@
-﻿namespace Sanctuary.Census.Models.Collections;
+﻿using Sanctuary.Census.Attributes;
+
+namespace Sanctuary.Census.Models.Collections;
 
 /// <summary>
 /// Represents <see cref="Weapon"/>'s ammo slot.
@@ -8,6 +10,7 @@
 /// <param name="ClipSize">The size of a single clip of this ammo slot.</param>
 /// <param name="Capacity">The size of the reserve ammunition capacity of this ammo slot.</param>
 /// <param name="ClipModelName">The name of the model that represents this clip.</param>
+[Collection]
 public record WeaponAmmoSlot
 (
     uint WeaponId,

@@ -4,6 +4,9 @@
         <Compile Update="Util\MemoryReader.Search.cs">
             <DependentUpon>MemoryReader.cs</DependentUpon>
         </Compile>
+        <Compile Update="Util\SpanReader.Search.cs">
+          <DependentUpon>SpanReader.cs</DependentUpon>
+        </Compile>
     </ItemGroup>
 
     <ItemGroup>

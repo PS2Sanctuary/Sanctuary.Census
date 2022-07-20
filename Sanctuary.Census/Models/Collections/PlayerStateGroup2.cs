@@ -1,6 +1,9 @@
-﻿namespace Sanctuary.Census.Models.Collections;
+﻿using Sanctuary.Census.Attributes;
+
+namespace Sanctuary.Census.Models.Collections;
 
 #pragma warning disable CS1591
+[Collection]
 public record PlayerStateGroup2
 (
     uint PlayerStateGroupId,

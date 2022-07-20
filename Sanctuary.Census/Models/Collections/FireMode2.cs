@@ -1,8 +1,10 @@
-﻿using Sanctuary.Census.Common.Objects.CommonModels;
+﻿using Sanctuary.Census.Attributes;
+using Sanctuary.Census.Common.Objects.CommonModels;
 
 namespace Sanctuary.Census.Models.Collections;
 
 #pragma warning disable CS1591
+[Collection]
 public record FireMode2
 (
     uint FireModeID,

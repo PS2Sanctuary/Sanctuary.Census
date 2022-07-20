@@ -1,4 +1,6 @@
-﻿namespace Sanctuary.Census.Models.Collections;
+﻿using Sanctuary.Census.Attributes;
+
+namespace Sanctuary.Census.Models.Collections;
 
 /// <summary>
 /// Represents fire group data.
@@ -9,6 +11,7 @@
 /// <param name="SpoolUpTimeMS">The time in milliseconds to spool up before firing.</param>
 /// <param name="SpoolUpInitialRefireTimeMS"></param>
 /// <param name="CanChamberIronsights"></param>
+[Collection]
 public record FireGroup
 (
     uint FireGroupID,

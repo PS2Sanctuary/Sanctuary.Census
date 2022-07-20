@@ -9,12 +9,13 @@ namespace Sanctuary.Census.Models;
 public class CollectionQueryParameters
 {
     /// <summary>
-    /// The position into the results of the query at which
-    /// to begin returning records at.
-    /// E.g. <c>c:start=75</c>.
+    /// Indicates whether queries on string fields should be
+    /// case insensitive. Defaults to <c>true</c>. Note
+    /// that disabling this may slow down the query.
+    /// E.g. <c>c:case=false</c>.
     /// </summary>
-    [FromQuery(Name = "c:start")]
-    public int Start { get; set; }
+    [FromQuery(Name = "c:case")]
+    public bool IsCaseSensitive { get; set; }
 
     /// <summary>
     /// The maximum number of records to return.
@@ -22,6 +23,14 @@ public class CollectionQueryParameters
     /// </summary>
     [FromQuery(Name = "c:limit")]
     public int Limit { get; set; }
+
+    /// <summary>
+    /// The position into the results of the query at which
+    /// to begin returning records at.
+    /// E.g. <c>c:start=75</c>.
+    /// </summary>
+    [FromQuery(Name = "c:start")]
+    public int Start { get; set; }
 
     /// <summary>
     /// The list of fields to include in the result.
@@ -65,7 +74,8 @@ public class CollectionQueryParameters
     /// </summary>
     public CollectionQueryParameters()
     {
-        Start = 0;
+        IsCaseSensitive = true;
         Limit = 100;
+        Start = 0;
     }
 }

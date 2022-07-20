@@ -1,4 +1,6 @@
-﻿namespace Sanctuary.Census.Models.Collections;
+﻿using Sanctuary.Census.Attributes;
+
+namespace Sanctuary.Census.Models.Collections;
 
 /// <summary>
 /// Represents projectile data.
@@ -22,6 +24,7 @@
 /// <param name="LockonLoseAngle">The angle to target at which the projectile will lose its lock.</param>
 /// <param name="LockonSeekInFlight">Indicates whether the projectile will seek its lock target while in flight.</param>
 /// <param name="ActorDefinition">The model used to represent the projectile.</param>
+[Collection]
 public record Projectile
 (
     uint ProjectileId,

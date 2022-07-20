@@ -31,11 +31,7 @@ public class PatchDataCacheService : IPatchDataCacheService
     /// <inheritdoc />
     public async Task RepopulateAsync(CancellationToken ct = default)
     {
-        string basePath = Path.Combine
-        (
-            Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)!,
-            "Data"
-        );
+        string basePath = Path.Combine(AppContext.BaseDirectory, "Data");
 
         await using FileStream linkStream = new(Path.Combine(basePath, "facility_link.json"), FileMode.Open);
         List<FacilityLinkPatch>? links = await JsonSerializer.DeserializeAsync<List<FacilityLinkPatch>>

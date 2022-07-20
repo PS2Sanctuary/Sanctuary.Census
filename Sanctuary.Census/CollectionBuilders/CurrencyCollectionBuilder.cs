@@ -1,9 +1,12 @@
 ﻿using Sanctuary.Census.Abstractions.CollectionBuilders;
+using Sanctuary.Census.Abstractions.Database;
 using Sanctuary.Census.ClientData.Abstractions.Services;
 using Sanctuary.Census.Common.Objects.CommonModels;
 using Sanctuary.Census.Exceptions;
 using Sanctuary.Census.ServerData.Internal.Abstractions.Services;
 using System.Collections.Generic;
+using System.Threading;
+using System.Threading.Tasks;
 using CCurrency = Sanctuary.Census.ClientData.ClientDataModels.Currency;
 using MCurrency = Sanctuary.Census.Models.Collections.Currency;
 
@@ -15,12 +18,13 @@ namespace Sanctuary.Census.CollectionBuilders;
 public class CurrencyCollectionBuilder : ICollectionBuilder
 {
     /// <inheritdoc />
-    public void Build
+    public async Task BuildAsync
     (
         IClientDataCacheService clientDataCache,
         IServerDataCacheService serverDataCache,
         ILocaleDataCacheService localeDataCache,
-        CollectionsContext context
+        IMongoContext dbContext,
+        CancellationToken ct
     )
     {
         if (clientDataCache.Currencies.Count == 0)
@@ -44,6 +48,6 @@ public class CurrencyCollectionBuilder : ICollectionBuilder
             builtCurrencies.TryAdd(built.CurrencyID, built);
         }
 
-        context.Currencies = builtCurrencies;
+        await dbContext.UpsertCurrenciesAsync(builtCurrencies.Values, ct);
     }
 }

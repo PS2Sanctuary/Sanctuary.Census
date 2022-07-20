@@ -1,4 +1,5 @@
-﻿using Sanctuary.Census.Common.Objects.CommonModels;
+﻿using Sanctuary.Census.Attributes;
+using Sanctuary.Census.Common.Objects.CommonModels;
 
 namespace Sanctuary.Census.Models.Collections;
 
@@ -13,6 +14,7 @@ namespace Sanctuary.Census.Models.Collections;
 /// <param name="ImageSetId">The ID of the profile's image set.</param>
 /// <param name="ImageId">The ID of the profile's default image.</param>
 /// <param name="ImagePath">The relative path to the profile's default image.</param>
+[Collection]
 public record Profile
 (
     uint ProfileId,

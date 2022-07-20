@@ -1,10 +1,13 @@
 ﻿using Sanctuary.Census.Abstractions.CollectionBuilders;
+using Sanctuary.Census.Abstractions.Database;
 using Sanctuary.Census.ClientData.Abstractions.Services;
 using Sanctuary.Census.ClientData.ClientDataModels;
 using Sanctuary.Census.Common.Objects.CommonModels;
 using Sanctuary.Census.Exceptions;
 using Sanctuary.Census.ServerData.Internal.Abstractions.Services;
 using System.Collections.Generic;
+using System.Threading;
+using System.Threading.Tasks;
 using MFaction = Sanctuary.Census.Models.Collections.Faction;
 
 namespace Sanctuary.Census.CollectionBuilders;
@@ -15,12 +18,13 @@ namespace Sanctuary.Census.CollectionBuilders;
 public class FactionCollectionBuilder : ICollectionBuilder
 {
     /// <inheritdoc />
-    public void Build
+    public async Task BuildAsync
     (
         IClientDataCacheService clientDataCache,
         IServerDataCacheService serverDataCache,
         ILocaleDataCacheService localeDataCache,
-        CollectionsContext context
+        IMongoContext dbContext,
+        CancellationToken ct
     )
     {
         if (clientDataCache.Factions.Count == 0)
@@ -72,6 +76,6 @@ public class FactionCollectionBuilder : ICollectionBuilder
             builtItems.TryAdd(built.FactionID, built);
         }
 
-        context.Factions = builtItems;
+        await dbContext.UpsertFactionsAsync(builtItems.Values, ct);
     }
 }

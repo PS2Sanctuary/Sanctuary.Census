@@ -1,4 +1,5 @@
-﻿using Sanctuary.Census.Common.Objects.CommonModels;
+﻿using Sanctuary.Census.Attributes;
+using Sanctuary.Census.Common.Objects.CommonModels;
 
 namespace Sanctuary.Census.Models.Collections;
 
@@ -11,6 +12,7 @@ namespace Sanctuary.Census.Models.Collections;
 /// <param name="IconImageSetID">The image set ID of the currency's icon.</param>
 /// <param name="MapIconImageSetID">The image set ID of the currency's map icon.</param>
 /// <param name="InventoryCap">The maximum amount of this currency a character may have.</param>
+[Collection]
 public record Currency
 (
     uint CurrencyID,

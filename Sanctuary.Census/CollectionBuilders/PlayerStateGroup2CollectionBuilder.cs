@@ -1,10 +1,13 @@
 ﻿using Sanctuary.Census.Abstractions.CollectionBuilders;
+using Sanctuary.Census.Abstractions.Database;
 using Sanctuary.Census.ClientData.Abstractions.Services;
 using Sanctuary.Census.Exceptions;
 using Sanctuary.Census.Models.Collections;
 using Sanctuary.Census.ServerData.Internal.Abstractions.Services;
 using Sanctuary.Zone.Packets.ReferenceData;
 using System.Collections.Generic;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace Sanctuary.Census.CollectionBuilders;
 
@@ -14,26 +17,25 @@ namespace Sanctuary.Census.CollectionBuilders;
 public class PlayerStateGroup2CollectionBuilder : ICollectionBuilder
 {
     /// <inheritdoc />
-    public void Build
+    public async Task BuildAsync
     (
         IClientDataCacheService clientDataCache,
         IServerDataCacheService serverDataCache,
         ILocaleDataCacheService localeDataCache,
-        CollectionsContext context
+        IMongoContext dbContext,
+        CancellationToken ct
     )
     {
         if (serverDataCache.WeaponDefinitions is null)
             throw new MissingCacheDataException(typeof(WeaponDefinitions));
 
-        Dictionary<uint, IReadOnlyList<PlayerStateGroup2>> builtStateGroups = new();
+        List<PlayerStateGroup2> builtStateGroups = new();
         foreach (PlayerStateGroup stateGroup in serverDataCache.WeaponDefinitions.PlayerStateGroups)
         {
-            List<PlayerStateGroup2> groups = new();
-
             for (uint i = 0; i < stateGroup.States.Length; i++)
             {
                 PlayerState state = stateGroup.States[i];
-                groups.Add(new PlayerStateGroup2
+                builtStateGroups.Add(new PlayerStateGroup2
                 (
                     stateGroup.PlayerStateGroupID,
                     state.PlayerStateID,
@@ -48,10 +50,8 @@ public class PlayerStateGroup2CollectionBuilder : ICollectionBuilder
                     state.CofTurnPenalty
                 ));
             }
-
-            builtStateGroups.Add(stateGroup.PlayerStateGroupID, groups);
         }
 
-        context.PlayerStateGroups = builtStateGroups;
+        await dbContext.UpsertPlayerStateGroup2Async(builtStateGroups, ct);
     }
 }

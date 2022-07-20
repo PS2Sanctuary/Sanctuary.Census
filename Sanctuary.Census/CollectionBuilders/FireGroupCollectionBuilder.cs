@@ -1,9 +1,12 @@
 ﻿using Sanctuary.Census.Abstractions.CollectionBuilders;
+using Sanctuary.Census.Abstractions.Database;
 using Sanctuary.Census.ClientData.Abstractions.Services;
 using Sanctuary.Census.Exceptions;
 using Sanctuary.Census.ServerData.Internal.Abstractions.Services;
 using Sanctuary.Zone.Packets.ReferenceData;
 using System.Collections.Generic;
+using System.Threading;
+using System.Threading.Tasks;
 using MFireGroup = Sanctuary.Census.Models.Collections.FireGroup;
 using SFireGroup = Sanctuary.Zone.Packets.ReferenceData.FireGroup;
 
@@ -15,12 +18,13 @@ namespace Sanctuary.Census.CollectionBuilders;
 public class FireGroupCollectionBuilder : ICollectionBuilder
 {
     /// <inheritdoc />
-    public void Build
+    public async Task BuildAsync
     (
         IClientDataCacheService clientDataCache,
         IServerDataCacheService serverDataCache,
         ILocaleDataCacheService localeDataCache,
-        CollectionsContext context
+        IMongoContext dbContext,
+        CancellationToken ct
     )
     {
         if (serverDataCache.WeaponDefinitions is null)
@@ -41,6 +45,6 @@ public class FireGroupCollectionBuilder : ICollectionBuilder
             builtFireGroups.TryAdd(built.FireGroupID, built);
         }
 
-        context.FireGroups = builtFireGroups;
+        await dbContext.UpsertFireGroupsAsync(builtFireGroups.Values, ct);
     }
 }

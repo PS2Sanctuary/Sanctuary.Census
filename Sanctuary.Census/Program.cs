@@ -1,10 +1,13 @@
 using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.HttpOverrides;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using MongoDB.Driver;
+using Sanctuary.Census.Abstractions.Database;
 using Sanctuary.Census.ClientData.Extensions;
 using Sanctuary.Census.Common.Objects;
+using Sanctuary.Census.Database;
 using Sanctuary.Census.Json;
 using Sanctuary.Census.Middleware;
 using Sanctuary.Census.ServerData.Internal.Extensions;
@@ -18,6 +21,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text.Json.Serialization;
+using System.Threading.Tasks;
 
 namespace Sanctuary.Census;
 
@@ -48,11 +52,13 @@ public static class Program
             .Configure<LoginClientOptions>(builder.Configuration.GetSection(nameof(LoginClientOptions)))
             .Configure<GatewayClientOptions>(builder.Configuration.GetSection(nameof(GatewayClientOptions)));
 
-        builder.Services.AddClientDataServices()
+        builder.Services.AddMemoryCache()
+            .AddClientDataServices()
             .AddInternalServerDataServices();
 
-        builder.Services.AddSingleton<CollectionsContext>();
-        builder.Services.AddHostedService<CollectionBuildWorker>();
+        builder.Services.AddSingleton(new MongoClient("mongodb://localhost:27017"))
+            .AddScoped<IMongoContext, MongoContext>()
+            .AddHostedService<CollectionBuildWorker>();
 
         builder.Services.AddControllers()
             .AddJsonOptions(options =>
@@ -60,6 +66,7 @@ public static class Program
                 options.JsonSerializerOptions.PropertyNamingPolicy = new SnakeCaseJsonNamingPolicy();
                 options.JsonSerializerOptions.DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull;
                 options.JsonSerializerOptions.Converters.Add(new DataResponseJsonConverter());
+                options.JsonSerializerOptions.Converters.Add(new BsonDocumentJsonConverter());
             });
 
         // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
@@ -104,9 +111,10 @@ public static class Program
         app.UseHttpsRedirection();
         app.UseMiddleware<ServiceIDMiddleware>();
 
-        app.MapGet("/", delegate(HttpContext context)
+        app.MapGet("/", [ApiExplorerSettings(IgnoreApi = true)](c) =>
         {
-            context.Response.Redirect("https://github.com/carlst99/Sanctuary.Census");
+            c.Response.Redirect("https://github.com/carlst99/Sanctuary.Census");
+            return Task.CompletedTask;
         });
 
         app.UseRouting();

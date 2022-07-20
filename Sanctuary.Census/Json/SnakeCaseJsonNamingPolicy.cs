@@ -10,6 +10,11 @@ namespace Sanctuary.Census.Json;
 /// </summary>
 public class SnakeCaseJsonNamingPolicy : JsonNamingPolicy
 {
+    /// <summary>
+    /// Gets a default instance of the <see cref="SnakeCaseJsonNamingPolicy"/>.
+    /// </summary>
+    public static readonly SnakeCaseJsonNamingPolicy Default = new();
+
     /// <inheritdoc />
     public override string ConvertName(string name)
     {

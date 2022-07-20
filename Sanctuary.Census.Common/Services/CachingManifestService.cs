@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.Options;
 using Sanctuary.Census.Common.Objects;
+using System;
 using System.IO;
 using System.IO.Abstractions;
 using System.Net.Http;
@@ -12,6 +13,11 @@ namespace Sanctuary.Census.Common.Services;
 /// <remarks>This service will cache manifest files in local appdata.</remarks>
 public class CachingManifestService : ManifestService
 {
+    private readonly SemaphoreSlim _cachedStreamLock;
+
+    private MemoryStream? _manifestStream;
+    private DateTimeOffset _streamLastUpdated;
+
     /// <summary>
     /// Gets the file system implementation.
     /// </summary>
@@ -35,6 +41,7 @@ public class CachingManifestService : ManifestService
         IFileSystem fileSystem
     ) : base(clientFactory)
     {
+        _cachedStreamLock = new SemaphoreSlim(1);
         FileSystem = fileSystem;
         CacheDirectory = FileSystem.Path.Combine(commonOptions.Value.AppDataDirectory, "ManifestCache");
     }
@@ -59,5 +66,30 @@ public class CachingManifestService : ManifestService
         dataStream.Seek(0, SeekOrigin.Begin);
 
         return dataStream;
+    }
+
+    /// <inheritdoc />
+    protected override async Task<Stream> GetManifestStreamAsync(PS2Environment environment, CancellationToken ct)
+    {
+        if (_streamLastUpdated.AddMinutes(5) < DateTimeOffset.UtcNow || _manifestStream is null)
+        {
+            if (_manifestStream is not null)
+                await _manifestStream.DisposeAsync();
+            _manifestStream = new MemoryStream();
+
+            await using Stream s = await base.GetManifestStreamAsync(environment, ct);
+            await s.CopyToAsync(_manifestStream, ct);
+            _streamLastUpdated = DateTimeOffset.UtcNow;
+        }
+
+        await _cachedStreamLock.WaitAsync(ct);
+        _manifestStream.Seek(0, SeekOrigin.Begin);
+
+        MemoryStream ms = new();
+        await _manifestStream.CopyToAsync(ms, ct);
+        ms.Seek(0, SeekOrigin.Begin);
+
+        _cachedStreamLock.Release();
+        return ms;
     }
 }

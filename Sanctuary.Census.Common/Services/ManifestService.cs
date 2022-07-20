@@ -36,9 +36,7 @@ public class ManifestService : IManifestService
     /// <inheritdoc />
     public virtual async Task<ManifestFile> GetFileAsync(string fileName, PS2Environment ps2Environment, CancellationToken ct = default)
     {
-        HttpClient client = _clientFactory.CreateClient(nameof(ManifestService));
-        await using Stream manifestData = await client.GetStreamAsync(ManifestUrls[ps2Environment], ct)
-            .ConfigureAwait(false);
+        await using Stream manifestData = await GetManifestStreamAsync(ps2Environment, ct).ConfigureAwait(false);
 
         using XmlReader reader = XmlReader.Create
         (
@@ -110,6 +108,19 @@ public class ManifestService : IManifestService
 
         ms.Seek(0, SeekOrigin.Begin);
         return ms;
+    }
+
+    /// <summary>
+    /// Gets a stream of data containing a manifest.
+    /// </summary>
+    /// <param name="environment">The environment to retrieve the manifest from.</param>
+    /// <param name="ct">A <see cref="CancellationToken"/> that can be used to stop the operation.</param>
+    /// <returns>The manifest stream.</returns>
+    protected virtual async Task<Stream> GetManifestStreamAsync(PS2Environment environment, CancellationToken ct)
+    {
+        HttpClient client = _clientFactory.CreateClient(nameof(ManifestService));
+        return await client.GetStreamAsync(ManifestUrls[environment], ct)
+            .ConfigureAwait(false);
     }
 
     private static void LMZADecompress(long inputStreamLength, Stream inputStream, Stream outputStream)

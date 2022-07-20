@@ -64,16 +64,16 @@ public class MongoContext : IMongoContext
         await CreateNonUniqueKeyIndexs<Item>
         (
             ct,
-            x => x.Name!.Chinese!,
-            x => x.Name!.English!,
-            x => x.Name!.French!,
-            x => x.Name!.German!,
-            x => x.Name!.Italian!,
-            x => x.Name!.Korean!,
-            x => x.Name!.Portuguese!,
-            x => x.Name!.Russian!,
-            x => x.Name!.Spanish!,
-            x => x.Name!.Turkish!
+            x => x.Name!.Zh!,
+            x => x.Name!.En!,
+            x => x.Name!.Fr!,
+            x => x.Name!.De!,
+            x => x.Name!.It!,
+            x => x.Name!.Ko!,
+            x => x.Name!.Pt!,
+            x => x.Name!.Ru!,
+            x => x.Name!.Es!,
+            x => x.Name!.Tr!
         );
         await CreateUniqueKeyIndex<ItemCategory>(x => x.ItemCategoryID, ct).ConfigureAwait(false);
         await CreateNonUniqueKeyIndexs<ItemToWeapon>(ct, x => x.ItemId, x => x.WeaponId).ConfigureAwait(false);
@@ -325,17 +325,8 @@ public class MongoContext : IMongoContext
 
         BsonClassMap.RegisterClassMap<LocaleString>(cm =>
         {
+            AutoMap(cm);
             cm.UnmapProperty(x => x.ID);
-            cm.MapProperty(x => x.German).SetElementName("de");
-            cm.MapProperty(x => x.English).SetElementName("en");
-            cm.MapProperty(x => x.Spanish).SetElementName("es");
-            cm.MapProperty(x => x.French).SetElementName("fr");
-            cm.MapProperty(x => x.Italian).SetElementName("it");
-            cm.MapProperty(x => x.Korean).SetElementName("ko");
-            cm.MapProperty(x => x.Portuguese).SetElementName("pt");
-            cm.MapProperty(x => x.Russian).SetElementName("ru");
-            cm.MapProperty(x => x.Turkish).SetElementName("tr");
-            cm.MapProperty(x => x.Chinese).SetElementName("zh");
         });
     }
 

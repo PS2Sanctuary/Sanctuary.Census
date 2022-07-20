@@ -17,7 +17,7 @@ namespace Sanctuary.Census.Database;
 /// </summary>
 public class FilterBuilder
 {
-    private static readonly Dictionary<string, Dictionary<string, Func<string, object>>> QueryStringConverters = new();
+    private static readonly Dictionary<string, Dictionary<string, object>> QueryStringConverters = new();
     private static readonly SnakeCaseJsonNamingPolicy NameConv = SnakeCaseJsonNamingPolicy.Default;
 
     private readonly List<Filter> _filters;
@@ -30,21 +30,14 @@ public class FilterBuilder
 
         foreach (Type collType in collTypes)
         {
-            Dictionary<string, Func<string, object>> propConverters = new();
+            Dictionary<string, object> propConverters = new();
             QueryStringConverters.Add
             (
                 NameConv.ConvertName(collType.Name),
                 propConverters
             );
 
-            foreach (PropertyInfo prop in collType.GetProperties())
-            {
-                propConverters.Add
-                (
-                    NameConv.ConvertName(prop.Name),
-                    GetConverter(prop.PropertyType)
-                );
-            }
+            GetTypeConverters(propConverters, collType);
         }
     }
 
@@ -65,27 +58,45 @@ public class FilterBuilder
     /// <param name="value">The value of the filter.</param>
     /// <returns>A new <see cref="FilterBuilder"/>.</returns>
     /// <exception cref="QueryException">If the filter string was malformed.</exception>
-    public static FilterBuilder Parse(string collectionName, string fieldName, ReadOnlySpan<char> value)
+    public static FilterBuilder Parse(string collectionName, ReadOnlySpan<char> fieldName, ReadOnlySpan<char> value)
     {
-        if (!QueryStringConverters.TryGetValue(collectionName, out Dictionary<string, Func<string, object>>? propConverters))
+        if (!QueryStringConverters.TryGetValue(collectionName, out Dictionary<string, object>? propConverters))
             throw new QueryException(QueryErrorCode.UnknownCollection, $"The {collectionName} collection is not recognised");
 
-        if (!propConverters.TryGetValue(fieldName, out Func<string, object>? converter))
-            throw new QueryException(QueryErrorCode.UnknownField, $"The {fieldName} does not exist on the {collectionName} collection");
+        SpanReader<char> nameReader = new(fieldName);
+        while (nameReader.TryReadTo(out ReadOnlySpan<char> nameComponent, '.'))
+        {
+            if (!propConverters.TryGetValue(nameComponent.ToString(), out object? subConverter))
+                throw new QueryException(QueryErrorCode.UnknownField, $"The field path {fieldName} does not point to a valid field");
+
+            if (subConverter is not Dictionary<string, object> subPropConverters)
+                throw new QueryException(QueryErrorCode.UnknownField, $"The field path {fieldName} attempts to traverse through a non-existent object");
+
+            propConverters = subPropConverters;
+        }
+
+        if (!nameReader.TryReadExact(out ReadOnlySpan<char> pathEnd, nameReader.Remaining))
+            throw new QueryException(QueryErrorCode.Malformed, $"The field path {fieldName} ended in an accessor ('.')");
+
+        if (!propConverters.TryGetValue(pathEnd.ToString(), out object? maybeConverter))
+            throw new QueryException(QueryErrorCode.UnknownField, $"The field path {fieldName} does not point to a valid field");
+
+        if (maybeConverter is not Func<string, object> converter)
+            throw new QueryException(QueryErrorCode.UnknownField, $"The field path {fieldName} points to an object, rather than a field");
 
         SpanReader<char> reader = new(value);
         List<Filter> filterValues = new();
 
         while (reader.TryReadTo(out ReadOnlySpan<char> term, ','))
         {
-            (FilterType type, object termValue) = GetTermValue(fieldName, term, converter);
-            filterValues.Add(new Filter(fieldName, type, termValue));
+            (FilterType type, object termValue) = GetTermValue(fieldName.ToString(), term, converter);
+            filterValues.Add(new Filter(fieldName.ToString(), type, termValue));
         }
 
         if (reader.TryReadExact(out ReadOnlySpan<char> lastTerm, reader.Remaining))
         {
-            (FilterType type, object termValue) = GetTermValue(fieldName, lastTerm, converter);
-            filterValues.Add(new Filter(fieldName, type, termValue));
+            (FilterType type, object termValue) = GetTermValue(fieldName.ToString(), lastTerm, converter);
+            filterValues.Add(new Filter(fieldName.ToString(), type, termValue));
         }
 
         return new FilterBuilder(filterValues);
@@ -183,7 +194,26 @@ public class FilterBuilder
         return (type, value);
     }
 
-    private static Func<string, object> GetConverter(Type propertyType)
+    private static void GetTypeConverters(IDictionary<string, object> converters, Type type)
+    {
+        foreach (PropertyInfo prop in type.GetProperties())
+        {
+            Func<string, object>? converter = GetConverter(prop.PropertyType);
+            string name = NameConv.ConvertName(prop.Name);
+            if (converter is null)
+            {
+                Dictionary<string, object> subConverters = new();
+                GetTypeConverters(subConverters, prop.PropertyType);
+                converters.Add(name, subConverters);
+            }
+            else
+            {
+                converters.Add(name, converter);
+            }
+        }
+    }
+
+    private static Func<string, object>? GetConverter(Type propertyType)
     {
         if (propertyType == typeof(bool))
             return ParseBoolean;
@@ -216,8 +246,7 @@ public class FilterBuilder
         if (Nullable.GetUnderlyingType(propertyType) != null)
             return GetConverter(Nullable.GetUnderlyingType(propertyType)!);
 
-        // Naughty! Our way of getting around nested types
-        return s => s.ToString();
+        return null;
     }
 
     private static object ParseBoolean(string value)

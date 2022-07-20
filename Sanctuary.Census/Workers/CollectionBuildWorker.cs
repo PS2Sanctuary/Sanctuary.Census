@@ -1,13 +1,14 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.Extensions.Caching.Memory;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
 using Sanctuary.Census.Abstractions.CollectionBuilders;
 using Sanctuary.Census.Abstractions.Database;
 using Sanctuary.Census.ClientData.Abstractions.Services;
 using Sanctuary.Census.CollectionBuilders;
 using Sanctuary.Census.Common.Objects;
 using Sanctuary.Census.Common.Services;
+using Sanctuary.Census.Models;
 using Sanctuary.Census.ServerData.Internal.Abstractions.Services;
 using Sanctuary.Census.ServerData.Internal.Exceptions;
 using System;
@@ -23,24 +24,24 @@ public class CollectionBuildWorker : BackgroundService
 {
     private readonly ILogger<CollectionBuildWorker> _logger;
     private readonly IServiceScopeFactory _serviceScopeFactory;
-    private readonly CommonOptions _options;
+    private readonly IMemoryCache _memoryCache;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="CollectionBuildWorker"/> class.
     /// </summary>
     /// <param name="logger">The logging interface to use.</param>
     /// <param name="serviceScopeFactory">The service provider.</param>
-    /// <param name="options">The configured common options.</param>
+    /// <param name="memoryCache">The memory cache.</param>
     public CollectionBuildWorker
     (
         ILogger<CollectionBuildWorker> logger,
         IServiceScopeFactory serviceScopeFactory,
-        IOptions<CommonOptions> options
+        IMemoryCache memoryCache
     )
     {
         _logger = logger;
         _serviceScopeFactory = serviceScopeFactory;
-        _options = options.Value;
+        _memoryCache = memoryCache;
     }
 
     /// <inheritdoc />
@@ -140,6 +141,7 @@ public class CollectionBuildWorker : BackgroundService
                         _logger.LogError(ex, "[{Environment}] Failed to run the {CollectionBuilder}", env, collectionBuilder);
                     }
                 }
+                _memoryCache.Remove((typeof(Datatype), env));
                 _logger.LogInformation("[{Environment}] Collection build complete", env);
 
                 clientDataCache.Clear();

@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Primitives;
 using MongoDB.Bson;
 using MongoDB.Driver;
@@ -30,20 +31,23 @@ public class CollectionController : ControllerBase
     private static readonly char[] QueryCommandIdentifier = { 'c', ':' };
 
     private readonly IMongoContext _mongoContext;
+    private readonly IMemoryCache _memoryCache;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="CollectionController"/> class.
     /// </summary>
     /// <param name="mongoContext">The Mongo DB collections context.</param>
-    public CollectionController(IMongoContext mongoContext)
+    /// <param name="memoryCache">The memory cache.</param>
+    public CollectionController(IMongoContext mongoContext, IMemoryCache memoryCache)
     {
         _mongoContext = mongoContext;
+        _memoryCache = memoryCache;
     }
 
     /// <summary>
     /// Gets the available collections.
     /// </summary>
-    /// <param name="environment">The environment to retrieve the collections of.</param>
+    /// <param name="environment">The environment to retrieve the collections from.</param>
     /// <param name="ct">A <see cref="CancellationToken"/> that can be used to stop the operation.</param>
     /// <returns>The available collections.</returns>
     /// <response code="200">Returns the list of collections.</response>
@@ -51,36 +55,21 @@ public class CollectionController : ControllerBase
     [ProducesResponseType(StatusCodes.Status200OK)]
     public async Task<DataResponse<Datatype>> GetDatatypesAsync(PS2Environment environment, CancellationToken ct = default)
     {
-        IMongoDatabase db = _mongoContext.GetDatabase(environment);
-
-        List<Datatype> dataTypes = new();
-        IAsyncCursor<string> collNames = await db.ListCollectionNamesAsync(cancellationToken: ct);
-        while (await collNames.MoveNextAsync(ct))
-        {
-            foreach (string collName in collNames.Current)
-            {
-                IMongoCollection<BsonDocument> coll = db.GetCollection<BsonDocument>(collName);
-                long count = await coll.CountDocumentsAsync(new BsonDocument(), null, ct);
-                dataTypes.Add(new Datatype(collName, (int)count));
-            }
-        }
-
+        IReadOnlyList<Datatype> dataTypes = await GetAndCacheDatatypeListAsync(environment, ct);
         return new DataResponse<Datatype>(dataTypes, "datatype", null);
     }
 
     /// <summary>
     /// Counts the number of available collections.
     /// </summary>
-    /// <param name="environment">The environment to retrieve the collections of.</param>
+    /// <param name="environment">The environment to retrieve the collections from.</param>
+    /// <param name="ct">A <see cref="CancellationToken"/> that can be used to stop the operation.</param>
     /// <returns>The collection count.</returns>
     /// <response code="200">Returns the number of collections.</response>
     [HttpGet("count/{environment}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
-    public CollectionCount CountDatatypes(PS2Environment environment)
-    {
-        IMongoDatabase db = _mongoContext.GetDatabase(environment);
-        return db.ListCollections().ToList().Count;
-    }
+    public async Task<CollectionCount> CountDatatypesAsync(PS2Environment environment, CancellationToken ct = default)
+        => (await GetAndCacheDatatypeListAsync(environment, ct)).Count;
 
     [HttpGet("/get/{environment}/{collectionName}")]
     [Produces("application/json", Type = typeof(object))]
@@ -216,6 +205,28 @@ public class CollectionController : ControllerBase
             collectionName,
             queryParams.ShowTimings ? st.Elapsed : null
         );
+    }
+
+    private async ValueTask<IReadOnlyList<Datatype>> GetAndCacheDatatypeListAsync(PS2Environment environment, CancellationToken ct)
+    {
+        if (_memoryCache.TryGetValue((typeof(Datatype), environment), out List<Datatype>? dataTypes) && dataTypes is not null)
+            return dataTypes;
+
+        dataTypes = new List<Datatype>();
+        IMongoDatabase db = _mongoContext.GetDatabase(environment);
+        IAsyncCursor<string> collNames = await db.ListCollectionNamesAsync(cancellationToken: ct);
+        while (await collNames.MoveNextAsync(ct))
+        {
+            foreach (string collName in collNames.Current)
+            {
+                IMongoCollection<BsonDocument> coll = db.GetCollection<BsonDocument>(collName);
+                long count = await coll.CountDocumentsAsync(new BsonDocument(), null, ct);
+                dataTypes.Add(new Datatype(collName, (int)count));
+            }
+        }
+
+        _memoryCache.Set((typeof(Datatype), environment), dataTypes, TimeSpan.FromHours(1));
+        return dataTypes;
     }
 
     // private RedirectResult GetRedirectToCensusResult()

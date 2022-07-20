@@ -1,5 +1,4 @@
 using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.DependencyInjection;
@@ -53,7 +52,8 @@ public static class Program
             .Configure<LoginClientOptions>(builder.Configuration.GetSection(nameof(LoginClientOptions)))
             .Configure<GatewayClientOptions>(builder.Configuration.GetSection(nameof(GatewayClientOptions)));
 
-        builder.Services.AddClientDataServices()
+        builder.Services.AddMemoryCache()
+            .AddClientDataServices()
             .AddInternalServerDataServices();
 
         builder.Services.AddSingleton(new MongoClient("mongodb://localhost:27017"))

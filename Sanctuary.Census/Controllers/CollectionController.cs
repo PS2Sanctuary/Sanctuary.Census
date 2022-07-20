@@ -7,6 +7,7 @@ using MongoDB.Driver;
 using Sanctuary.Census.Abstractions.Database;
 using Sanctuary.Census.Common.Objects;
 using Sanctuary.Census.Database;
+using Sanctuary.Census.Exceptions;
 using Sanctuary.Census.Models;
 using System;
 using System.Collections.Generic;
@@ -54,9 +55,10 @@ public class CollectionController : ControllerBase
     /// <response code="200">Returns the list of collections.</response>
     [HttpGet("get/{environment}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
-    public async Task<DataResponse<Datatype>> GetDatatypesAsync(PS2Environment environment, CancellationToken ct = default)
+    public async Task<DataResponse<Datatype>> GetDatatypesAsync(string environment, CancellationToken ct = default)
     {
-        IReadOnlyList<Datatype> dataTypes = await GetAndCacheDatatypeListAsync(environment, ct);
+        PS2Environment env = ParseEnvironment(environment);
+        IReadOnlyList<Datatype> dataTypes = await GetAndCacheDatatypeListAsync(env, ct);
         return new DataResponse<Datatype>(dataTypes, "datatype", null);
     }
 
@@ -69,8 +71,11 @@ public class CollectionController : ControllerBase
     /// <response code="200">Returns the number of collections.</response>
     [HttpGet("count/{environment}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
-    public async Task<CollectionCount> CountDatatypesAsync(PS2Environment environment, CancellationToken ct = default)
-        => (await GetAndCacheDatatypeListAsync(environment, ct)).Count;
+    public async Task<CollectionCount> CountDatatypesAsync(string environment, CancellationToken ct = default)
+    {
+        PS2Environment env = ParseEnvironment(environment);
+        return (await GetAndCacheDatatypeListAsync(env, ct)).Count;
+    }
 
     /// <summary>
     /// Queries a collection.
@@ -85,12 +90,13 @@ public class CollectionController : ControllerBase
     [ProducesResponseType(StatusCodes.Status200OK)]
     public async Task<DataResponse<BsonDocument>> QueryCollectionAsync
     (
-        PS2Environment environment,
+        string environment,
         string collectionName,
         [FromQuery] CollectionQueryParameters queryParams
     )
     {
-        IMongoDatabase db = _mongoContext.GetDatabase(environment);
+        PS2Environment env = ParseEnvironment(environment);
+        IMongoDatabase db = _mongoContext.GetDatabase(env);
         IMongoCollection<BsonDocument> coll = db.GetCollection<BsonDocument>(collectionName);
 
         ProjectionDefinition<BsonDocument>? projection = Builders<BsonDocument>.Projection
@@ -201,6 +207,17 @@ public class CollectionController : ControllerBase
             queryParams.ShowTimings ? st.Elapsed : null
         );
     }
+
+    private static PS2Environment ParseEnvironment(string environment)
+        => environment.ToLower() switch {
+            "ps2" or "ps2:v2" => PS2Environment.PS2,
+            "pts" => PS2Environment.PTS,
+            _ => throw new QueryException
+            (
+                QueryErrorCode.InvalidNamespace,
+                "Valid namespaces are: " + string.Join(", ", Enum.GetNames<PS2Environment>())
+            )
+        };
 
     private async ValueTask<IReadOnlyList<Datatype>> GetAndCacheDatatypeListAsync(PS2Environment environment, CancellationToken ct)
     {

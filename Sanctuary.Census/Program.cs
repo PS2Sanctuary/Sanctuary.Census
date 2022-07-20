@@ -74,6 +74,7 @@ public static class Program
         builder.Services.AddSwaggerGen(options =>
         {
             options.SchemaFilter<EnumSchemaFilter>();
+            options.ParameterFilter<EnvironmentParameterFilter>();
 
             IEnumerable<Assembly> assems = AppDomain.CurrentDomain
                 .GetAssemblies()

@@ -23,5 +23,10 @@ public enum QueryErrorCode
     /// <summary>
     /// An invalid filter term was provided.
     /// </summary>
-    InvalidFilterTerm = 3
+    InvalidFilterTerm = 3,
+
+    /// <summary>
+    /// An invalid namespace was provided.
+    /// </summary>
+    InvalidNamespace = 4
 }

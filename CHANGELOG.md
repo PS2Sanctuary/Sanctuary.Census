@@ -2,6 +2,23 @@
 
 Date format: DD/MM/YYYY
 
+## 21/07/2022
+
+- Added the PTS environment.
+- ⚠ Temporarily removed support for the `count` verb.
+- Expanded the query interface:
+  - Filtering now fully supported.
+  - `c:case`.
+  - `c:show`.
+  - `c:hide`.
+  - `c:sort`.
+  - `c:has`.
+  - `c:timing`.
+- Added the following, **manually** updated collections:
+  - `facility_link`.
+  - `map_region`.
+- Removed automatic redirect to DBG Census for unrecognised collections.
+
 ## 17/07/2022
 
 - Added the `weapon_to_fire_group` collection.

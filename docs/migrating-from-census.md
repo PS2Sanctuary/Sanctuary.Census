@@ -1,18 +1,25 @@
 # Migrating from Census
 
+⚠ Error messages are extremely uninformative at the moment. Sorry!
+
 ## Queries
 
 The basic structure of a query is supported. Submitting a service ID is optional, and it's not logged in any way if you do.
 
-Both the `get` and `count` verbs are supported.
+Only the `get` verb is supported.
 
-Note that the default value of the `c:limit` command is 100.
+Filtering is fully supported.
 
-Querying itself is extremely limited at the moment:
+Supported query commands:
 
-- The only supported Census commands are `c:start` and `c:limit`.
-- A collection can only be filtered on its ID field.
-- A collection cannot be filtered by multiple values (e.g. `item_id=1,2`)
+- `c:limit` (default `100`).
+- `c:start`.
+- `c:case`.
+- `c:show`.
+- `c:hide`.
+- `c:sort`.
+- `c:has`.
+- `c:timing` - inserts a timestamp into the response detailing the length of the database query, rather than the more specific model the DBG Census inserts.
 
 ## Response Shape
 

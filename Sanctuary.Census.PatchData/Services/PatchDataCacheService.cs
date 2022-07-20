@@ -53,7 +53,12 @@ public class PatchDataCacheService : IPatchDataCacheService
             JsonOptions,
             ct
         );
-        MapRegions = regions ?? throw new Exception("Failed to deserialize map regions");
+
+        if (regions is null)
+            throw new Exception("Failed to deserialize map regions");
+
+        regions.Sort((x1, x2) => x1.RegionID.CompareTo(x2.RegionID));
+        MapRegions = regions;
     }
 
     /// <inheritdoc />

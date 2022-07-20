@@ -151,6 +151,7 @@ public static class Program
             .RegisterCollectionBuilder<ItemCollectionBuilder>()
             .RegisterCollectionBuilder<ItemCategoryCollectionBuilder>()
             .RegisterCollectionBuilder<ItemToWeaponCollectionBuilder>()
+            .RegisterCollectionBuilder<MapRegionCollectionBuilder>()
             .RegisterCollectionBuilder<PlayerStateGroup2CollectionBuilder>()
             .RegisterCollectionBuilder<ProfileCollectionBuilder>()
             .RegisterCollectionBuilder<ProjectileCollectionBuilder>()

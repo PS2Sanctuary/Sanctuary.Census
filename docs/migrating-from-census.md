@@ -54,6 +54,7 @@ These collections are missing small amounts of data as compared to their Census 
 in such a way that retrieving certain data may not be immediately obvious.
 
 - item
+- map_region
 - projectile
 - weapon
 - weapon_ammo_slot
@@ -63,6 +64,10 @@ in such a way that retrieving certain data may not be immediately obvious.
 
 Missing the `is_vehicle_weapon` and `is_default_attachment` fields. The former can be replaced by checking
 if the `item_category_id` matches or inherits from **item_category** `104 - Vehicle Weapons`.
+
+#### map_region
+
+Missing the `reward_amount` and `reward_currency_id` fields.
 
 #### projectile
 

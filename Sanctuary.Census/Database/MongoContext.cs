@@ -55,14 +55,14 @@ public class MongoContext : IMongoContext
     {
         await CreateUniqueKeyIndex<Currency>(x => x.CurrencyID, ct).ConfigureAwait(false);
         await CreateUniqueKeyIndex<Experience>(x => x.ExperienceID, ct).ConfigureAwait(false);
-        await CreateNonUniqueKeyIndexs<FacilityLink>(ct, x => x.ZoneID, x => x.FacilityIdA, x => x.FacilityIdB).ConfigureAwait(false);
+        await CreateNonUniqueKeyIndexes<FacilityLink>(ct, x => x.ZoneID, x => x.FacilityIdA, x => x.FacilityIdB).ConfigureAwait(false);
         await CreateUniqueKeyIndex<Faction>(x => x.FactionID, ct).ConfigureAwait(false);
         await CreateUniqueKeyIndex<FireGroup>(x => x.FireGroupID, ct).ConfigureAwait(false);
-        await CreateNonUniqueKeyIndexs<FireGroupToFireMode>(ct, x => x.FireGroupId, x => x.FireModeId);
+        await CreateNonUniqueKeyIndexes<FireGroupToFireMode>(ct, x => x.FireGroupId, x => x.FireModeId);
         await CreateUniqueKeyIndex<FireMode2>(x => x.FireModeID, ct).ConfigureAwait(false);
-        await CreateNonUniqueKeyIndexs<FireModeToProjectile>(ct, x => x.FireModeID, x => x.ProjectileID);
+        await CreateNonUniqueKeyIndexes<FireModeToProjectile>(ct, x => x.FireModeID, x => x.ProjectileID);
         await CreateUniqueKeyIndex<Item>(x => x.ItemID, ct).ConfigureAwait(false);
-        await CreateNonUniqueKeyIndexs<Item>
+        await CreateNonUniqueKeyIndexes<Item>
         (
             ct,
             x => x.Name!.Zh!,
@@ -77,13 +77,14 @@ public class MongoContext : IMongoContext
             x => x.Name!.Tr!
         );
         await CreateUniqueKeyIndex<ItemCategory>(x => x.ItemCategoryID, ct).ConfigureAwait(false);
-        await CreateNonUniqueKeyIndexs<ItemToWeapon>(ct, x => x.ItemId, x => x.WeaponId).ConfigureAwait(false);
-        await CreateNonUniqueKeyIndexs<PlayerStateGroup2>(ct, x => x.PlayerStateGroupId, x => x.PlayerStateId).ConfigureAwait(false);
+        await CreateNonUniqueKeyIndexes<ItemToWeapon>(ct, x => x.ItemId, x => x.WeaponId).ConfigureAwait(false);
+        await CreateUniqueKeyIndex<MapRegion>(x => x.MapRegionId, ct).ConfigureAwait(false);
+        await CreateNonUniqueKeyIndexes<PlayerStateGroup2>(ct, x => x.PlayerStateGroupId, x => x.PlayerStateId).ConfigureAwait(false);
         await CreateUniqueKeyIndex<Profile>(x => x.ProfileId, ct).ConfigureAwait(false);
         await CreateUniqueKeyIndex<Projectile>(x => x.ProjectileId, ct).ConfigureAwait(false);
         await CreateUniqueKeyIndex<Weapon>(x => x.WeaponId, ct).ConfigureAwait(false);
-        await CreateNonUniqueKeyIndexs<WeaponAmmoSlot>(ct, x => x.WeaponId).ConfigureAwait(false);
-        await CreateNonUniqueKeyIndexs<WeaponToFireGroup>(ct, x => x.WeaponId, x => x.FireGroupId).ConfigureAwait(false);
+        await CreateNonUniqueKeyIndexes<WeaponAmmoSlot>(ct, x => x.WeaponId).ConfigureAwait(false);
+        await CreateNonUniqueKeyIndexes<WeaponToFireGroup>(ct, x => x.WeaponId, x => x.FireGroupId).ConfigureAwait(false);
         await CreateUniqueKeyIndex<World>(x => x.WorldID, ct).ConfigureAwait(false);
     }
 
@@ -210,6 +211,15 @@ public class MongoContext : IMongoContext
         ).ConfigureAwait(false);
 
     /// <inheritdoc />
+    public async Task UpsertMapRegionsAsync(IEnumerable<MapRegion> collection, CancellationToken ct = default)
+        => await UpsertCollectionAsync
+        (
+            collection,
+            e => Builders<MapRegion>.Filter.Eq(x => x.MapRegionId, e.MapRegionId),
+            ct
+        ).ConfigureAwait(false);
+
+    /// <inheritdoc />
     public async Task UpsertPlayerStateGroup2Async(IEnumerable<PlayerStateGroup2> collection, CancellationToken ct = default)
         => await UpsertCollectionAsync
         (
@@ -290,7 +300,7 @@ public class MongoContext : IMongoContext
         ).ConfigureAwait(false);
     }
 
-    private async Task CreateNonUniqueKeyIndexs<T>(CancellationToken ct, params Expression<Func<T, object>>[] indexPropertySelector)
+    private async Task CreateNonUniqueKeyIndexes<T>(CancellationToken ct, params Expression<Func<T, object>>[] indexPropertySelector)
     {
         IMongoCollection<T> collection = GetCollection<T>();
 
@@ -326,6 +336,7 @@ public class MongoContext : IMongoContext
         BsonClassMap.RegisterClassMap<Item>(AutoMap);
         BsonClassMap.RegisterClassMap<ItemCategory>(AutoMap);
         BsonClassMap.RegisterClassMap<ItemToWeapon>(AutoMap);
+        BsonClassMap.RegisterClassMap<MapRegion>(AutoMap);
         BsonClassMap.RegisterClassMap<PlayerStateGroup2>(AutoMap);
         BsonClassMap.RegisterClassMap<Profile>(AutoMap);
         BsonClassMap.RegisterClassMap<Projectile>(AutoMap);

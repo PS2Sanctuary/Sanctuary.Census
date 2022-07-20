@@ -83,17 +83,12 @@ public class CollectionController : ControllerBase
     }
 
     [HttpGet("/get/{environment}/{collectionName}")]
-    public async Task<DataResponse<BsonDocument>> Test
+    [Produces("application/json", Type = typeof(object))]
+    public async Task<DataResponse<BsonDocument>> QueryCollectionAsync
     (
         PS2Environment environment,
         string collectionName,
-        [FromQuery(Name = "c:start")] int start = 0,
-        [FromQuery(Name = "c:limit")] int limit = 100,
-        [FromQuery(Name = "c:show")] IEnumerable<string>? show = null,
-        [FromQuery(Name = "c:hide")] IEnumerable<string>? hide = null,
-        [FromQuery(Name = "c:sort")] IEnumerable<string>? sortList = null,
-        [FromQuery(Name = "c:has")] IEnumerable<string>? has = null,
-        [FromQuery(Name = "c:timing")] bool timing = false
+        [FromQuery] CollectionQueryParameters queryParams
     )
     {
         IMongoDatabase db = _mongoContext.GetDatabase(environment);
@@ -102,23 +97,23 @@ public class CollectionController : ControllerBase
         ProjectionDefinition<BsonDocument>? projection = Builders<BsonDocument>.Projection
             .Exclude("_id");
 
-        if (show is not null)
+        if (queryParams.Show is not null)
         {
-            foreach (string value in show.SelectMany(s => s.Split(',')))
+            foreach (string value in queryParams.Show.SelectMany(s => s.Split(',')))
                 projection = projection.Include(value);
         }
 
-        if (hide is not null)
+        if (queryParams.Hide is not null)
         {
-            foreach (string value in hide.SelectMany(h => h.Split(',')))
+            foreach (string value in queryParams.Hide.SelectMany(h => h.Split(',')))
                 projection = projection.Exclude(value);
         }
 
         FilterDefinitionBuilder<BsonDocument> filterBuilder = Builders<BsonDocument>.Filter;
         FilterDefinition<BsonDocument> filter = filterBuilder.Empty;
-        if (has is not null)
+        if (queryParams.HasFields is not null)
         {
-            foreach (string value in has.SelectMany(s => s.Split(',')))
+            foreach (string value in queryParams.HasFields.SelectMany(s => s.Split(',')))
                 filter &= filterBuilder.Ne(value, BsonNull.Value);
         }
 
@@ -153,9 +148,9 @@ public class CollectionController : ControllerBase
             .Match(filter)
             .Project(projection);
 
-        if (sortList is not null)
+        if (queryParams.Sorts is not null)
         {
-            foreach (string value in sortList.SelectMany(s => s.Split(',')))
+            foreach (string value in queryParams.Sorts.SelectMany(s => s.Split(',')))
             {
                 string[] components = value.Split(':');
                 int sortDirection = 1;
@@ -207,8 +202,8 @@ public class CollectionController : ControllerBase
                 .Add("as", "fire_group_to_fire_mode")
         );
 
-        aggregate = aggregate.Skip(start)
-            .Limit(limit)
+        aggregate = aggregate.Skip(queryParams.Start)
+            .Limit(queryParams.Limit)
             .AppendStage<BsonDocument>(lookup);
 
         Stopwatch st = new();
@@ -219,73 +214,16 @@ public class CollectionController : ControllerBase
         (
             records,
             collectionName,
-            timing ? st.Elapsed : null
+            queryParams.ShowTimings ? st.Elapsed : null
         );
     }
 
-    private static DataResponse<object> ConvertCollection<TValue>
-    (
-        IReadOnlyDictionary<uint, TValue> collection,
-        uint? id,
-        int start,
-        int limit,
-        string dataTypeName
-    ) where TValue : notnull
-    {
-        IReadOnlyList<object> filtered = FilterCollection(collection, id, start, limit);
-        return new DataResponse<object>(filtered, dataTypeName, null);
-    }
-
-    private static IReadOnlyList<object> FilterCollection<TValue>
-    (
-        IReadOnlyDictionary<uint, TValue> collection,
-        uint? id,
-        int start,
-        int limit
-    ) where TValue : notnull
-    {
-        if (typeof(TValue).IsGenericType && typeof(TValue).GetGenericTypeDefinition() == typeof(IReadOnlyList<>))
-        {
-            if (id is not null)
-            {
-                return !collection.ContainsKey(id.Value)
-                    ? Array.Empty<object>()
-                    : (IReadOnlyList<object>)collection[id.Value];
-            }
-
-            return collection.Values
-                .Cast<IReadOnlyList<object>>()
-                .SelectMany(o => o)
-                .Skip(start)
-                .Take(limit)
-                .ToList();
-        }
-
-        if (id is not null)
-        {
-            return !collection.ContainsKey(id.Value)
-                ? Array.Empty<object>()
-                : new object[] { collection[id.Value] };
-        }
-
-        List<object> elements2 = collection.Values
-            .Skip(start)
-            .Take(limit)
-            .Cast<object>()
-            .ToList();
-
-        return elements2;
-    }
-
-    private RedirectResult GetRedirectToCensusResult()
-    {
-        string url = "http://census.daybreakgames.com";
-        if (HttpContext.Items.TryGetValue("ServiceId", out object? serviceId))
-            url += (string)serviceId!;
-
-        return Redirect(url + HttpContext.Request.Path + HttpContext.Request.QueryString);
-    }
-
-    private BadRequestObjectResult GetInvalidEnvironmentResult()
-        => BadRequest("Valid environments are " + PS2Environment.PS2);
+    // private RedirectResult GetRedirectToCensusResult()
+    // {
+    //     string url = "http://census.daybreakgames.com";
+    //     if (HttpContext.Items.TryGetValue("ServiceId", out object? serviceId))
+    //         url += (string)serviceId!;
+    //
+    //     return Redirect(url + HttpContext.Request.Path + HttpContext.Request.QueryString);
+    // }
 }

@@ -3,7 +3,6 @@ using Sanctuary.Census.Abstractions.Database;
 using Sanctuary.Census.ClientData.Abstractions.Services;
 using Sanctuary.Census.Common.Objects.CommonModels;
 using Sanctuary.Census.Exceptions;
-using Sanctuary.Census.ServerData.Internal.Abstractions.Services;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
@@ -17,24 +16,39 @@ namespace Sanctuary.Census.CollectionBuilders;
 /// </summary>
 public class CurrencyCollectionBuilder : ICollectionBuilder
 {
+    private readonly IClientDataCacheService _clientDataCache;
+    private readonly ILocaleDataCacheService _localeDataCache;
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="CurrencyCollectionBuilder"/> class.
+    /// </summary>
+    /// <param name="clientDataCache">The client data cache.</param>
+    /// <param name="localeDataCache">The locale data cache.</param>
+    public CurrencyCollectionBuilder
+    (
+        IClientDataCacheService clientDataCache,
+        ILocaleDataCacheService localeDataCache
+    )
+    {
+        _clientDataCache = clientDataCache;
+        _localeDataCache = localeDataCache;
+    }
+
     /// <inheritdoc />
     public async Task BuildAsync
     (
-        IClientDataCacheService clientDataCache,
-        IServerDataCacheService serverDataCache,
-        ILocaleDataCacheService localeDataCache,
         IMongoContext dbContext,
         CancellationToken ct
     )
     {
-        if (clientDataCache.Currencies.Count == 0)
+        if (_clientDataCache.Currencies.Count == 0)
             throw new MissingCacheDataException(typeof(CCurrency));
 
         Dictionary<uint, MCurrency> builtCurrencies = new();
-        foreach (CCurrency currency in clientDataCache.Currencies)
+        foreach (CCurrency currency in _clientDataCache.Currencies)
         {
-            localeDataCache.TryGetLocaleString(currency.NameID, out LocaleString? name);
-            localeDataCache.TryGetLocaleString(currency.DescriptionID, out LocaleString? description);
+            _localeDataCache.TryGetLocaleString(currency.NameID, out LocaleString? name);
+            _localeDataCache.TryGetLocaleString(currency.DescriptionID, out LocaleString? description);
 
             MCurrency built = new
             (

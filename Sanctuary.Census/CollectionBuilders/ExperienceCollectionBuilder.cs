@@ -3,7 +3,6 @@ using Sanctuary.Census.Abstractions.Database;
 using Sanctuary.Census.ClientData.Abstractions.Services;
 using Sanctuary.Census.Common.Objects.CommonModels;
 using Sanctuary.Census.Exceptions;
-using Sanctuary.Census.ServerData.Internal.Abstractions.Services;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
@@ -17,23 +16,38 @@ namespace Sanctuary.Census.CollectionBuilders;
 /// </summary>
 public class ExperienceCollectionBuilder : ICollectionBuilder
 {
+    private readonly IClientDataCacheService _clientDataCache;
+    private readonly ILocaleDataCacheService _localeDataCache;
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="ExperienceCollectionBuilder"/> class.
+    /// </summary>
+    /// <param name="clientDataCache">The client data cache.</param>
+    /// <param name="localeDataCache">The locale data cache.</param>
+    public ExperienceCollectionBuilder
+    (
+        IClientDataCacheService clientDataCache,
+        ILocaleDataCacheService localeDataCache
+    )
+    {
+        _clientDataCache = clientDataCache;
+        _localeDataCache = localeDataCache;
+    }
+
     /// <inheritdoc />
     public async Task BuildAsync
     (
-        IClientDataCacheService clientDataCache,
-        IServerDataCacheService serverDataCache,
-        ILocaleDataCacheService localeDataCache,
         IMongoContext dbContext,
         CancellationToken ct
     )
     {
-        if (clientDataCache.Experiences.Count == 0)
+        if (_clientDataCache.Experiences.Count == 0)
             throw new MissingCacheDataException(typeof(CExperience));
 
         Dictionary<uint, MExperience> builtItems = new();
-        foreach (CExperience experience in clientDataCache.Experiences)
+        foreach (CExperience experience in _clientDataCache.Experiences)
         {
-            localeDataCache.TryGetLocaleString(experience.StringID, out LocaleString? name);
+            _localeDataCache.TryGetLocaleString(experience.StringID, out LocaleString? name);
 
             MExperience built = new
             (

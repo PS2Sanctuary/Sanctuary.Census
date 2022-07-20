@@ -18,24 +18,43 @@ namespace Sanctuary.Census.CollectionBuilders;
 /// </summary>
 public class ProfileCollectionBuilder : ICollectionBuilder
 {
+    private readonly IClientDataCacheService _clientDataCache;
+    private readonly ILocaleDataCacheService _localeDataCache;
+    private readonly IServerDataCacheService _serverDataCache;
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="ProfileCollectionBuilder"/> class.
+    /// </summary>
+    /// <param name="clientDataCache">The client data cache.</param>
+    /// <param name="localeDataCache">The locale data cache.</param>
+    /// <param name="serverDataCache">The server data cache.</param>
+    public ProfileCollectionBuilder
+    (
+        IClientDataCacheService clientDataCache,
+        ILocaleDataCacheService localeDataCache,
+        IServerDataCacheService serverDataCache
+    )
+    {
+        _clientDataCache = clientDataCache;
+        _localeDataCache = localeDataCache;
+        _serverDataCache = serverDataCache;
+    }
+
     /// <inheritdoc />
     public async Task BuildAsync
     (
-        IClientDataCacheService clientDataCache,
-        IServerDataCacheService serverDataCache,
-        ILocaleDataCacheService localeDataCache,
         IMongoContext dbContext,
         CancellationToken ct
     )
     {
-        if (serverDataCache.ProfileDefinitions is null)
+        if (_serverDataCache.ProfileDefinitions is null)
             throw new MissingCacheDataException(typeof(ProfileDefinitions));
 
-        if (clientDataCache.ItemProfiles.Count == 0)
+        if (_clientDataCache.ItemProfiles.Count == 0)
             throw new MissingCacheDataException(typeof(ItemProfile));
 
         Dictionary<uint, FactionDefinition> profileFactionMap = new();
-        foreach (ItemProfile profile in clientDataCache.ItemProfiles)
+        foreach (ItemProfile profile in _clientDataCache.ItemProfiles)
         {
             profileFactionMap.TryAdd(profile.ProfileID, profile.FactionID);
             if (profileFactionMap[profile.ProfileID] != profile.FactionID)
@@ -43,7 +62,7 @@ public class ProfileCollectionBuilder : ICollectionBuilder
         }
 
         Dictionary<uint, uint> imageSetToPrimaryImageMap = new();
-        foreach (ImageSetMapping mapping in clientDataCache.ImageSetMappings)
+        foreach (ImageSetMapping mapping in _clientDataCache.ImageSetMappings)
         {
             if (mapping.ImageType is not ImageSetType.Large)
                 continue;
@@ -52,10 +71,10 @@ public class ProfileCollectionBuilder : ICollectionBuilder
         }
 
         Dictionary<uint, MProfile> builtProfiles = new();
-        foreach (Profile profile in serverDataCache.ProfileDefinitions.Profiles)
+        foreach (Profile profile in _serverDataCache.ProfileDefinitions.Profiles)
         {
-            localeDataCache.TryGetLocaleString(profile.NameID, out LocaleString? name);
-            localeDataCache.TryGetLocaleString(profile.DescriptionID, out LocaleString? description);
+            _localeDataCache.TryGetLocaleString(profile.NameID, out LocaleString? name);
+            _localeDataCache.TryGetLocaleString(profile.DescriptionID, out LocaleString? description);
 
             bool hasFaction = profileFactionMap.TryGetValue(profile.ProfileID, out FactionDefinition factionId);
             bool hasImage = imageSetToPrimaryImageMap.TryGetValue(profile.ImageSetID, out uint imageId);

@@ -4,7 +4,6 @@ using Sanctuary.Census.ClientData.Abstractions.Services;
 using Sanctuary.Census.ClientData.ClientDataModels;
 using Sanctuary.Census.Common.Objects.CommonModels;
 using Sanctuary.Census.Exceptions;
-using Sanctuary.Census.ServerData.Internal.Abstractions.Services;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
@@ -17,24 +16,39 @@ namespace Sanctuary.Census.CollectionBuilders;
 /// </summary>
 public class FactionCollectionBuilder : ICollectionBuilder
 {
+    private readonly IClientDataCacheService _clientDataCache;
+    private readonly ILocaleDataCacheService _localeDataCache;
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="FactionCollectionBuilder"/> class.
+    /// </summary>
+    /// <param name="clientDataCache">The client data cache.</param>
+    /// <param name="localeDataCache">The locale data cache.</param>
+    public FactionCollectionBuilder
+    (
+        IClientDataCacheService clientDataCache,
+        ILocaleDataCacheService localeDataCache
+    )
+    {
+        _clientDataCache = clientDataCache;
+        _localeDataCache = localeDataCache;
+    }
+
     /// <inheritdoc />
     public async Task BuildAsync
     (
-        IClientDataCacheService clientDataCache,
-        IServerDataCacheService serverDataCache,
-        ILocaleDataCacheService localeDataCache,
         IMongoContext dbContext,
         CancellationToken ct
     )
     {
-        if (clientDataCache.Factions.Count == 0)
+        if (_clientDataCache.Factions.Count == 0)
             throw new MissingCacheDataException(typeof(Faction));
 
-        if (clientDataCache.ImageSetMappings.Count == 0)
+        if (_clientDataCache.ImageSetMappings.Count == 0)
             throw new MissingCacheDataException(typeof(ImageSetMapping));
 
         Dictionary<uint, uint> imageSetToPrimaryImageMap = new();
-        foreach (ImageSetMapping mapping in clientDataCache.ImageSetMappings)
+        foreach (ImageSetMapping mapping in _clientDataCache.ImageSetMappings)
         {
             if (mapping.ImageType is not ImageSetType.Massive)
                 continue;
@@ -43,11 +57,11 @@ public class FactionCollectionBuilder : ICollectionBuilder
         }
 
         Dictionary<uint, MFaction> builtItems = new();
-        foreach (Faction faction in clientDataCache.Factions)
+        foreach (Faction faction in _clientDataCache.Factions)
         {
-            localeDataCache.TryGetLocaleString(faction.NameID, out LocaleString? name);
-            localeDataCache.TryGetLocaleString(faction.DescriptionTextID, out LocaleString? description);
-            localeDataCache.TryGetLocaleString(faction.ShortNameID, out LocaleString? shortName);
+            _localeDataCache.TryGetLocaleString(faction.NameID, out LocaleString? name);
+            _localeDataCache.TryGetLocaleString(faction.DescriptionTextID, out LocaleString? description);
+            _localeDataCache.TryGetLocaleString(faction.ShortNameID, out LocaleString? shortName);
 
             uint? imageID = null;
             string? imagePath = null;

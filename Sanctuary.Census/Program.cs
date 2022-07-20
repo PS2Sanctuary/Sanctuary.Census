@@ -3,9 +3,13 @@ using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Options;
 using MongoDB.Driver;
+using Sanctuary.Census.Abstractions.CollectionBuilders;
 using Sanctuary.Census.Abstractions.Database;
+using Sanctuary.Census.Abstractions.Services;
 using Sanctuary.Census.ClientData.Extensions;
+using Sanctuary.Census.CollectionBuilders;
 using Sanctuary.Census.Common.Objects;
 using Sanctuary.Census.Database;
 using Sanctuary.Census.Json;
@@ -13,6 +17,7 @@ using Sanctuary.Census.Middleware;
 using Sanctuary.Census.PatchData.Extensions;
 using Sanctuary.Census.ServerData.Internal.Extensions;
 using Sanctuary.Census.ServerData.Internal.Objects;
+using Sanctuary.Census.Services;
 using Sanctuary.Census.Workers;
 using Serilog;
 using Serilog.Events;
@@ -60,6 +65,7 @@ public static class Program
 
         builder.Services.AddSingleton(new MongoClient("mongodb://localhost:27017"))
             .AddScoped<IMongoContext, MongoContext>()
+            .RegisterCollectionBuilders()
             .AddHostedService<CollectionBuildWorker>();
 
         builder.Services.AddControllers()
@@ -125,6 +131,40 @@ public static class Program
         app.MapControllers();
 
         app.Run();
+    }
+
+    private static IServiceCollection RegisterCollectionBuilders(this IServiceCollection services)
+    {
+        services.AddSingleton<ICollectionBuilderRepository>
+        (
+            s => s.GetRequiredService<IOptions<CollectionBuilderRepository>>().Value
+        );
+
+        return services.RegisterCollectionBuilder<CurrencyCollectionBuilder>()
+            .RegisterCollectionBuilder<ExperienceCollectionBuilder>()
+            .RegisterCollectionBuilder<FactionCollectionBuilder>()
+            .RegisterCollectionBuilder<FireGroupCollectionBuilder>()
+            .RegisterCollectionBuilder<FireGroupToFireModeCollectionBuilder>()
+            .RegisterCollectionBuilder<FireModeCollectionBuilder>()
+            .RegisterCollectionBuilder<FireModeToProjectileCollectionBuilder>()
+            .RegisterCollectionBuilder<ItemCollectionBuilder>()
+            .RegisterCollectionBuilder<ItemCategoryCollectionBuilder>()
+            .RegisterCollectionBuilder<ItemToWeaponCollectionBuilder>()
+            .RegisterCollectionBuilder<PlayerStateGroup2CollectionBuilder>()
+            .RegisterCollectionBuilder<ProfileCollectionBuilder>()
+            .RegisterCollectionBuilder<ProjectileCollectionBuilder>()
+            .RegisterCollectionBuilder<WeaponCollectionBuilder>()
+            .RegisterCollectionBuilder<WeaponAmmoSlotCollectionBuilder>()
+            .RegisterCollectionBuilder<WeaponToFireGroupCollectionBuilder>()
+            .RegisterCollectionBuilder<WorldCollectionBuilder>();
+    }
+
+    private static IServiceCollection RegisterCollectionBuilder<TBuilder>(this IServiceCollection services)
+        where TBuilder : class, ICollectionBuilder
+    {
+        services.AddScoped<TBuilder>();
+        services.Configure<CollectionBuilderRepository>(x => x.Register<TBuilder>());
+        return services;
     }
 
     // ReSharper disable twice UnusedParameter.Local

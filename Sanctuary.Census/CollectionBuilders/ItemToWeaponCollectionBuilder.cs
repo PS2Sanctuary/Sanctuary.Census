@@ -4,7 +4,6 @@ using Sanctuary.Census.ClientData.Abstractions.Services;
 using Sanctuary.Census.ClientData.ClientDataModels;
 using Sanctuary.Census.Exceptions;
 using Sanctuary.Census.Models.Collections;
-using Sanctuary.Census.ServerData.Internal.Abstractions.Services;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
@@ -17,20 +16,31 @@ namespace Sanctuary.Census.CollectionBuilders;
 /// </summary>
 public class ItemToWeaponCollectionBuilder : ICollectionBuilder
 {
+    private readonly IClientDataCacheService _clientDataCache;
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="ItemToWeaponCollectionBuilder"/> class.
+    /// </summary>
+    /// <param name="clientDataCache">The client data cache.</param>
+    public ItemToWeaponCollectionBuilder
+    (
+        IClientDataCacheService clientDataCache
+    )
+    {
+        _clientDataCache = clientDataCache;
+    }
+
     /// <inheritdoc />
     public async Task BuildAsync
     (
-        IClientDataCacheService clientDataCache,
-        IServerDataCacheService serverDataCache,
-        ILocaleDataCacheService localeDataCache,
         IMongoContext dbContext,
         CancellationToken ct
     )
     {
-        if (clientDataCache.ClientItemDatasheetDatas.Count == 0)
+        if (_clientDataCache.ClientItemDatasheetDatas.Count == 0)
             throw new MissingCacheDataException(typeof(ClientItemDatasheetData));
 
-        IEnumerable<ItemToWeapon> builtItemsToWeapon = clientDataCache.ClientItemDatasheetDatas
+        IEnumerable<ItemToWeapon> builtItemsToWeapon = _clientDataCache.ClientItemDatasheetDatas
             .Select(i => new ItemToWeapon(i.ItemID, i.WeaponID));
 
         await dbContext.UpsertItemsToWeaponsAsync(builtItemsToWeapon, ct);

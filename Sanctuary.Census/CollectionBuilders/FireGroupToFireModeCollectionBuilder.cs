@@ -1,6 +1,5 @@
 ﻿using Sanctuary.Census.Abstractions.CollectionBuilders;
 using Sanctuary.Census.Abstractions.Database;
-using Sanctuary.Census.ClientData.Abstractions.Services;
 using Sanctuary.Census.Exceptions;
 using Sanctuary.Census.Models.Collections;
 using Sanctuary.Census.ServerData.Internal.Abstractions.Services;
@@ -17,21 +16,32 @@ namespace Sanctuary.Census.CollectionBuilders;
 /// </summary>
 public class FireGroupToFireModeCollectionBuilder : ICollectionBuilder
 {
+    private readonly IServerDataCacheService _serverDataCache;
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="FireGroupToFireModeCollectionBuilder"/> class.
+    /// </summary>
+    /// <param name="serverDataCache">The server data cache.</param>
+    public FireGroupToFireModeCollectionBuilder
+    (
+        IServerDataCacheService serverDataCache
+    )
+    {
+        _serverDataCache = serverDataCache;
+    }
+
     /// <inheritdoc />
     public async Task BuildAsync
     (
-        IClientDataCacheService clientDataCache,
-        IServerDataCacheService serverDataCache,
-        ILocaleDataCacheService localeDataCache,
         IMongoContext dbContext,
         CancellationToken ct
     )
     {
-        if (serverDataCache.WeaponDefinitions is null)
+        if (_serverDataCache.WeaponDefinitions is null)
             throw new MissingCacheDataException(typeof(WeaponDefinitions));
 
         List<FireGroupToFireMode> builtMaps = new();
-        foreach (FireGroup fireGroup in serverDataCache.WeaponDefinitions.FireGroups)
+        foreach (FireGroup fireGroup in _serverDataCache.WeaponDefinitions.FireGroups)
         {
             for (uint i = 0; i < fireGroup.FireModes.Length; i++)
             {

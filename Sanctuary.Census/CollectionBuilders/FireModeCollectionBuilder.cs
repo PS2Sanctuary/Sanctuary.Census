@@ -18,30 +18,49 @@ namespace Sanctuary.Census.CollectionBuilders;
 /// </summary>
 public class FireModeCollectionBuilder : ICollectionBuilder
 {
+    private readonly IClientDataCacheService _clientDataCache;
+    private readonly ILocaleDataCacheService _localeDataCache;
+    private readonly IServerDataCacheService _serverDataCache;
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="FireModeCollectionBuilder"/> class.
+    /// </summary>
+    /// <param name="clientDataCache">The client data cache.</param>
+    /// <param name="localeDataCache">The locale data cache.</param>
+    /// <param name="serverDataCache">The server data cache.</param>
+    public FireModeCollectionBuilder
+    (
+        IClientDataCacheService clientDataCache,
+        ILocaleDataCacheService localeDataCache,
+        IServerDataCacheService serverDataCache
+    )
+    {
+        _clientDataCache = clientDataCache;
+        _localeDataCache = localeDataCache;
+        _serverDataCache = serverDataCache;
+    }
+
     /// <inheritdoc />
     public async Task BuildAsync
     (
-        IClientDataCacheService clientDataCache,
-        IServerDataCacheService serverDataCache,
-        ILocaleDataCacheService localeDataCache,
         IMongoContext dbContext,
         CancellationToken ct
     )
     {
-        if (serverDataCache.WeaponDefinitions is null)
+        if (_serverDataCache.WeaponDefinitions is null)
             throw new MissingCacheDataException(typeof(WeaponDefinitions));
 
-        if (clientDataCache.FireModeDisplayStats.Count == 0)
+        if (_clientDataCache.FireModeDisplayStats.Count == 0)
             throw new MissingCacheDataException(typeof(FireModeDisplayStat));
 
         Dictionary<uint, FireModeDisplayStat> clientDisplayStats = new();
-        foreach (FireModeDisplayStat fmds in clientDataCache.FireModeDisplayStats)
+        foreach (FireModeDisplayStat fmds in _clientDataCache.FireModeDisplayStats)
             clientDisplayStats[fmds.ID] = fmds;
 
         Dictionary<uint, FireMode2> builtFireModes = new();
-        foreach (FireMode fireMode in serverDataCache.WeaponDefinitions.FireModes)
+        foreach (FireMode fireMode in _serverDataCache.WeaponDefinitions.FireModes)
         {
-            localeDataCache.TryGetLocaleString(fireMode.TypeDescriptionID, out LocaleString? description);
+            _localeDataCache.TryGetLocaleString(fireMode.TypeDescriptionID, out LocaleString? description);
             clientDisplayStats.TryGetValue(fireMode.ID, out FireModeDisplayStat? displayStats);
 
             FireMode2 built = new

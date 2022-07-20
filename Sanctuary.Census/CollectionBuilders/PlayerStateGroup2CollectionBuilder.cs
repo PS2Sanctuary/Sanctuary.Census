@@ -1,6 +1,5 @@
 ﻿using Sanctuary.Census.Abstractions.CollectionBuilders;
 using Sanctuary.Census.Abstractions.Database;
-using Sanctuary.Census.ClientData.Abstractions.Services;
 using Sanctuary.Census.Exceptions;
 using Sanctuary.Census.Models.Collections;
 using Sanctuary.Census.ServerData.Internal.Abstractions.Services;
@@ -16,21 +15,32 @@ namespace Sanctuary.Census.CollectionBuilders;
 /// </summary>
 public class PlayerStateGroup2CollectionBuilder : ICollectionBuilder
 {
+    private readonly IServerDataCacheService _serverDataCache;
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="PlayerStateGroup2CollectionBuilder"/> class.
+    /// </summary>
+    /// <param name="serverDataCache">The server data cache.</param>
+    public PlayerStateGroup2CollectionBuilder
+    (
+        IServerDataCacheService serverDataCache
+    )
+    {
+        _serverDataCache = serverDataCache;
+    }
+
     /// <inheritdoc />
     public async Task BuildAsync
     (
-        IClientDataCacheService clientDataCache,
-        IServerDataCacheService serverDataCache,
-        ILocaleDataCacheService localeDataCache,
         IMongoContext dbContext,
         CancellationToken ct
     )
     {
-        if (serverDataCache.WeaponDefinitions is null)
+        if (_serverDataCache.WeaponDefinitions is null)
             throw new MissingCacheDataException(typeof(WeaponDefinitions));
 
         List<PlayerStateGroup2> builtStateGroups = new();
-        foreach (PlayerStateGroup stateGroup in serverDataCache.WeaponDefinitions.PlayerStateGroups)
+        foreach (PlayerStateGroup stateGroup in _serverDataCache.WeaponDefinitions.PlayerStateGroups)
         {
             for (uint i = 0; i < stateGroup.States.Length; i++)
             {

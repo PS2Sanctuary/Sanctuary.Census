@@ -17,23 +17,38 @@ namespace Sanctuary.Census.CollectionBuilders;
 /// </summary>
 public class WorldCollectionBuilder : ICollectionBuilder
 {
+    private readonly ILocaleDataCacheService _localeDataCache;
+    private readonly IServerDataCacheService _serverDataCache;
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="WorldCollectionBuilder"/> class.
+    /// </summary>
+    /// <param name="localeDataCache">The locale data cache.</param>
+    /// <param name="serverDataCache">The server data cache.</param>
+    public WorldCollectionBuilder
+    (
+        ILocaleDataCacheService localeDataCache,
+        IServerDataCacheService serverDataCache
+    )
+    {
+        _localeDataCache = localeDataCache;
+        _serverDataCache = serverDataCache;
+    }
+
     /// <inheritdoc />
     public async Task BuildAsync
     (
-        IClientDataCacheService clientDataCache,
-        IServerDataCacheService serverDataCache,
-        ILocaleDataCacheService localeDataCache,
         IMongoContext dbContext,
         CancellationToken ct
     )
     {
-        if (serverDataCache.ServerListResponse is null)
+        if (_serverDataCache.ServerListResponse is null)
             throw new MissingCacheDataException(typeof(ServerListResponse));
 
         Dictionary<uint, World> builtWorlds = new();
-        foreach (ServerUpdate server in serverDataCache.ServerListResponse.Servers)
+        foreach (ServerUpdate server in _serverDataCache.ServerListResponse.Servers)
         {
-            localeDataCache.TryGetLocaleString(server.NameID, out LocaleString? name);
+            _localeDataCache.TryGetLocaleString(server.NameID, out LocaleString? name);
 
             World built = new
             (

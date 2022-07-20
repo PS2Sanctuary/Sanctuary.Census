@@ -4,8 +4,8 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Sanctuary.Census.Abstractions.CollectionBuilders;
 using Sanctuary.Census.Abstractions.Database;
+using Sanctuary.Census.Abstractions.Services;
 using Sanctuary.Census.ClientData.Abstractions.Services;
-using Sanctuary.Census.CollectionBuilders;
 using Sanctuary.Census.Common.Objects;
 using Sanctuary.Census.Common.Services;
 using Sanctuary.Census.Models;
@@ -13,6 +13,7 @@ using Sanctuary.Census.PatchData.Abstractions.Services;
 using Sanctuary.Census.ServerData.Internal.Abstractions.Services;
 using Sanctuary.Census.ServerData.Internal.Exceptions;
 using System;
+using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -26,6 +27,7 @@ public class CollectionBuildWorker : BackgroundService
     private readonly ILogger<CollectionBuildWorker> _logger;
     private readonly IServiceScopeFactory _serviceScopeFactory;
     private readonly IMemoryCache _memoryCache;
+    private readonly ICollectionBuilderRepository _collectionBuilderRepository;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="CollectionBuildWorker"/> class.
@@ -33,16 +35,19 @@ public class CollectionBuildWorker : BackgroundService
     /// <param name="logger">The logging interface to use.</param>
     /// <param name="serviceScopeFactory">The service provider.</param>
     /// <param name="memoryCache">The memory cache.</param>
+    /// <param name="collectionBuilderRepository">The collection builder repository.</param>
     public CollectionBuildWorker
     (
         ILogger<CollectionBuildWorker> logger,
         IServiceScopeFactory serviceScopeFactory,
-        IMemoryCache memoryCache
+        IMemoryCache memoryCache,
+        ICollectionBuilderRepository collectionBuilderRepository
     )
     {
         _logger = logger;
         _serviceScopeFactory = serviceScopeFactory;
         _memoryCache = memoryCache;
+        _collectionBuilderRepository = collectionBuilderRepository;
     }
 
     /// <inheritdoc />
@@ -103,38 +108,14 @@ public class CollectionBuildWorker : BackgroundService
                     continue;
                 }
 
-                ICollectionBuilder[] collectionBuilders =
-                {
-                    new CurrencyCollectionBuilder(),
-                    new ExperienceCollectionBuilder(),
-                    new FactionCollectionBuilder(),
-                    new FireGroupCollectionBuilder(),
-                    new FireGroupToFireModeCollectionBuilder(),
-                    new FireModeCollectionBuilder(),
-                    new FireModeToProjectileCollectionBuilder(),
-                    new ItemCollectionBuilder(),
-                    new ItemCategoryCollectionBuilder(),
-                    new ItemToWeaponCollectionBuilder(),
-                    new PlayerStateGroup2CollectionBuilder(),
-                    new ProfileCollectionBuilder(),
-                    new ProjectileCollectionBuilder(),
-                    new WeaponCollectionBuilder(),
-                    new WeaponAmmoSlotCollectionBuilder(),
-                    new WeaponToFireGroupCollectionBuilder(),
-                    new WorldCollectionBuilder()
-                };
-
+                IReadOnlyList<ICollectionBuilder> collectionBuilders = _collectionBuilderRepository.ConstructBuilders(serviceScope);
                 _logger.LogInformation("[{Environment}] Collection build starting...", env);
                 foreach (ICollectionBuilder collectionBuilder in collectionBuilders)
                 {
                     try
                     {
                         await collectionBuilder.BuildAsync
-                        (
-                            clientDataCache,
-                            serverDataCache,
-                            localeDataCache,
-                            mongoContext,
+                        (mongoContext,
                             ct
                         );
                         _logger.LogDebug("[{Environment}] Successfully ran the {CollectionBuilder}", env, collectionBuilder);

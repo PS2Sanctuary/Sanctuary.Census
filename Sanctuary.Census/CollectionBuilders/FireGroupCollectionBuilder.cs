@@ -1,6 +1,5 @@
 ﻿using Sanctuary.Census.Abstractions.CollectionBuilders;
 using Sanctuary.Census.Abstractions.Database;
-using Sanctuary.Census.ClientData.Abstractions.Services;
 using Sanctuary.Census.Exceptions;
 using Sanctuary.Census.ServerData.Internal.Abstractions.Services;
 using Sanctuary.Zone.Packets.ReferenceData;
@@ -17,21 +16,32 @@ namespace Sanctuary.Census.CollectionBuilders;
 /// </summary>
 public class FireGroupCollectionBuilder : ICollectionBuilder
 {
+    private readonly IServerDataCacheService _serverDataCache;
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="FireGroupCollectionBuilder"/> class.
+    /// </summary>
+    /// <param name="serverDataCache">The server data cache.</param>
+    public FireGroupCollectionBuilder
+    (
+        IServerDataCacheService serverDataCache
+    )
+    {
+        _serverDataCache = serverDataCache;
+    }
+
     /// <inheritdoc />
     public async Task BuildAsync
     (
-        IClientDataCacheService clientDataCache,
-        IServerDataCacheService serverDataCache,
-        ILocaleDataCacheService localeDataCache,
         IMongoContext dbContext,
         CancellationToken ct
     )
     {
-        if (serverDataCache.WeaponDefinitions is null)
+        if (_serverDataCache.WeaponDefinitions is null)
             throw new MissingCacheDataException(typeof(WeaponDefinitions));
 
         Dictionary<uint, MFireGroup> builtFireGroups = new();
-        foreach (SFireGroup fireGroup in serverDataCache.WeaponDefinitions.FireGroups)
+        foreach (SFireGroup fireGroup in _serverDataCache.WeaponDefinitions.FireGroups)
         {
             MFireGroup built = new
             (

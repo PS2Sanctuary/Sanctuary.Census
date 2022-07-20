@@ -5,7 +5,6 @@ using Sanctuary.Census.ClientData.ClientDataModels;
 using Sanctuary.Census.Common.Objects.CommonModels;
 using Sanctuary.Census.Exceptions;
 using Sanctuary.Census.Models.Collections;
-using Sanctuary.Census.ServerData.Internal.Abstractions.Services;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
@@ -17,27 +16,42 @@ namespace Sanctuary.Census.CollectionBuilders;
 /// </summary>
 public class ItemCollectionBuilder : ICollectionBuilder
 {
+    private readonly IClientDataCacheService _clientDataCache;
+    private readonly ILocaleDataCacheService _localeDataCache;
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="ItemCollectionBuilder"/> class.
+    /// </summary>
+    /// <param name="clientDataCache">The client data cache.</param>
+    /// <param name="localeDataCache">The locale data cache.</param>
+    public ItemCollectionBuilder
+    (
+        IClientDataCacheService clientDataCache,
+        ILocaleDataCacheService localeDataCache
+    )
+    {
+        _clientDataCache = clientDataCache;
+        _localeDataCache = localeDataCache;
+    }
+
     /// <inheritdoc />
     public async Task BuildAsync
     (
-        IClientDataCacheService clientDataCache,
-        IServerDataCacheService serverDataCache,
-        ILocaleDataCacheService localeDataCache,
         IMongoContext dbContext,
         CancellationToken ct
     )
     {
-        if (clientDataCache.ClientItemDefinitions.Count == 0)
+        if (_clientDataCache.ClientItemDefinitions.Count == 0)
             throw new MissingCacheDataException(typeof(ClientItemDefinition));
 
-        if (clientDataCache.ItemProfiles.Count == 0)
+        if (_clientDataCache.ItemProfiles.Count == 0)
             throw new MissingCacheDataException(typeof(ItemProfile));
 
-        if (clientDataCache.ImageSetMappings.Count == 0)
+        if (_clientDataCache.ImageSetMappings.Count == 0)
             throw new MissingCacheDataException(typeof(ImageSetMapping));
 
         Dictionary<uint, FactionDefinition> itemFactionMap = new();
-        foreach (ItemProfile profile in clientDataCache.ItemProfiles)
+        foreach (ItemProfile profile in _clientDataCache.ItemProfiles)
         {
             itemFactionMap.TryAdd(profile.ItemID, profile.FactionID);
             if (itemFactionMap[profile.ItemID] != profile.FactionID)
@@ -45,7 +59,7 @@ public class ItemCollectionBuilder : ICollectionBuilder
         }
 
         Dictionary<uint, uint> imageSetToPrimaryImageMap = new();
-        foreach (ImageSetMapping mapping in clientDataCache.ImageSetMappings)
+        foreach (ImageSetMapping mapping in _clientDataCache.ImageSetMappings)
         {
             if (mapping.ImageType is not ImageSetType.Large)
                 continue;
@@ -54,10 +68,10 @@ public class ItemCollectionBuilder : ICollectionBuilder
         }
 
         Dictionary<uint, Item> builtItems = new();
-        foreach (ClientItemDefinition definition in clientDataCache.ClientItemDefinitions)
+        foreach (ClientItemDefinition definition in _clientDataCache.ClientItemDefinitions)
         {
-            localeDataCache.TryGetLocaleString(definition.NameID, out LocaleString? name);
-            localeDataCache.TryGetLocaleString(definition.DescriptionID, out LocaleString? description);
+            _localeDataCache.TryGetLocaleString(definition.NameID, out LocaleString? name);
+            _localeDataCache.TryGetLocaleString(definition.DescriptionID, out LocaleString? description);
 
             if (!itemFactionMap.TryGetValue(definition.ID, out FactionDefinition faction))
                 faction = FactionDefinition.All;

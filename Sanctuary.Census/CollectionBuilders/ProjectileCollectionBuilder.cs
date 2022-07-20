@@ -1,6 +1,5 @@
 ﻿using Sanctuary.Census.Abstractions.CollectionBuilders;
 using Sanctuary.Census.Abstractions.Database;
-using Sanctuary.Census.ClientData.Abstractions.Services;
 using Sanctuary.Census.Exceptions;
 using Sanctuary.Census.Models.Collections;
 using Sanctuary.Census.ServerData.Internal.Abstractions.Services;
@@ -16,21 +15,32 @@ namespace Sanctuary.Census.CollectionBuilders;
 /// </summary>
 public class ProjectileCollectionBuilder : ICollectionBuilder
 {
+    private readonly IServerDataCacheService _serverDataCache;
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="ProjectileCollectionBuilder"/> class.
+    /// </summary>
+    /// <param name="serverDataCache">The server data cache.</param>
+    public ProjectileCollectionBuilder
+    (
+        IServerDataCacheService serverDataCache
+    )
+    {
+        _serverDataCache = serverDataCache;
+    }
+
     /// <inheritdoc />
     public async Task BuildAsync
     (
-        IClientDataCacheService clientDataCache,
-        IServerDataCacheService serverDataCache,
-        ILocaleDataCacheService localeDataCache,
         IMongoContext dbContext,
         CancellationToken ct
     )
     {
-        if (serverDataCache.ProjectileDefinitions is null)
+        if (_serverDataCache.ProjectileDefinitions is null)
             throw new MissingCacheDataException(typeof(ProjectileDefinitions));
 
         Dictionary<uint, Projectile> builtProjectiles = new();
-        foreach (ProjectileDefinition projectile in serverDataCache.ProjectileDefinitions.Projectiles)
+        foreach (ProjectileDefinition projectile in _serverDataCache.ProjectileDefinitions.Projectiles)
         {
             Projectile built = new
             (

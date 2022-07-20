@@ -17,23 +17,38 @@ namespace Sanctuary.Census.CollectionBuilders;
 /// </summary>
 public class WeaponCollectionBuilder : ICollectionBuilder
 {
+    private readonly ILocaleDataCacheService _localeDataCache;
+    private readonly IServerDataCacheService _serverDataCache;
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="WeaponCollectionBuilder"/> class.
+    /// </summary>
+    /// <param name="localeDataCache">The locale data cache.</param>
+    /// <param name="serverDataCache">The server data cache.</param>
+    public WeaponCollectionBuilder
+    (
+        ILocaleDataCacheService localeDataCache,
+        IServerDataCacheService serverDataCache
+    )
+    {
+        _localeDataCache = localeDataCache;
+        _serverDataCache = serverDataCache;
+    }
+
     /// <inheritdoc />
     public async Task BuildAsync
     (
-        IClientDataCacheService clientDataCache,
-        IServerDataCacheService serverDataCache,
-        ILocaleDataCacheService localeDataCache,
         IMongoContext dbContext,
         CancellationToken ct
     )
     {
-        if (serverDataCache.WeaponDefinitions is null)
+        if (_serverDataCache.WeaponDefinitions is null)
             throw new MissingCacheDataException(typeof(WeaponDefinitions));
 
         Dictionary<uint, Weapon> builtWeapons = new();
-        foreach (WeaponDefinition definition in serverDataCache.WeaponDefinitions.Definitions)
+        foreach (WeaponDefinition definition in _serverDataCache.WeaponDefinitions.Definitions)
         {
-            localeDataCache.TryGetLocaleString(definition.RangeDescriptionID, out LocaleString? rangeDescription);
+            _localeDataCache.TryGetLocaleString(definition.RangeDescriptionID, out LocaleString? rangeDescription);
 
             string? animWieldTypeName = definition.AnimationWieldTypeName.Length == 0
                 ? null

@@ -251,7 +251,7 @@ public class FilterBuilder
         if (propertyType == typeof(long))
             return s => long.Parse(s);
         if (propertyType == typeof(float))
-            return s => float.Parse(s);
+            return s => double.Parse(s);
         if (propertyType == typeof(double))
             return s => double.Parse(s);
         if (propertyType == typeof(decimal))

@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.HttpOverrides;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using MongoDB.Driver;
@@ -21,6 +22,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text.Json.Serialization;
+using System.Threading.Tasks;
 
 namespace Sanctuary.Census;
 
@@ -109,9 +111,10 @@ public static class Program
         app.UseHttpsRedirection();
         app.UseMiddleware<ServiceIDMiddleware>();
 
-        app.MapGet("/", delegate(HttpContext context)
+        app.MapGet("/", [ApiExplorerSettings(IgnoreApi = true)](c) =>
         {
-            context.Response.Redirect("https://github.com/carlst99/Sanctuary.Census");
+            c.Response.Redirect("https://github.com/carlst99/Sanctuary.Census");
+            return Task.CompletedTask;
         });
 
         app.UseRouting();

@@ -25,6 +25,8 @@ public class CollectionController : ControllerBase
     /// </summary>
     public const int MAX_LIMIT = 10000;
 
+    private static readonly char[] QueryCommandIdentifier = { 'c', ':' };
+
     private readonly CollectionsContext _collectionsContext;
     private readonly MongoClient _mongoClient;
 
@@ -200,7 +202,7 @@ public class CollectionController : ControllerBase
     )
     {
         IMongoDatabase db = _mongoClient.GetDatabase(environment + "-collections");
-        IMongoCollection<BsonDocument> coll = db.GetCollection<BsonDocument>("currency");
+        IMongoCollection<BsonDocument> coll = db.GetCollection<BsonDocument>("fire_group");
 
         ProjectionDefinition<BsonDocument>? projection = Builders<BsonDocument>.Projection
             .Exclude("_id");
@@ -225,8 +227,36 @@ public class CollectionController : ControllerBase
                 filter &= filterBuilder.Ne(value, BsonNull.Value);
         }
 
-        IFindFluent<BsonDocument, BsonDocument> findBuilder = coll.Find(filter)
-            .Project(projection).Skip(start).Limit(limit);
+        foreach ((string paramName, StringValues paramValues) in HttpContext.Request.Query)
+        {
+            if (paramName.AsSpan().StartsWith(QueryCommandIdentifier))
+                continue;
+
+            foreach (string value in paramValues.SelectMany(s => s.Split(',')))
+            {
+                if (value.Length == 0)
+                    continue;
+
+                if (value[0] is '<' or '[' or '>' or ']' or '^' or '*' or '!' && value.Length < 2)
+                    continue;
+
+                // TODO: Need to convert value to correct type
+                filter &= value[0] switch {
+                    '<' => filterBuilder.Lt(paramName, value[1..]),
+                    '[' => filterBuilder.Lte(paramName, value[1..]),
+                    '>' => filterBuilder.Gt(paramName, value[1..]),
+                    ']' => filterBuilder.Gte(paramName, value[1..]),
+                    '^' => filterBuilder.Regex(paramName, value),
+                    '*' => filterBuilder.Regex(paramName, value[1..]),
+                    '!' => filterBuilder.Ne(paramName, value[1..]),
+                    _ => filterBuilder.Eq(paramName, value)
+                };
+            }
+        }
+
+        IAggregateFluent<BsonDocument> aggregate = coll.Aggregate()
+            .Match(filter)
+            .Project(projection);
 
         if (sortList is not null)
         {
@@ -238,13 +268,58 @@ public class CollectionController : ControllerBase
                 if (components.Length == 2 && components[1] == "-1")
                     sortDirection = -1;
 
-                findBuilder = findBuilder.Sort(new BsonDocument(components[0], sortDirection));
+                aggregate = aggregate.Sort(new BsonDocument(components[0], sortDirection));
             }
         }
 
+        BsonArray subPipeline = new()
+        {
+            new BsonDocument
+            (
+                "$match",
+                new BsonDocument
+                (
+                    "$expr",
+                    new BsonDocument
+                    (
+                        "$eq",
+                        new BsonArray { 0, "$fire_mode_index" }
+                    )
+                )
+            ),
+            new BsonDocument
+            (
+                "$project",
+                new BsonDocument("_id", 0)
+            ),
+            new BsonDocument
+            (
+                "$lookup",
+                new BsonDocument("from", "fire_group")
+                    .Add("localField", "fire_group_id")
+                    .Add("foreignField", "fire_group_id")
+                    .Add("as", "fire_mode_to_fire_group")
+            )
+        };
+
+        BsonDocument lookup = new
+        (
+            "$lookup",
+            new BsonDocument("from", "fire_group_to_fire_mode")
+                .Add("localField", "fire_group_id")
+                .Add("foreignField", "fire_group_id")
+                .Add("pipeline", subPipeline)
+                .Add("as", "fire_group_to_fire_mode")
+        );
+
+        aggregate = aggregate.Skip(start)
+            .Limit(limit)
+            //.Lookup("fire_group_to_fire_mode", "fire_group_id", "fire_group_id", "fire_group_to_fire_mode")
+            .AppendStage<BsonDocument>(lookup);
+
         Stopwatch st = new();
         st.Start();
-        List<BsonDocument> records = await findBuilder.ToListAsync();
+        List<BsonDocument> records = await aggregate.ToListAsync();
         st.Stop();
         return new DataResponse<BsonDocument>
         (

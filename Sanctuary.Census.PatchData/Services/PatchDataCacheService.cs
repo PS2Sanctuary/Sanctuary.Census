@@ -17,6 +17,9 @@ public class PatchDataCacheService : IPatchDataCacheService
     /// <inheritdoc />
     public IReadOnlyList<FacilityLinkPatch> FacilityLinks { get; private set; }
 
+    /// <inheritdoc />
+    public IReadOnlyList<MapRegionPatch> MapRegions { get; private set; }
+
     /// <summary>
     /// Initializes a new instance of the <see cref="PatchDataCacheService"/> class.
     /// </summary>
@@ -42,13 +45,24 @@ public class PatchDataCacheService : IPatchDataCacheService
             ct
         );
         FacilityLinks = links ?? throw new Exception("Failed to deserialize facility links");
+
+        await using FileStream regionsStream = new(Path.Combine(basePath, "map_region.json"), FileMode.Open);
+        List<MapRegionPatch>? regions = await JsonSerializer.DeserializeAsync<List<MapRegionPatch>>
+        (
+            regionsStream,
+            JsonOptions,
+            ct
+        );
+        MapRegions = regions ?? throw new Exception("Failed to deserialize map regions");
     }
 
     /// <inheritdoc />
     [MemberNotNull(nameof(FacilityLinks))]
+    [MemberNotNull(nameof(MapRegions))]
     public void Clear()
     {
         LastPopulated = DateTimeOffset.MinValue;
         FacilityLinks = new List<FacilityLinkPatch>();
+        MapRegions = new List<MapRegionPatch>();
     }
 }

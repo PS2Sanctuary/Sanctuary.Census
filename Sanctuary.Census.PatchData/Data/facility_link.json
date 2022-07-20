@@ -1,0 +1,4010 @@
+[
+  {
+    "zoneID": 2,
+    "facilityA": 208,
+    "facilityB": 5300,
+    "description": "Indar - SO9.AlkaliMinning to LO1.CampConnery"
+  },
+  {
+    "zoneID": 2,
+    "facilityA": 209,
+    "facilityB": 208,
+    "description": "Indar - SO10.CraterFiringRange to SO9.AlkaliMining"
+  },
+  {
+    "zoneID": 2,
+    "facilityA": 213,
+    "facilityB": 400131,
+    "description": null
+  },
+  {
+    "zoneID": 6,
+    "facilityA": 205000,
+    "facilityB": 205001,
+    "description": "Amerish - Ikanam to Ikanam.NW"
+  },
+  {
+    "zoneID": 6,
+    "facilityA": 205000,
+    "facilityB": 205002,
+    "description": "Amerish - Ikanam to Ikanam.NE"
+  },
+  {
+    "zoneID": 6,
+    "facilityA": 205000,
+    "facilityB": 205003,
+    "description": "Amerish - Ikanam to Ikanam.S"
+  },
+  {
+    "zoneID": 6,
+    "facilityA": 206000,
+    "facilityB": 206001,
+    "description": "Amerish - Heyoka to Heyoka.N"
+  },
+  {
+    "zoneID": 6,
+    "facilityA": 207000,
+    "facilityB": 207001,
+    "description": "Amerish - Sungrey to Sungrey.West"
+  },
+  {
+    "zoneID": 6,
+    "facilityA": 207000,
+    "facilityB": 207003,
+    "description": "Amerish - Sungrey to Sungrey.East"
+  },
+  {
+    "zoneID": 6,
+    "facilityA": 208000,
+    "facilityB": 208002,
+    "description": "Amerish - Mekala to Mekala.South"
+  },
+  {
+    "zoneID": 6,
+    "facilityA": 209000,
+    "facilityB": 209002,
+    "description": "Amerish - Onatha to Onatha.East"
+  },
+  {
+    "zoneID": 6,
+    "facilityA": 209001,
+    "facilityB": 209002,
+    "description": null
+  },
+  {
+    "zoneID": 2,
+    "facilityA": 207,
+    "facilityB": 3810,
+    "description": "Indar - SO8.BensonConstruction to Saurva.DataStorage"
+  },
+  {
+    "zoneID": 6,
+    "facilityA": 210000,
+    "facilityB": 210003,
+    "description": "Amerish - Wokuk to Wokuk.East"
+  },
+  {
+    "zoneID": 6,
+    "facilityA": 211000,
+    "facilityB": 211002,
+    "description": "Amerish - Tumas to Tumas.East"
+  },
+  {
+    "zoneID": 6,
+    "facilityA": 212000,
+    "facilityB": 212002,
+    "description": "Amerish - Xelas to Xelas.North"
+  },
+  {
+    "zoneID": 6,
+    "facilityA": 212001,
+    "facilityB": 212003,
+    "description": null
+  },
+  {
+    "zoneID": 6,
+    "facilityA": 213000,
+    "facilityB": 205001,
+    "description": "Amerish - LO1.LithCorpSecureMine to Ikanam.NW"
+  },
+  {
+    "zoneID": 6,
+    "facilityA": 214000,
+    "facilityB": 222060,
+    "description": "Amerish - LO2.NCArsenal to SO.7.AuraxiComNetworkHub"
+  },
+  {
+    "zoneID": 6,
+    "facilityA": 215000,
+    "facilityB": 209001,
+    "description": "Amerish - LO3.CruxMiningOperation to Onatha.North"
+  },
+  {
+    "zoneID": 6,
+    "facilityA": 217000,
+    "facilityB": 222060,
+    "description": "Amerish - LO5.TheBastion to SO.7.AuraxiComNetwork"
+  },
+  {
+    "zoneID": 6,
+    "facilityA": 218000,
+    "facilityB": 211002,
+    "description": "Amerish - LO6.AuraxisFirearms to Tumas.East"
+  },
+  {
+    "zoneID": 6,
+    "facilityA": 219000,
+    "facilityB": 222160,
+    "description": "Amerish - LO7.SplitPeakPass to SO.17.EastHillCheckpoint"
+  },
+  {
+    "zoneID": 6,
+    "facilityA": 220000,
+    "facilityB": 210002,
+    "description": "Amerish - LO8.WestPassWatchtower to Wokuk.North"
+  },
+  {
+    "zoneID": 6,
+    "facilityA": 220000,
+    "facilityB": 222180,
+    "description": "Amerish - LO8.WestPassWatchtower to SO.19.ChimneyRock"
+  },
+  {
+    "zoneID": 6,
+    "facilityA": 220000,
+    "facilityB": 400129,
+    "description": null
+  },
+  {
+    "zoneID": 6,
+    "facilityA": 221000,
+    "facilityB": 222250,
+    "description": "Amerish - LO9.GraniteValleyGarrison to SO.26.AuraxianCryobank"
+  },
+  {
+    "zoneID": 6,
+    "facilityA": 222000,
+    "facilityB": 213000,
+    "description": "Amerish - SO1.StoneRidge to LO1.LithCorpSecureMine"
+  },
+  {
+    "zoneID": 6,
+    "facilityA": 222010,
+    "facilityB": 222310,
+    "description": "Amerish - SO2.NorthGrove to SO.31"
+  },
+  {
+    "zoneID": 6,
+    "facilityA": 222020,
+    "facilityB": 222030,
+    "description": "Amerish - SO3.JaggedLanceMine to SO4.HiddenHidge"
+  },
+  {
+    "zoneID": 6,
+    "facilityA": 222030,
+    "facilityB": 207003,
+    "description": "Amerish - SO4.HiddenHidge to Sungrey.East"
+  },
+  {
+    "zoneID": 6,
+    "facilityA": 222040,
+    "facilityB": 222050,
+    "description": "Amerish - SO.5 to SO.6"
+  },
+  {
+    "zoneID": 6,
+    "facilityA": 222050,
+    "facilityB": 222100,
+    "description": "Amerish - SO6.DesertedMineShaft to SO.11.WestFoothillsAirdock"
+  },
+  {
+    "zoneID": 6,
+    "facilityA": 222080,
+    "facilityB": 204003,
+    "description": "Amerish - SO9.GenudinePhysicsLab to Kwahtee.South"
+  },
+  {
+    "zoneID": 6,
+    "facilityA": 222090,
+    "facilityB": 204002,
+    "description": "Amerish - SO10.CobaltCommunications to Kwahtee.East"
+  },
+  {
+    "zoneID": 6,
+    "facilityA": 222100,
+    "facilityB": 217000,
+    "description": "Amerish - SO11.WestFoothillsAirdock to LO5.TheBastion"
+  },
+  {
+    "zoneID": 6,
+    "facilityA": 222110,
+    "facilityB": 217000,
+    "description": "Amerish - SO12.DeepCoreGeolab to LO5.TheBastion"
+  },
+  {
+    "zoneID": 6,
+    "facilityA": 222130,
+    "facilityB": 201000,
+    "description": "Amerish - SO14.ShadeSpireFarm to Amerish.WG.NE"
+  },
+  {
+    "zoneID": 6,
+    "facilityA": 222150,
+    "facilityB": 216000,
+    "description": "Amerish - SO16.RockSlideOutlook to LO4.CruxHeadquarters"
+  },
+  {
+    "zoneID": 6,
+    "facilityA": 222150,
+    "facilityB": 222350,
+    "description": "Amerish - SO16.RockSlideOutlook to SO.35"
+  },
+  {
+    "zoneID": 6,
+    "facilityA": 222170,
+    "facilityB": 222360,
+    "description": "Amerish - SO18.SilverValleyArsenal to SO.36"
+  },
+  {
+    "zoneID": 6,
+    "facilityA": 222180,
+    "facilityB": 211001,
+    "description": "Amerish - SO19.ChimneyRockDepot to Tumas.West"
+  },
+  {
+    "zoneID": 6,
+    "facilityA": 222190,
+    "facilityB": 218000,
+    "description": "Amerish - SO20.AuraxiComSubstation to LO6.AuraxisFirearmsCorp"
+  },
+  {
+    "zoneID": 6,
+    "facilityA": 222220,
+    "facilityB": 222240,
+    "description": "Amerish - SO23.TorremarStorageYard to SO.25.AramaxChemicalCo"
+  },
+  {
+    "zoneID": 6,
+    "facilityA": 222230,
+    "facilityB": 222380,
+    "description": "Amerish - SO24.HighRoadsStation to SO.38"
+  },
+  {
+    "zoneID": 6,
+    "facilityA": 222240,
+    "facilityB": 222380,
+    "description": "Amerish - SO.25 to SO.38"
+  },
+  {
+    "zoneID": 6,
+    "facilityA": 222270,
+    "facilityB": 218000,
+    "description": "Amerish - SO28.RavenLanding to LO6.AuraxisFirearmsCorp"
+  },
+  {
+    "zoneID": 6,
+    "facilityA": 222270,
+    "facilityB": 222350,
+    "description": "Amerish - SO28.RavenLanding to SO.35"
+  },
+  {
+    "zoneID": 6,
+    "facilityA": 222300,
+    "facilityB": 205002,
+    "description": "Amerish - SO.30 to Ikanam.East"
+  },
+  {
+    "zoneID": 6,
+    "facilityA": 222320,
+    "facilityB": 205003,
+    "description": "Amerish - SO.32 to Ikanam.South"
+  },
+  {
+    "zoneID": 6,
+    "facilityA": 222340,
+    "facilityB": 210001,
+    "description": "Amerish - SO.34 to Wokuk.West"
+  },
+  {
+    "zoneID": 6,
+    "facilityA": 222350,
+    "facilityB": 222280,
+    "description": "Amerish - SO.35 to LO.10.TheAscent"
+  },
+  {
+    "zoneID": 6,
+    "facilityA": 222380,
+    "facilityB": 203000,
+    "description": "Amerish - SO.38 to Amerish.WG.South"
+  },
+  {
+    "zoneID": 8,
+    "facilityA": 230000,
+    "facilityB": 258000,
+    "description": "Esamir - SO1.PalosSolar to WG.NW"
+  },
+  {
+    "zoneID": 8,
+    "facilityA": 231000,
+    "facilityB": 232000,
+    "description": "Esamir - SO.2 to SO.3"
+  },
+  {
+    "zoneID": 8,
+    "facilityA": 231000,
+    "facilityB": 258000,
+    "description": "Esamir - SO2.NorthernWeighStation to WG.NW"
+  },
+  {
+    "zoneID": 8,
+    "facilityA": 232000,
+    "facilityB": 258000,
+    "description": "Esamir - SO3.HavenOutpost to WG.NW"
+  },
+  {
+    "zoneID": 8,
+    "facilityA": 234000,
+    "facilityB": 244620,
+    "description": null
+  },
+  {
+    "zoneID": 8,
+    "facilityA": 235000,
+    "facilityB": 247000,
+    "description": null
+  },
+  {
+    "zoneID": 8,
+    "facilityA": 237000,
+    "facilityB": 246000,
+    "description": "Esamir - SO8.TheTraverse to LO2.EsamirMunitions"
+  },
+  {
+    "zoneID": 8,
+    "facilityA": 240000,
+    "facilityB": 244300,
+    "description": "Esamir - SO11.OldShoreCheckpoint to SO18.FrostbiteHarbor"
+  },
+  {
+    "zoneID": 8,
+    "facilityA": 240000,
+    "facilityB": 259000,
+    "description": null
+  },
+  {
+    "zoneID": 8,
+    "facilityA": 243000,
+    "facilityB": 400328,
+    "description": null
+  },
+  {
+    "zoneID": 8,
+    "facilityA": 244000,
+    "facilityB": 257000,
+    "description": null
+  },
+  {
+    "zoneID": 8,
+    "facilityA": 244100,
+    "facilityB": 249000,
+    "description": "Esamir - SO16.EchoValley to LO5.GlacierStation"
+  },
+  {
+    "zoneID": 8,
+    "facilityA": 244200,
+    "facilityB": 252010,
+    "description": null
+  },
+  {
+    "zoneID": 8,
+    "facilityA": 244500,
+    "facilityB": 251030,
+    "description": null
+  },
+  {
+    "zoneID": 8,
+    "facilityA": 244600,
+    "facilityB": 244300,
+    "description": "Esamir - SO.18 to SO.21"
+  },
+  {
+    "zoneID": 8,
+    "facilityA": 244600,
+    "facilityB": 259000,
+    "description": "Esamir - SO21.TwoStoneBeach to WG.South"
+  },
+  {
+    "zoneID": 8,
+    "facilityA": 244610,
+    "facilityB": 234000,
+    "description": null
+  },
+  {
+    "zoneID": 8,
+    "facilityA": 244620,
+    "facilityB": 248000,
+    "description": null
+  },
+  {
+    "zoneID": 8,
+    "facilityA": 245000,
+    "facilityB": 237000,
+    "description": null
+  },
+  {
+    "zoneID": 8,
+    "facilityA": 248000,
+    "facilityB": 244610,
+    "description": null
+  },
+  {
+    "zoneID": 8,
+    "facilityA": 253000,
+    "facilityB": 237000,
+    "description": null
+  },
+  {
+    "zoneID": 8,
+    "facilityA": 254000,
+    "facilityB": 246000,
+    "description": null
+  },
+  {
+    "zoneID": 8,
+    "facilityA": 254000,
+    "facilityB": 249000,
+    "description": null
+  },
+  {
+    "zoneID": 8,
+    "facilityA": 255020,
+    "facilityB": 247000,
+    "description": null
+  },
+  {
+    "zoneID": 8,
+    "facilityA": 255030,
+    "facilityB": 255020,
+    "description": null
+  },
+  {
+    "zoneID": 8,
+    "facilityA": 256000,
+    "facilityB": 242000,
+    "description": null
+  },
+  {
+    "zoneID": 8,
+    "facilityA": 256000,
+    "facilityB": 260000,
+    "description": null
+  },
+  {
+    "zoneID": 8,
+    "facilityA": 260000,
+    "facilityB": 236000,
+    "description": null
+  },
+  {
+    "zoneID": 6,
+    "facilityA": 260004,
+    "facilityB": 201000,
+    "description": "Amerish - SO8.AmerishARXReserve to WG.NE"
+  },
+  {
+    "zoneID": 6,
+    "facilityA": 260004,
+    "facilityB": 222130,
+    "description": "Amerish - SO.8 to SO.14"
+  },
+  {
+    "zoneID": 4,
+    "facilityA": 261000,
+    "facilityB": 262000,
+    "description": "Hossin.SO.1 to Hossin.SO.2"
+  },
+  {
+    "zoneID": 4,
+    "facilityA": 261000,
+    "facilityB": 308000,
+    "description": "Hossin - SO1.SharpesRun to WG.NW"
+  },
+  {
+    "zoneID": 4,
+    "facilityA": 262000,
+    "facilityB": 308000,
+    "description": "Hossin - SO2.EdgewaterO to WG.NW"
+  },
+  {
+    "zoneID": 4,
+    "facilityA": 263000,
+    "facilityB": 299030,
+    "description": "Hossin - SO3.LastHold to Naum.West"
+  },
+  {
+    "zoneID": 2,
+    "facilityA": 201,
+    "facilityB": 209,
+    "description": null
+  },
+  {
+    "zoneID": 2,
+    "facilityA": 203,
+    "facilityB": 3810,
+    "description": null
+  },
+  {
+    "zoneID": 2,
+    "facilityA": 203,
+    "facilityB": 3820,
+    "description": null
+  },
+  {
+    "zoneID": 2,
+    "facilityA": 204,
+    "facilityB": 5100,
+    "description": null
+  },
+  {
+    "zoneID": 2,
+    "facilityA": 205,
+    "facilityB": 207,
+    "description": "Indar - SO6.AlkaliSHipping to SO8.BensonConstruction"
+  },
+  {
+    "zoneID": 2,
+    "facilityA": 205,
+    "facilityB": 3820,
+    "description": "Indar - SO6.AlkaliShipping to Saurva.SSat"
+  },
+  {
+    "zoneID": 2,
+    "facilityA": 206,
+    "facilityB": 3210,
+    "description": "Indar - SO7.CoraMedLabs to Dahaka.UplinkHub"
+  },
+  {
+    "zoneID": 2,
+    "facilityA": 206,
+    "facilityB": 5100,
+    "description": null
+  },
+  {
+    "zoneID": 6,
+    "facilityA": 210000,
+    "facilityB": 210001,
+    "description": "Amerish - Wokuk to Wokuk.West"
+  },
+  {
+    "zoneID": 6,
+    "facilityA": 222050,
+    "facilityB": 200000,
+    "description": "Amerish - SO6.DesertedMineShaft to WG.NW"
+  },
+  {
+    "zoneID": 6,
+    "facilityA": 209000,
+    "facilityB": 209003,
+    "description": "Amerish - Onatha to Onatha.South"
+  },
+  {
+    "zoneID": 6,
+    "facilityA": 209003,
+    "facilityB": 209001,
+    "description": null
+  },
+  {
+    "zoneID": 6,
+    "facilityA": 211000,
+    "facilityB": 211001,
+    "description": "Amerish - Tumas to Tumas.West"
+  },
+  {
+    "zoneID": 6,
+    "facilityA": 212000,
+    "facilityB": 212001,
+    "description": "Amerish - Xelas to Xelas.West"
+  },
+  {
+    "zoneID": 6,
+    "facilityA": 212000,
+    "facilityB": 212003,
+    "description": "Amerish - Xelas to Xelas.South"
+  },
+  {
+    "zoneID": 6,
+    "facilityA": 212002,
+    "facilityB": 212001,
+    "description": null
+  },
+  {
+    "zoneID": 6,
+    "facilityA": 214000,
+    "facilityB": 207001,
+    "description": "Amerish - LO2.NCArsenal to Sungrey.West"
+  },
+  {
+    "zoneID": 6,
+    "facilityA": 214000,
+    "facilityB": 222320,
+    "description": "Amerish - LO2.NCArsenal to SO.32"
+  },
+  {
+    "zoneID": 6,
+    "facilityA": 216000,
+    "facilityB": 208001,
+    "description": "Amerish - LO4.CruxHeadquarters to Mekala.North"
+  },
+  {
+    "zoneID": 6,
+    "facilityA": 217000,
+    "facilityB": 222350,
+    "description": "Amerish - LO5.TheBastion to SO.35"
+  },
+  {
+    "zoneID": 6,
+    "facilityA": 219000,
+    "facilityB": 212001,
+    "description": "Amerish - LO7.SplitPeakPass to Xelas.West"
+  },
+  {
+    "zoneID": 6,
+    "facilityA": 219000,
+    "facilityB": 222190,
+    "description": "Amerish - LO7.SplitPeakPass to SO.20.AuraxiCom"
+  },
+  {
+    "zoneID": 6,
+    "facilityA": 221000,
+    "facilityB": 212003,
+    "description": "Amerish - LO9.GraniteValleyGarrison to Xelas.South"
+  },
+  {
+    "zoneID": 6,
+    "facilityA": 222000,
+    "facilityB": 200000,
+    "description": "Amerish - SO1.StoneRidge to WG.NW"
+  },
+  {
+    "zoneID": 6,
+    "facilityA": 222010,
+    "facilityB": 222300,
+    "description": "Amerish - SO2.NorthGrove to SO.30"
+  },
+  {
+    "zoneID": 6,
+    "facilityA": 222020,
+    "facilityB": 201000,
+    "description": "Amerish - SO3.JaggedLanceMine to WG.NE"
+  },
+  {
+    "zoneID": 6,
+    "facilityA": 222020,
+    "facilityB": 260004,
+    "description": "Amerish - SO.3 to SO.8"
+  },
+  {
+    "zoneID": 6,
+    "facilityA": 222040,
+    "facilityB": 200000,
+    "description": "Amerish - SO5.SolTechCharging to WG.NW"
+  },
+  {
+    "zoneID": 6,
+    "facilityA": 222040,
+    "facilityB": 222290,
+    "description": "Amerish - SO5.SolTechCharging to SO.29"
+  },
+  {
+    "zoneID": 6,
+    "facilityA": 222050,
+    "facilityB": 222000,
+    "description": "Amerish - SO.1 to SO.6"
+  },
+  {
+    "zoneID": 6,
+    "facilityA": 222060,
+    "facilityB": 216000,
+    "description": "Amerish - SO7.AuraxiComNetworkHub to LO4.CruxHeadquarters"
+  },
+  {
+    "zoneID": 6,
+    "facilityA": 222080,
+    "facilityB": 222330,
+    "description": "Amerish - SO9.GenudinePhysicsLab to SO.33"
+  },
+  {
+    "zoneID": 6,
+    "facilityA": 222090,
+    "facilityB": 400129,
+    "description": null
+  },
+  {
+    "zoneID": 6,
+    "facilityA": 222110,
+    "facilityB": 206001,
+    "description": "Amerish - SO12.DeepCoreGeolab to Heyoka.North"
+  },
+  {
+    "zoneID": 6,
+    "facilityA": 222120,
+    "facilityB": 216000,
+    "description": "Amerish - SO13.BlackshardTungstenMine to LO4.CruxHeadquarters"
+  },
+  {
+    "zoneID": 6,
+    "facilityA": 222130,
+    "facilityB": 215000,
+    "description": "Amerish - SO14.ShadeSpireFarm to LO3.CruxMining"
+  },
+  {
+    "zoneID": 6,
+    "facilityA": 222150,
+    "facilityB": 222280,
+    "description": "Amerish - SO16.RockSlideOutlook to LO10.TheAscent"
+  },
+  {
+    "zoneID": 6,
+    "facilityA": 222160,
+    "facilityB": 209003,
+    "description": "Amerish - SO17.EastHillsCheckpoint to Onatha.South"
+  },
+  {
+    "zoneID": 6,
+    "facilityA": 222180,
+    "facilityB": 206002,
+    "description": "Amerish - SO19.ChimneyRockDepot to Heyoka.South"
+  },
+  {
+    "zoneID": 6,
+    "facilityA": 222190,
+    "facilityB": 208002,
+    "description": "Amerish - SO20.AuraxiComSubstation to Mekala.South"
+  },
+  {
+    "zoneID": 6,
+    "facilityA": 222220,
+    "facilityB": 210003,
+    "description": "Amerish - SO23.TorremarStorageYard to Wokuk.East"
+  },
+  {
+    "zoneID": 6,
+    "facilityA": 222230,
+    "facilityB": 218000,
+    "description": "Amerish - SO24.HighRoadsStation to LO6.AuraxisFirearmsCorp"
+  },
+  {
+    "zoneID": 6,
+    "facilityA": 222240,
+    "facilityB": 203000,
+    "description": "Amerish - SO25.AramaxChemicalCo to WG.South"
+  },
+  {
+    "zoneID": 6,
+    "facilityA": 222250,
+    "facilityB": 203000,
+    "description": "Amerish - SO26.AuraxianCryoBank to WG.South"
+  },
+  {
+    "zoneID": 6,
+    "facilityA": 222270,
+    "facilityB": 222280,
+    "description": "Amerish - SO28.RavenLanding to LO10.TheAscent"
+  },
+  {
+    "zoneID": 6,
+    "facilityA": 222290,
+    "facilityB": 204001,
+    "description": "Amerish - SO.29 to Kwathee .West"
+  },
+  {
+    "zoneID": 6,
+    "facilityA": 222310,
+    "facilityB": 207002,
+    "description": "Amerish - SO.31 to Sungrey.North"
+  },
+  {
+    "zoneID": 6,
+    "facilityA": 222330,
+    "facilityB": 222340,
+    "description": "Amerish - SO.33 to SO.34"
+  },
+  {
+    "zoneID": 6,
+    "facilityA": 222340,
+    "facilityB": 400129,
+    "description": null
+  },
+  {
+    "zoneID": 6,
+    "facilityA": 222360,
+    "facilityB": 209002,
+    "description": "Amerish - SO.36 to Onatha.East"
+  },
+  {
+    "zoneID": 6,
+    "facilityA": 222380,
+    "facilityB": 222250,
+    "description": "Amerish - SO.26 to SO.38"
+  },
+  {
+    "zoneID": 8,
+    "facilityA": 231000,
+    "facilityB": 230000,
+    "description": "Esamir - SO.1 to SO.2"
+  },
+  {
+    "zoneID": 8,
+    "facilityA": 231000,
+    "facilityB": 253000,
+    "description": null
+  },
+  {
+    "zoneID": 8,
+    "facilityA": 232000,
+    "facilityB": 255010,
+    "description": null
+  },
+  {
+    "zoneID": 8,
+    "facilityA": 234000,
+    "facilityB": 235000,
+    "description": null
+  },
+  {
+    "zoneID": 8,
+    "facilityA": 234000,
+    "facilityB": 255030,
+    "description": null
+  },
+  {
+    "zoneID": 8,
+    "facilityA": 235000,
+    "facilityB": 400315,
+    "description": null
+  },
+  {
+    "zoneID": 8,
+    "facilityA": 239000,
+    "facilityB": 246000,
+    "description": "Esamir - SO10.ThePit to LO2.EsamirMunitions"
+  },
+  {
+    "zoneID": 8,
+    "facilityA": 240000,
+    "facilityB": 252010,
+    "description": null
+  },
+  {
+    "zoneID": 8,
+    "facilityA": 243000,
+    "facilityB": 252010,
+    "description": null
+  },
+  {
+    "zoneID": 8,
+    "facilityA": 244000,
+    "facilityB": 242000,
+    "description": null
+  },
+  {
+    "zoneID": 8,
+    "facilityA": 244100,
+    "facilityB": 248000,
+    "description": "Esamir - SO16.EchoValley to LO4.SaerroListening"
+  },
+  {
+    "zoneID": 8,
+    "facilityA": 244200,
+    "facilityB": 249000,
+    "description": "Esamir - SO17.BridgeWard to LO5.GlacierStation"
+  },
+  {
+    "zoneID": 8,
+    "facilityA": 244300,
+    "facilityB": 259000,
+    "description": "Esamir - SO18.FrostbiteHarbor to WG.SW"
+  },
+  {
+    "zoneID": 8,
+    "facilityA": 244500,
+    "facilityB": 400134,
+    "description": null
+  },
+  {
+    "zoneID": 8,
+    "facilityA": 244600,
+    "facilityB": 244500,
+    "description": null
+  },
+  {
+    "zoneID": 8,
+    "facilityA": 244610,
+    "facilityB": 233000,
+    "description": null
+  },
+  {
+    "zoneID": 8,
+    "facilityA": 244620,
+    "facilityB": 236000,
+    "description": null
+  },
+  {
+    "zoneID": 8,
+    "facilityA": 245000,
+    "facilityB": 230000,
+    "description": null
+  },
+  {
+    "zoneID": 8,
+    "facilityA": 245000,
+    "facilityB": 251010,
+    "description": null
+  },
+  {
+    "zoneID": 8,
+    "facilityA": 253000,
+    "facilityB": 233000,
+    "description": null
+  },
+  {
+    "zoneID": 8,
+    "facilityA": 254000,
+    "facilityB": 244610,
+    "description": null
+  },
+  {
+    "zoneID": 8,
+    "facilityA": 254000,
+    "facilityB": 248000,
+    "description": null
+  },
+  {
+    "zoneID": 8,
+    "facilityA": 255010,
+    "facilityB": 255020,
+    "description": null
+  },
+  {
+    "zoneID": 8,
+    "facilityA": 255030,
+    "facilityB": 233000,
+    "description": null
+  },
+  {
+    "zoneID": 8,
+    "facilityA": 256000,
+    "facilityB": 256030,
+    "description": null
+  },
+  {
+    "zoneID": 8,
+    "facilityA": 256030,
+    "facilityB": 248000,
+    "description": null
+  },
+  {
+    "zoneID": 8,
+    "facilityA": 260000,
+    "facilityB": 242000,
+    "description": null
+  },
+  {
+    "zoneID": 6,
+    "facilityA": 260004,
+    "facilityB": 222120,
+    "description": "Amerish - SO8.AmerishARXReserve to SO.13.BlackshardTungstenMine"
+  },
+  {
+    "zoneID": 8,
+    "facilityA": 260010,
+    "facilityB": 400328,
+    "description": null
+  },
+  {
+    "zoneID": 4,
+    "facilityA": 261000,
+    "facilityB": 289000,
+    "description": "Hossin - SO1.SharpesRun to LO1.DevilsWreath"
+  },
+  {
+    "zoneID": 4,
+    "facilityA": 262000,
+    "facilityB": 287070,
+    "description": null
+  },
+  {
+    "zoneID": 4,
+    "facilityA": 263000,
+    "facilityB": 262000,
+    "description": "Hossin.SO2. to Hossin SO.3"
+  },
+  {
+    "zoneID": 4,
+    "facilityA": 263000,
+    "facilityB": 308000,
+    "description": "Hossin - SO3.LastHold to WG.NW"
+  },
+  {
+    "zoneID": 4,
+    "facilityA": 264000,
+    "facilityB": 287070,
+    "description": null
+  },
+  {
+    "zoneID": 4,
+    "facilityA": 265000,
+    "facilityB": 266000,
+    "description": "Hossin - SO5.RustwashDepot to SO6.KesselsCrossing"
+  },
+  {
+    "zoneID": 4,
+    "facilityA": 265000,
+    "facilityB": 299010,
+    "description": "Hossin - SO5.RustwashDepot to Naum.NorthEast"
+  },
+  {
+    "zoneID": 4,
+    "facilityA": 267000,
+    "facilityB": 295000,
+    "description": "Hossin - SO7.NSSupply to LO7.MatsudaGen"
+  },
+  {
+    "zoneID": 4,
+    "facilityA": 268000,
+    "facilityB": 269000,
+    "description": "Hossin - SO8.VEXBioLogics to SO9.StaggeredMesa"
+  },
+  {
+    "zoneID": 4,
+    "facilityA": 268000,
+    "facilityB": 296000,
+    "description": "Hossin - SO8.VEXBioLogics to LO8.HaydSkydock"
+  },
+  {
+    "zoneID": 4,
+    "facilityA": 269000,
+    "facilityB": 287100,
+    "description": null
+  },
+  {
+    "zoneID": 4,
+    "facilityA": 270000,
+    "facilityB": 287100,
+    "description": null
+  },
+  {
+    "zoneID": 4,
+    "facilityA": 271000,
+    "facilityB": 270000,
+    "description": "Hossin.SO.10 to Hossin SO.11"
+  },
+  {
+    "zoneID": 4,
+    "facilityA": 271000,
+    "facilityB": 309000,
+    "description": "Hossin - SO11.HalcyonWatch to WG.NE"
+  },
+  {
+    "zoneID": 4,
+    "facilityA": 273000,
+    "facilityB": 289000,
+    "description": "Hossin - SO13.ORMScrap to LO1.DevilsWreath"
+  },
+  {
+    "zoneID": 4,
+    "facilityA": 274000,
+    "facilityB": 290000,
+    "description": "Hossin - SO14.IronQuay to LO2.FortDrexler"
+  },
+  {
+    "zoneID": 4,
+    "facilityA": 275000,
+    "facilityB": 298000,
+    "description": "Hossin - SO15.BrokenVale to LO10.NasonsDefiance"
+  },
+  {
+    "zoneID": 4,
+    "facilityA": 276000,
+    "facilityB": 287090,
+    "description": null
+  },
+  {
+    "zoneID": 4,
+    "facilityA": 276000,
+    "facilityB": 301010,
+    "description": "Hossin - SO16.WoodmanASE to Ixtab.West"
+  },
+  {
+    "zoneID": 4,
+    "facilityA": 277000,
+    "facilityB": 278000,
+    "description": "Hossin - SO17.TheGlaive to SO18.RootHouse"
+  },
+  {
+    "zoneID": 4,
+    "facilityA": 278000,
+    "facilityB": 303010,
+    "description": "Hossin - SO18.RootHouse to Bitol.West"
+  },
+  {
+    "zoneID": 4,
+    "facilityA": 279000,
+    "facilityB": 287110,
+    "description": null
+  },
+  {
+    "zoneID": 4,
+    "facilityA": 280000,
+    "facilityB": 287110,
+    "description": null
+  },
+  {
+    "zoneID": 4,
+    "facilityA": 280000,
+    "facilityB": 301010,
+    "description": "Hossin - SO20.FogertyDam to Ixtab.West"
+  },
+  {
+    "zoneID": 4,
+    "facilityA": 281000,
+    "facilityB": 293000,
+    "description": "Hossin - SO21.SRPHydro to LO5.GenesisTerra"
+  },
+  {
+    "zoneID": 4,
+    "facilityA": 282000,
+    "facilityB": 287060,
+    "description": null
+  },
+  {
+    "zoneID": 4,
+    "facilityA": 284000,
+    "facilityB": 285000,
+    "description": "Hossin.SO.24 to Hossin.SO.25"
+  },
+  {
+    "zoneID": 4,
+    "facilityA": 284000,
+    "facilityB": 310000,
+    "description": "Hossin - SO24.WhisperingPass to WG.S"
+  },
+  {
+    "zoneID": 6,
+    "facilityA": 205002,
+    "facilityB": 222320,
+    "description": null
+  },
+  {
+    "zoneID": 6,
+    "facilityA": 206000,
+    "facilityB": 206002,
+    "description": "Amerish - Heyoka to Heyoka.S"
+  },
+  {
+    "zoneID": 6,
+    "facilityA": 207000,
+    "facilityB": 207002,
+    "description": "Amerish - Sungrey to Sungrey.North"
+  },
+  {
+    "zoneID": 6,
+    "facilityA": 208000,
+    "facilityB": 208001,
+    "description": "Amerish - Mekala to Mekala.North"
+  },
+  {
+    "zoneID": 6,
+    "facilityA": 209000,
+    "facilityB": 209001,
+    "description": "Amerish - Onatha to Onatha.North"
+  },
+  {
+    "zoneID": 6,
+    "facilityA": 210000,
+    "facilityB": 210002,
+    "description": "Amerish - Wokuk to Wokuk.North"
+  },
+  {
+    "zoneID": 4,
+    "facilityA": 266000,
+    "facilityB": 307010,
+    "description": "Hossin - SO6.KesselsCrossing to Chac.Fusion"
+  },
+  {
+    "zoneID": 4,
+    "facilityA": 267000,
+    "facilityB": 307020,
+    "description": "Hossin - SO7.NSSupply to Chac.WaterPur"
+  },
+  {
+    "zoneID": 4,
+    "facilityA": 268000,
+    "facilityB": 287030,
+    "description": null
+  },
+  {
+    "zoneID": 4,
+    "facilityA": 269000,
+    "facilityB": 287090,
+    "description": null
+  },
+  {
+    "zoneID": 4,
+    "facilityA": 270000,
+    "facilityB": 272000,
+    "description": "Hossin.SO.10 to Hossin.SO.12"
+  },
+  {
+    "zoneID": 4,
+    "facilityA": 270000,
+    "facilityB": 309000,
+    "description": "Hossin - SO10.FortWashburn to WG.NE"
+  },
+  {
+    "zoneID": 4,
+    "facilityA": 265000,
+    "facilityB": 287020,
+    "description": null
+  },
+  {
+    "zoneID": 4,
+    "facilityA": 271000,
+    "facilityB": 295000,
+    "description": "Hossin - SO11.HalcyonWatch to LO7.MatsudaGen"
+  },
+  {
+    "zoneID": 4,
+    "facilityA": 272000,
+    "facilityB": 309000,
+    "description": "Hossin - SO12.AscensionPoint to WG.NE"
+  },
+  {
+    "zoneID": 4,
+    "facilityA": 274000,
+    "facilityB": 287010,
+    "description": null
+  },
+  {
+    "zoneID": 4,
+    "facilityA": 275000,
+    "facilityB": 287080,
+    "description": null
+  },
+  {
+    "zoneID": 4,
+    "facilityA": 275000,
+    "facilityB": 302030,
+    "description": "Hossin - SO15.BrokenVale to Acan.South"
+  },
+  {
+    "zoneID": 4,
+    "facilityA": 276000,
+    "facilityB": 298000,
+    "description": "Hossin - SO16.WoodmanASE to LO10.NasonsDefiance"
+  },
+  {
+    "zoneID": 4,
+    "facilityA": 276000,
+    "facilityB": 302030,
+    "description": "Hossin - SO16.WoodmanASE to Acan.South"
+  },
+  {
+    "zoneID": 4,
+    "facilityA": 278000,
+    "facilityB": 287040,
+    "description": null
+  },
+  {
+    "zoneID": 4,
+    "facilityA": 279000,
+    "facilityB": 281000,
+    "description": "Hossin - SO19.HuntersBlind to SO21.SRPHydro"
+  },
+  {
+    "zoneID": 4,
+    "facilityA": 279000,
+    "facilityB": 287120,
+    "description": null
+  },
+  {
+    "zoneID": 4,
+    "facilityA": 280000,
+    "facilityB": 298000,
+    "description": "Hossin - SO20.FogertyDam to LO10.NasonsDefiance"
+  },
+  {
+    "zoneID": 4,
+    "facilityA": 281000,
+    "facilityB": 287050,
+    "description": null
+  },
+  {
+    "zoneID": 4,
+    "facilityA": 282000,
+    "facilityB": 283000,
+    "description": "Hossin - SO22.DeadcreekDepot to SO23.Nettlemire"
+  },
+  {
+    "zoneID": 4,
+    "facilityA": 283000,
+    "facilityB": 306020,
+    "description": "Hossin - SO23.Nettlemire to Mulac.East"
+  },
+  {
+    "zoneID": 4,
+    "facilityA": 284000,
+    "facilityB": 303030,
+    "description": "Hossin - SO24.WhisperingPass to Bitol.East"
+  },
+  {
+    "zoneID": 4,
+    "facilityA": 285000,
+    "facilityB": 287120,
+    "description": null
+  },
+  {
+    "zoneID": 4,
+    "facilityA": 286000,
+    "facilityB": 285000,
+    "description": "Hossin.SO.25 to Hossin.SO.26"
+  },
+  {
+    "zoneID": 4,
+    "facilityA": 286000,
+    "facilityB": 310000,
+    "description": "Hossin - SO26.FourFingers to WG.S"
+  },
+  {
+    "zoneID": 4,
+    "facilityA": 287000,
+    "facilityB": 306030,
+    "description": "Hossin - SO27.KestralWatch to Mulac.South"
+  },
+  {
+    "zoneID": 4,
+    "facilityA": 290000,
+    "facilityB": 287040,
+    "description": null
+  },
+  {
+    "zoneID": 4,
+    "facilityA": 291000,
+    "facilityB": 287110,
+    "description": null
+  },
+  {
+    "zoneID": 4,
+    "facilityA": 300010,
+    "facilityB": 280000,
+    "description": null
+  },
+  {
+    "zoneID": 4,
+    "facilityA": 300020,
+    "facilityB": 290000,
+    "description": null
+  },
+  {
+    "zoneID": 4,
+    "facilityA": 300030,
+    "facilityB": 291000,
+    "description": null
+  },
+  {
+    "zoneID": 4,
+    "facilityA": 301000,
+    "facilityB": 301010,
+    "description": "Hossin - Ixtab to Ixtab.West"
+  },
+  {
+    "zoneID": 4,
+    "facilityA": 301000,
+    "facilityB": 301030,
+    "description": "Hossin - Ixtab to Ixtab.South"
+  },
+  {
+    "zoneID": 4,
+    "facilityA": 302000,
+    "facilityB": 302020,
+    "description": "Hossin - Acan to Acan.NE"
+  },
+  {
+    "zoneID": 4,
+    "facilityA": 302010,
+    "facilityB": 302020,
+    "description": null
+  },
+  {
+    "zoneID": 4,
+    "facilityA": 303000,
+    "facilityB": 303010,
+    "description": "Hossin - Bitol to Bitol.West"
+  },
+  {
+    "zoneID": 4,
+    "facilityA": 303000,
+    "facilityB": 303030,
+    "description": "Hossin - Bitol to Bitol.East"
+  },
+  {
+    "zoneID": 4,
+    "facilityA": 303020,
+    "facilityB": 291000,
+    "description": null
+  },
+  {
+    "zoneID": 4,
+    "facilityA": 304010,
+    "facilityB": 272000,
+    "description": null
+  },
+  {
+    "zoneID": 4,
+    "facilityA": 304010,
+    "facilityB": 304020,
+    "description": null
+  },
+  {
+    "zoneID": 4,
+    "facilityA": 304020,
+    "facilityB": 304000,
+    "description": null
+  },
+  {
+    "zoneID": 4,
+    "facilityA": 304030,
+    "facilityB": 282000,
+    "description": null
+  },
+  {
+    "zoneID": 4,
+    "facilityA": 305010,
+    "facilityB": 277000,
+    "description": null
+  },
+  {
+    "zoneID": 4,
+    "facilityA": 305020,
+    "facilityB": 273000,
+    "description": null
+  },
+  {
+    "zoneID": 4,
+    "facilityA": 305030,
+    "facilityB": 290000,
+    "description": null
+  },
+  {
+    "zoneID": 4,
+    "facilityA": 306000,
+    "facilityB": 306010,
+    "description": "Hossin - Mulac to Mulac.NW"
+  },
+  {
+    "zoneID": 4,
+    "facilityA": 306000,
+    "facilityB": 306030,
+    "description": "Hossin - Mulac to Mulac.South"
+  },
+  {
+    "zoneID": 4,
+    "facilityA": 307000,
+    "facilityB": 307020,
+    "description": "Hossin - Chac to Chac.NE"
+  },
+  {
+    "zoneID": 59,
+    "facilityA": 310066,
+    "facilityB": 310073,
+    "description": "QAzone.AmpStation->QAzone.SO1"
+  },
+  {
+    "zoneID": 59,
+    "facilityA": 310067,
+    "facilityB": 310074,
+    "description": "QAzone.BioLab->QAzone.SO.2"
+  },
+  {
+    "zoneID": 59,
+    "facilityA": 310068,
+    "facilityB": 310073,
+    "description": "QAzone.TechPlant->QAzone.SO.1"
+  },
+  {
+    "zoneID": 59,
+    "facilityA": 310071,
+    "facilityB": 310073,
+    "description": "QAzone.LO.1->QAzone.SO.1"
+  },
+  {
+    "zoneID": 59,
+    "facilityA": 310071,
+    "facilityB": 310075,
+    "description": "QAzone.LO.1->QAzone.SO.3"
+  },
+  {
+    "zoneID": 95,
+    "facilityA": 310088,
+    "facilityB": 310061,
+    "description": "Tutorial - TR Spawn to Training Facility"
+  },
+  {
+    "zoneID": 95,
+    "facilityA": 310088,
+    "facilityB": 310063,
+    "description": "Tutorial - VS Spawn to Training Facility"
+  },
+  {
+    "zoneID": 10,
+    "facilityA": 310510,
+    "facilityB": 310500,
+    "description": "Nexus - SO3 to SouthTower"
+  },
+  {
+    "zoneID": 10,
+    "facilityA": 310530,
+    "facilityB": 310510,
+    "description": "Nexus - IceCave to SO3"
+  },
+  {
+    "zoneID": 10,
+    "facilityA": 310540,
+    "facilityB": 310590,
+    "description": "Nexus - SO1 to NorthTower"
+  },
+  {
+    "zoneID": 10,
+    "facilityA": 310570,
+    "facilityB": 310600,
+    "description": "Nexus - WG.SW to Home.West"
+  },
+  {
+    "zoneID": 10,
+    "facilityA": 310590,
+    "facilityB": 310550,
+    "description": "Nexus - NorthTower to SO2"
+  },
+  {
+    "zoneID": 10,
+    "facilityA": 310600,
+    "facilityB": 310540,
+    "description": "Nexus - Home.West to SO1"
+  },
+  {
+    "zoneID": 10,
+    "facilityA": 310610,
+    "facilityB": 310550,
+    "description": "Nexus - Home.East to SO2"
+  },
+  {
+    "zoneID": 14,
+    "facilityA": 400015,
+    "facilityB": 400018,
+    "description": null
+  },
+  {
+    "zoneID": 14,
+    "facilityA": 400017,
+    "facilityB": 400022,
+    "description": null
+  },
+  {
+    "zoneID": 14,
+    "facilityA": 400020,
+    "facilityB": 400021,
+    "description": null
+  },
+  {
+    "zoneID": 14,
+    "facilityA": 400022,
+    "facilityB": 400020,
+    "description": null
+  },
+  {
+    "zoneID": 309,
+    "facilityA": 400036,
+    "facilityB": 400087,
+    "description": null
+  },
+  {
+    "zoneID": 309,
+    "facilityA": 400038,
+    "facilityB": 400092,
+    "description": null
+  },
+  {
+    "zoneID": 309,
+    "facilityA": 400076,
+    "facilityB": 400036,
+    "description": null
+  },
+  {
+    "zoneID": 309,
+    "facilityA": 400080,
+    "facilityB": 400092,
+    "description": null
+  },
+  {
+    "zoneID": 309,
+    "facilityA": 400087,
+    "facilityB": 400036,
+    "description": null
+  },
+  {
+    "zoneID": 309,
+    "facilityA": 400091,
+    "facilityB": 400103,
+    "description": null
+  },
+  {
+    "zoneID": 309,
+    "facilityA": 400093,
+    "facilityB": 400087,
+    "description": null
+  },
+  {
+    "zoneID": 309,
+    "facilityA": 400095,
+    "facilityB": 400087,
+    "description": null
+  },
+  {
+    "zoneID": 309,
+    "facilityA": 400096,
+    "facilityB": 400100,
+    "description": null
+  },
+  {
+    "zoneID": 309,
+    "facilityA": 400097,
+    "facilityB": 400083,
+    "description": null
+  },
+  {
+    "zoneID": 309,
+    "facilityA": 400099,
+    "facilityB": 400109,
+    "description": null
+  },
+  {
+    "zoneID": 309,
+    "facilityA": 400100,
+    "facilityB": 400114,
+    "description": null
+  },
+  {
+    "zoneID": 309,
+    "facilityA": 400102,
+    "facilityB": 400105,
+    "description": null
+  },
+  {
+    "zoneID": 309,
+    "facilityA": 400103,
+    "facilityB": 400104,
+    "description": null
+  },
+  {
+    "zoneID": 309,
+    "facilityA": 400105,
+    "facilityB": 400096,
+    "description": null
+  },
+  {
+    "zoneID": 309,
+    "facilityA": 400113,
+    "facilityB": 400094,
+    "description": null
+  },
+  {
+    "zoneID": 309,
+    "facilityA": 400114,
+    "facilityB": 400098,
+    "description": null
+  },
+  {
+    "zoneID": 309,
+    "facilityA": 400118,
+    "facilityB": 400097,
+    "description": null
+  },
+  {
+    "zoneID": 6,
+    "facilityA": 400128,
+    "facilityB": 212002,
+    "description": null
+  },
+  {
+    "zoneID": 2,
+    "facilityA": 400130,
+    "facilityB": 5700,
+    "description": null
+  },
+  {
+    "zoneID": 2,
+    "facilityA": 400132,
+    "facilityB": 5100,
+    "description": null
+  },
+  {
+    "zoneID": 8,
+    "facilityA": 400134,
+    "facilityB": 239000,
+    "description": null
+  },
+  {
+    "zoneID": 8,
+    "facilityA": 400135,
+    "facilityB": 246000,
+    "description": null
+  },
+  {
+    "zoneID": 338,
+    "facilityA": 400285,
+    "facilityB": 400278,
+    "description": null
+  },
+  {
+    "zoneID": 338,
+    "facilityA": 400287,
+    "facilityB": 400285,
+    "description": null
+  },
+  {
+    "zoneID": 338,
+    "facilityA": 400288,
+    "facilityB": 400280,
+    "description": null
+  },
+  {
+    "zoneID": 338,
+    "facilityA": 400289,
+    "facilityB": 400288,
+    "description": null
+  },
+  {
+    "zoneID": 338,
+    "facilityA": 400290,
+    "facilityB": 400284,
+    "description": null
+  },
+  {
+    "zoneID": 338,
+    "facilityA": 400291,
+    "facilityB": 400284,
+    "description": null
+  },
+  {
+    "zoneID": 338,
+    "facilityA": 400292,
+    "facilityB": 400291,
+    "description": null
+  },
+  {
+    "zoneID": 338,
+    "facilityA": 400293,
+    "facilityB": 400289,
+    "description": null
+  },
+  {
+    "zoneID": 338,
+    "facilityA": 400293,
+    "facilityB": 400292,
+    "description": null
+  },
+  {
+    "zoneID": 8,
+    "facilityA": 400314,
+    "facilityB": 244300,
+    "description": null
+  },
+  {
+    "zoneID": 8,
+    "facilityA": 400315,
+    "facilityB": 236000,
+    "description": null
+  },
+  {
+    "zoneID": 8,
+    "facilityA": 400317,
+    "facilityB": 400133,
+    "description": null
+  },
+  {
+    "zoneID": 8,
+    "facilityA": 400326,
+    "facilityB": 251030,
+    "description": null
+  },
+  {
+    "zoneID": 8,
+    "facilityA": 400327,
+    "facilityB": 243000,
+    "description": null
+  },
+  {
+    "zoneID": 8,
+    "facilityA": 400327,
+    "facilityB": 260010,
+    "description": null
+  },
+  {
+    "zoneID": 344,
+    "facilityA": 400329,
+    "facilityB": 400339,
+    "description": null
+  },
+  {
+    "zoneID": 344,
+    "facilityA": 400329,
+    "facilityB": 400407,
+    "description": null
+  },
+  {
+    "zoneID": 344,
+    "facilityA": 400330,
+    "facilityB": 400407,
+    "description": null
+  },
+  {
+    "zoneID": 344,
+    "facilityA": 400331,
+    "facilityB": 400346,
+    "description": null
+  },
+  {
+    "zoneID": 344,
+    "facilityA": 400331,
+    "facilityB": 400329,
+    "description": null
+  },
+  {
+    "zoneID": 344,
+    "facilityA": 400390,
+    "facilityB": 400361,
+    "description": null
+  },
+  {
+    "zoneID": 344,
+    "facilityA": 400332,
+    "facilityB": 400333,
+    "description": null
+  },
+  {
+    "zoneID": 344,
+    "facilityA": 400391,
+    "facilityB": 400338,
+    "description": null
+  },
+  {
+    "zoneID": 344,
+    "facilityA": 400333,
+    "facilityB": 400332,
+    "description": null
+  },
+  {
+    "zoneID": 344,
+    "facilityA": 400333,
+    "facilityB": 400335,
+    "description": null
+  },
+  {
+    "zoneID": 344,
+    "facilityA": 400392,
+    "facilityB": 400356,
+    "description": null
+  },
+  {
+    "zoneID": 344,
+    "facilityA": 400392,
+    "facilityB": 400353,
+    "description": null
+  },
+  {
+    "zoneID": 344,
+    "facilityA": 400334,
+    "facilityB": 400372,
+    "description": null
+  },
+  {
+    "zoneID": 344,
+    "facilityA": 400335,
+    "facilityB": 400351,
+    "description": null
+  },
+  {
+    "zoneID": 344,
+    "facilityA": 400336,
+    "facilityB": 400333,
+    "description": null
+  },
+  {
+    "zoneID": 2,
+    "facilityA": 201,
+    "facilityB": 5300,
+    "description": "Indar - SO2.WasteTreatment to LO1.CampConnery"
+  },
+  {
+    "zoneID": 2,
+    "facilityA": 203,
+    "facilityB": 204,
+    "description": "Indar - SO4.Saurva.Overflow to SO5.HeliosSolar"
+  },
+  {
+    "zoneID": 2,
+    "facilityA": 209,
+    "facilityB": 210,
+    "description": "Indar - SO.10 to SO.11"
+  },
+  {
+    "zoneID": 2,
+    "facilityA": 211,
+    "facilityB": 4410,
+    "description": "Indar - SO12.BriggsLabs to Mao.SouthwestGate"
+  },
+  {
+    "zoneID": 2,
+    "facilityA": 212,
+    "facilityB": 5500,
+    "description": "Indar - SO13.NSRefinery to LO2.CampWaterson"
+  },
+  {
+    "zoneID": 2,
+    "facilityA": 213,
+    "facilityB": 224,
+    "description": "Indar - SO14.HowlingPass to SO25.NSMaterial"
+  },
+  {
+    "zoneID": 4,
+    "facilityA": 264000,
+    "facilityB": 274000,
+    "description": "Hossin - SO4.WainwrightA to SO14.IronQuay"
+  },
+  {
+    "zoneID": 4,
+    "facilityA": 264000,
+    "facilityB": 287080,
+    "description": null
+  },
+  {
+    "zoneID": 2,
+    "facilityA": 230,
+    "facilityB": 400130,
+    "description": null
+  },
+  {
+    "zoneID": 2,
+    "facilityA": 6500,
+    "facilityB": 7020,
+    "description": null
+  },
+  {
+    "zoneID": 4,
+    "facilityA": 285000,
+    "facilityB": 310000,
+    "description": "Hossin - SO25.GlobalCom to WG.S"
+  },
+  {
+    "zoneID": 4,
+    "facilityA": 286000,
+    "facilityB": 292000,
+    "description": "Hossin - SO26.FourFingers to LO4.SouthGate"
+  },
+  {
+    "zoneID": 4,
+    "facilityA": 287000,
+    "facilityB": 292000,
+    "description": "Hossin - SO27.KestralWatch to LO4.SouthGate"
+  },
+  {
+    "zoneID": 4,
+    "facilityA": 289000,
+    "facilityB": 287010,
+    "description": null
+  },
+  {
+    "zoneID": 4,
+    "facilityA": 291000,
+    "facilityB": 287040,
+    "description": null
+  },
+  {
+    "zoneID": 4,
+    "facilityA": 292000,
+    "facilityB": 287050,
+    "description": null
+  },
+  {
+    "zoneID": 4,
+    "facilityA": 293000,
+    "facilityB": 301030,
+    "description": "Hossin - LO5.GenesisTerra to Ixtab.South"
+  },
+  {
+    "zoneID": 4,
+    "facilityA": 294000,
+    "facilityB": 287060,
+    "description": null
+  },
+  {
+    "zoneID": 4,
+    "facilityA": 294000,
+    "facilityB": 301020,
+    "description": "Hossin - LO6.BravataPMC to Ixtab.East"
+  },
+  {
+    "zoneID": 4,
+    "facilityA": 296000,
+    "facilityB": 287020,
+    "description": null
+  },
+  {
+    "zoneID": 2,
+    "facilityA": 229,
+    "facilityB": 6100,
+    "description": "Indar - SO30.SnakeRavine to LO7.CrossroadsWatchtower"
+  },
+  {
+    "zoneID": 2,
+    "facilityA": 235,
+    "facilityB": 5900,
+    "description": "Indar - SO36.RustMesa to LO5.CrimsonBluff"
+  },
+  {
+    "zoneID": 4,
+    "facilityA": 296000,
+    "facilityB": 307030,
+    "description": "Hossin - LO8.HaydSkydock to Chac.South"
+  },
+  {
+    "zoneID": 4,
+    "facilityA": 305010,
+    "facilityB": 305000,
+    "description": null
+  },
+  {
+    "zoneID": 4,
+    "facilityA": 305020,
+    "facilityB": 305000,
+    "description": null
+  },
+  {
+    "zoneID": 4,
+    "facilityA": 305030,
+    "facilityB": 305000,
+    "description": null
+  },
+  {
+    "zoneID": 4,
+    "facilityA": 306000,
+    "facilityB": 306020,
+    "description": "Hossin - Mulac to Mulac.NE"
+  },
+  {
+    "zoneID": 4,
+    "facilityA": 307000,
+    "facilityB": 307010,
+    "description": "Hossin - Chac to Chac.NW"
+  },
+  {
+    "zoneID": 4,
+    "facilityA": 307000,
+    "facilityB": 307030,
+    "description": "Hossin - Chac to Chac.South"
+  },
+  {
+    "zoneID": 59,
+    "facilityA": 310066,
+    "facilityB": 310076,
+    "description": "QAzone.AmpStation->QAzone.SO4"
+  },
+  {
+    "zoneID": 59,
+    "facilityA": 310067,
+    "facilityB": 310075,
+    "description": "QAzone.BioLab->QAzone.SO.3"
+  },
+  {
+    "zoneID": 59,
+    "facilityA": 310068,
+    "facilityB": 310074,
+    "description": "QAzone.TechPlant->QAzone.SO.2"
+  },
+  {
+    "zoneID": 59,
+    "facilityA": 310071,
+    "facilityB": 310074,
+    "description": "QAzone.LO.1->QAzone.SO.2"
+  },
+  {
+    "zoneID": 59,
+    "facilityA": 310071,
+    "facilityB": 310076,
+    "description": "QAzone.LO.1->QAzone.SO.4"
+  },
+  {
+    "zoneID": 95,
+    "facilityA": 310088,
+    "facilityB": 310062,
+    "description": "Tutorial - NC Spawn to Training Facility"
+  },
+  {
+    "zoneID": 95,
+    "facilityA": 310088,
+    "facilityB": 310612,
+    "description": "Link from Training Facility to Gate Shield facility so the generator can be overloaded"
+  },
+  {
+    "zoneID": 10,
+    "facilityA": 310520,
+    "facilityB": 310500,
+    "description": "Nexus - SO4 to SouthTower"
+  },
+  {
+    "zoneID": 10,
+    "facilityA": 310530,
+    "facilityB": 310520,
+    "description": "Nexus - IceCave to SO4"
+  },
+  {
+    "zoneID": 10,
+    "facilityA": 310560,
+    "facilityB": 310610,
+    "description": "Nexus - WG.NE to Home.East"
+  },
+  {
+    "zoneID": 10,
+    "facilityA": 310590,
+    "facilityB": 310530,
+    "description": "Nexus - NorthTower to IceCave"
+  },
+  {
+    "zoneID": 10,
+    "facilityA": 310600,
+    "facilityB": 310510,
+    "description": "Nexus - Home.West to SO3"
+  },
+  {
+    "zoneID": 10,
+    "facilityA": 310610,
+    "facilityB": 310520,
+    "description": "Nexus - Home.East to SO4"
+  },
+  {
+    "zoneID": 14,
+    "facilityA": 400014,
+    "facilityB": 400019,
+    "description": null
+  },
+  {
+    "zoneID": 14,
+    "facilityA": 400016,
+    "facilityB": 400017,
+    "description": null
+  },
+  {
+    "zoneID": 14,
+    "facilityA": 400019,
+    "facilityB": 400020,
+    "description": null
+  },
+  {
+    "zoneID": 14,
+    "facilityA": 400021,
+    "facilityB": 400018,
+    "description": null
+  },
+  {
+    "zoneID": 14,
+    "facilityA": 400022,
+    "facilityB": 400021,
+    "description": null
+  },
+  {
+    "zoneID": 309,
+    "facilityA": 400038,
+    "facilityB": 400083,
+    "description": null
+  },
+  {
+    "zoneID": 309,
+    "facilityA": 400068,
+    "facilityB": 400093,
+    "description": null
+  },
+  {
+    "zoneID": 309,
+    "facilityA": 400076,
+    "facilityB": 400098,
+    "description": null
+  },
+  {
+    "zoneID": 309,
+    "facilityA": 400083,
+    "facilityB": 400101,
+    "description": null
+  },
+  {
+    "zoneID": 309,
+    "facilityA": 400091,
+    "facilityB": 400102,
+    "description": null
+  },
+  {
+    "zoneID": 309,
+    "facilityA": 400092,
+    "facilityB": 400068,
+    "description": null
+  },
+  {
+    "zoneID": 309,
+    "facilityA": 400094,
+    "facilityB": 400080,
+    "description": null
+  },
+  {
+    "zoneID": 309,
+    "facilityA": 400096,
+    "facilityB": 400072,
+    "description": null
+  },
+  {
+    "zoneID": 309,
+    "facilityA": 400097,
+    "facilityB": 400072,
+    "description": null
+  },
+  {
+    "zoneID": 309,
+    "facilityA": 400098,
+    "facilityB": 400036,
+    "description": null
+  },
+  {
+    "zoneID": 309,
+    "facilityA": 400100,
+    "facilityB": 400083,
+    "description": null
+  },
+  {
+    "zoneID": 309,
+    "facilityA": 400101,
+    "facilityB": 400093,
+    "description": null
+  },
+  {
+    "zoneID": 309,
+    "facilityA": 400103,
+    "facilityB": 400076,
+    "description": null
+  },
+  {
+    "zoneID": 309,
+    "facilityA": 400104,
+    "facilityB": 400114,
+    "description": null
+  },
+  {
+    "zoneID": 309,
+    "facilityA": 400109,
+    "facilityB": 400038,
+    "description": null
+  },
+  {
+    "zoneID": 309,
+    "facilityA": 400113,
+    "facilityB": 400095,
+    "description": null
+  },
+  {
+    "zoneID": 309,
+    "facilityA": 400114,
+    "facilityB": 400101,
+    "description": null
+  },
+  {
+    "zoneID": 309,
+    "facilityA": 400118,
+    "facilityB": 400099,
+    "description": null
+  },
+  {
+    "zoneID": 6,
+    "facilityA": 400128,
+    "facilityB": 222170,
+    "description": null
+  },
+  {
+    "zoneID": 2,
+    "facilityA": 400132,
+    "facilityB": 215,
+    "description": null
+  },
+  {
+    "zoneID": 8,
+    "facilityA": 400133,
+    "facilityB": 260010,
+    "description": null
+  },
+  {
+    "zoneID": 8,
+    "facilityA": 400135,
+    "facilityB": 244610,
+    "description": null
+  },
+  {
+    "zoneID": 338,
+    "facilityA": 400284,
+    "facilityB": 400278,
+    "description": null
+  },
+  {
+    "zoneID": 338,
+    "facilityA": 400287,
+    "facilityB": 400280,
+    "description": null
+  },
+  {
+    "zoneID": 338,
+    "facilityA": 400287,
+    "facilityB": 400292,
+    "description": null
+  },
+  {
+    "zoneID": 338,
+    "facilityA": 400289,
+    "facilityB": 400279,
+    "description": null
+  },
+  {
+    "zoneID": 338,
+    "facilityA": 400290,
+    "facilityB": 400279,
+    "description": null
+  },
+  {
+    "zoneID": 338,
+    "facilityA": 400290,
+    "facilityB": 400291,
+    "description": null
+  },
+  {
+    "zoneID": 338,
+    "facilityA": 400292,
+    "facilityB": 400285,
+    "description": null
+  },
+  {
+    "zoneID": 338,
+    "facilityA": 400293,
+    "facilityB": 400288,
+    "description": null
+  },
+  {
+    "zoneID": 338,
+    "facilityA": 400293,
+    "facilityB": 400291,
+    "description": null
+  },
+  {
+    "zoneID": 8,
+    "facilityA": 400314,
+    "facilityB": 239000,
+    "description": null
+  },
+  {
+    "zoneID": 8,
+    "facilityA": 400314,
+    "facilityB": 249000,
+    "description": null
+  },
+  {
+    "zoneID": 8,
+    "facilityA": 400317,
+    "facilityB": 244100,
+    "description": null
+  },
+  {
+    "zoneID": 8,
+    "facilityA": 400326,
+    "facilityB": 251010,
+    "description": null
+  },
+  {
+    "zoneID": 8,
+    "facilityA": 400326,
+    "facilityB": 400134,
+    "description": null
+  },
+  {
+    "zoneID": 8,
+    "facilityA": 400327,
+    "facilityB": 257000,
+    "description": null
+  },
+  {
+    "zoneID": 344,
+    "facilityA": 400329,
+    "facilityB": 400331,
+    "description": null
+  },
+  {
+    "zoneID": 344,
+    "facilityA": 400329,
+    "facilityB": 400340,
+    "description": null
+  },
+  {
+    "zoneID": 344,
+    "facilityA": 400330,
+    "facilityB": 400331,
+    "description": null
+  },
+  {
+    "zoneID": 344,
+    "facilityA": 400331,
+    "facilityB": 400330,
+    "description": null
+  },
+  {
+    "zoneID": 344,
+    "facilityA": 400331,
+    "facilityB": 400342,
+    "description": null
+  },
+  {
+    "zoneID": 344,
+    "facilityA": 400390,
+    "facilityB": 400362,
+    "description": null
+  },
+  {
+    "zoneID": 344,
+    "facilityA": 400332,
+    "facilityB": 400407,
+    "description": null
+  },
+  {
+    "zoneID": 344,
+    "facilityA": 400332,
+    "facilityB": 400374,
+    "description": null
+  },
+  {
+    "zoneID": 344,
+    "facilityA": 400391,
+    "facilityB": 400358,
+    "description": null
+  },
+  {
+    "zoneID": 344,
+    "facilityA": 400333,
+    "facilityB": 400334,
+    "description": null
+  },
+  {
+    "zoneID": 344,
+    "facilityA": 400333,
+    "facilityB": 400336,
+    "description": null
+  },
+  {
+    "zoneID": 344,
+    "facilityA": 400392,
+    "facilityB": 400341,
+    "description": null
+  },
+  {
+    "zoneID": 344,
+    "facilityA": 400334,
+    "facilityB": 400333,
+    "description": null
+  },
+  {
+    "zoneID": 344,
+    "facilityA": 400335,
+    "facilityB": 400333,
+    "description": null
+  },
+  {
+    "zoneID": 344,
+    "facilityA": 400336,
+    "facilityB": 400348,
+    "description": null
+  },
+  {
+    "zoneID": 344,
+    "facilityA": 400337,
+    "facilityB": 400338,
+    "description": null
+  },
+  {
+    "zoneID": 344,
+    "facilityA": 400337,
+    "facilityB": 400373,
+    "description": null
+  },
+  {
+    "zoneID": 344,
+    "facilityA": 400338,
+    "facilityB": 400337,
+    "description": null
+  },
+  {
+    "zoneID": 344,
+    "facilityA": 400339,
+    "facilityB": 400374,
+    "description": null
+  },
+  {
+    "zoneID": 344,
+    "facilityA": 400340,
+    "facilityB": 400337,
+    "description": null
+  },
+  {
+    "zoneID": 344,
+    "facilityA": 400341,
+    "facilityB": 400339,
+    "description": null
+  },
+  {
+    "zoneID": 344,
+    "facilityA": 400341,
+    "facilityB": 400358,
+    "description": null
+  },
+  {
+    "zoneID": 344,
+    "facilityA": 400346,
+    "facilityB": 400331,
+    "description": null
+  },
+  {
+    "zoneID": 344,
+    "facilityA": 400342,
+    "facilityB": 400331,
+    "description": null
+  },
+  {
+    "zoneID": 344,
+    "facilityA": 400342,
+    "facilityB": 400346,
+    "description": null
+  },
+  {
+    "zoneID": 344,
+    "facilityA": 400343,
+    "facilityB": 400364,
+    "description": null
+  },
+  {
+    "zoneID": 344,
+    "facilityA": 400346,
+    "facilityB": 400344,
+    "description": null
+  },
+  {
+    "zoneID": 344,
+    "facilityA": 400404,
+    "facilityB": 400348,
+    "description": null
+  },
+  {
+    "zoneID": 344,
+    "facilityA": 400345,
+    "facilityB": 400343,
+    "description": null
+  },
+  {
+    "zoneID": 344,
+    "facilityA": 400405,
+    "facilityB": 400353,
+    "description": null
+  },
+  {
+    "zoneID": 344,
+    "facilityA": 400347,
+    "facilityB": 400404,
+    "description": null
+  },
+  {
+    "zoneID": 344,
+    "facilityA": 400348,
+    "facilityB": 400349,
+    "description": null
+  },
+  {
+    "zoneID": 344,
+    "facilityA": 400348,
+    "facilityB": 400404,
+    "description": null
+  },
+  {
+    "zoneID": 344,
+    "facilityA": 400407,
+    "facilityB": 400332,
+    "description": null
+  },
+  {
+    "zoneID": 344,
+    "facilityA": 400349,
+    "facilityB": 400369,
+    "description": null
+  },
+  {
+    "zoneID": 344,
+    "facilityA": 400349,
+    "facilityB": 400350,
+    "description": null
+  },
+  {
+    "zoneID": 344,
+    "facilityA": 400350,
+    "facilityB": 400349,
+    "description": null
+  },
+  {
+    "zoneID": 344,
+    "facilityA": 400351,
+    "facilityB": 400350,
+    "description": null
+  },
+  {
+    "zoneID": 344,
+    "facilityA": 400351,
+    "facilityB": 400352,
+    "description": null
+  },
+  {
+    "zoneID": 344,
+    "facilityA": 400352,
+    "facilityB": 400351,
+    "description": null
+  },
+  {
+    "zoneID": 344,
+    "facilityA": 400353,
+    "facilityB": 400354,
+    "description": null
+  },
+  {
+    "zoneID": 344,
+    "facilityA": 400353,
+    "facilityB": 400392,
+    "description": null
+  },
+  {
+    "zoneID": 344,
+    "facilityA": 400354,
+    "facilityB": 400353,
+    "description": null
+  },
+  {
+    "zoneID": 344,
+    "facilityA": 400355,
+    "facilityB": 400371,
+    "description": null
+  },
+  {
+    "zoneID": 344,
+    "facilityA": 400356,
+    "facilityB": 400355,
+    "description": null
+  },
+  {
+    "zoneID": 344,
+    "facilityA": 400356,
+    "facilityB": 400392,
+    "description": null
+  },
+  {
+    "zoneID": 2,
+    "facilityA": 213,
+    "facilityB": 4430,
+    "description": "Indar - SO14.HowlingPass to Mao.SoutheastGate"
+  },
+  {
+    "zoneID": 2,
+    "facilityA": 214,
+    "facilityB": 4020,
+    "description": null
+  },
+  {
+    "zoneID": 2,
+    "facilityA": 217,
+    "facilityB": 3230,
+    "description": "Indar - SO18.SeabedListening to Dahaka.SouthernPost"
+  },
+  {
+    "zoneID": 2,
+    "facilityA": 219,
+    "facilityB": 218,
+    "description": "Hydroponics to TI Alloys"
+  },
+  {
+    "zoneID": 2,
+    "facilityA": 220,
+    "facilityB": 211,
+    "description": "Indar - SO21.GalaxySolar to SO12.BriggsLab"
+  },
+  {
+    "zoneID": 2,
+    "facilityA": 221,
+    "facilityB": 6200,
+    "description": "Indar - SO22.ThePalisade to LO6.TheCrown"
+  },
+  {
+    "zoneID": 2,
+    "facilityA": 226,
+    "facilityB": 7530,
+    "description": "Indar - SO27.NSSecureData to Hvar.Southgate"
+  },
+  {
+    "zoneID": 2,
+    "facilityA": 228,
+    "facilityB": 252,
+    "description": "Indar - SO29.AyaniLabs to SO53.CeresFarms"
+  },
+  {
+    "zoneID": 344,
+    "facilityA": 400337,
+    "facilityB": 400340,
+    "description": null
+  },
+  {
+    "zoneID": 344,
+    "facilityA": 400338,
+    "facilityB": 400391,
+    "description": null
+  },
+  {
+    "zoneID": 344,
+    "facilityA": 400339,
+    "facilityB": 400341,
+    "description": null
+  },
+  {
+    "zoneID": 344,
+    "facilityA": 400339,
+    "facilityB": 400329,
+    "description": null
+  },
+  {
+    "zoneID": 344,
+    "facilityA": 400340,
+    "facilityB": 400329,
+    "description": null
+  },
+  {
+    "zoneID": 344,
+    "facilityA": 400341,
+    "facilityB": 400392,
+    "description": null
+  },
+  {
+    "zoneID": 344,
+    "facilityA": 400346,
+    "facilityB": 400345,
+    "description": null
+  },
+  {
+    "zoneID": 344,
+    "facilityA": 400346,
+    "facilityB": 400342,
+    "description": null
+  },
+  {
+    "zoneID": 344,
+    "facilityA": 400342,
+    "facilityB": 400372,
+    "description": null
+  },
+  {
+    "zoneID": 344,
+    "facilityA": 400343,
+    "facilityB": 400345,
+    "description": null
+  },
+  {
+    "zoneID": 344,
+    "facilityA": 400404,
+    "facilityB": 400347,
+    "description": null
+  },
+  {
+    "zoneID": 344,
+    "facilityA": 400344,
+    "facilityB": 400361,
+    "description": null
+  },
+  {
+    "zoneID": 344,
+    "facilityA": 400345,
+    "facilityB": 400346,
+    "description": null
+  },
+  {
+    "zoneID": 344,
+    "facilityA": 400405,
+    "facilityB": 400352,
+    "description": null
+  },
+  {
+    "zoneID": 344,
+    "facilityA": 400347,
+    "facilityB": 400367,
+    "description": null
+  },
+  {
+    "zoneID": 344,
+    "facilityA": 400348,
+    "facilityB": 400369,
+    "description": null
+  },
+  {
+    "zoneID": 344,
+    "facilityA": 400348,
+    "facilityB": 400336,
+    "description": null
+  },
+  {
+    "zoneID": 344,
+    "facilityA": 400407,
+    "facilityB": 400330,
+    "description": null
+  },
+  {
+    "zoneID": 344,
+    "facilityA": 400407,
+    "facilityB": 400329,
+    "description": null
+  },
+  {
+    "zoneID": 344,
+    "facilityA": 400349,
+    "facilityB": 400348,
+    "description": null
+  },
+  {
+    "zoneID": 344,
+    "facilityA": 400350,
+    "facilityB": 400369,
+    "description": null
+  },
+  {
+    "zoneID": 344,
+    "facilityA": 400350,
+    "facilityB": 400351,
+    "description": null
+  },
+  {
+    "zoneID": 344,
+    "facilityA": 400351,
+    "facilityB": 400335,
+    "description": null
+  },
+  {
+    "zoneID": 344,
+    "facilityA": 400352,
+    "facilityB": 400405,
+    "description": null
+  },
+  {
+    "zoneID": 344,
+    "facilityA": 400352,
+    "facilityB": 400374,
+    "description": null
+  },
+  {
+    "zoneID": 344,
+    "facilityA": 400353,
+    "facilityB": 400405,
+    "description": null
+  },
+  {
+    "zoneID": 344,
+    "facilityA": 400354,
+    "facilityB": 400355,
+    "description": null
+  },
+  {
+    "zoneID": 344,
+    "facilityA": 400355,
+    "facilityB": 400354,
+    "description": null
+  },
+  {
+    "zoneID": 344,
+    "facilityA": 400355,
+    "facilityB": 400356,
+    "description": null
+  },
+  {
+    "zoneID": 344,
+    "facilityA": 400356,
+    "facilityB": 400371,
+    "description": null
+  },
+  {
+    "zoneID": 344,
+    "facilityA": 400356,
+    "facilityB": 400368,
+    "description": null
+  },
+  {
+    "zoneID": 344,
+    "facilityA": 400357,
+    "facilityB": 400359,
+    "description": null
+  },
+  {
+    "zoneID": 344,
+    "facilityA": 400358,
+    "facilityB": 400341,
+    "description": null
+  },
+  {
+    "zoneID": 344,
+    "facilityA": 400358,
+    "facilityB": 400368,
+    "description": null
+  },
+  {
+    "zoneID": 344,
+    "facilityA": 400359,
+    "facilityB": 400360,
+    "description": null
+  },
+  {
+    "zoneID": 344,
+    "facilityA": 400360,
+    "facilityB": 400359,
+    "description": null
+  },
+  {
+    "zoneID": 344,
+    "facilityA": 400361,
+    "facilityB": 400390,
+    "description": null
+  },
+  {
+    "zoneID": 344,
+    "facilityA": 400362,
+    "facilityB": 400363,
+    "description": null
+  },
+  {
+    "zoneID": 344,
+    "facilityA": 400362,
+    "facilityB": 400370,
+    "description": null
+  },
+  {
+    "zoneID": 344,
+    "facilityA": 400363,
+    "facilityB": 400364,
+    "description": null
+  },
+  {
+    "zoneID": 344,
+    "facilityA": 400364,
+    "facilityB": 400363,
+    "description": null
+  },
+  {
+    "zoneID": 344,
+    "facilityA": 400364,
+    "facilityB": 400343,
+    "description": null
+  },
+  {
+    "zoneID": 344,
+    "facilityA": 400365,
+    "facilityB": 400364,
+    "description": null
+  },
+  {
+    "zoneID": 344,
+    "facilityA": 400366,
+    "facilityB": 400365,
+    "description": null
+  },
+  {
+    "zoneID": 344,
+    "facilityA": 400366,
+    "facilityB": 400367,
+    "description": null
+  },
+  {
+    "zoneID": 344,
+    "facilityA": 400367,
+    "facilityB": 400366,
+    "description": null
+  },
+  {
+    "zoneID": 344,
+    "facilityA": 400368,
+    "facilityB": 400356,
+    "description": null
+  },
+  {
+    "zoneID": 344,
+    "facilityA": 400370,
+    "facilityB": 400362,
+    "description": null
+  },
+  {
+    "zoneID": 344,
+    "facilityA": 400370,
+    "facilityB": 400364,
+    "description": null
+  },
+  {
+    "zoneID": 344,
+    "facilityA": 400369,
+    "facilityB": 400349,
+    "description": null
+  },
+  {
+    "zoneID": 344,
+    "facilityA": 400371,
+    "facilityB": 400355,
+    "description": null
+  },
+  {
+    "zoneID": 344,
+    "facilityA": 400371,
+    "facilityB": 400368,
+    "description": null
+  },
+  {
+    "zoneID": 344,
+    "facilityA": 400372,
+    "facilityB": 400366,
+    "description": null
+  },
+  {
+    "zoneID": 344,
+    "facilityA": 400373,
+    "facilityB": 400360,
+    "description": null
+  },
+  {
+    "zoneID": 344,
+    "facilityA": 400374,
+    "facilityB": 400339,
+    "description": null
+  },
+  {
+    "zoneID": 344,
+    "facilityA": 400374,
+    "facilityB": 400352,
+    "description": null
+  },
+  {
+    "zoneID": 344,
+    "facilityA": 400357,
+    "facilityB": 400358,
+    "description": null
+  },
+  {
+    "zoneID": 344,
+    "facilityA": 400358,
+    "facilityB": 400391,
+    "description": null
+  },
+  {
+    "zoneID": 344,
+    "facilityA": 400358,
+    "facilityB": 400357,
+    "description": null
+  },
+  {
+    "zoneID": 344,
+    "facilityA": 400359,
+    "facilityB": 400357,
+    "description": null
+  },
+  {
+    "zoneID": 344,
+    "facilityA": 400360,
+    "facilityB": 400373,
+    "description": null
+  },
+  {
+    "zoneID": 344,
+    "facilityA": 400360,
+    "facilityB": 400361,
+    "description": null
+  },
+  {
+    "zoneID": 344,
+    "facilityA": 400361,
+    "facilityB": 400360,
+    "description": null
+  },
+  {
+    "zoneID": 344,
+    "facilityA": 400362,
+    "facilityB": 400390,
+    "description": null
+  },
+  {
+    "zoneID": 344,
+    "facilityA": 400363,
+    "facilityB": 400362,
+    "description": null
+  },
+  {
+    "zoneID": 344,
+    "facilityA": 400363,
+    "facilityB": 400370,
+    "description": null
+  },
+  {
+    "zoneID": 344,
+    "facilityA": 400364,
+    "facilityB": 400365,
+    "description": null
+  },
+  {
+    "zoneID": 344,
+    "facilityA": 400364,
+    "facilityB": 400370,
+    "description": null
+  },
+  {
+    "zoneID": 344,
+    "facilityA": 400365,
+    "facilityB": 400366,
+    "description": null
+  },
+  {
+    "zoneID": 344,
+    "facilityA": 400366,
+    "facilityB": 400372,
+    "description": null
+  },
+  {
+    "zoneID": 344,
+    "facilityA": 400367,
+    "facilityB": 400347,
+    "description": null
+  },
+  {
+    "zoneID": 344,
+    "facilityA": 400368,
+    "facilityB": 400371,
+    "description": null
+  },
+  {
+    "zoneID": 344,
+    "facilityA": 400368,
+    "facilityB": 400358,
+    "description": null
+  },
+  {
+    "zoneID": 344,
+    "facilityA": 400370,
+    "facilityB": 400363,
+    "description": null
+  },
+  {
+    "zoneID": 344,
+    "facilityA": 400369,
+    "facilityB": 400348,
+    "description": null
+  },
+  {
+    "zoneID": 344,
+    "facilityA": 400369,
+    "facilityB": 400350,
+    "description": null
+  },
+  {
+    "zoneID": 344,
+    "facilityA": 400371,
+    "facilityB": 400356,
+    "description": null
+  },
+  {
+    "zoneID": 344,
+    "facilityA": 400372,
+    "facilityB": 400334,
+    "description": null
+  },
+  {
+    "zoneID": 344,
+    "facilityA": 400372,
+    "facilityB": 400342,
+    "description": null
+  },
+  {
+    "zoneID": 344,
+    "facilityA": 400373,
+    "facilityB": 400337,
+    "description": null
+  },
+  {
+    "zoneID": 344,
+    "facilityA": 400374,
+    "facilityB": 400332,
+    "description": null
+  },
+  {
+    "zoneID": 2,
+    "facilityA": 215,
+    "facilityB": 214,
+    "description": "Indar - SO16.QuartzRidge to SO15.IndarCommArray"
+  },
+  {
+    "zoneID": 2,
+    "facilityA": 219,
+    "facilityB": 217,
+    "description": "Indar - SO20.CeresHydroponics to SO18.SeabedListening"
+  },
+  {
+    "zoneID": 2,
+    "facilityA": 219,
+    "facilityB": 220,
+    "description": "Indar - SO20.CeresHydro to SO21.GalaxySolar"
+  },
+  {
+    "zoneID": 2,
+    "facilityA": 221,
+    "facilityB": 211,
+    "description": null
+  },
+  {
+    "zoneID": 2,
+    "facilityA": 224,
+    "facilityB": 3620,
+    "description": "Indar - SO25.NSMaterialStorage to Rashnu.Watchtower"
+  },
+  {
+    "zoneID": 8,
+    "facilityA": 256000,
+    "facilityB": 236000,
+    "description": null
+  },
+  {
+    "zoneID": 2,
+    "facilityA": 5900,
+    "facilityB": 221,
+    "description": "Indar - LO5.CrimsonBluff to SO22.ThePalisade"
+  },
+  {
+    "zoneID": 2,
+    "facilityA": 5900,
+    "facilityB": 118020,
+    "description": "Indar - LO5.CrimsonBluff to Zurvan.Storageyard"
+  },
+  {
+    "zoneID": 2,
+    "facilityA": 6000,
+    "facilityB": 252,
+    "description": "Indar - LO.8 to SO.53"
+  },
+  {
+    "zoneID": 2,
+    "facilityA": 6100,
+    "facilityB": 7010,
+    "description": null
+  },
+  {
+    "zoneID": 2,
+    "facilityA": 6200,
+    "facilityB": 219,
+    "description": "Indar - LO6.TheCrown to SO20.CeresHydroponics"
+  },
+  {
+    "zoneID": 2,
+    "facilityA": 6200,
+    "facilityB": 118010,
+    "description": "Indar - LO6.TheCrown to Zurvan.PumpStation"
+  },
+  {
+    "zoneID": 2,
+    "facilityA": 6400,
+    "facilityB": 247,
+    "description": "Indar - LO12.FeldsparCanyon to SO48.OldAuraxiumMine"
+  },
+  {
+    "zoneID": 2,
+    "facilityA": 7000,
+    "facilityB": 7020,
+    "description": "Indar - Tawrich to Tawrich.Tower"
+  },
+  {
+    "zoneID": 2,
+    "facilityA": 7020,
+    "facilityB": 232,
+    "description": null
+  },
+  {
+    "zoneID": 2,
+    "facilityA": 7500,
+    "facilityB": 7510,
+    "description": "Indar - Hvar to Hvar.Watchtower"
+  },
+  {
+    "zoneID": 2,
+    "facilityA": 7500,
+    "facilityB": 7530,
+    "description": "Indar - Hvar to Hvar.SouthGate"
+  },
+  {
+    "zoneID": 2,
+    "facilityA": 7520,
+    "facilityB": 215,
+    "description": "Indar - Hvar.Northgate to SO16.QuartzRidge"
+  },
+  {
+    "zoneID": 2,
+    "facilityA": 7801,
+    "facilityB": 201,
+    "description": null
+  },
+  {
+    "zoneID": 2,
+    "facilityA": 7801,
+    "facilityB": 210,
+    "description": "Indar - WG.Ocean to SO11.AlkaliStorage"
+  },
+  {
+    "zoneID": 2,
+    "facilityA": 118000,
+    "facilityB": 118020,
+    "description": "Indar - Zurvan to Zurvan.StorageYard"
+  },
+  {
+    "zoneID": 2,
+    "facilityA": 118030,
+    "facilityB": 236,
+    "description": "Indar - Zurvan.NetworkComplex to SO37.TheOldStockpile"
+  },
+  {
+    "zoneID": 2,
+    "facilityA": 120000,
+    "facilityB": 252,
+    "description": "Indar - WG.Highlands to SO53.CeresFarm"
+  },
+  {
+    "zoneID": 6,
+    "facilityA": 204000,
+    "facilityB": 204001,
+    "description": "Amerish - Kwahtee to Kwahtee.West"
+  },
+  {
+    "zoneID": 6,
+    "facilityA": 204000,
+    "facilityB": 204003,
+    "description": "Amerish - Kwahtee to Kwahtee.South"
+  },
+  {
+    "zoneID": 2,
+    "facilityA": 227,
+    "facilityB": 228,
+    "description": "Indar - SO28.HighlandsSolar to SO29.AyaniLabs"
+  },
+  {
+    "zoneID": 2,
+    "facilityA": 228,
+    "facilityB": 5800,
+    "description": "Indar - SO29.AyaniLabs to LO9.VanuArchives"
+  },
+  {
+    "zoneID": 2,
+    "facilityA": 230,
+    "facilityB": 5700,
+    "description": "Indar - SO31.XenoTechLabs to LO10.RegentRockGarrison"
+  },
+  {
+    "zoneID": 2,
+    "facilityA": 232,
+    "facilityB": 118010,
+    "description": "Indar - SO33.GravelPass to Zurvan.PumpStation"
+  },
+  {
+    "zoneID": 2,
+    "facilityA": 236,
+    "facilityB": 235,
+    "description": "Indar - SO37.TheOldStockpile to SO36.RustMesa"
+  },
+  {
+    "zoneID": 2,
+    "facilityA": 237,
+    "facilityB": 252,
+    "description": "Indar - SO.38 to SO.53"
+  },
+  {
+    "zoneID": 2,
+    "facilityA": 242,
+    "facilityB": 7030,
+    "description": null
+  },
+  {
+    "zoneID": 2,
+    "facilityA": 246,
+    "facilityB": 247,
+    "description": "Indar - SO.47 to SO.48"
+  },
+  {
+    "zoneID": 2,
+    "facilityA": 247,
+    "facilityB": 248,
+    "description": "Indar - SO.48 to SO.49"
+  },
+  {
+    "zoneID": 2,
+    "facilityA": 3201,
+    "facilityB": 3210,
+    "description": "Indar - Dahaka to Dahaka.UplinkHub"
+  },
+  {
+    "zoneID": 2,
+    "facilityA": 3201,
+    "facilityB": 3230,
+    "description": "Indar - Dahaka to Dahaka.SouthernPass"
+  },
+  {
+    "zoneID": 2,
+    "facilityA": 3220,
+    "facilityB": 5200,
+    "description": "Indar - Dahaka.PumpStation to LO4.J908"
+  },
+  {
+    "zoneID": 2,
+    "facilityA": 3400,
+    "facilityB": 3410,
+    "description": "Indar - Peris to Peris.West.Barracks"
+  },
+  {
+    "zoneID": 2,
+    "facilityA": 3400,
+    "facilityB": 3430,
+    "description": "Indar - Peris to Peris.EasternGrove"
+  },
+  {
+    "zoneID": 2,
+    "facilityA": 3420,
+    "facilityB": 5800,
+    "description": null
+  },
+  {
+    "zoneID": 2,
+    "facilityA": 3601,
+    "facilityB": 3620,
+    "description": "Indar - Rashnu to Rashnu.WatchTower"
+  },
+  {
+    "zoneID": 2,
+    "facilityA": 3610,
+    "facilityB": 235,
+    "description": null
+  },
+  {
+    "zoneID": 2,
+    "facilityA": 3620,
+    "facilityB": 3630,
+    "description": null
+  },
+  {
+    "zoneID": 2,
+    "facilityA": 3801,
+    "facilityB": 3810,
+    "description": "Indar - Saurva to Saurva.DataStorage"
+  },
+  {
+    "zoneID": 2,
+    "facilityA": 4001,
+    "facilityB": 4010,
+    "description": "Indar - Allatum to Allatum.ResearchLab"
+  },
+  {
+    "zoneID": 2,
+    "facilityA": 4001,
+    "facilityB": 4030,
+    "description": "Indar - Allatum to Allatum.SESat"
+  },
+  {
+    "zoneID": 2,
+    "facilityA": 4010,
+    "facilityB": 4030,
+    "description": null
+  },
+  {
+    "zoneID": 2,
+    "facilityA": 4030,
+    "facilityB": 218,
+    "description": "Indar - Allatum.SESat to SO19.TIAlloys"
+  },
+  {
+    "zoneID": 2,
+    "facilityA": 4401,
+    "facilityB": 4410,
+    "description": "Indar - Mao to Mao.SouthWestGate"
+  },
+  {
+    "zoneID": 2,
+    "facilityA": 4401,
+    "facilityB": 4430,
+    "description": "Indar - Mao to Mao.SouthEastGate"
+  },
+  {
+    "zoneID": 2,
+    "facilityA": 4420,
+    "facilityB": 400131,
+    "description": null
+  },
+  {
+    "zoneID": 2,
+    "facilityA": 4801,
+    "facilityB": 246,
+    "description": "Indar - WG.Canyons to SO47.CopperRavine"
+  },
+  {
+    "zoneID": 2,
+    "facilityA": 4801,
+    "facilityB": 248,
+    "description": "Indar - WG.Canyons to SO49.ValleyStorageYard"
+  },
+  {
+    "zoneID": 2,
+    "facilityA": 5200,
+    "facilityB": 220,
+    "description": "Indar - LO4.J908 to SO21.GalaxySolar"
+  },
+  {
+    "zoneID": 2,
+    "facilityA": 5300,
+    "facilityB": 208,
+    "description": "Indar - LO1.CampConnery to SO9.AlkaliMining"
+  },
+  {
+    "zoneID": 2,
+    "facilityA": 5700,
+    "facilityB": 3430,
+    "description": "Indar - LO10.RegentRock to Peris.EasternGrove"
+  },
+  {
+    "zoneID": 2,
+    "facilityA": 6000,
+    "facilityB": 227,
+    "description": "Indar - LO8.IndarBay to SO28.HighlandsSolar"
+  },
+  {
+    "zoneID": 2,
+    "facilityA": 6100,
+    "facilityB": 230,
+    "description": "Indar - LO7.CrossRoads to SO31.XenoTechLabs"
+  },
+  {
+    "zoneID": 2,
+    "facilityA": 6200,
+    "facilityB": 218,
+    "description": "Indar - LO6.TheCrown to SO19.TIAlloys"
+  },
+  {
+    "zoneID": 2,
+    "facilityA": 6200,
+    "facilityB": 6100,
+    "description": "Indar - LO6.TheCrown to LO7.CrossRoads"
+  },
+  {
+    "zoneID": 2,
+    "facilityA": 6300,
+    "facilityB": 7030,
+    "description": "Indar - LO13.ArroyoTorre to Tawrich.SESat"
+  },
+  {
+    "zoneID": 2,
+    "facilityA": 6400,
+    "facilityB": 6500,
+    "description": "Indar - LO12.FeldsparCanyon to LO11.TheStronghold"
+  },
+  {
+    "zoneID": 2,
+    "facilityA": 7000,
+    "facilityB": 7010,
+    "description": "Indar - Tawrich to Tawrich.Depot"
+  },
+  {
+    "zoneID": 2,
+    "facilityA": 7000,
+    "facilityB": 7030,
+    "description": "Indar - Tawrich to Tawrich.Recycling"
+  },
+  {
+    "zoneID": 2,
+    "facilityA": 7020,
+    "facilityB": 7010,
+    "description": "Indar - Tawrich Depot to Tawrich Recycling"
+  },
+  {
+    "zoneID": 2,
+    "facilityA": 7500,
+    "facilityB": 7520,
+    "description": "Indar - Hvar to Hvar.NorthGate"
+  },
+  {
+    "zoneID": 2,
+    "facilityA": 7510,
+    "facilityB": 6000,
+    "description": null
+  },
+  {
+    "zoneID": 2,
+    "facilityA": 7520,
+    "facilityB": 7530,
+    "description": "Indar - Indar.Hvar.NorthgateGarrison to Indar.Hvar.SouthgateGarrison"
+  },
+  {
+    "zoneID": 2,
+    "facilityA": 7801,
+    "facilityB": 209,
+    "description": "Indar - WG.Ocean to SO10.CraterFiringRange"
+  },
+  {
+    "zoneID": 2,
+    "facilityA": 118000,
+    "facilityB": 118010,
+    "description": "Indar - Zurvan to Zurvan.PumpStation"
+  },
+  {
+    "zoneID": 2,
+    "facilityA": 118000,
+    "facilityB": 118030,
+    "description": "Indar - Zurvan to Zurvan.NetworkComlex"
+  },
+  {
+    "zoneID": 2,
+    "facilityA": 120000,
+    "facilityB": 237,
+    "description": "Indar - WG.Highlands to SO38.CeresBiotech"
+  },
+  {
+    "zoneID": 2,
+    "facilityA": 120000,
+    "facilityB": 6000,
+    "description": "Indar - WG.Highlands to LO8.IndarBay"
+  },
+  {
+    "zoneID": 6,
+    "facilityA": 204000,
+    "facilityB": 204002,
+    "description": "Amerish - Kwahtee to Kwahtee.East"
+  },
+  {
+    "zoneID": 2,
+    "facilityA": 236,
+    "facilityB": 6400,
+    "description": "Indar - SO37.TheOldStockpile to LO12.FeldsparCanyon"
+  },
+  {
+    "zoneID": 2,
+    "facilityA": 239,
+    "facilityB": 237,
+    "description": "Indar - SO40.HighlandsSubstation to SO38.CeresBiotech"
+  },
+  {
+    "zoneID": 2,
+    "facilityA": 242,
+    "facilityB": 400130,
+    "description": null
+  },
+  {
+    "zoneID": 2,
+    "facilityA": 246,
+    "facilityB": 6300,
+    "description": "Indar - SO47.CopperRavine to LO13.ArroyoTorre"
+  },
+  {
+    "zoneID": 2,
+    "facilityA": 248,
+    "facilityB": 3630,
+    "description": "Indar - SO49.ValleyStorage to Rashnu.SoutherPass"
+  },
+  {
+    "zoneID": 2,
+    "facilityA": 3201,
+    "facilityB": 3220,
+    "description": "Indar - Dahaka to Dahaka.PumpStation"
+  },
+  {
+    "zoneID": 2,
+    "facilityA": 3210,
+    "facilityB": 205,
+    "description": "Indar - Dahaka.uplinkHub to SO6.AlkaliShipping"
+  },
+  {
+    "zoneID": 2,
+    "facilityA": 3230,
+    "facilityB": 214,
+    "description": "Indar - Dahaka.SouthernPass to SO15.IndarCommArray"
+  },
+  {
+    "zoneID": 2,
+    "facilityA": 3400,
+    "facilityB": 3420,
+    "description": "Indar - Peris to Peris.North.Tower"
+  },
+  {
+    "zoneID": 2,
+    "facilityA": 3410,
+    "facilityB": 239,
+    "description": "Indar - Peris.WestSat.Barracks to SO40.HighlandsSubstation"
+  },
+  {
+    "zoneID": 2,
+    "facilityA": 3601,
+    "facilityB": 3610,
+    "description": "Indar - Rashnu to Rashnu.Cavern"
+  },
+  {
+    "zoneID": 2,
+    "facilityA": 3601,
+    "facilityB": 3630,
+    "description": "Indar - Rashnu to Rashnu.SouthernPass"
+  },
+  {
+    "zoneID": 2,
+    "facilityA": 3610,
+    "facilityB": 3620,
+    "description": null
+  },
+  {
+    "zoneID": 2,
+    "facilityA": 3801,
+    "facilityB": 203,
+    "description": "Indar - Saurva to SO4.SaurvaOverflowDepot"
+  },
+  {
+    "zoneID": 2,
+    "facilityA": 3801,
+    "facilityB": 3820,
+    "description": "Indar - Saurva to Saurva.SSat"
+  },
+  {
+    "zoneID": 2,
+    "facilityA": 4001,
+    "facilityB": 4020,
+    "description": "Indar - Allatum to Allatum.BroadcastHub"
+  },
+  {
+    "zoneID": 2,
+    "facilityA": 4010,
+    "facilityB": 226,
+    "description": "Indar - AllatumWestSat.Research to SO27.NSSecureData"
+  },
+  {
+    "zoneID": 2,
+    "facilityA": 4020,
+    "facilityB": 4010,
+    "description": null
+  },
+  {
+    "zoneID": 2,
+    "facilityA": 4030,
+    "facilityB": 229,
+    "description": "Indar - Allatum.SESat to SO30.SnakeRavine"
+  },
+  {
+    "zoneID": 2,
+    "facilityA": 4401,
+    "facilityB": 4420,
+    "description": "Indar - Mao to Mao.Watchtower"
+  },
+  {
+    "zoneID": 2,
+    "facilityA": 4420,
+    "facilityB": 212,
+    "description": "Indar - Mao.WatchTower to SO13.NSRefinery"
+  },
+  {
+    "zoneID": 2,
+    "facilityA": 4430,
+    "facilityB": 4420,
+    "description": "Indar - Mao.SoutheastGate to Mao.Watchtower"
+  },
+  {
+    "zoneID": 2,
+    "facilityA": 4801,
+    "facilityB": 247,
+    "description": "Indar - WG.Canyons to SO48.OldAuraxiumMines"
+  },
+  {
+    "zoneID": 2,
+    "facilityA": 5200,
+    "facilityB": 209,
+    "description": "Indar - LO4.J908 to SO10.CraterFiringRange"
+  },
+  {
+    "zoneID": 2,
+    "facilityA": 5300,
+    "facilityB": 207,
+    "description": "Indar - LO1.CampConnery to SO8.BensonConstruction"
+  },
+  {
+    "zoneID": 2,
+    "facilityA": 5500,
+    "facilityB": 210,
+    "description": "Indar - LO2.CampWaterson to SO11.AlkaliStorage"
+  },
+  {
+    "zoneID": 2,
+    "facilityA": 5800,
+    "facilityB": 229,
+    "description": "Indar - LO9.VanuArchive to SO30.SnakeRavine"
+  },
+  {
+    "zoneID": 2,
+    "facilityA": 5900,
+    "facilityB": 224,
+    "description": "Indar - LO5.CrimsonBluff to SO25.NSMatStorage"
+  },
+  {
+    "zoneID": 4,
+    "facilityA": 293000,
+    "facilityB": 287060,
+    "description": null
+  },
+  {
+    "zoneID": 4,
+    "facilityA": 293000,
+    "facilityB": 306010,
+    "description": "Hossin - LO5.GenesisTerra to Mulac.North"
+  },
+  {
+    "zoneID": 4,
+    "facilityA": 294000,
+    "facilityB": 287090,
+    "description": null
+  },
+  {
+    "zoneID": 4,
+    "facilityA": 295000,
+    "facilityB": 287030,
+    "description": null
+  },
+  {
+    "zoneID": 4,
+    "facilityA": 296000,
+    "facilityB": 302010,
+    "description": null
+  },
+  {
+    "zoneID": 4,
+    "facilityA": 297000,
+    "facilityB": 287020,
+    "description": null
+  },
+  {
+    "zoneID": 4,
+    "facilityA": 297000,
+    "facilityB": 299020,
+    "description": "Hossin - LO9.HatcherAir to Naum.South"
+  },
+  {
+    "zoneID": 4,
+    "facilityA": 299000,
+    "facilityB": 299020,
+    "description": "Hossin - Naum to Naum.SE"
+  },
+  {
+    "zoneID": 4,
+    "facilityA": 299010,
+    "facilityB": 299000,
+    "description": "Hossin - Naum to Naum.NE"
+  },
+  {
+    "zoneID": 4,
+    "facilityA": 297000,
+    "facilityB": 287080,
+    "description": null
+  },
+  {
+    "zoneID": 4,
+    "facilityA": 297000,
+    "facilityB": 302020,
+    "description": null
+  },
+  {
+    "zoneID": 4,
+    "facilityA": 299000,
+    "facilityB": 299030,
+    "description": "Hossin - Naum to Naum.West"
+  },
+  {
+    "zoneID": 4,
+    "facilityA": 300010,
+    "facilityB": 275000,
+    "description": null
+  },
+  {
+    "zoneID": 4,
+    "facilityA": 300010,
+    "facilityB": 300000,
+    "description": null
+  },
+  {
+    "zoneID": 4,
+    "facilityA": 300020,
+    "facilityB": 300000,
+    "description": null
+  },
+  {
+    "zoneID": 4,
+    "facilityA": 300030,
+    "facilityB": 300000,
+    "description": null
+  },
+  {
+    "zoneID": 4,
+    "facilityA": 301000,
+    "facilityB": 301020,
+    "description": "Hossin - Ixtab to Ixtab.East"
+  },
+  {
+    "zoneID": 4,
+    "facilityA": 302000,
+    "facilityB": 302010,
+    "description": "Hossin - Acan to Acan.NW"
+  },
+  {
+    "zoneID": 4,
+    "facilityA": 302000,
+    "facilityB": 302030,
+    "description": "Hossin - Acan to Acan.South"
+  },
+  {
+    "zoneID": 4,
+    "facilityA": 302030,
+    "facilityB": 302010,
+    "description": null
+  },
+  {
+    "zoneID": 4,
+    "facilityA": 303000,
+    "facilityB": 303020,
+    "description": "Hossin - Bitol to Bitol.North"
+  },
+  {
+    "zoneID": 4,
+    "facilityA": 303010,
+    "facilityB": 303020,
+    "description": null
+  },
+  {
+    "zoneID": 4,
+    "facilityA": 303020,
+    "facilityB": 303030,
+    "description": null
+  },
+  {
+    "zoneID": 4,
+    "facilityA": 304010,
+    "facilityB": 304000,
+    "description": null
+  },
+  {
+    "zoneID": 4,
+    "facilityA": 304020,
+    "facilityB": 294000,
+    "description": null
+  },
+  {
+    "zoneID": 4,
+    "facilityA": 304020,
+    "facilityB": 304030,
+    "description": null
+  },
+  {
+    "zoneID": 4,
+    "facilityA": 304030,
+    "facilityB": 304000,
+    "description": null
+  }
+]

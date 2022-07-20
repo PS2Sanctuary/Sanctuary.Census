@@ -10,6 +10,7 @@ using Sanctuary.Census.Common.Objects;
 using Sanctuary.Census.Database;
 using Sanctuary.Census.Json;
 using Sanctuary.Census.Middleware;
+using Sanctuary.Census.PatchData.Extensions;
 using Sanctuary.Census.ServerData.Internal.Extensions;
 using Sanctuary.Census.ServerData.Internal.Objects;
 using Sanctuary.Census.Workers;
@@ -54,7 +55,8 @@ public static class Program
 
         builder.Services.AddMemoryCache()
             .AddClientDataServices()
-            .AddInternalServerDataServices();
+            .AddInternalServerDataServices()
+            .AddPatchDataServices();
 
         builder.Services.AddSingleton(new MongoClient("mongodb://localhost:27017"))
             .AddScoped<IMongoContext, MongoContext>()

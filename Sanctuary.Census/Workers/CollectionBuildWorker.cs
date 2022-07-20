@@ -9,6 +9,7 @@ using Sanctuary.Census.CollectionBuilders;
 using Sanctuary.Census.Common.Objects;
 using Sanctuary.Census.Common.Services;
 using Sanctuary.Census.Models;
+using Sanctuary.Census.PatchData.Abstractions.Services;
 using Sanctuary.Census.ServerData.Internal.Abstractions.Services;
 using Sanctuary.Census.ServerData.Internal.Exceptions;
 using System;
@@ -70,6 +71,7 @@ public class CollectionBuildWorker : BackgroundService
                 IClientDataCacheService clientDataCache = services.GetRequiredService<IClientDataCacheService>();
                 IServerDataCacheService serverDataCache = services.GetRequiredService<IServerDataCacheService>();
                 ILocaleDataCacheService localeDataCache = services.GetRequiredService<ILocaleDataCacheService>();
+                IPatchDataCacheService patchDataCache = services.GetRequiredService<IPatchDataCacheService>();
                 IMongoContext mongoContext = services.GetRequiredService<IMongoContext>();
 
                 try
@@ -80,6 +82,7 @@ public class CollectionBuildWorker : BackgroundService
                     await serverDataCache.RepopulateAsync(ct).ConfigureAwait(false);
                     _logger.LogDebug("[{Environment}] Populating locale data cache...", env);
                     await localeDataCache.RepopulateAsync(ct).ConfigureAwait(false);
+                    _logger.LogDebug("[{Environment}] Populating patch data cache...", env);
                     dataCacheFailureCount = 0;
                     _logger.LogInformation("[{Environment}] Caches updated successfully", env);
                 }
@@ -147,6 +150,7 @@ public class CollectionBuildWorker : BackgroundService
                 clientDataCache.Clear();
                 serverDataCache.Clear();
                 localeDataCache.Clear();
+                patchDataCache.Clear();
             }
 
             await Task.Delay(TimeSpan.FromHours(1), ct).ConfigureAwait(false);

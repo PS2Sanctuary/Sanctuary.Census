@@ -15,6 +15,7 @@
 
     <ItemGroup>
         <ProjectReference Include="..\Sanctuary.Census.ClientData\Sanctuary.Census.ClientData.csproj" />
+        <ProjectReference Include="..\Sanctuary.Census.PatchData\Sanctuary.Census.PatchData.csproj" />
         <ProjectReference Include="..\Sanctuary.Census.ServerData.Internal\Sanctuary.Census.ServerData.Internal.csproj" />
     </ItemGroup>
 

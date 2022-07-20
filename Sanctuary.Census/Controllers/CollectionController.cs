@@ -121,8 +121,11 @@ public class CollectionController : ControllerBase
             if (paramName.AsSpan().StartsWith(QueryCommandIdentifier))
                 continue;
 
-            FilterBuilder fb = FilterBuilder.Parse(collectionName, paramName, string.Join(',', paramValues));
-            fb.Build(ref filter, !queryParams.IsCaseSensitive);
+            foreach (string value in paramValues)
+            {
+                FilterBuilder fb = FilterBuilder.Parse(collectionName, paramName, value);
+                fb.Build(ref filter, !queryParams.IsCaseSensitive);
+            }
         }
 
         IAggregateFluent<BsonDocument> aggregate = coll.Aggregate()

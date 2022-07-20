@@ -20,7 +20,9 @@ public class FilterBuilder
     private static readonly Dictionary<string, Dictionary<string, object>> QueryStringConverters = new();
     private static readonly SnakeCaseJsonNamingPolicy NameConv = SnakeCaseJsonNamingPolicy.Default;
 
-    private readonly List<Filter> _filters;
+    private readonly string _field;
+    private readonly FilterType _type;
+    private readonly List<object> _values;
 
     static FilterBuilder()
     {
@@ -44,10 +46,14 @@ public class FilterBuilder
     /// <summary>
     /// Initializes a new instance of the <see cref="FilterBuilder"/> class.
     /// </summary>
-    /// <param name="filters">The filters to build.</param>
-    public FilterBuilder(List<Filter> filters)
+    /// <param name="field">The field to filter on.</param>
+    /// <param name="type">The type of the filter.</param>
+    /// <param name="values">The values to filter by.</param>
+    public FilterBuilder(string field, FilterType type, List<object> values)
     {
-        _filters = filters;
+        _field = field;
+        _type = type;
+        _values = values;
     }
 
     /// <summary>
@@ -84,22 +90,37 @@ public class FilterBuilder
         if (maybeConverter is not Func<string, object> converter)
             throw new QueryException(QueryErrorCode.UnknownField, $"The field path {fieldName} points to an object, rather than a field");
 
+        FilterType type = FilterType.Equals;
+        if (value[0] is '<' or '[' or '>' or ']' or '^' or '*' or '!')
+        {
+            if (value.Length < 2)
+            {
+                throw new QueryException
+                (
+                    QueryErrorCode.Malformed,
+                    $"A term with the comparison operator {value[0]} is expected to contain a value: on field {fieldName}"
+                );
+            }
+            type = (FilterType)value[0];
+            value = value[1..];
+        }
+
         SpanReader<char> reader = new(value);
-        List<Filter> filterValues = new();
+        List<object> filterValues = new();
 
         while (reader.TryReadTo(out ReadOnlySpan<char> term, ','))
         {
-            (FilterType type, object termValue) = GetTermValue(fieldName.ToString(), term, converter);
-            filterValues.Add(new Filter(fieldName.ToString(), type, termValue));
+            object termValue = GetTermValue(fieldName.ToString(), type, term, converter);
+            filterValues.Add(termValue);
         }
 
         if (reader.TryReadExact(out ReadOnlySpan<char> lastTerm, reader.Remaining))
         {
-            (FilterType type, object termValue) = GetTermValue(fieldName.ToString(), lastTerm, converter);
-            filterValues.Add(new Filter(fieldName.ToString(), type, termValue));
+            object termValue = GetTermValue(fieldName.ToString(), type, lastTerm, converter);
+            filterValues.Add(termValue);
         }
 
-        return new FilterBuilder(filterValues);
+        return new FilterBuilder(fieldName.ToString(), type, filterValues);
     }
 
     /// <summary>
@@ -129,29 +150,11 @@ public class FilterBuilder
     {
         FilterDefinitionBuilder<BsonDocument> filterBuilder = Builders<BsonDocument>.Filter;
 
-        Dictionary<string, Dictionary<FilterType, List<Filter>>> buckets = new();
-        foreach (Filter f in _filters)
-        {
-            if (!buckets.ContainsKey(f.FieldName))
-                buckets[f.FieldName] = new Dictionary<FilterType, List<Filter>>();
+        FilterDefinition<BsonDocument> orFilter = GetFilter(filterBuilder, _field, _type, _values[0], caseInsensitiveRegex);
+        for (int i = 1; i < _values.Count; i++)
+            orFilter |= GetFilter(filterBuilder, _field, _type, _values[i], caseInsensitiveRegex);
 
-            if (!buckets[f.FieldName].ContainsKey(f.Type))
-                buckets[f.FieldName][f.Type] = new List<Filter>();
-
-            buckets[f.FieldName][f.Type].Add(f);
-        }
-
-        foreach ((string fieldName, Dictionary<FilterType, List<Filter>> bucket) in buckets)
-        {
-            foreach ((FilterType type, List<Filter> filters) in bucket)
-            {
-                FilterDefinition<BsonDocument> orFilter = GetFilter(filterBuilder, fieldName, type, filters[0].Value, caseInsensitiveRegex);
-                for (int i = 1; i < filters.Count; i++)
-                    orFilter |= GetFilter(filterBuilder, fieldName, type, filters[i].Value, caseInsensitiveRegex);
-
-                appendTo &= orFilter;
-            }
-        }
+        appendTo &= orFilter;
     }
 
     private FilterDefinition<BsonDocument> GetFilter
@@ -186,23 +189,8 @@ public class FilterBuilder
         _ => filterBuilder.Eq(fieldName, filterValue)
     };
 
-    private static (FilterType, object) GetTermValue(string fieldName, ReadOnlySpan<char> term, Func<string, object> converter)
+    private static object GetTermValue(string fieldName, FilterType type, ReadOnlySpan<char> term, Func<string, object> converter)
     {
-        FilterType type = FilterType.Equals;
-        if (term[0] is '<' or '[' or '>' or ']' or '^' or '*' or '!')
-        {
-            if (term.Length < 2)
-            {
-                throw new QueryException
-                (
-                    QueryErrorCode.Malformed,
-                    $"A term with the comparison operator {term[0]} is expected to contain a value: on field {fieldName}"
-                );
-            }
-            type = (FilterType)term[0];
-            term = term[1..];
-        }
-
         object value;
         try
         {
@@ -213,14 +201,14 @@ public class FilterBuilder
             throw new QueryException
             (
                 QueryErrorCode.InvalidFilterTerm,
-                $"Invalid term ('{term}') for filter on {fieldName}"
+                $"Invalid term ('{term}') for filter on {fieldName}. Please check the type matches that of the field you are filtering on"
             );
         }
 
         if (type is FilterType.Contains or FilterType.StartsWith && value is not string)
             throw new QueryException(QueryErrorCode.InvalidFilterTerm, "A regex query can only be performed on a string field");
 
-        return (type, value);
+        return value;
     }
 
     private static void GetTypeConverters(IDictionary<string, object> converters, Type type)
@@ -285,14 +273,6 @@ public class FilterBuilder
             "1" => true,
             _ => bool.Parse(value)
         };
-
-    /// <summary>
-    /// Represents a filter.
-    /// </summary>
-    /// <param name="FieldName">The field to be filtered.</param>
-    /// <param name="Type">The type of the filter.</param>
-    /// <param name="Value">The value to filter by.</param>
-    public record Filter(string FieldName, FilterType Type, object Value);
 
     /// <summary>
     /// Defines the possible filter types.

@@ -4,8 +4,10 @@ using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using MongoDB.Driver;
+using Sanctuary.Census.Abstractions.Database;
 using Sanctuary.Census.ClientData.Extensions;
 using Sanctuary.Census.Common.Objects;
+using Sanctuary.Census.Database;
 using Sanctuary.Census.Json;
 using Sanctuary.Census.Middleware;
 using Sanctuary.Census.ServerData.Internal.Extensions;
@@ -54,7 +56,8 @@ public static class Program
 
         builder.Services.AddSingleton<CollectionsContext>();
         builder.Services.AddHostedService<CollectionBuildWorker>();
-        builder.Services.AddSingleton(new MongoClient("mongodb://localhost:27017"));
+        builder.Services.AddSingleton(new MongoClient("mongodb://localhost:27017"))
+            .AddScoped<IMongoContext, MongoContext>();
 
         builder.Services.AddControllers()
             .AddJsonOptions(options =>

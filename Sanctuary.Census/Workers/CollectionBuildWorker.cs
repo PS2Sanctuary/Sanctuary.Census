@@ -69,6 +69,9 @@ public class CollectionBuildWorker : BackgroundService
         {
             foreach (PS2Environment env in Enum.GetValues<PS2Environment>())
             {
+                if (ct.IsCancellationRequested)
+                    break;
+
                 await using AsyncServiceScope serviceScope = _serviceScopeFactory.CreateAsyncScope();
                 IServiceProvider services = serviceScope.ServiceProvider;
                 services.GetRequiredService<EnvironmentContextProvider>().Environment = env;
@@ -113,6 +116,9 @@ public class CollectionBuildWorker : BackgroundService
                 _logger.LogInformation("[{Environment}] Collection build starting...", env);
                 foreach (ICollectionBuilder collectionBuilder in collectionBuilders)
                 {
+                    if (ct.IsCancellationRequested)
+                        break;
+
                     try
                     {
                         await collectionBuilder.BuildAsync

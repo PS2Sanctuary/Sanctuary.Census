@@ -187,8 +187,8 @@ public class CollectionController : ControllerBase
         );
 
         aggregate = aggregate.Skip(queryParams.Start)
-            .Limit(queryParams.Limit);
-            //.AppendStage<BsonDocument>(lookup);
+            .Limit(queryParams.LimitPerDb ?? queryParams.Limit);
+        //.AppendStage<BsonDocument>(lookup);
 
         Stopwatch st = new();
         st.Start();

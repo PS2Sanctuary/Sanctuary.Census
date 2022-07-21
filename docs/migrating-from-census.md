@@ -13,6 +13,7 @@ Filtering is fully supported.
 Supported query commands:
 
 - `c:limit` (default `100`).
+- `c:limitPerDB` (overrides `c:limit`).
 - `c:start`.
 - `c:case`.
 - `c:show`.
@@ -28,9 +29,13 @@ Responses aim to be very similar in shape to Census. Notable differences include
 - Number, boolean and `null` values are represented appropriately, rather than as strings.
 - The error response format is not consistent.
 
+### Error Responses
+
+Sanctuary.Census uses a different set of error codes, the definitions of which [can be found here](../Sanctuary.Census/Models/QueryErrorCode.cs).
+
 ## Collections
 
-ℹ️ Please see the [collection model definitions here](https://github.com/carlst99/Sanctuary.Census/tree/main/Sanctuary.Census/Models/Collections).
+ℹ️ Please see the [collection model definitions here](../Sanctuary.Census/Models/Collections).
 
 This section lists the Collections provided by Sanctuary.Census, and compares them to Census itself.
 Many collections also add additional data on top of the base Census data, but this is not documented here.

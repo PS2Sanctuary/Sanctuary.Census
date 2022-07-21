@@ -25,6 +25,14 @@ public class CollectionQueryParameters
     public int Limit { get; set; }
 
     /// <summary>
+    /// An alias to <see cref="Limit"/>. Specifying this parameter
+    /// will override the <see cref="Limit"/> parameter.
+    /// E.g. <c>c:limitPerDB=20</c>.
+    /// </summary>
+    [FromQuery(Name = "c:limitPerDB")]
+    public int? LimitPerDb { get; set; }
+
+    /// <summary>
     /// The position into the results of the query at which
     /// to begin returning records at.
     /// E.g. <c>c:start=75</c>.
@@ -76,6 +84,7 @@ public class CollectionQueryParameters
     {
         IsCaseSensitive = true;
         Limit = 100;
+        LimitPerDb = null;
         Start = 0;
     }
 }

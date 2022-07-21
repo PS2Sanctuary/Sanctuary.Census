@@ -2,6 +2,12 @@
 
 Date format: DD/MM/YYYY
 
+## vNext
+
+- The `count` verb is supported again.
+- Added more informative error responses.
+- `c:limitPerDB` added as an alias of `c:limit`.
+
 ## 21/07/2022
 
 - Added the PTS environment.

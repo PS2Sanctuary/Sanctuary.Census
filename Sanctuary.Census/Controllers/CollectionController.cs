@@ -87,6 +87,7 @@ public class CollectionController : ControllerBase
     /// <param name="environment">The environment to retrieve the collection from.</param>
     /// <param name="collectionName">The name of the collection to query.</param>
     /// <param name="queryParams">The query parameters.</param>
+    /// <param name="ct">A <see cref="CancellationToken"/> that can be used to stop the operation.</param>
     /// <returns>The results of the query.</returns>
     /// <response code="200">Returns the result of the query.</response>
     [HttpGet("/get/{environment}/{collectionName}")]
@@ -95,9 +96,62 @@ public class CollectionController : ControllerBase
     (
         string environment,
         string collectionName,
-        [FromQuery] CollectionQueryParameters queryParams
+        [FromQuery] CollectionQueryParameters queryParams,
+        CancellationToken ct = default
     )
     {
+        IAggregateFluent<BsonDocument> query = ConstructBasicQuery(environment, collectionName, queryParams)
+            .Skip(queryParams.Start)
+            .Limit(queryParams.LimitPerDb ?? queryParams.Limit);
+
+        Stopwatch st = new();
+        st.Start();
+        List<BsonDocument> records = await query.ToListAsync(ct);
+        st.Stop();
+
+        return new DataResponse<BsonDocument>
+        (
+            records,
+            collectionName,
+            queryParams.ShowTimings ? st.Elapsed : null
+        );
+    }
+
+    /// <summary>
+    /// Gets the number of documents that match a particular query on a collection.
+    /// </summary>
+    /// <param name="environment">The environment to retrieve the collection from.</param>
+    /// <param name="collectionName">The name of the collection to query.</param>
+    /// <param name="queryParams">The query parameters.</param>
+    /// <param name="ct">A <see cref="CancellationToken"/> that can be used to stop the operation.</param>
+    /// <returns>The number of documents that match the query.</returns>
+    /// <response code="200">Returns the result of the query.</response>
+    [HttpGet("/count/{environment}/{collectionName}")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    public async Task<CollectionCount> CountCollectionAsync
+    (
+        string environment,
+        string collectionName,
+        [FromQuery] CollectionQueryParameters queryParams,
+        CancellationToken ct = default
+    )
+    {
+        IAggregateFluent<AggregateCountResult> count = ConstructBasicQuery(environment, collectionName, queryParams)
+            .Count();
+
+        AggregateCountResult res = await count.FirstAsync(ct);
+        return res.Count;
+    }
+
+    private IAggregateFluent<BsonDocument> ConstructBasicQuery
+    (
+        string environment,
+        string collectionName,
+        CollectionQueryParameters queryParams
+    )
+    {
+        // TODO: Validate collection name
+
         PS2Environment env = ParseEnvironment(environment);
         IMongoDatabase db = _mongoContext.GetDatabase(env);
         IMongoCollection<BsonDocument> coll = db.GetCollection<BsonDocument>(collectionName);
@@ -186,20 +240,7 @@ public class CollectionController : ControllerBase
                 .Add("as", "fire_group_to_fire_mode")
         );
 
-        aggregate = aggregate.Skip(queryParams.Start)
-            .Limit(queryParams.LimitPerDb ?? queryParams.Limit);
-        //.AppendStage<BsonDocument>(lookup);
-
-        Stopwatch st = new();
-        st.Start();
-        List<BsonDocument> records = await aggregate.ToListAsync();
-        st.Stop();
-        return new DataResponse<BsonDocument>
-        (
-            records,
-            collectionName,
-            queryParams.ShowTimings ? st.Elapsed : null
-        );
+        return aggregate;
     }
 
     private static PS2Environment ParseEnvironment(string environment)

@@ -69,7 +69,7 @@ public class WeaponCollectionBuilder : ICollectionBuilder
                 definition.TurnRateModifier,
                 definition.MoveSpeedModifier,
                 definition.HeatBleedoffRate == 0 ? null : definition.HeatBleedoffRate,
-                definition.HeatOverheatPenaltyMs == 0 ? null : definition.HeatBleedoffRate,
+                definition.HeatOverheatPenaltyMs == 0 ? null : definition.HeatOverheatPenaltyMs,
                 rangeDescription,
                 definition.MeleeDetectWidth == 0 ? null : definition.MeleeDetectWidth,
                 definition.MeleeDetectHeight == 0 ? null : definition.MeleeDetectHeight,

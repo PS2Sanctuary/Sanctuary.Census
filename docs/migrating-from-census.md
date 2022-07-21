@@ -87,7 +87,8 @@ Missing the `tether_distance` field.
 
 #### weapon
 
-Missing the `heat_capacity` field.
+The `heat_capacity` field has been replaced by the `heat_threshold` field on any fire modes that
+are linked to the weapon.
 
 #### weapon_ammo_slot
 

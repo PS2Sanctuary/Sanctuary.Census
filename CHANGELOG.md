@@ -8,6 +8,7 @@ Date format: DD/MM/YYYY
 - Added more informative error responses.
 - `c:limitPerDB` added as an alias of `c:limit`.
 - Fixed `facility_link` and `map_region` being non-queryable.
+- Fixed `weapon.heat_overheat_penalty_ms` being set incorrectly
 
 ## 21/07/2022
 

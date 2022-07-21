@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Caching.Memory;
-using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Primitives;
 using MongoDB.Bson;
 using MongoDB.Driver;
@@ -33,24 +32,20 @@ public class CollectionController : ControllerBase
 
     private static readonly char[] QueryCommandIdentifier = { 'c', ':' };
 
-    private readonly ILogger<CollectionController> _logger;
     private readonly IMongoContext _mongoContext;
     private readonly IMemoryCache _memoryCache;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="CollectionController"/> class.
     /// </summary>
-    /// <param name="logger">The logging interface to use.</param>
     /// <param name="mongoContext">The Mongo DB collections context.</param>
     /// <param name="memoryCache">The memory cache.</param>
     public CollectionController
     (
-        ILogger<CollectionController> logger,
         IMongoContext mongoContext,
         IMemoryCache memoryCache
     )
     {
-        _logger = logger;
         _mongoContext = mongoContext;
         _memoryCache = memoryCache;
     }
@@ -107,21 +102,6 @@ public class CollectionController : ControllerBase
         IMongoDatabase db = _mongoContext.GetDatabase(env);
         IMongoCollection<BsonDocument> coll = db.GetCollection<BsonDocument>(collectionName);
 
-        ProjectionDefinition<BsonDocument>? projection = Builders<BsonDocument>.Projection
-            .Exclude("_id");
-
-        if (queryParams.Show is not null)
-        {
-            foreach (string value in queryParams.Show.SelectMany(s => s.Split(',')))
-                projection = projection.Include(value);
-        }
-
-        if (queryParams.Hide is not null)
-        {
-            foreach (string value in queryParams.Hide.SelectMany(h => h.Split(',')))
-                projection = projection.Exclude(value);
-        }
-
         FilterDefinitionBuilder<BsonDocument> filterBuilder = Builders<BsonDocument>.Filter;
         FilterDefinition<BsonDocument> filter = filterBuilder.Empty;
         if (queryParams.HasFields is not null)
@@ -141,6 +121,12 @@ public class CollectionController : ControllerBase
                 fb.Build(ref filter, !queryParams.IsCaseSensitive);
             }
         }
+
+        ProjectionDefinition<BsonDocument> projection = new ProjectionBuilder
+        (
+            queryParams.Show?.SelectMany(s => s.Split(',')),
+            queryParams.Hide?.SelectMany(s => s.Split(','))
+        ).Build();
 
         IAggregateFluent<BsonDocument> aggregate = coll.Aggregate()
             .Match(filter)

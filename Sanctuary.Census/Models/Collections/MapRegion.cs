@@ -1,4 +1,6 @@
-﻿namespace Sanctuary.Census.Models.Collections;
+﻿using Sanctuary.Census.Attributes;
+
+namespace Sanctuary.Census.Models.Collections;
 
 /// <summary>
 /// Represents map region data.
@@ -12,6 +14,7 @@
 /// <param name="LocationX">The X coordinate of the center of the region.</param>
 /// <param name="LocationY">The Y coordinate of the center of the region.</param>
 /// <param name="LocationZ">The Z coordinate of the center of the region.</param>
+[Collection]
 public record MapRegion
 (
     uint MapRegionId,

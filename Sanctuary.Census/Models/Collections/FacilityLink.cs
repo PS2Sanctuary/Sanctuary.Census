@@ -1,4 +1,6 @@
-﻿namespace Sanctuary.Census.Models.Collections;
+﻿using Sanctuary.Census.Attributes;
+
+namespace Sanctuary.Census.Models.Collections;
 
 /// <summary>
 /// Represents facility link data.
@@ -7,6 +9,7 @@
 /// <param name="FacilityIdA">The first facility involved in the link.</param>
 /// <param name="FacilityIdB">The second facility involved in the link.</param>
 /// <param name="Description">The description of the link.</param>
+[Collection]
 public record FacilityLink
 (
     uint ZoneID,

@@ -5,6 +5,7 @@ using Microsoft.Extensions.Primitives;
 using MongoDB.Bson;
 using MongoDB.Driver;
 using Sanctuary.Census.Abstractions.Database;
+using Sanctuary.Census.Abstractions.Services;
 using Sanctuary.Census.Common.Objects;
 using Sanctuary.Census.Database;
 using Sanctuary.Census.Exceptions;
@@ -34,20 +35,24 @@ public class CollectionController : ControllerBase
 
     private readonly IMongoContext _mongoContext;
     private readonly IMemoryCache _memoryCache;
+    private readonly ICollectionBuilderRepository _collectionBuilderRepository;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="CollectionController"/> class.
     /// </summary>
     /// <param name="mongoContext">The Mongo DB collections context.</param>
     /// <param name="memoryCache">The memory cache.</param>
+    /// <param name="collectionBuilderRepository">The collection builder repository.</param>
     public CollectionController
     (
         IMongoContext mongoContext,
-        IMemoryCache memoryCache
+        IMemoryCache memoryCache,
+        ICollectionBuilderRepository collectionBuilderRepository
     )
     {
         _mongoContext = mongoContext;
         _memoryCache = memoryCache;
+        _collectionBuilderRepository = collectionBuilderRepository;
     }
 
     /// <summary>
@@ -150,7 +155,8 @@ public class CollectionController : ControllerBase
         CollectionQueryParameters queryParams
     )
     {
-        // TODO: Validate collection name
+        if (!_collectionBuilderRepository.CheckCollectionExists(collectionName))
+            throw new QueryException(QueryErrorCode.UnknownCollection, $"The {collectionName} collection does not exist");
 
         PS2Environment env = ParseEnvironment(environment);
         IMongoDatabase db = _mongoContext.GetDatabase(env);

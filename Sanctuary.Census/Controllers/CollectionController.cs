@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Caching.Memory;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Primitives;
 using MongoDB.Bson;
 using MongoDB.Driver;
@@ -32,16 +33,24 @@ public class CollectionController : ControllerBase
 
     private static readonly char[] QueryCommandIdentifier = { 'c', ':' };
 
+    private readonly ILogger<CollectionController> _logger;
     private readonly IMongoContext _mongoContext;
     private readonly IMemoryCache _memoryCache;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="CollectionController"/> class.
     /// </summary>
+    /// <param name="logger">The logging interface to use.</param>
     /// <param name="mongoContext">The Mongo DB collections context.</param>
     /// <param name="memoryCache">The memory cache.</param>
-    public CollectionController(IMongoContext mongoContext, IMemoryCache memoryCache)
+    public CollectionController
+    (
+        ILogger<CollectionController> logger,
+        IMongoContext mongoContext,
+        IMemoryCache memoryCache
+    )
     {
+        _logger = logger;
         _mongoContext = mongoContext;
         _memoryCache = memoryCache;
     }
@@ -86,9 +95,8 @@ public class CollectionController : ControllerBase
     /// <returns>The results of the query.</returns>
     /// <response code="200">Returns the result of the query.</response>
     [HttpGet("/get/{environment}/{collectionName}")]
-    [Produces("application/json", Type = typeof(object))]
     [ProducesResponseType(StatusCodes.Status200OK)]
-    public async Task<DataResponse<BsonDocument>> QueryCollectionAsync
+    public async Task<object> QueryCollectionAsync
     (
         string environment,
         string collectionName,

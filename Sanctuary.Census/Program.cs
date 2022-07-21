@@ -1,4 +1,6 @@
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Diagnostics;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.DependencyInjection;
@@ -12,8 +14,10 @@ using Sanctuary.Census.ClientData.Extensions;
 using Sanctuary.Census.CollectionBuilders;
 using Sanctuary.Census.Common.Objects;
 using Sanctuary.Census.Database;
+using Sanctuary.Census.Exceptions;
 using Sanctuary.Census.Json;
 using Sanctuary.Census.Middleware;
+using Sanctuary.Census.Models;
 using Sanctuary.Census.PatchData.Extensions;
 using Sanctuary.Census.ServerData.Internal.Extensions;
 using Sanctuary.Census.ServerData.Internal.Objects;
@@ -25,6 +29,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Net.Mime;
 using System.Reflection;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
@@ -104,11 +109,34 @@ public static class Program
 
         app.UseSerilogRequestLogging();
 
-        // Configure the HTTP request pipeline.
         if (!app.Environment.IsDevelopment())
-            app.UseExceptionHandler("/error");
+        {
+            app.UseExceptionHandler(exceptionHandlerApp =>
+            {
+                exceptionHandlerApp.Run(async context =>
+                {
+                    context.Response.ContentType = MediaTypeNames.Application.Json;
+                    IExceptionHandlerPathFeature? exceptionHandlerPathFeature = context.Features.Get<IExceptionHandlerPathFeature>();
+
+                    if (exceptionHandlerPathFeature?.Error is QueryException quex)
+                    {
+                        context.Response.StatusCode = StatusCodes.Status400BadRequest;
+                        ErrorResponse er = new(quex.ErrorCode, quex.Message);
+                        await context.Response.WriteAsJsonAsync(er);
+                    }
+                    else
+                    {
+                        context.Response.StatusCode = StatusCodes.Status500InternalServerError;
+                        ErrorResponse er = new(QueryErrorCode.ServerError, string.Empty);
+                        await context.Response.WriteAsJsonAsync(er);
+                    }
+                });
+            });
+        }
         else
+        {
             app.UseDeveloperExceptionPage();
+        }
 
         app.UseSwagger();
         app.UseSwaggerUI(options =>

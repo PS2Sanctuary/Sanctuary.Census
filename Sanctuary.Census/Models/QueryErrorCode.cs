@@ -28,5 +28,10 @@ public enum QueryErrorCode
     /// <summary>
     /// An invalid namespace was provided.
     /// </summary>
-    InvalidNamespace = 4
+    InvalidNamespace = 4,
+
+    /// <summary>
+    /// An internal server error occurred.
+    /// </summary>
+    ServerError = 5
 }

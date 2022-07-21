@@ -7,6 +7,7 @@ Date format: DD/MM/YYYY
 - The `count` verb is supported again.
 - Added more informative error responses.
 - `c:limitPerDB` added as an alias of `c:limit`.
+- Fixed `facility_link` and `map_region` being non-queryable.
 
 ## 21/07/2022
 

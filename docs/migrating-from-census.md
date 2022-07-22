@@ -1,51 +1,51 @@
 # Migrating from Census
 
-⚠ Error messages are extremely uninformative at the moment. Sorry!
+This document serves as an outline of how well Sanctuary.Census maintains parity with DBG Census.
 
 ## Queries
 
 The basic structure of a query is supported. Submitting a service ID is optional, and it's not logged in any way if you do.
 
-Only the `get` verb is supported.
+Both the `get` and `count` verbs are supported.
 
-Filtering is fully supported.
+Filtering (searching, querying) is fully supported.
 
-Supported query commands:
+Supported commands:
 
+- `c:case`.
 - `c:limit` (default `100`, max `10 000`).
 - `c:limitPerDB` (overrides `c:limit`).
 - `c:start`.
-- `c:case`.
 - `c:show`.
 - `c:hide`.
-- `c:sort`.
 - `c:has`.
-- `c:timing` - inserts a timestamp into the response detailing the length of the database query, rather than the more specific model the DBG Census inserts.
+- `c:includeNull`.
+- `c:sort`.
+- `c:timing` - inserts a timestamp indicating the time taken to query the database, rather than the more specific model of the DBG Census.
 
 ## Response Shape
 
-Responses aim to be very similar in shape to Census. Notable differences include:
-
-- Number, boolean and `null` values are represented appropriately, rather than as strings.
-- The error response format is not consistent.
+The shape of the response document should be exactly the same as DBG Census. Please note however that
+number, boolean and `null` values are represented appropriately, rather than as strings.
 
 ### Error Responses
 
 Sanctuary.Census uses a different set of error codes, the definitions of which [can be found here](../Sanctuary.Census/Models/QueryErrorCode.cs).
+Please note that the error response format is not consistent, although it should match Census for most query-related errors.
 
 ## Collections
 
 ℹ️ Please see the [collection model definitions here](../Sanctuary.Census/Models/Collections).
 
-This section lists the Collections provided by Sanctuary.Census, and compares them to Census itself.
-Many collections also add additional data on top of the base Census data, but this is not documented here.
+This section lists the Collections provided by Sanctuary.Census, and compares them to the DBG Census.
+Many collections also add additional data on top of the DBG Census data, but this is not documented here.
 
-⚠️ If a Census collection is not listed here, it is missing.
+⚠️ If a DBG Census collection is not listed here, it not supported.
 
 ### 🌠 Gold Tier Collections
 
-These collections provide the same data as their Census equivalents. The shape is not guaranteed to match, but is likely to
-be very similar.
+These collections provide the same data as their DBG Census equivalents. The shape is not guaranteed to match,
+but is likely to be very similar.
 
 - currency
 - experience
@@ -62,7 +62,7 @@ be very similar.
 
 ### 🌟 Silver Tier Collections
 
-These collections are missing small amounts of data as compared to their Census equivalents, or are shaped differently
+These collections are missing small amounts of data as compared to their DBG Census equivalents, or are shaped differently
 in such a way that retrieving certain data may not be immediately obvious.
 
 - item
@@ -121,6 +121,10 @@ Missing the follow fields:
 - `lockon_range_far`
 - `lockon_required`
 
-#### profile
-Missing the `movement_speed`, `backpedal_speed_modifier`, `sprint_speed_modifier` and `strafe_speed_modifier` fields.
+Of note is that lock-on parameters seem to be calculated dynamically by the game nowadays, using an unknown
+algorithm. Hence, it's not surprising that these fields have been un-obtainable and you should consider
+the DBG Census equivalents invalid.
 
+#### profile
+
+Missing the `movement_speed`, `backpedal_speed_modifier`, `sprint_speed_modifier` and `strafe_speed_modifier` fields.

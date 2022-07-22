@@ -4,6 +4,11 @@ Date format: DD/MM/YYYY
 
 ## vNext
 
+- Added support for the `c:includeNull` command.
+- Restricted `c:limit` to a maximum value of 10000.
+
+## 22/07/2022
+
 - The `count` verb is supported again.
 - Added more informative error responses.
 - `c:limitPerDB` added as an alias of `c:limit`.

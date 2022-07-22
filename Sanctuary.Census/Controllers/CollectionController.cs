@@ -141,6 +141,12 @@ public class CollectionController : ControllerBase
                 .Skip(queryParams.Start)
                 .Limit(queryParams.LimitPerDb ?? queryParams.Limit);
 
+            if (queryParams.Tree is not null)
+            {
+                GroupBuilder groupBuilder = GroupBuilder.ParseFromTreeCommand(queryParams.Tree);
+                groupBuilder.BuildAndAppendTo(ref query);
+            }
+
             Stopwatch st = new();
             st.Start();
             List<BsonDocument> records = await query.ToListAsync(ct);

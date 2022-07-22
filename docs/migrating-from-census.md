@@ -21,6 +21,7 @@ Supported commands:
 - `c:has`.
 - `c:includeNull`.
 - `c:sort`.
+- `c:tree` - the `start` key is not yet supported.
 - `c:timing` - inserts a timestamp indicating the time taken to query the database, rather than the more specific model of the DBG Census.
 
 ## Response Shape

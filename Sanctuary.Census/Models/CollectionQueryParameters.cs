@@ -86,6 +86,12 @@ public class CollectionQueryParameters
     public bool ShowTimings { get; set; }
 
     /// <summary>
+    /// Groups the response on a field.
+    /// </summary>
+    [FromQuery(Name = "c:tree")]
+    public string? Tree { get; set; }
+
+    /// <summary>
     /// Initializes a new instance of the <see cref="CollectionQueryParameters"/> class.
     /// </summary>
     public CollectionQueryParameters()

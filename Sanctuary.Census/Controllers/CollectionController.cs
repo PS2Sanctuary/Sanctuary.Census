@@ -105,21 +105,28 @@ public class CollectionController : ControllerBase
         CancellationToken ct = default
     )
     {
-        IAggregateFluent<BsonDocument> query = ConstructBasicQuery(environment, collectionName, queryParams)
-            .Skip(queryParams.Start)
-            .Limit(queryParams.LimitPerDb ?? queryParams.Limit);
+        try
+        {
+            IAggregateFluent<BsonDocument> query = ConstructBasicQuery(environment, collectionName, queryParams)
+                .Skip(queryParams.Start)
+                .Limit(queryParams.LimitPerDb ?? queryParams.Limit);
 
-        Stopwatch st = new();
-        st.Start();
-        List<BsonDocument> records = await query.ToListAsync(ct);
-        st.Stop();
+            Stopwatch st = new();
+            st.Start();
+            List<BsonDocument> records = await query.ToListAsync(ct);
+            st.Stop();
 
-        return new DataResponse<BsonDocument>
-        (
-            records,
-            collectionName,
-            queryParams.ShowTimings ? st.Elapsed : null
-        );
+            return new DataResponse<BsonDocument>
+            (
+                records,
+                collectionName,
+                queryParams.ShowTimings ? st.Elapsed : null
+            );
+        }
+        catch (QueryException quex)
+        {
+            return new ErrorResponse(quex.ErrorCode, quex.Message);
+        }
     }
 
     /// <summary>
@@ -133,7 +140,7 @@ public class CollectionController : ControllerBase
     /// <response code="200">Returns the result of the query.</response>
     [HttpGet("/count/{environment}/{collectionName}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
-    public async Task<CollectionCount> CountCollectionAsync
+    public async Task<object> CountCollectionAsync
     (
         string environment,
         string collectionName,
@@ -141,11 +148,18 @@ public class CollectionController : ControllerBase
         CancellationToken ct = default
     )
     {
-        IAggregateFluent<AggregateCountResult> count = ConstructBasicQuery(environment, collectionName, queryParams)
-            .Count();
+        try
+        {
+            IAggregateFluent<AggregateCountResult> count = ConstructBasicQuery(environment, collectionName, queryParams)
+                .Count();
 
-        AggregateCountResult res = await count.FirstAsync(ct);
-        return res.Count;
+            AggregateCountResult res = await count.FirstAsync(ct);
+            return res.Count;
+        }
+        catch (QueryException quex)
+        {
+            return new ErrorResponse(quex.ErrorCode, quex.Message);
+        }
     }
 
     private IAggregateFluent<BsonDocument> ConstructBasicQuery

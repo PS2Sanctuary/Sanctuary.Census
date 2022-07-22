@@ -18,6 +18,14 @@ public class CollectionQueryParameters
     public bool IsCaseSensitive { get; set; }
 
     /// <summary>
+    /// Indicates whether null fields should be included in
+    /// the results. Defaults to <c>false</c>.
+    /// E.g. <c>c:includeNull=true</c>.
+    /// </summary>
+    [FromQuery(Name = "c:includeNull")]
+    public bool IncludeNullFields { get; set; }
+
+    /// <summary>
     /// The maximum number of records to return.
     /// E.g. <c>c:limit=10</c>.
     /// </summary>

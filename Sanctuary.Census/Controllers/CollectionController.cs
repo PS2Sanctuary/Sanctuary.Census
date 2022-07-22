@@ -9,11 +9,14 @@ using Sanctuary.Census.Abstractions.Services;
 using Sanctuary.Census.Common.Objects;
 using Sanctuary.Census.Database;
 using Sanctuary.Census.Exceptions;
+using Sanctuary.Census.Json;
 using Sanctuary.Census.Models;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -32,10 +35,28 @@ public class CollectionController : ControllerBase
     public const int MAX_LIMIT = 10000;
 
     private static readonly char[] QueryCommandIdentifier = { 'c', ':' };
+    private static readonly JsonSerializerOptions _noIncludeNullOptions;
+    private static readonly JsonSerializerOptions _includeNullOptions;
 
     private readonly IMongoContext _mongoContext;
     private readonly IMemoryCache _memoryCache;
     private readonly ICollectionBuilderRepository _collectionBuilderRepository;
+
+    static CollectionController()
+    {
+        _noIncludeNullOptions = new JsonSerializerOptions
+        {
+            DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull,
+            PropertyNamingPolicy = new SnakeCaseJsonNamingPolicy()
+        };
+        _noIncludeNullOptions.Converters.Add(new DataResponseJsonConverter());
+        _noIncludeNullOptions.Converters.Add(new BsonDocumentJsonConverter());
+
+        _includeNullOptions = new JsonSerializerOptions(_noIncludeNullOptions)
+        {
+            DefaultIgnoreCondition = JsonIgnoreCondition.Never
+        };
+    }
 
     /// <summary>
     /// Initializes a new instance of the <see cref="CollectionController"/> class.
@@ -109,8 +130,9 @@ public class CollectionController : ControllerBase
         {
             return new JsonResult
             (
-                new ErrorResponse(QueryErrorCode.InvalidCommandValue, "The maximum value of the c:limit command is " + MAX_LIMIT)
-            );
+                new ErrorResponse(QueryErrorCode.InvalidCommandValue,
+                    "The maximum value of the c:limit command is " + MAX_LIMIT)
+            ) { StatusCode = StatusCodes.Status400BadRequest };
         }
 
         try
@@ -131,7 +153,8 @@ public class CollectionController : ControllerBase
                     records,
                     collectionName,
                     queryParams.ShowTimings ? st.Elapsed : null
-                )
+                ),
+                queryParams.IncludeNullFields ? _includeNullOptions : _noIncludeNullOptions
             );
         }
         catch (QueryException quex)
@@ -139,7 +162,7 @@ public class CollectionController : ControllerBase
             return new JsonResult
             (
                 new ErrorResponse(quex.ErrorCode, quex.Message)
-            );
+            ) { StatusCode = StatusCodes.Status400BadRequest };
         }
     }
 
@@ -168,7 +191,7 @@ public class CollectionController : ControllerBase
                 .Count();
 
             AggregateCountResult res = await count.FirstAsync(ct);
-            return res.Count;
+            return new CollectionCount((ulong)res.Count);
         }
         catch (QueryException quex)
         {

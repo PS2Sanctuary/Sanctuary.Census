@@ -12,7 +12,7 @@ Filtering is fully supported.
 
 Supported query commands:
 
-- `c:limit` (default `100`).
+- `c:limit` (default `100`, max `10 000`).
 - `c:limitPerDB` (overrides `c:limit`).
 - `c:start`.
 - `c:case`.

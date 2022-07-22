@@ -97,7 +97,7 @@ public class CollectionController : ControllerBase
     /// <response code="200">Returns the result of the query.</response>
     [HttpGet("/get/{environment}/{collectionName}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
-    public async Task<object> QueryCollectionAsync
+    public async Task<JsonResult> QueryCollectionAsync
     (
         string environment,
         string collectionName,
@@ -105,6 +105,14 @@ public class CollectionController : ControllerBase
         CancellationToken ct = default
     )
     {
+        if (queryParams.Limit > MAX_LIMIT || queryParams.LimitPerDb > MAX_LIMIT)
+        {
+            return new JsonResult
+            (
+                new ErrorResponse(QueryErrorCode.InvalidCommandValue, "The maximum value of the c:limit command is " + MAX_LIMIT)
+            );
+        }
+
         try
         {
             IAggregateFluent<BsonDocument> query = ConstructBasicQuery(environment, collectionName, queryParams)
@@ -116,16 +124,22 @@ public class CollectionController : ControllerBase
             List<BsonDocument> records = await query.ToListAsync(ct);
             st.Stop();
 
-            return new DataResponse<BsonDocument>
+            return new JsonResult
             (
-                records,
-                collectionName,
-                queryParams.ShowTimings ? st.Elapsed : null
+                new DataResponse<BsonDocument>
+                (
+                    records,
+                    collectionName,
+                    queryParams.ShowTimings ? st.Elapsed : null
+                )
             );
         }
         catch (QueryException quex)
         {
-            return new ErrorResponse(quex.ErrorCode, quex.Message);
+            return new JsonResult
+            (
+                new ErrorResponse(quex.ErrorCode, quex.Message)
+            );
         }
     }
 

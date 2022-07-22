@@ -33,5 +33,15 @@ public enum QueryErrorCode
     /// <summary>
     /// An internal server error occurred.
     /// </summary>
-    ServerError = 5
+    ServerError = 5,
+
+    /// <summary>
+    /// A required key of a command is missing.
+    /// </summary>
+    MissingRequiredKey = 6,
+
+    /// <summary>
+    /// An invalid value was provided to a command.
+    /// </summary>
+    InvalidCommandValue = 7
 }

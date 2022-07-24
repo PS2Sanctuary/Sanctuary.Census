@@ -183,6 +183,7 @@ public static class Program
             .RegisterCollectionBuilder<PlayerStateGroup2CollectionBuilder>()
             .RegisterCollectionBuilder<ProfileCollectionBuilder>()
             .RegisterCollectionBuilder<ProjectileCollectionBuilder>()
+            .RegisterCollectionBuilder<VehicleCollectionBuilder>()
             .RegisterCollectionBuilder<WeaponCollectionBuilder>()
             .RegisterCollectionBuilder<WeaponAmmoSlotCollectionBuilder>()
             .RegisterCollectionBuilder<WeaponToFireGroupCollectionBuilder>()

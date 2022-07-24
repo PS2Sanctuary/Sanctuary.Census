@@ -7,7 +7,7 @@ namespace Sanctuary.Census.Models.Collections;
 /// </summary>
 /// <param name="ItemId">The ID of the item.</param>
 /// <param name="WeaponId">The ID of the weapon.</param>
-[Collection(PrimaryJoinField = nameof(ItemId))]
+[Collection(PrimaryJoinField = nameof(ItemToWeapon.ItemId))]
 public record ItemToWeapon
 (
     uint ItemId,

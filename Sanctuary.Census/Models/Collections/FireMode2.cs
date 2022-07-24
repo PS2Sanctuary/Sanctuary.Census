@@ -4,7 +4,7 @@ using Sanctuary.Census.Common.Objects.CommonModels;
 namespace Sanctuary.Census.Models.Collections;
 
 #pragma warning disable CS1591
-[Collection(PrimaryJoinField = nameof(FireModeID))]
+[Collection(PrimaryJoinField = nameof(FireMode2.FireModeID))]
 public record FireMode2
 (
     uint FireModeID,

@@ -26,7 +26,7 @@ namespace Sanctuary.Census.Models.Collections;
 /// <param name="AnimationWieldTypeName">The name of this weapon's animation type.</param>
 /// <param name="MinViewPitch">The minimum view pitch that this weapon can be used at.</param>
 /// <param name="MaxViewPitch">The maximum view pitch that this weapon can be used at.</param>
-[Collection(PrimaryJoinField = nameof(WeaponId))]
+[Collection(PrimaryJoinField = nameof(Weapon.WeaponId))]
 public record Weapon
 (
     uint WeaponId,

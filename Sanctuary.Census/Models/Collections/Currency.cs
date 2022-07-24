@@ -12,7 +12,7 @@ namespace Sanctuary.Census.Models.Collections;
 /// <param name="IconImageSetID">The image set ID of the currency's icon.</param>
 /// <param name="MapIconImageSetID">The image set ID of the currency's map icon.</param>
 /// <param name="InventoryCap">The maximum amount of this currency a character may have.</param>
-[Collection(PrimaryJoinField = nameof(CurrencyID))]
+[Collection(PrimaryJoinField = nameof(Currency.CurrencyID))]
 public record Currency
 (
     uint CurrencyID,

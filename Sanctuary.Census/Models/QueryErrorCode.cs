@@ -53,5 +53,10 @@ public enum QueryErrorCode
     /// <summary>
     /// The collection to join to was not specified in a join command.
     /// </summary>
-    JoinCollectionRequired = 9
+    JoinCollectionRequired = 9,
+
+    /// <summary>
+    /// The maximum number of allowed joins in a single query was exceeded.
+    /// </summary>
+    JoinLimitExceeded = 10
 }

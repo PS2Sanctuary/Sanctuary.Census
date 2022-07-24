@@ -145,6 +145,7 @@ public class CollectionController : ControllerBase
 
             if (queryParams.Join is not null)
             {
+                int totalLookups = 0;
                 foreach (string value in queryParams.Join)
                 {
                     List<JoinBuilder> builders = JoinBuilder.Parse(value);
@@ -156,7 +157,18 @@ public class CollectionController : ControllerBase
                             collectionName,
                             mongoCollection.DocumentSerializer,
                             mongoCollection.Settings.SerializerRegistry,
-                            !queryParams.IsCaseSensitive
+                            !queryParams.IsCaseSensitive,
+                            out int builtLookups
+                        );
+                        totalLookups += builtLookups;
+                    }
+
+                    if (totalLookups > JoinBuilder.MAX_JOINS)
+                    {
+                        throw new QueryException
+                        (
+                            QueryErrorCode.JoinLimitExceeded,
+                            $"Up to {JoinBuilder.MAX_JOINS} may be performed in a single query"
                         );
                     }
                 }

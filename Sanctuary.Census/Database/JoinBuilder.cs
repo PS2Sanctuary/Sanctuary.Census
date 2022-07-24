@@ -17,8 +17,12 @@ namespace Sanctuary.Census.Database;
 /// </summary>
 public class JoinBuilder
 {
-    // TODO: Limit maximum joins
     private const char VALUE_DELIMITER = '\'';
+
+    /// <summary>
+    /// The maximum number of joins that may be performed in a single query.
+    /// </summary>
+    public const int MAX_JOINS = 25;
 
     private static readonly char[] TypeKey = "type".ToCharArray();
     private static readonly char[] OnFieldKey = "on".ToCharArray();
@@ -53,7 +57,7 @@ public class JoinBuilder
     /// <summary>
     /// Whether this is an outer join.
     /// </summary>
-    public bool IsOuter { get; private set; } // TODO: Support
+    public bool IsOuter { get; private set; }
 
     /// <summary>
     /// The field to inject the joined results at.
@@ -119,10 +123,28 @@ public class JoinBuilder
         string onCollection,
         IBsonSerializer<BsonDocument> documentSerializer,
         IBsonSerializerRegistry serializerRegistry,
-        bool useCaseInsensitiveRegex
+        bool useCaseInsensitiveRegex,
+        out int builtLookups
     )
     {
-        BsonDocument built = BuildInternal(this, onCollection, documentSerializer, serializerRegistry, useCaseInsensitiveRegex);
+        BsonDocument built = BuildInternal
+        (
+            this,
+            onCollection,
+            documentSerializer,
+            serializerRegistry, useCaseInsensitiveRegex,
+            out builtLookups
+        );
+
+        if (builtLookups > MAX_JOINS)
+        {
+            throw new QueryException
+            (
+                QueryErrorCode.JoinLimitExceeded,
+                $"Up to {MAX_JOINS} may be performed in a single query"
+            );
+        }
+
         BsonDocumentPipelineStageDefinition<BsonDocument, BsonDocument> stageDef = new(built);
         aggregatePipeline = aggregatePipeline.AppendStage(stageDef);
 
@@ -235,9 +257,11 @@ public class JoinBuilder
         string onCollection,
         IBsonSerializer<BsonDocument> documentSerializer,
         IBsonSerializerRegistry serializerRegistry,
-        bool useCaseInsensitiveRegex
+        bool useCaseInsensitiveRegex,
+        out int builtLookups
     )
     {
+        builtLookups = 1;
         List<FilterBuilder> filterBuilders = builder.PerformPreBuildChecks(onCollection);
 
         BsonArray subPipeline = new();
@@ -271,8 +295,10 @@ public class JoinBuilder
                 builder.ToCollection,
                 documentSerializer,
                 serializerRegistry,
-                useCaseInsensitiveRegex
+                useCaseInsensitiveRegex,
+                out int builtChildLookups
             );
+            builtLookups += builtChildLookups;
             subPipeline.Add(builtChild);
 
             if (!child.IsList)

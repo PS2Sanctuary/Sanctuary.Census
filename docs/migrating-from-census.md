@@ -71,6 +71,7 @@ in such a way that retrieving certain data may not be immediately obvious.
 - item
 - map_region
 - projectile
+- vehicle
 - weapon
 - weapon_ammo_slot
 - world
@@ -87,6 +88,10 @@ Missing the `reward_amount` and `reward_currency_id` fields.
 #### projectile
 
 Missing the `tether_distance` field.
+
+#### vehicle
+
+Missing the `type_name` field.
 
 #### weapon
 

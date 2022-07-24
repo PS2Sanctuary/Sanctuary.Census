@@ -2,13 +2,14 @@
 
 Date format: DD/MM/YYYY
 
-## vNext
+## 25/07/2022
 
 - Added full support for the `c:join` command.
 - Added near-full support for the `c:tree` command. The `start` key is not yet supported.
 - Added support for the `c:lang` command.
 - Added support for the `c:includeNull` command.
 - Restricted `c:limit` to a maximum value of 10000.
+- Added the `vehicle` collection.
 
 ## 22/07/2022
 

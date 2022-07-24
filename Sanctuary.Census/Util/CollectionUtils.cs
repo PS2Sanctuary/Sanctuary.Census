@@ -14,11 +14,36 @@ namespace Sanctuary.Census.Util;
 /// </summary>
 public static class CollectionUtils
 {
-    private static IReadOnlyDictionary<string, HashSet<string>> _collectionNamesAndFields;
+    private static readonly Dictionary<string, HashSet<string>> _collectionNamesAndFields;
+    private static readonly Dictionary<string, string> _primaryJoinFields;
+    // TODO: Lang fields
 
     static CollectionUtils()
     {
-        BuildCollectionNamesAndFields();
+        _collectionNamesAndFields = new Dictionary<string, HashSet<string>>();
+        _primaryJoinFields = new Dictionary<string, string>();
+
+        IEnumerable<Type> collTypes = typeof(CollectionBuilderRepository).Assembly
+            .GetTypes()
+            .Where(t => t.IsDefined(typeof(CollectionAttribute)));
+
+        foreach (Type collType in collTypes)
+        {
+            HashSet<string> propNames = new();
+            string collName = SnakeCaseJsonNamingPolicy.Default.ConvertName(collType.Name);
+            _collectionNamesAndFields.Add
+            (
+                collName,
+                propNames
+            );
+
+            foreach (PropertyInfo prop in collType.GetProperties())
+                propNames.Add(SnakeCaseJsonNamingPolicy.Default.ConvertName(prop.Name));
+
+            CollectionAttribute collAttr = collType.GetCustomAttribute<CollectionAttribute>()!;
+            if (collAttr.PrimaryJoinField is not null)
+                _primaryJoinFields[collName] = SnakeCaseJsonNamingPolicy.Default.ConvertName(collAttr.PrimaryJoinField);
+        }
     }
 
     /// <summary>
@@ -39,28 +64,12 @@ public static class CollectionUtils
         => _collectionNamesAndFields.TryGetValue(collectionWebName, out HashSet<string>? fields)
            && fields.Contains(fieldWebName);
 
-    [MemberNotNull(nameof(_collectionNamesAndFields))]
-    private static void BuildCollectionNamesAndFields()
-    {
-        Dictionary<string, HashSet<string>> collectionNamesAndFields = new();
-
-        IEnumerable<Type> collTypes = typeof(CollectionBuilderRepository).Assembly
-            .GetTypes()
-            .Where(t => t.IsDefined(typeof(CollectionAttribute)));
-
-        foreach (Type collType in collTypes)
-        {
-            HashSet<string> propNames = new();
-            collectionNamesAndFields.Add
-            (
-                SnakeCaseJsonNamingPolicy.Default.ConvertName(collType.Name),
-                propNames
-            );
-
-            foreach (PropertyInfo prop in collType.GetProperties())
-                propNames.Add(SnakeCaseJsonNamingPolicy.Default.ConvertName(prop.Name));
-        }
-
-        _collectionNamesAndFields = collectionNamesAndFields;
-    }
+    /// <summary>
+    /// Gets the primary join field of a collection.
+    /// </summary>
+    /// <param name="collectionName">The name of the collection.</param>
+    /// <param name="primaryJoinField">The primary join field.</param>
+    /// <returns><c>True</c> if the collection has a primary join field, else <c>False</c>.</returns>
+    public static bool TryGetPrimaryJoinField(string collectionName, [NotNullWhen(true)] out string? primaryJoinField)
+        => _primaryJoinFields.TryGetValue(collectionName, out primaryJoinField);
 }

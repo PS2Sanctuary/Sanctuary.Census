@@ -1,9 +1,13 @@
-﻿using Sanctuary.Census.Common.Util;
+﻿using MongoDB.Bson;
+using MongoDB.Bson.Serialization;
+using MongoDB.Driver;
+using Sanctuary.Census.Common.Util;
 using Sanctuary.Census.Exceptions;
 using Sanctuary.Census.Models;
 using Sanctuary.Census.Util;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Text.Encodings.Web;
 
 namespace Sanctuary.Census.Database;
@@ -13,6 +17,7 @@ namespace Sanctuary.Census.Database;
 /// </summary>
 public class JoinBuilder
 {
+    // TODO: Limit maximum joins
     private const char VALUE_DELIMITER = '\'';
 
     private static readonly char[] TypeKey = "type".ToCharArray();
@@ -28,7 +33,7 @@ public class JoinBuilder
     /// <summary>
     /// The collection that will be joined to.
     /// </summary>
-    public string ToCollection { get; private set; }
+    public string? ToCollection { get; private set; }
 
     /// <summary>
     /// The field on the local collection to join on.
@@ -48,7 +53,7 @@ public class JoinBuilder
     /// <summary>
     /// Whether this is an outer join.
     /// </summary>
-    public bool IsOuter { get; private set; }
+    public bool IsOuter { get; private set; } // TODO: Support
 
     /// <summary>
     /// The field to inject the joined results at.
@@ -68,19 +73,24 @@ public class JoinBuilder
     /// <summary>
     /// The children of this join.
     /// </summary>
-    public IReadOnlyList<JoinBuilder>? Children { get; private set; }
+    public List<JoinBuilder> Children { get; private set; }
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="JoinBuilder"/> class.
+    /// </summary>
     public JoinBuilder()
     {
         Terms = new List<string>();
         IsOuter = true;
         Projection = new ProjectionBuilder();
-        // _toCollection = new BsonDocument("from", toCollection);
-        // _onField = new BsonDocument("localField", onField);
-        // _toField = new BsonDocument("foreignField", toField);
-        // _injectAt = new BsonDocument("as", injectAt);
+        Children = new List<JoinBuilder>();
     }
 
+    /// <summary>
+    /// Parses a <see cref="JoinBuilder"/> from a query join command.
+    /// </summary>
+    /// <param name="value">The values of the join command.</param>
+    /// <returns>The parsed <see cref="JoinBuilder"/>s.</returns>
     public static List<JoinBuilder> Parse(ReadOnlySpan<char> value)
     {
         List<JoinBuilder> builders = new();
@@ -95,36 +105,26 @@ public class JoinBuilder
         return builders;
     }
 
-    public void Build(string onCollection)
+    /// <summary>
+    /// Builds the lookup stage.
+    /// </summary>
+    /// <param name="aggregatePipeline">The aggregate pipeline to append the join to.</param>
+    /// <param name="onCollection">The collection that the join is being performed on.</param>
+    /// <param name="documentSerializer">The document serializer.</param>
+    /// <param name="serializerRegistry">The serializer registry.</param>
+    /// <param name="useCaseInsensitiveRegex">Whether regex matches should be case-insensitive.</param>
+    public void Build
+    (
+        ref IAggregateFluent<BsonDocument> aggregatePipeline,
+        string onCollection,
+        IBsonSerializer<BsonDocument> documentSerializer,
+        IBsonSerializerRegistry serializerRegistry,
+        bool useCaseInsensitiveRegex
+    )
     {
-        if (!CollectionUtils.CheckCollectionExists(ToCollection))
-        {
-            throw new QueryException
-            (
-                QueryErrorCode.UnknownCollection,
-                $"Cannot join to the {ToCollection} collection as it does not exist"
-            );
-        }
-
-        if (ToField is not null && !CollectionUtils.CheckFieldExists(ToCollection, ToField))
-        {
-            throw new QueryException
-            (
-                QueryErrorCode.UnknownField,
-                $"The {ToField} field does not exist on the {ToCollection} collection"
-            );
-        }
-
-        if (OnField is not null && !CollectionUtils.CheckFieldExists(onCollection, OnField))
-        {
-            throw new QueryException
-            (
-                QueryErrorCode.UnknownField,
-                $"The {OnField} field does not exist on the {onCollection} collection"
-            );
-        }
-
-        // TODO: If ToField and OnField are null auto-fill them
+        BsonDocument built = BuildInternal(this, onCollection, documentSerializer, serializerRegistry, useCaseInsensitiveRegex);
+        BsonDocumentPipelineStageDefinition<BsonDocument, BsonDocument> stageDef = new(built);
+        aggregatePipeline = aggregatePipeline.AppendStage(stageDef);
     }
 
     private static JoinBuilder ParseIndividualJoin(ReadOnlySpan<char> value)
@@ -132,21 +132,21 @@ public class JoinBuilder
         SpanReader<char> reader = new(value);
         JoinBuilder builder = new();
 
-        while (reader.TryReadTo(out ReadOnlySpan<char> keyValue, '^'))
+        while (reader.TryReadToAny(out ReadOnlySpan<char> keyValue, new[] { '^', '(' }, false))
+        {
             ParseKeyValuePair(keyValue, builder);
 
-        if (reader.TryReadTo(out ReadOnlySpan<char> finalKeyValue, '(', false))
-            ParseKeyValuePair(finalKeyValue, builder);
-        else if (reader.TryReadExact(out finalKeyValue, reader.Remaining))
-            ParseKeyValuePair(finalKeyValue, builder);
+            if (reader.IsNext('(', true))
+            {
+                builder.Children = Parse(reader.Span[^reader.Remaining..]);
+                return builder;
+            }
 
-        if (reader.IsNext('(', true))
-        {
-            if (reader.TryReadTo(out ReadOnlySpan<char> children, ')'))
-                builder.Children = Parse(children);
-            else
-                throw new QueryException(QueryErrorCode.Malformed, "Missing a closing bracket on a child join");
+            reader.Advance(1);
         }
+
+        if (!reader.IsNext(')'))
+            ParseKeyValuePair(reader.Span[^reader.Remaining..], builder);
 
         return builder;
     }
@@ -155,6 +155,12 @@ public class JoinBuilder
     {
         if (keyValuePair.Length == 0)
             throw new QueryException(QueryErrorCode.Malformed, "Zero-length keyvalues are not permitted");
+
+        // We're naughty and don't validate closing joins properly
+        // which means we have to ignore them here
+        int closingJoinIndex = keyValuePair.IndexOf(')');
+        if (closingJoinIndex != -1)
+            keyValuePair = keyValuePair[..closingJoinIndex];
 
         SpanReader<char> reader = new(keyValuePair);
 
@@ -169,6 +175,7 @@ public class JoinBuilder
 
         if (value.Length == 0)
             throw new QueryException(QueryErrorCode.Malformed, $"The {key} key requires a value");
+        SpanReader<char> valueReader = new(value);
 
         if (key.SequenceEqual(OnFieldKey))
         {
@@ -192,27 +199,153 @@ public class JoinBuilder
         }
         else if (key.SequenceEqual(ShowKey))
         {
-            while (reader.TryReadTo(out ReadOnlySpan<char> show, VALUE_DELIMITER))
+            while (valueReader.TryReadTo(out ReadOnlySpan<char> show, VALUE_DELIMITER))
                 builder.Projection.Include(show.ToString());
 
-            if (reader.TryReadExact(out ReadOnlySpan<char> finalShow, VALUE_DELIMITER))
+            if (valueReader.TryReadExact(out ReadOnlySpan<char> finalShow, valueReader.Remaining))
                 builder.Projection.Include(finalShow.ToString());
         }
         else if (key.SequenceEqual(HideKey))
         {
-            while (reader.TryReadTo(out ReadOnlySpan<char> hide, VALUE_DELIMITER))
+            while (valueReader.TryReadTo(out ReadOnlySpan<char> hide, VALUE_DELIMITER))
                 builder.Projection.Exclude(hide.ToString());
 
-            if (reader.TryReadExact(out ReadOnlySpan<char> finalHide, VALUE_DELIMITER))
+            if (valueReader.TryReadExact(out ReadOnlySpan<char> finalHide, valueReader.Remaining))
                 builder.Projection.Exclude(finalHide.ToString());
         }
         else if (key.SequenceEqual(TermsKey))
         {
-            while (reader.TryReadTo(out ReadOnlySpan<char> term, VALUE_DELIMITER))
+            while (valueReader.TryReadTo(out ReadOnlySpan<char> term, VALUE_DELIMITER))
                 builder.Terms.Add(term.ToString());
 
-            if (reader.TryReadExact(out ReadOnlySpan<char> finalTerm, VALUE_DELIMITER))
+            if (valueReader.TryReadExact(out ReadOnlySpan<char> finalTerm, valueReader.Remaining))
                 builder.Terms.Add(finalTerm.ToString());
         }
+    }
+
+    private BsonDocument BuildInternal
+    (
+        JoinBuilder builder,
+        string onCollection,
+        IBsonSerializer<BsonDocument> documentSerializer,
+        IBsonSerializerRegistry serializerRegistry,
+        bool useCaseInsensitiveRegex
+    )
+    {
+        List<FilterBuilder> filterBuilders = builder.PerformPreBuildChecks(onCollection);
+
+        BsonArray subPipeline = new();
+
+        FilterDefinition<BsonDocument> filter = Builders<BsonDocument>.Filter.Empty;
+        foreach (FilterBuilder f in filterBuilders)
+            f.Build(ref filter, useCaseInsensitiveRegex);
+
+        if (filterBuilders.Count > 0)
+        {
+            BsonDocument filterStage = new
+            (
+                "$match",
+                filter.Render(documentSerializer, serializerRegistry)
+            );
+            subPipeline.Add(filterStage);
+        }
+
+        BsonDocument projectStage = new
+        (
+            "$project",
+            builder.Projection.Build().Render(documentSerializer, serializerRegistry)
+        );
+        subPipeline.Add(projectStage);
+
+        foreach (JoinBuilder child in builder.Children)
+        {
+            BsonDocument builtChild = child.BuildInternal
+            (
+                child,
+                builder.ToCollection,
+                documentSerializer,
+                serializerRegistry,
+                useCaseInsensitiveRegex
+            );
+            subPipeline.Add(builtChild);
+        }
+
+        return new BsonDocument
+        (
+            "$lookup",
+            new BsonDocument("from", ToCollection)
+                .Add("localField", OnField)
+                .Add("foreignField", ToField)
+                .Add("pipeline", subPipeline)
+                .Add("as", InjectAt)
+        );
+    }
+
+    [MemberNotNull(nameof(ToCollection))]
+    [MemberNotNull(nameof(OnField))]
+    [MemberNotNull(nameof(ToField))]
+    private List<FilterBuilder> PerformPreBuildChecks(string onCollection)
+    {
+        List<FilterBuilder> filters = new();
+
+        if (ToCollection is null)
+        {
+            throw new QueryException
+            (
+                QueryErrorCode.JoinCollectionRequired,
+                "Specify the 'type' key by providing the name of the collection you wish to join to"
+            );
+        }
+
+        if (!CollectionUtils.CheckCollectionExists(ToCollection))
+        {
+            throw new QueryException
+            (
+                QueryErrorCode.UnknownCollection,
+                $"Cannot join to the '{ToCollection}' collection as it does not exist"
+            );
+        }
+
+        if (OnField is not null && !CollectionUtils.CheckFieldExists(onCollection, OnField))
+        {
+            throw new QueryException
+            (
+                QueryErrorCode.UnknownField,
+                $"The {OnField} field does not exist on the {onCollection} collection"
+            );
+        }
+
+        if (ToField is not null && !CollectionUtils.CheckFieldExists(ToCollection, ToField))
+        {
+            throw new QueryException
+            (
+                QueryErrorCode.UnknownField,
+                $"The {ToField} field does not exist on the {ToCollection} collection"
+            );
+        }
+
+        if (OnField is null)
+        {
+            if (CollectionUtils.TryGetPrimaryJoinField(onCollection, out string? onField))
+                OnField = onField;
+            else
+                throw new QueryException(QueryErrorCode.JoinFieldRequired, $"The {onCollection} requires the 'on' key to be specified.");
+        }
+
+        if (ToField is null)
+        {
+            if (CollectionUtils.TryGetPrimaryJoinField(ToCollection, out string? toField))
+                ToField = toField;
+            else
+                throw new QueryException(QueryErrorCode.JoinFieldRequired, $"The {ToCollection} requires the 'to' key to be specified.");
+        }
+
+        if (InjectAt is null)
+            InjectAt = $"{OnField}_join_{ToCollection}";
+
+        foreach (string term in Terms)
+            filters.Add(FilterBuilder.Parse(ToCollection, term));
+
+        return filters;
     }
 }

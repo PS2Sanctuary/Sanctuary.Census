@@ -133,9 +133,34 @@ public class CollectionController : ControllerBase
 
         try
         {
-            IAggregateFluent<BsonDocument> query = ConstructBasicQuery(environment, collectionName, queryParams)
+            IAggregateFluent<BsonDocument> query = ConstructBasicQuery
+            (
+                environment,
+                collectionName,
+                queryParams,
+                out IMongoCollection<BsonDocument> mongoCollection
+            )
                 .Skip(queryParams.Start)
                 .Limit(queryParams.LimitPerDb ?? queryParams.Limit);
+
+            if (queryParams.Join is not null)
+            {
+                foreach (string value in queryParams.Join)
+                {
+                    List<JoinBuilder> builders = JoinBuilder.Parse(value);
+                    foreach (JoinBuilder b in builders)
+                    {
+                        b.Build
+                        (
+                            ref query,
+                            collectionName,
+                            mongoCollection.DocumentSerializer,
+                            mongoCollection.Settings.SerializerRegistry,
+                            !queryParams.IsCaseSensitive
+                        );
+                    }
+                }
+            }
 
             if (queryParams.Tree is not null)
             {
@@ -189,8 +214,13 @@ public class CollectionController : ControllerBase
     {
         try
         {
-            IAggregateFluent<AggregateCountResult> count = ConstructBasicQuery(environment, collectionName, queryParams)
-                .Count();
+            IAggregateFluent<AggregateCountResult> count = ConstructBasicQuery
+            (
+                environment,
+                collectionName,
+                queryParams,
+                out _
+            ).Count();
 
             AggregateCountResult res = await count.FirstAsync(ct);
             return new CollectionCount((ulong)res.Count);
@@ -205,7 +235,8 @@ public class CollectionController : ControllerBase
     (
         string environment,
         string collectionName,
-        CollectionQueryParameters queryParams
+        CollectionQueryParameters queryParams,
+        out IMongoCollection<BsonDocument> mongoCollection
     )
     {
         if (!CollectionUtils.CheckCollectionExists(collectionName))
@@ -213,7 +244,7 @@ public class CollectionController : ControllerBase
 
         PS2Environment env = ParseEnvironment(environment);
         IMongoDatabase db = _mongoContext.GetDatabase(env);
-        IMongoCollection<BsonDocument> coll = db.GetCollection<BsonDocument>(collectionName);
+        mongoCollection = db.GetCollection<BsonDocument>(collectionName);
 
         FilterDefinitionBuilder<BsonDocument> filterBuilder = Builders<BsonDocument>.Filter;
         FilterDefinition<BsonDocument> filter = filterBuilder.Empty;
@@ -241,7 +272,7 @@ public class CollectionController : ControllerBase
             queryParams.Hide?.SelectMany(s => s.Split(','))
         ).Build();
 
-        IAggregateFluent<BsonDocument> aggregate = coll.Aggregate()
+        IAggregateFluent<BsonDocument> aggregate = mongoCollection.Aggregate()
             .Match(filter)
             .Project(projection);
 
@@ -258,46 +289,6 @@ public class CollectionController : ControllerBase
                 aggregate = aggregate.Sort(new BsonDocument(components[0], sortDirection));
             }
         }
-
-        BsonArray subPipeline = new()
-        {
-            new BsonDocument
-            (
-                "$match",
-                new BsonDocument
-                (
-                    "$expr",
-                    new BsonDocument
-                    (
-                        "$eq",
-                        new BsonArray { 0, "$fire_mode_index" }
-                    )
-                )
-            ),
-            new BsonDocument
-            (
-                "$project",
-                new BsonDocument("_id", 0)
-            ),
-            new BsonDocument
-            (
-                "$lookup",
-                new BsonDocument("from", "fire_group")
-                    .Add("localField", "fire_group_id")
-                    .Add("foreignField", "fire_group_id")
-                    .Add("as", "fire_mode_to_fire_group")
-            )
-        };
-
-        BsonDocument lookup = new
-        (
-            "$lookup",
-            new BsonDocument("from", "fire_group_to_fire_mode")
-                .Add("localField", "fire_group_id")
-                .Add("foreignField", "fire_group_id")
-                .Add("pipeline", subPipeline)
-                .Add("as", "fire_group_to_fire_mode")
-        );
 
         return aggregate;
     }

@@ -86,6 +86,13 @@ public class CollectionQueryParameters
     public bool ShowTimings { get; set; }
 
     /// <summary>
+    /// Perform joins to other collections.
+    /// E.g. <c>item?c:join=item_to_weapon^on:item_id^to:item_id^show:weapon_id^inject_at:weapon_mapping</c>.
+    /// </summary>
+    [FromQuery(Name = "c:join")]
+    public IEnumerable<string>? Join { get; set; }
+
+    /// <summary>
     /// Groups the response on a field.
     /// </summary>
     [FromQuery(Name = "c:tree")]

@@ -43,5 +43,15 @@ public enum QueryErrorCode
     /// <summary>
     /// An invalid value was provided to a command.
     /// </summary>
-    InvalidCommandValue = 7
+    InvalidCommandValue = 7,
+
+    /// <summary>
+    /// A field needed to be specified for either the 'on' or 'to' join key.
+    /// </summary>
+    JoinFieldRequired = 8,
+
+    /// <summary>
+    /// The collection to join to was not specified in a join command.
+    /// </summary>
+    JoinCollectionRequired = 9
 }

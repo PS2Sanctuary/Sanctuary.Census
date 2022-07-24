@@ -16,7 +16,7 @@ namespace Sanctuary.Census.Models.Collections;
 /// <param name="HUDTintRGB">The default HUD tint of the faction.</param>
 /// <param name="CodeTag">The code tag of the faction.</param>
 /// <param name="UserSelectable">Indicates whether a user can select to play as this faction.</param>
-[Collection]
+[Collection(PrimaryJoinField = nameof(FactionID))]
 public record Faction
 (
     uint FactionID,

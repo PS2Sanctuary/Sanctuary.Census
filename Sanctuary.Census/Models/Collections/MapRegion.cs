@@ -14,7 +14,7 @@ namespace Sanctuary.Census.Models.Collections;
 /// <param name="LocationX">The X coordinate of the center of the region.</param>
 /// <param name="LocationY">The Y coordinate of the center of the region.</param>
 /// <param name="LocationZ">The Z coordinate of the center of the region.</param>
-[Collection]
+[Collection(PrimaryJoinField = nameof(MapRegionId))]
 public record MapRegion
 (
     uint MapRegionId,

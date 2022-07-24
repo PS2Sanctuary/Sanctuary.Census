@@ -3,7 +3,7 @@
 namespace Sanctuary.Census.Models.Collections;
 
 #pragma warning disable CS1591
-[Collection]
+[Collection(PrimaryJoinField = nameof(PlayerStateGroupId))]
 public record PlayerStateGroup2
 (
     uint PlayerStateGroupId,

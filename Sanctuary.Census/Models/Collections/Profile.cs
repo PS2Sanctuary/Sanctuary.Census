@@ -14,7 +14,7 @@ namespace Sanctuary.Census.Models.Collections;
 /// <param name="ImageSetId">The ID of the profile's image set.</param>
 /// <param name="ImageId">The ID of the profile's default image.</param>
 /// <param name="ImagePath">The relative path to the profile's default image.</param>
-[Collection]
+[Collection(PrimaryJoinField = nameof(ProfileId))]
 public record Profile
 (
     uint ProfileId,

@@ -10,7 +10,7 @@ namespace Sanctuary.Census.Models.Collections;
 /// <param name="Name">The name of the server.</param>
 /// <param name="IsLocked">Indicates whether the server is locked.</param>
 /// <param name="IsUnprivilegedAccessAllowed">Indicates whether standard accounts are allowed access to the server.</param>
-[Collection]
+[Collection(PrimaryJoinField = nameof(WorldID))]
 public record World
 (
     uint WorldID,

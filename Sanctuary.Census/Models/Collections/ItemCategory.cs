@@ -12,7 +12,7 @@ namespace Sanctuary.Census.Models.Collections;
 /// The IDs of this category's parents, ordered such that the immediate
 /// parent/s are the first items in the collection.
 /// </param>
-[Collection]
+[Collection(PrimaryJoinField = nameof(ItemCategoryID))]
 public record ItemCategory
 (
     uint ItemCategoryID,

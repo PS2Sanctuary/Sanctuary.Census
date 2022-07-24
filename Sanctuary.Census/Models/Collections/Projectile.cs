@@ -24,7 +24,7 @@ namespace Sanctuary.Census.Models.Collections;
 /// <param name="LockonLoseAngle">The angle to target at which the projectile will lose its lock.</param>
 /// <param name="LockonSeekInFlight">Indicates whether the projectile will seek its lock target while in flight.</param>
 /// <param name="ActorDefinition">The model used to represent the projectile.</param>
-[Collection]
+[Collection(PrimaryJoinField = nameof(ProjectileId))]
 public record Projectile
 (
     uint ProjectileId,

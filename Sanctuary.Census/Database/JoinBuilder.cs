@@ -126,6 +126,9 @@ public class JoinBuilder
         BsonDocumentPipelineStageDefinition<BsonDocument, BsonDocument> stageDef = new(built);
         aggregatePipeline = aggregatePipeline.AppendStage(stageDef);
 
+        if (!IsOuter)
+            aggregatePipeline.Match(Builders<BsonDocument>.Filter.Ne(InjectAt, Array.Empty<BsonDocument>()));
+
         if (!IsList)
             aggregatePipeline = aggregatePipeline.Unwind(InjectAt);
     }
@@ -278,6 +281,16 @@ public class JoinBuilder
                 (
                     "$unwind",
                     new BsonDocument("path", $"${child.InjectAt}")
+                ));
+            }
+
+            if (!child.IsOuter)
+            {
+                subPipeline.Add(new BsonDocument
+                (
+                    "$match",
+                    Builders<BsonDocument>.Filter.Ne(InjectAt, Array.Empty<BsonDocument>())
+                        .Render(documentSerializer, serializerRegistry)
                 ));
             }
         }

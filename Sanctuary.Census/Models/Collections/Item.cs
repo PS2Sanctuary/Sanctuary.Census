@@ -23,7 +23,7 @@ namespace Sanctuary.Census.Models.Collections;
 /// <param name="ImagePath">The relative path to the item's default image.</param>
 /// <param name="HudImageSetID">The ID of the item's HUD display image.</param>
 /// <param name="IsAccountScoped">Indicates whether this item is available to every character on an account once purchased.</param>
-[Collection(PrimaryJoinField = nameof(Item.ItemID))]
+[Collection]
 public record Item
 (
     [property:Key] uint ItemID,

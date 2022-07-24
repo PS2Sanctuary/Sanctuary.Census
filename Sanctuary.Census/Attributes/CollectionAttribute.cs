@@ -8,8 +8,4 @@ namespace Sanctuary.Census.Attributes;
 [AttributeUsage(AttributeTargets.Class)]
 public class CollectionAttribute : Attribute
 {
-    /// <summary>
-    /// The primary join field of the collection.
-    /// </summary>
-    public string? PrimaryJoinField { get; set; }
 }

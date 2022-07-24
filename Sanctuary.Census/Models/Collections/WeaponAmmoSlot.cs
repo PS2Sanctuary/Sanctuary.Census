@@ -11,7 +11,7 @@ namespace Sanctuary.Census.Models.Collections;
 /// <param name="ClipSize">The size of a single clip of this ammo slot.</param>
 /// <param name="Capacity">The size of the reserve ammunition capacity of this ammo slot.</param>
 /// <param name="ClipModelName">The name of the model that represents this clip.</param>
-[Collection(PrimaryJoinField = nameof(WeaponAmmoSlot.WeaponId))]
+[Collection]
 public record WeaponAmmoSlot
 (
     [property:Key] uint WeaponId,

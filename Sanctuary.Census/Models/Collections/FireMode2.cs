@@ -5,7 +5,7 @@ using System.ComponentModel.DataAnnotations;
 namespace Sanctuary.Census.Models.Collections;
 
 #pragma warning disable CS1591
-[Collection(PrimaryJoinField = nameof(FireMode2.FireModeID))]
+[Collection]
 public record FireMode2
 (
     [property:Key] uint FireModeID,

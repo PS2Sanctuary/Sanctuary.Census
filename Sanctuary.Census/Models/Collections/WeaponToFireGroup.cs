@@ -9,7 +9,7 @@ namespace Sanctuary.Census.Models.Collections;
 /// <param name="WeaponId">The ID of the weapon.</param>
 /// <param name="FireGroupId">The ID of the fire group.</param>
 /// <param name="FireGroupIndex">The index of the fire group within the mapping list.</param>
-[Collection(PrimaryJoinField = nameof(WeaponToFireGroup.WeaponId))]
+[Collection]
 public record WeaponToFireGroup
 (
     [property:Key] uint WeaponId,

@@ -8,7 +8,7 @@ namespace Sanctuary.Census.Models.Collections;
 /// </summary>
 /// <param name="FireModeID">The ID of the fire mode.</param>
 /// <param name="ProjectileID">The ID of the projectile.</param>
-[Collection(PrimaryJoinField = nameof(FireModeToProjectile.FireModeID))]
+[Collection]
 public record FireModeToProjectile
 (
     [property:Key] uint FireModeID,

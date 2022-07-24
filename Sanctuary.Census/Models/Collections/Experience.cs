@@ -12,7 +12,7 @@ namespace Sanctuary.Census.Models.Collections;
 /// <param name="Description">The description of this experience point.</param>
 /// <param name="XP">The amount of XP granted by this experience point.</param>
 /// <param name="IsNotableEvent">Indicates whether this experience point denotes an important player action.</param>
-[Collection(PrimaryJoinField = nameof(Experience.ExperienceID))]
+[Collection]
 public record Experience
 (
     [property:Key] uint ExperienceID,

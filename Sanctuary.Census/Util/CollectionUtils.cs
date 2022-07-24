@@ -39,10 +39,6 @@ public static class CollectionUtils
 
             foreach (PropertyInfo prop in collType.GetProperties())
                 propNames.Add(SnakeCaseJsonNamingPolicy.Default.ConvertName(prop.Name));
-
-            CollectionAttribute collAttr = collType.GetCustomAttribute<CollectionAttribute>()!;
-            if (collAttr.PrimaryJoinField is not null)
-                _primaryJoinFields[collName] = SnakeCaseJsonNamingPolicy.Default.ConvertName(collAttr.PrimaryJoinField);
         }
     }
 
@@ -72,4 +68,14 @@ public static class CollectionUtils
     /// <returns><c>True</c> if the collection has a primary join field, else <c>False</c>.</returns>
     public static bool TryGetPrimaryJoinField(string collectionName, [NotNullWhen(true)] out string? primaryJoinField)
         => _primaryJoinFields.TryGetValue(collectionName, out primaryJoinField);
+
+    public static bool TryGetMatchingKeyFields
+    (
+        string collectionNameA,
+        string collectionNameB,
+        out string? matchingKeyFieldName
+    )
+    {
+        throw new NotImplementedException();
+    }
 }

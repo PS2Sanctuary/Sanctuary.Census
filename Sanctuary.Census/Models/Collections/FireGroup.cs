@@ -12,7 +12,7 @@ namespace Sanctuary.Census.Models.Collections;
 /// <param name="SpoolUpTimeMS">The time in milliseconds to spool up before firing.</param>
 /// <param name="SpoolUpInitialRefireTimeMS"></param>
 /// <param name="CanChamberIronsights"></param>
-[Collection(PrimaryJoinField = nameof(FireGroup.FireGroupID))]
+[Collection]
 public record FireGroup
 (
     [property:Key] uint FireGroupID,

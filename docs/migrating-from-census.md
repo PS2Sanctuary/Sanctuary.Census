@@ -21,6 +21,7 @@ Supported commands:
 - `c:hide`.
 - `c:has`.
 - `c:includeNull`.
+- `c:lang` - allows a comma-separated list of language codes, rather than a single code.
 - `c:sort`.
 - `c:tree` - the `start` key is not yet supported.
 - `c:timing` - inserts a timestamp indicating the time taken to query the database, rather than the more specific model of the DBG Census.

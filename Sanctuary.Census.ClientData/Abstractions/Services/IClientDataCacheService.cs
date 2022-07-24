@@ -53,4 +53,9 @@ public interface IClientDataCacheService : IDataCacheService
     /// Gets the cached <see cref="ResourceType"/> objects.
     /// </summary>
     IReadOnlyList<ResourceType> ResourceTypes { get; }
+
+    /// <summary>
+    /// Gets the cached <see cref="Vehicle"/> objects.
+    /// </summary>
+    IReadOnlyList<Vehicle> Vehicles { get; }
 }

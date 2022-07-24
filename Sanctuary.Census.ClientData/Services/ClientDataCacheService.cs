@@ -55,6 +55,9 @@ public class ClientDataCacheService : IClientDataCacheService
     /// <inheritdoc />
     public IReadOnlyList<ResourceType> ResourceTypes { get; private set; }
 
+    /// <inheritdoc />
+    public IReadOnlyList<Vehicle> Vehicles { get; private set; }
+
     /// <summary>
     /// Initializes a new instance of the <see cref="ClientDataCacheService"/> class.
     /// </summary>
@@ -160,6 +163,14 @@ public class ClientDataCacheService : IClientDataCacheService
             ct
         ).ConfigureAwait(false);
 
+        Vehicles = await ExtractDatasheet<Vehicle>
+        (
+            "Vehicles.txt",
+            assetHeaders,
+            reader,
+            ct
+        ).ConfigureAwait(false);
+
         LastPopulated = DateTimeOffset.UtcNow;
     }
 
@@ -173,6 +184,7 @@ public class ClientDataCacheService : IClientDataCacheService
     [MemberNotNull(nameof(ImageSetMappings))]
     [MemberNotNull(nameof(ItemProfiles))]
     [MemberNotNull(nameof(ResourceTypes))]
+    [MemberNotNull(nameof(Vehicles))]
     public void Clear()
     {
         LastPopulated = DateTimeOffset.MinValue;
@@ -185,6 +197,7 @@ public class ClientDataCacheService : IClientDataCacheService
         ImageSetMappings = new List<ImageSetMapping>();
         ItemProfiles = new List<ItemProfile>();
         ResourceTypes = new List<ResourceType>();
+        Vehicles = new List<Vehicle>();
     }
 
     private static async Task<List<TDataType>> ExtractDatasheet<TDataType>

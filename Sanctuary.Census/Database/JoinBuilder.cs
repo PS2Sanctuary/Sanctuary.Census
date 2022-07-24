@@ -117,6 +117,7 @@ public class JoinBuilder
     /// <param name="documentSerializer">The document serializer.</param>
     /// <param name="serializerRegistry">The serializer registry.</param>
     /// <param name="useCaseInsensitiveRegex">Whether regex matches should be case-insensitive.</param>
+    /// <param name="langProjections">A lang projection builder.</param>
     /// <param name="builtLookups">The total number of lookup stages that were built and appended.</param>
     public void Build
     (
@@ -125,6 +126,7 @@ public class JoinBuilder
         IBsonSerializer<BsonDocument> documentSerializer,
         IBsonSerializerRegistry serializerRegistry,
         bool useCaseInsensitiveRegex,
+        LangProjectionBuilder? langProjections,
         out int builtLookups
     )
     {
@@ -133,7 +135,9 @@ public class JoinBuilder
             this,
             onCollection,
             documentSerializer,
-            serializerRegistry, useCaseInsensitiveRegex,
+            serializerRegistry,
+            useCaseInsensitiveRegex,
+            langProjections,
             out builtLookups
         );
 
@@ -259,12 +263,12 @@ public class JoinBuilder
         IBsonSerializer<BsonDocument> documentSerializer,
         IBsonSerializerRegistry serializerRegistry,
         bool useCaseInsensitiveRegex,
+        LangProjectionBuilder? langProjections,
         out int builtLookups
     )
     {
         builtLookups = 1;
         List<FilterBuilder> filterBuilders = builder.PerformPreBuildChecks(onCollection);
-
         BsonArray subPipeline = new();
 
         FilterDefinition<BsonDocument> filter = Builders<BsonDocument>.Filter.Empty;
@@ -281,6 +285,7 @@ public class JoinBuilder
             subPipeline.Add(filterStage);
         }
 
+        langProjections?.AppendToProjection(builder.Projection, builder.ToCollection);
         BsonDocument projectStage = new
         (
             "$project",
@@ -297,6 +302,7 @@ public class JoinBuilder
                 documentSerializer,
                 serializerRegistry,
                 useCaseInsensitiveRegex,
+                langProjections,
                 out int builtChildLookups
             );
             builtLookups += builtChildLookups;

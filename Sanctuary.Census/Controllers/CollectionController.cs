@@ -163,6 +163,7 @@ public class CollectionController : ControllerBase
                             mongoCollection.DocumentSerializer,
                             mongoCollection.Settings.SerializerRegistry,
                             !queryParams.IsCaseSensitive,
+                            langProjections,
                             out int builtLookups
                         );
                         totalLookups += builtLookups;

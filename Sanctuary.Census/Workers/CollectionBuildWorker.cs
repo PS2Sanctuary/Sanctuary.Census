@@ -121,10 +121,8 @@ public class CollectionBuildWorker : BackgroundService
 
                     try
                     {
-                        await collectionBuilder.BuildAsync
-                        (mongoContext,
-                            ct
-                        );
+                        // TODO: We need to remove old data, and tie this in with a diff system
+                        await collectionBuilder.BuildAsync(mongoContext,ct);
                         _logger.LogDebug("[{Environment}] Successfully ran the {CollectionBuilder}", env, collectionBuilder);
                     }
                     catch (Exception ex)

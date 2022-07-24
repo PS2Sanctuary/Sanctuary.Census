@@ -4,6 +4,7 @@ Date format: DD/MM/YYYY
 
 ## vNext
 
+- Added full support for joins.
 - Added near-full support for the `c:tree` command. The `start` key is not yet supported.
 - Added support for the `c:includeNull` command.
 - Restricted `c:limit` to a maximum value of 10000.

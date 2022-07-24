@@ -15,6 +15,7 @@ Supported commands:
 - `c:case`.
 - `c:limit` (default `100`, max `10 000`).
 - `c:limitPerDB` (overrides `c:limit`).
+- `c:join` - unlike DBG Census, all siblings may use child joins. However, a single query is limited to 25 joins total.
 - `c:start`.
 - `c:show`.
 - `c:hide`.

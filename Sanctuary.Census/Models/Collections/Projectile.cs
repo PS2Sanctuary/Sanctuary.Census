@@ -1,4 +1,5 @@
 ﻿using Sanctuary.Census.Attributes;
+using System.ComponentModel.DataAnnotations;
 
 namespace Sanctuary.Census.Models.Collections;
 
@@ -27,7 +28,7 @@ namespace Sanctuary.Census.Models.Collections;
 [Collection(PrimaryJoinField = nameof(Projectile.ProjectileId))]
 public record Projectile
 (
-    uint ProjectileId,
+    [property:Key] uint ProjectileId,
     byte ProjectileFlightTypeId,
     float Speed,
     float? SpeedMax,

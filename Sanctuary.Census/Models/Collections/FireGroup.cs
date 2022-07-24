@@ -1,4 +1,5 @@
 ﻿using Sanctuary.Census.Attributes;
+using System.ComponentModel.DataAnnotations;
 
 namespace Sanctuary.Census.Models.Collections;
 
@@ -14,7 +15,7 @@ namespace Sanctuary.Census.Models.Collections;
 [Collection(PrimaryJoinField = nameof(FireGroup.FireGroupID))]
 public record FireGroup
 (
-    uint FireGroupID,
+    [property:Key] uint FireGroupID,
     uint? ChamberDurationMS,
     ushort? TransitionDurationMS,
     ushort? SpoolUpTimeMS,

@@ -1,5 +1,6 @@
 ﻿using Sanctuary.Census.Attributes;
 using Sanctuary.Census.Common.Objects.CommonModels;
+using System.ComponentModel.DataAnnotations;
 
 namespace Sanctuary.Census.Models.Collections;
 
@@ -14,7 +15,7 @@ namespace Sanctuary.Census.Models.Collections;
 [Collection(PrimaryJoinField = nameof(Experience.ExperienceID))]
 public record Experience
 (
-    uint ExperienceID,
+    [property:Key] uint ExperienceID,
     uint AwardTypeID,
     LocaleString Description,
     float XP,

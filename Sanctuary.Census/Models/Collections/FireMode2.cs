@@ -1,5 +1,6 @@
 ﻿using Sanctuary.Census.Attributes;
 using Sanctuary.Census.Common.Objects.CommonModels;
+using System.ComponentModel.DataAnnotations;
 
 namespace Sanctuary.Census.Models.Collections;
 
@@ -7,7 +8,7 @@ namespace Sanctuary.Census.Models.Collections;
 [Collection(PrimaryJoinField = nameof(FireMode2.FireModeID))]
 public record FireMode2
 (
-    uint FireModeID,
+    [property:Key] uint FireModeID,
     byte FireModeTypeID,
     LocaleString Description,
     uint? AbilityID,

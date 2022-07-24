@@ -1,4 +1,5 @@
 ﻿using Sanctuary.Census.Attributes;
+using System.ComponentModel.DataAnnotations;
 
 namespace Sanctuary.Census.Models.Collections;
 
@@ -6,8 +7,8 @@ namespace Sanctuary.Census.Models.Collections;
 [Collection(PrimaryJoinField = nameof(PlayerStateGroup2.PlayerStateGroupId))]
 public record PlayerStateGroup2
 (
-    uint PlayerStateGroupId,
-    uint PlayerStateId,
+    [property:Key] uint PlayerStateGroupId,
+    [property:Key] uint PlayerStateId,
     bool CanIronSight,
     float CofGrowRate,
     float CofMax,

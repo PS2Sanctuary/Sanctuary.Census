@@ -1,4 +1,5 @@
 ﻿using Sanctuary.Census.Attributes;
+using System.ComponentModel.DataAnnotations;
 
 namespace Sanctuary.Census.Models.Collections;
 
@@ -12,8 +13,8 @@ namespace Sanctuary.Census.Models.Collections;
 [Collection]
 public record FacilityLink
 (
-    uint ZoneID,
-    int FacilityIdA,
-    int FacilityIdB,
+    [property:Key] uint ZoneID,
+    [property:Key] int FacilityIdA,
+    [property:Key] int FacilityIdB,
     string? Description
 );

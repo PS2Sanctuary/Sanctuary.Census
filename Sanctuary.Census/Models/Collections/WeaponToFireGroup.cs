@@ -1,4 +1,5 @@
 ﻿using Sanctuary.Census.Attributes;
+using System.ComponentModel.DataAnnotations;
 
 namespace Sanctuary.Census.Models.Collections;
 
@@ -11,7 +12,7 @@ namespace Sanctuary.Census.Models.Collections;
 [Collection(PrimaryJoinField = nameof(WeaponToFireGroup.WeaponId))]
 public record WeaponToFireGroup
 (
-    uint WeaponId,
-    uint FireGroupId,
+    [property:Key] uint WeaponId,
+    [property:Key] uint FireGroupId,
     uint FireGroupIndex
 );

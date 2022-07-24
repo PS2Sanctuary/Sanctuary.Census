@@ -1,4 +1,5 @@
 ﻿using Sanctuary.Census.Attributes;
+using System.ComponentModel.DataAnnotations;
 
 namespace Sanctuary.Census.Models.Collections;
 
@@ -13,8 +14,8 @@ namespace Sanctuary.Census.Models.Collections;
 [Collection(PrimaryJoinField = nameof(WeaponAmmoSlot.WeaponId))]
 public record WeaponAmmoSlot
 (
-    uint WeaponId,
-    uint WeaponSlotIndex,
+    [property:Key] uint WeaponId,
+    [property:Key] uint WeaponSlotIndex,
     ushort ClipSize,
     ushort Capacity,
     string? ClipModelName

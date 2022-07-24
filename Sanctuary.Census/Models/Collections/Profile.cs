@@ -1,5 +1,6 @@
 ﻿using Sanctuary.Census.Attributes;
 using Sanctuary.Census.Common.Objects.CommonModels;
+using System.ComponentModel.DataAnnotations;
 
 namespace Sanctuary.Census.Models.Collections;
 
@@ -17,7 +18,7 @@ namespace Sanctuary.Census.Models.Collections;
 [Collection(PrimaryJoinField = nameof(Profile.ProfileId))]
 public record Profile
 (
-    uint ProfileId,
+    [property:Key] uint ProfileId,
     uint ProfileTypeId,
     uint? FactionId,
     LocaleString? Name,

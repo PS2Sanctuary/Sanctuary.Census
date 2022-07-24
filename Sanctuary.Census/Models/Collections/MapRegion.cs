@@ -1,4 +1,5 @@
 ﻿using Sanctuary.Census.Attributes;
+using System.ComponentModel.DataAnnotations;
 
 namespace Sanctuary.Census.Models.Collections;
 
@@ -17,7 +18,7 @@ namespace Sanctuary.Census.Models.Collections;
 [Collection(PrimaryJoinField = nameof(MapRegion.MapRegionId))]
 public record MapRegion
 (
-    uint MapRegionId,
+    [property:Key] uint MapRegionId,
     uint ZoneId,
     uint FacilityId,
     string FacilityName,

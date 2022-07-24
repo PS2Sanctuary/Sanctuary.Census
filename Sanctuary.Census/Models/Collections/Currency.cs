@@ -1,5 +1,6 @@
 ﻿using Sanctuary.Census.Attributes;
 using Sanctuary.Census.Common.Objects.CommonModels;
+using System.ComponentModel.DataAnnotations;
 
 namespace Sanctuary.Census.Models.Collections;
 
@@ -15,7 +16,7 @@ namespace Sanctuary.Census.Models.Collections;
 [Collection(PrimaryJoinField = nameof(Currency.CurrencyID))]
 public record Currency
 (
-    uint CurrencyID,
+    [property:Key] uint CurrencyID,
     LocaleString Name,
     LocaleString? Description,
     uint IconImageSetID,

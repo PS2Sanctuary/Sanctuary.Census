@@ -1,5 +1,6 @@
 ﻿using Sanctuary.Census.Attributes;
 using Sanctuary.Census.Common.Objects.CommonModels;
+using System.ComponentModel.DataAnnotations;
 
 namespace Sanctuary.Census.Models.Collections;
 
@@ -15,7 +16,7 @@ namespace Sanctuary.Census.Models.Collections;
 [Collection(PrimaryJoinField = nameof(ItemCategory.ItemCategoryID))]
 public record ItemCategory
 (
-    uint ItemCategoryID,
+    [property:Key] uint ItemCategoryID,
     LocaleString Name,
     uint[]? ParentCategoryIds
 );

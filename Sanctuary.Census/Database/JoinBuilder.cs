@@ -117,6 +117,7 @@ public class JoinBuilder
     /// <param name="documentSerializer">The document serializer.</param>
     /// <param name="serializerRegistry">The serializer registry.</param>
     /// <param name="useCaseInsensitiveRegex">Whether regex matches should be case-insensitive.</param>
+    /// <param name="builtLookups">The total number of lookup stages that were built and appended.</param>
     public void Build
     (
         ref IAggregateFluent<BsonDocument> aggregatePipeline,

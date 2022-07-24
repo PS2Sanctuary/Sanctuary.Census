@@ -26,6 +26,13 @@ public class CollectionQueryParameters
     public bool IncludeNullFields { get; set; }
 
     /// <summary>
+    /// Includes only the given language codes on any locale fields.
+    /// E.g. <c>c:lang=de,en</c>.
+    /// </summary>
+    [FromQuery(Name = "c:lang")]
+    public string? Lang { get; set; }
+
+    /// <summary>
     /// The maximum number of records to return.
     /// E.g. <c>c:limit=10</c>.
     /// </summary>

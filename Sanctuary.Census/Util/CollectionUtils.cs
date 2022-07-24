@@ -1,10 +1,10 @@
 ﻿using Sanctuary.Census.Attributes;
+using Sanctuary.Census.Common.Objects.CommonModels;
 using Sanctuary.Census.Json;
 using Sanctuary.Census.Services;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Reflection;
 
@@ -17,12 +17,13 @@ public static class CollectionUtils
 {
     private static readonly Dictionary<string, HashSet<string>> _collectionNamesAndFields;
     private static readonly Dictionary<string, List<string>> _keyFields;
-    // TODO: Lang fields
+    private static readonly Dictionary<string, List<string>> _langFields;
 
     static CollectionUtils()
     {
         _collectionNamesAndFields = new Dictionary<string, HashSet<string>>();
         _keyFields = new Dictionary<string, List<string>>();
+        _langFields = new Dictionary<string, List<string>>();
 
         IEnumerable<Type> collTypes = typeof(CollectionBuilderRepository).Assembly
             .GetTypes()
@@ -35,13 +36,18 @@ public static class CollectionUtils
 
             _collectionNamesAndFields.Add(collName, propNames);
             _keyFields.Add(collName, new List<string>());
+            _langFields.Add(collName, new List<string>());
 
             foreach (PropertyInfo prop in collType.GetProperties())
             {
                 string propName = SnakeCaseJsonNamingPolicy.Default.ConvertName(prop.Name);
                 propNames.Add(propName);
+
                 if (prop.IsDefined(typeof(KeyAttribute)))
                     _keyFields[collName].Add(propName);
+
+                if (prop.PropertyType == typeof(LocaleString))
+                    _langFields[collName].Add(propName);
             }
         }
     }
@@ -88,4 +94,12 @@ public static class CollectionUtils
         matchingKeyFieldName = keyFieldsA.FirstOrDefault(k => keyFieldsB.Contains(k));
         return matchingKeyFieldName is not null;
     }
+
+    /// <summary>
+    /// Gets any fields on a collection of the <see cref="LocaleString"/> type.
+    /// </summary>
+    /// <param name="collectionName">The name of the collection.</param>
+    /// <returns></returns>
+    public static List<string> GetLocaleFields(string collectionName)
+        => _langFields[collectionName];
 }

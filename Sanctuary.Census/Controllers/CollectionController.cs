@@ -133,11 +133,16 @@ public class CollectionController : ControllerBase
 
         try
         {
+            LangProjectionBuilder? langProjections = queryParams.Lang is null
+                ? null
+                : new LangProjectionBuilder(queryParams.Lang.Split(','));
+
             IAggregateFluent<BsonDocument> query = ConstructBasicQuery
             (
                 environment,
                 collectionName,
                 queryParams,
+                langProjections,
                 out IMongoCollection<BsonDocument> mongoCollection
             )
                 .Skip(queryParams.Start)
@@ -231,6 +236,7 @@ public class CollectionController : ControllerBase
                 environment,
                 collectionName,
                 queryParams,
+                null,
                 out _
             ).Count();
 
@@ -248,6 +254,7 @@ public class CollectionController : ControllerBase
         string environment,
         string collectionName,
         CollectionQueryParameters queryParams,
+        LangProjectionBuilder? langProjections,
         out IMongoCollection<BsonDocument> mongoCollection
     )
     {
@@ -278,15 +285,16 @@ public class CollectionController : ControllerBase
             }
         }
 
-        ProjectionDefinition<BsonDocument> projection = new ProjectionBuilder
+        ProjectionBuilder projection = new
         (
             queryParams.Show?.SelectMany(s => s.Split(',')),
             queryParams.Hide?.SelectMany(s => s.Split(','))
-        ).Build();
+        );
+        langProjections?.AppendToProjection(projection, collectionName);
 
         IAggregateFluent<BsonDocument> aggregate = mongoCollection.Aggregate()
             .Match(filter)
-            .Project(projection);
+            .Project(projection.Build());
 
         if (queryParams.Sorts is not null)
         {

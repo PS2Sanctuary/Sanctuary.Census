@@ -136,8 +136,8 @@ public class FilterBuilder
         if (splitIndex == -1)
             throw new QueryException(QueryErrorCode.Malformed, "A filter term must have a be in the form '<field_name>=<value>'");
 
-        string fieldName = filter[..splitIndex].ToString();
-        return Parse(collectionName, fieldName, filter);
+        string fieldName = filter[..splitIndex++].ToString();
+        return Parse(collectionName, fieldName, filter[splitIndex..]);
     }
 
     /// <summary>

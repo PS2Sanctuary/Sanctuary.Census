@@ -125,6 +125,9 @@ public class JoinBuilder
         BsonDocument built = BuildInternal(this, onCollection, documentSerializer, serializerRegistry, useCaseInsensitiveRegex);
         BsonDocumentPipelineStageDefinition<BsonDocument, BsonDocument> stageDef = new(built);
         aggregatePipeline = aggregatePipeline.AppendStage(stageDef);
+
+        if (!IsList)
+            aggregatePipeline = aggregatePipeline.Unwind(InjectAt);
     }
 
     private static JoinBuilder ParseIndividualJoin(ReadOnlySpan<char> value)
@@ -268,9 +271,18 @@ public class JoinBuilder
                 useCaseInsensitiveRegex
             );
             subPipeline.Add(builtChild);
+
+            if (!child.IsList)
+            {
+                subPipeline.Add(new BsonDocument
+                (
+                    "$unwind",
+                    new BsonDocument("path", $"${child.InjectAt}")
+                ));
+            }
         }
 
-        return new BsonDocument
+        BsonDocument lookup = new
         (
             "$lookup",
             new BsonDocument("from", ToCollection)
@@ -279,6 +291,8 @@ public class JoinBuilder
                 .Add("pipeline", subPipeline)
                 .Add("as", InjectAt)
         );
+
+        return lookup;
     }
 
     [MemberNotNull(nameof(ToCollection))]
@@ -324,20 +338,16 @@ public class JoinBuilder
             );
         }
 
+        CollectionUtils.TryGetMatchingKeyFields(onCollection, ToCollection, out string? matchingKeyField);
         if (OnField is null)
         {
-            if (CollectionUtils.TryGetPrimaryJoinField(onCollection, out string? onField))
-                OnField = onField;
-            else
-                throw new QueryException(QueryErrorCode.JoinFieldRequired, $"The {onCollection} requires the 'on' key to be specified.");
+            OnField = matchingKeyField
+                ?? throw new QueryException(QueryErrorCode.JoinFieldRequired, $"The {onCollection} requires the 'on' key to be specified.");
         }
-
         if (ToField is null)
         {
-            if (CollectionUtils.TryGetPrimaryJoinField(ToCollection, out string? toField))
-                ToField = toField;
-            else
-                throw new QueryException(QueryErrorCode.JoinFieldRequired, $"The {ToCollection} requires the 'to' key to be specified.");
+            ToField = matchingKeyField
+                ?? throw new QueryException(QueryErrorCode.JoinFieldRequired, $"The {ToCollection} requires the 'to' key to be specified.");
         }
 
         if (InjectAt is null)

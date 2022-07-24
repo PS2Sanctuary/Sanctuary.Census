@@ -3,6 +3,7 @@ using Sanctuary.Census.Json;
 using Sanctuary.Census.Services;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Reflection;
@@ -15,13 +16,13 @@ namespace Sanctuary.Census.Util;
 public static class CollectionUtils
 {
     private static readonly Dictionary<string, HashSet<string>> _collectionNamesAndFields;
-    private static readonly Dictionary<string, string> _primaryJoinFields;
+    private static readonly Dictionary<string, List<string>> _keyFields;
     // TODO: Lang fields
 
     static CollectionUtils()
     {
         _collectionNamesAndFields = new Dictionary<string, HashSet<string>>();
-        _primaryJoinFields = new Dictionary<string, string>();
+        _keyFields = new Dictionary<string, List<string>>();
 
         IEnumerable<Type> collTypes = typeof(CollectionBuilderRepository).Assembly
             .GetTypes()
@@ -31,14 +32,17 @@ public static class CollectionUtils
         {
             HashSet<string> propNames = new();
             string collName = SnakeCaseJsonNamingPolicy.Default.ConvertName(collType.Name);
-            _collectionNamesAndFields.Add
-            (
-                collName,
-                propNames
-            );
+
+            _collectionNamesAndFields.Add(collName, propNames);
+            _keyFields.Add(collName, new List<string>());
 
             foreach (PropertyInfo prop in collType.GetProperties())
-                propNames.Add(SnakeCaseJsonNamingPolicy.Default.ConvertName(prop.Name));
+            {
+                string propName = SnakeCaseJsonNamingPolicy.Default.ConvertName(prop.Name);
+                propNames.Add(propName);
+                if (prop.IsDefined(typeof(KeyAttribute)))
+                    _keyFields[collName].Add(propName);
+            }
         }
     }
 
@@ -61,14 +65,12 @@ public static class CollectionUtils
            && fields.Contains(fieldWebName);
 
     /// <summary>
-    /// Gets the primary join field of a collection.
+    /// Tries to find key fields on two different collections that share the same name.
     /// </summary>
-    /// <param name="collectionName">The name of the collection.</param>
-    /// <param name="primaryJoinField">The primary join field.</param>
-    /// <returns><c>True</c> if the collection has a primary join field, else <c>False</c>.</returns>
-    public static bool TryGetPrimaryJoinField(string collectionName, [NotNullWhen(true)] out string? primaryJoinField)
-        => _primaryJoinFields.TryGetValue(collectionName, out primaryJoinField);
-
+    /// <param name="collectionNameA">The first collection.</param>
+    /// <param name="collectionNameB">The second collection.</param>
+    /// <param name="matchingKeyFieldName">A common key field, or <c>null</c> if none exists.</param>
+    /// <returns><c>True</c> if a common key field could be found, otherwise <c>False</c>.</returns>
     public static bool TryGetMatchingKeyFields
     (
         string collectionNameA,
@@ -76,6 +78,14 @@ public static class CollectionUtils
         out string? matchingKeyFieldName
     )
     {
-        throw new NotImplementedException();
+        matchingKeyFieldName = null;
+
+        if (!_keyFields.TryGetValue(collectionNameA, out List<string>? keyFieldsA))
+            return false;
+        if (!_keyFields.TryGetValue(collectionNameB, out List<string>? keyFieldsB))
+            return false;
+
+        matchingKeyFieldName = keyFieldsA.FirstOrDefault(k => keyFieldsB.Contains(k));
+        return matchingKeyFieldName is not null;
     }
 }

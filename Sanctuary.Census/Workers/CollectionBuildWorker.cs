@@ -24,6 +24,8 @@ namespace Sanctuary.Census.Workers;
 /// </summary>
 public class CollectionBuildWorker : BackgroundService
 {
+    private static readonly TimeSpan COLLECTION_BUILD_INTERVAL = TimeSpan.FromHours(3);
+
     private readonly ILogger<CollectionBuildWorker> _logger;
     private readonly IServiceScopeFactory _serviceScopeFactory;
     private readonly IMemoryCache _memoryCache;
@@ -139,7 +141,7 @@ public class CollectionBuildWorker : BackgroundService
                 patchDataCache.Clear();
             }
 
-            await Task.Delay(TimeSpan.FromHours(1), ct).ConfigureAwait(false);
+            await Task.Delay(COLLECTION_BUILD_INTERVAL, ct).ConfigureAwait(false);
         }
     }
 }

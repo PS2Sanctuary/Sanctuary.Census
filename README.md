@@ -16,20 +16,28 @@ Jump right in by heading to [https://census.lithafalcon.cc/get/ps2](https://cens
 
 ⚠ The API should be considered unstable, although hopefully only in a manner that features are being added in a non-disruptive way.
 
-## Contributing
+## Building
 
-Contributions are more than welcome! However, I'm afraid at the current moment, you'll have to make a large number of adjustments to allow compilation.
-This is because I have not open-sourced a particular data retrieval component, and don't have any plans to do so in the near future.
+To build Sanctuary.Census, you'll require the [.NET 6 SDK](https://dotnet.microsoft.com/en-us/download/dotnet/6.0).
+Furthermore, you'll need access to a MongoDB instance. This is simple to [install locally](https://www.mongodb.com/docs/manual/installation/).
+Sanctuary.Census expects the database to be running on the default endpoint of `localhost:27017`, and there is currently
+no way to configure this.
 
-If you'd still like to go ahead with contributing, consider opening an issue first to detail your ideas. This gives a maintainer a chance to pre-approve
-the work, and reduces the likelihood of two people working on the same feature simultaneously.
+I'm afraid at the current moment, you'll have to make a large number of adjustments to allow compilation.
+This is because I have not open-sourced a particular data retrieval component, and don't have any plans to
+do so in the near future.
 
-### Structure
+### Solution Structure
 
 The main project, `Sanctuary.Census`, contains the API, collection models and collection building logic.
 
-Each data source has its own project. The only visible one at the moment is `Sanctuary.Census.ClientData`. Data source projects contain their
+Each data source has its own project - for example, `Sanctuary.Census.ClientData`. Data source projects contain their
 specific data models, data retrieval logic and an object inheriting from `IDataCacheService` responsible for caching the data, for use in
 the main project's collection builders.
 
 Finally, the `Sanctuary.Common` project contains shared data types and services.
+
+## Contributing
+
+Contributions are more than welcome! Please consider opening an issue first to detail your ideas. This gives a maintainer a chance to pre-approve
+the work, and reduces the likelihood of two people working on the same feature simultaneously.

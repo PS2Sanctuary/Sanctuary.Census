@@ -122,29 +122,22 @@ public class CollectionController : ControllerBase
         CancellationToken ct = default
     )
     {
-        if (queryParams.Limit > MAX_LIMIT || queryParams.LimitPerDb > MAX_LIMIT)
-        {
-            return new JsonResult
-            (
-                new ErrorResponse(QueryErrorCode.InvalidCommandValue,
-                    "The maximum value of the c:limit command is " + MAX_LIMIT)
-            ) { StatusCode = StatusCodes.Status400BadRequest };
-        }
-
         try
         {
+            ValidateQueryParams(queryParams);
+
             LangProjectionBuilder? langProjections = queryParams.Lang is null
                 ? null
                 : new LangProjectionBuilder(queryParams.Lang.Split(','));
 
             IAggregateFluent<BsonDocument> query = ConstructBasicQuery
-            (
-                environment,
-                collectionName,
-                queryParams,
-                langProjections,
-                out IMongoCollection<BsonDocument> mongoCollection
-            )
+                (
+                    environment,
+                    collectionName,
+                    queryParams,
+                    langProjections,
+                    out IMongoCollection<BsonDocument> mongoCollection
+                )
                 .Skip(queryParams.Start)
                 .Limit(queryParams.LimitPerDb ?? queryParams.Limit);
 
@@ -209,6 +202,13 @@ public class CollectionController : ControllerBase
                 new ErrorResponse(quex.ErrorCode, quex.Message)
             ) { StatusCode = StatusCodes.Status400BadRequest };
         }
+        catch (MongoCommandException mcex) when (mcex.Message.StartsWith("Command aggregate failed: Invalid $project"))
+        {
+            return new JsonResult
+            (
+                new ErrorResponse(QueryErrorCode.InvalidProjection, "Ensure you don't have conflicting c:show and c:hide commands")
+            ) { StatusCode = StatusCodes.Status400BadRequest };
+        }
     }
 
     /// <summary>
@@ -232,6 +232,8 @@ public class CollectionController : ControllerBase
     {
         try
         {
+            ValidateQueryParams(queryParams);
+
             IAggregateFluent<AggregateCountResult> count = ConstructBasicQuery
             (
                 environment,
@@ -247,6 +249,13 @@ public class CollectionController : ControllerBase
         catch (QueryException quex)
         {
             return new ErrorResponse(quex.ErrorCode, quex.Message);
+        }
+        catch (MongoCommandException mcex) when (mcex.Message.StartsWith("Command aggregate failed: Invalid $project"))
+        {
+            return new JsonResult
+            (
+                new ErrorResponse(QueryErrorCode.InvalidProjection, "Ensure you don't have conflicting c:show and c:hide commands")
+            ) { StatusCode = StatusCodes.Status400BadRequest };
         }
     }
 
@@ -312,6 +321,27 @@ public class CollectionController : ControllerBase
         }
 
         return aggregate;
+    }
+
+    private static void ValidateQueryParams(CollectionQueryParameters queryParams)
+    {
+        if (queryParams.Limit > MAX_LIMIT || queryParams.LimitPerDb > MAX_LIMIT)
+        {
+            throw new QueryException
+            (
+                QueryErrorCode.InvalidCommandValue,
+                "The maximum value of the c:limit command is " + MAX_LIMIT
+            );
+        }
+
+        if (queryParams.Hide is not null && queryParams.Show is not null)
+        {
+            throw new QueryException
+            (
+                QueryErrorCode.Malformed,
+                "The c:show and c:hide commands are not compatible with each other"
+            );
+        }
     }
 
     private static PS2Environment ParseEnvironment(string environment)

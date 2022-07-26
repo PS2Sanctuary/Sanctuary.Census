@@ -58,5 +58,10 @@ public enum QueryErrorCode
     /// <summary>
     /// The maximum number of allowed joins in a single query was exceeded.
     /// </summary>
-    JoinLimitExceeded = 10
+    JoinLimitExceeded = 10,
+
+    /// <summary>
+    /// An invalid projection was made.
+    /// </summary>
+    InvalidProjection
 }

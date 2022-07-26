@@ -9,30 +9,32 @@ namespace Sanctuary.Census.Database;
 /// </summary>
 public class ProjectionBuilder
 {
-    private readonly List<string> _show;
-    private readonly List<string> _hide;
+    private readonly List<string> _projections;
+
+    /// <summary>
+    /// Gets a value indicating whether this is an exclusion projection.
+    /// </summary>
+    public bool IsExclusionProjection { get; private set; }
 
     /// <summary>
     /// Initializes a new instance of the <see cref="ProjectionBuilder"/> class.
     /// </summary>
-    public ProjectionBuilder()
+    /// <param name="isExclusionProjection">Indicates whether this is an exclusion projection.</param>
+    public ProjectionBuilder(bool isExclusionProjection)
     {
-        _show = new List<string>();
-        _hide = new List<string>();
+        IsExclusionProjection = isExclusionProjection;
+        _projections = new List<string>();
     }
 
     /// <summary>
     /// Initializes a new instance of the <see cref="ProjectionBuilder"/> class.
     /// </summary>
-    /// <param name="show">The fields to include.</param>
-    /// <param name="hide">The fields to exclude.</param>
-    public ProjectionBuilder(IEnumerable<string>? show, IEnumerable<string>? hide)
-        : this()
+    /// <param name="isExclusionProjection">Indicates whether this is an exclusion projection.</param>
+    /// <param name="projections">The fields to project.</param>
+    public ProjectionBuilder(bool isExclusionProjection, IEnumerable<string> projections)
+        : this(isExclusionProjection)
     {
-        if (show is not null)
-            _show.AddRange(show);
-        if (hide is not null)
-            _hide.AddRange(hide);
+        _projections.AddRange(projections);
     }
 
     /// <summary>
@@ -44,11 +46,12 @@ public class ProjectionBuilder
         ProjectionDefinition<BsonDocument>? projection = Builders<BsonDocument>.Projection
             .Exclude("_id");
 
-        foreach (string value in _show)
-            projection = projection.Include(value);
-
-        foreach (string value in _hide)
-            projection = projection.Exclude(value);
+        foreach (string value in _projections)
+        {
+            projection = IsExclusionProjection
+                ? projection.Exclude(value)
+                : projection.Include(value);
+        }
 
         return projection;
     }
@@ -57,13 +60,21 @@ public class ProjectionBuilder
     /// Includes a field in the projection.
     /// </summary>
     /// <param name="fieldToInclude">The name of the field to include.</param>
-    public void Include(string fieldToInclude)
-        => _show.Add(fieldToInclude);
+    public void Project(string fieldToInclude)
+        => _projections.Add(fieldToInclude);
 
     /// <summary>
-    /// Excludes a field from the projection.
+    /// Removes a field from the projection.
     /// </summary>
-    /// <param name="fieldToExclude">The name of the field to exclude.</param>
-    public void Exclude(string fieldToExclude)
-        => _hide.Add(fieldToExclude);
+    /// <param name="fieldToRemove">The name of the field to remove.</param>
+    public void RemoveProjection(string fieldToRemove)
+        => _projections.Remove(fieldToRemove);
+
+    /// <summary>
+    /// Gets a value indicating whether a projection is set for the given field.
+    /// </summary>
+    /// <param name="field">The name of the field.</param>
+    /// <returns><c>True</c> if the field is being projected, otherwise <c>False</c>.</returns>
+    public bool ContainsProjection(string field)
+        => _projections.Contains(field);
 }

@@ -124,8 +124,6 @@ public class CollectionController : ControllerBase
     {
         try
         {
-            ValidateQueryParams(queryParams);
-
             LangProjectionBuilder? langProjections = queryParams.Lang is null
                 ? null
                 : new LangProjectionBuilder(queryParams.Lang.Split(','));
@@ -232,8 +230,6 @@ public class CollectionController : ControllerBase
     {
         try
         {
-            ValidateQueryParams(queryParams);
-
             IAggregateFluent<AggregateCountResult> count = ConstructBasicQuery
             (
                 environment,
@@ -268,6 +264,7 @@ public class CollectionController : ControllerBase
         out IMongoCollection<BsonDocument> mongoCollection
     )
     {
+        ValidateQueryParams(queryParams);
         if (!CollectionUtils.CheckCollectionExists(collectionName))
             throw new QueryException(QueryErrorCode.UnknownCollection, $"The {collectionName} collection does not exist");
 
@@ -295,11 +292,14 @@ public class CollectionController : ControllerBase
             }
         }
 
-        ProjectionBuilder projection = new
-        (
-            queryParams.Show?.SelectMany(s => s.Split(',')),
-            queryParams.Hide?.SelectMany(s => s.Split(','))
-        );
+        ProjectionBuilder projection;
+        if (queryParams.Show is not null)
+            projection = new ProjectionBuilder(false, queryParams.Show.SelectMany(s => s.Split(',')));
+        else if (queryParams.Hide is not null)
+            projection = new ProjectionBuilder(true, queryParams.Hide.SelectMany(s => s.Split(',')));
+        else
+            projection = new ProjectionBuilder(true);
+
         langProjections?.AppendToProjection(projection, collectionName);
 
         IAggregateFluent<BsonDocument> aggregate = mongoCollection.Aggregate()

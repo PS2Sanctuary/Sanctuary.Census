@@ -72,7 +72,7 @@ public class JoinBuilder
     /// <summary>
     /// The projection to apply to the foreign collection.
     /// </summary>
-    public ProjectionBuilder Projection { get; }
+    public ProjectionBuilder? Projection { get; private set; }
 
     /// <summary>
     /// The children of this join.
@@ -86,7 +86,6 @@ public class JoinBuilder
     {
         Terms = new List<string>();
         IsOuter = true;
-        Projection = new ProjectionBuilder();
         Children = new List<JoinBuilder>();
     }
 
@@ -232,19 +231,29 @@ public class JoinBuilder
         }
         else if (key.SequenceEqual(ShowKey))
         {
+            if (builder.Projection is not null)
+                throw new QueryException(QueryErrorCode.Malformed, "The 'show' and 'hide' keys are not compatible with each other");
+
+            builder.Projection = new ProjectionBuilder(false);
+
             while (valueReader.TryReadTo(out ReadOnlySpan<char> show, VALUE_DELIMITER))
-                builder.Projection.Include(show.ToString());
+                builder.Projection.Project(show.ToString());
 
             if (valueReader.TryReadExact(out ReadOnlySpan<char> finalShow, valueReader.Remaining))
-                builder.Projection.Include(finalShow.ToString());
+                builder.Projection.Project(finalShow.ToString());
         }
         else if (key.SequenceEqual(HideKey))
         {
+            if (builder.Projection is not null)
+                throw new QueryException(QueryErrorCode.Malformed, "The 'show' and 'hide' keys are not compatible with each other");
+
+            builder.Projection = new ProjectionBuilder(true);
+
             while (valueReader.TryReadTo(out ReadOnlySpan<char> hide, VALUE_DELIMITER))
-                builder.Projection.Exclude(hide.ToString());
+                builder.Projection.Project(hide.ToString());
 
             if (valueReader.TryReadExact(out ReadOnlySpan<char> finalHide, valueReader.Remaining))
-                builder.Projection.Exclude(finalHide.ToString());
+                builder.Projection.Project(finalHide.ToString());
         }
         else if (key.SequenceEqual(TermsKey))
         {
@@ -285,6 +294,7 @@ public class JoinBuilder
             subPipeline.Add(filterStage);
         }
 
+        builder.Projection ??= new ProjectionBuilder(true);
         langProjections?.AppendToProjection(builder.Projection, builder.ToCollection);
         BsonDocument projectStage = new
         (

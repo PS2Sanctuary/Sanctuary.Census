@@ -15,7 +15,7 @@ public class LangProjectionBuilder
 {
     private static readonly List<string> AllLangCodes;
 
-    private readonly IReadOnlyList<string> _excludeLangCodes;
+    private readonly IReadOnlyList<string> _includeLangCodes;
 
     static LangProjectionBuilder()
     {
@@ -30,8 +30,7 @@ public class LangProjectionBuilder
     /// <param name="includeLangCodes">The language codes to include in any projections.</param>
     public LangProjectionBuilder(IReadOnlyList<string> includeLangCodes)
     {
-        _excludeLangCodes = AllLangCodes.Where(exclude => !includeLangCodes.Contains(exclude))
-            .ToList();
+        _includeLangCodes = includeLangCodes;
     }
 
     /// <summary>
@@ -44,8 +43,26 @@ public class LangProjectionBuilder
         List<string> localeFields = CollectionUtils.GetLocaleFields(collectionName);
         foreach (string localeField in localeFields)
         {
-            foreach (string exclude in _excludeLangCodes)
-                builder.Exclude($"{localeField}.{exclude}");
+            if (builder.IsExclusionProjection)
+            {
+                if (builder.ContainsProjection(localeField))
+                    continue;
+
+                foreach (string code in AllLangCodes)
+                {
+                    if (!_includeLangCodes.Contains(code))
+                        builder.Project($"{localeField}.{code}");
+                }
+            }
+            else
+            {
+                if (!builder.ContainsProjection(localeField))
+                    continue;
+                builder.RemoveProjection(localeField);
+
+                foreach (string code in _includeLangCodes)
+                    builder.Project($"{localeField}.{code}");
+            }
         }
     }
 }

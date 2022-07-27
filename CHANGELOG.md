@@ -5,6 +5,8 @@ Date format: DD/MM/YYYY
 ## vNext
 
 - Added automatic collection diffing.
+- When servers are locked, the collection build interval is reduced to 30m, so that we can get back up-to-date faster
+  once the servers unlock again.
 
 ## 27/07/2022
 

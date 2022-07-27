@@ -67,6 +67,8 @@ public class CollectionBuildWorker : BackgroundService
 
         // TODO: Quick-update collections? E.g. the world collection could be updated every 5m to better represent lock state.
         int dataCacheFailureCount = 0;
+        TimeSpan currentBuildInterval = COLLECTION_BUILD_INTERVAL;
+
         while (!ct.IsCancellationRequested)
         {
             foreach (PS2Environment env in Enum.GetValues<PS2Environment>())
@@ -97,9 +99,12 @@ public class CollectionBuildWorker : BackgroundService
                     await patchDataCache.RepopulateAsync(ct).ConfigureAwait(false);
                     dataCacheFailureCount = 0;
                     _logger.LogInformation("[{Environment}] Caches updated successfully", env);
+                    currentBuildInterval = COLLECTION_BUILD_INTERVAL;
                 }
                 catch (ServerLockedException)
                 {
+                    // Probably down for an update. Let's get back in the game faster!
+                    currentBuildInterval = TimeSpan.FromMinutes(30);
                     _logger.LogWarning("[{Environment}] Servers are locked. Collection build could not complete", env);
                     continue;
                 }
@@ -111,6 +116,7 @@ public class CollectionBuildWorker : BackgroundService
                         return;
                     }
 
+                    currentBuildInterval = COLLECTION_BUILD_INTERVAL;
                     _logger.LogError(ex, "[{Environment}] Failed to cache data!", env);
                     continue;
                 }
@@ -144,7 +150,7 @@ public class CollectionBuildWorker : BackgroundService
                 patchDataCache.Clear();
             }
 
-            await Task.Delay(COLLECTION_BUILD_INTERVAL, ct).ConfigureAwait(false);
+            await Task.Delay(currentBuildInterval, ct).ConfigureAwait(false);
         }
     }
 }

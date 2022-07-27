@@ -21,10 +21,7 @@ public class WeaponToFireGroupCollectionBuilder : ICollectionBuilder
     /// Initializes a new instance of the <see cref="WeaponToFireGroupCollectionBuilder"/> class.
     /// </summary>
     /// <param name="serverDataCache">The server data cache.</param>
-    public WeaponToFireGroupCollectionBuilder
-    (
-        IServerDataCacheService serverDataCache
-    )
+    public WeaponToFireGroupCollectionBuilder(IServerDataCacheService serverDataCache)
     {
         _serverDataCache = serverDataCache;
     }
@@ -32,7 +29,7 @@ public class WeaponToFireGroupCollectionBuilder : ICollectionBuilder
     /// <inheritdoc />
     public async Task BuildAsync
     (
-        IMongoContext dbContext,
+        ICollectionsContext dbContext,
         CancellationToken ct
     )
     {

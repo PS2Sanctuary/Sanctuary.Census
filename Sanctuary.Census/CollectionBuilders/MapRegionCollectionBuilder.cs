@@ -28,7 +28,7 @@ public class MapRegionCollectionBuilder : ICollectionBuilder
     }
 
     /// <inheritdoc />
-    public async Task BuildAsync(IMongoContext dbContext, CancellationToken ct = default)
+    public async Task BuildAsync(ICollectionsContext dbContext, CancellationToken ct = default)
     {
         if (_patchDataCache.MapRegions.Count == 0)
             throw new MissingCacheDataException(typeof(MapRegionPatch));

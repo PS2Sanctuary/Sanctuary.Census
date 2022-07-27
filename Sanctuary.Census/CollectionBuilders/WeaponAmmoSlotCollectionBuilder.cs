@@ -32,7 +32,7 @@ public class WeaponAmmoSlotCollectionBuilder : ICollectionBuilder
     /// <inheritdoc />
     public async Task BuildAsync
     (
-        IMongoContext dbContext,
+        ICollectionsContext dbContext,
         CancellationToken ct
     )
     {

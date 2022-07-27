@@ -62,7 +62,7 @@ public class CollectionBuildWorker : BackgroundService
             IServiceProvider services = serviceScope.ServiceProvider;
 
             services.GetRequiredService<EnvironmentContextProvider>().Environment = env;
-            await services.GetRequiredService<IMongoContext>().ScaffoldAsync(ct).ConfigureAwait(false);
+            await services.GetRequiredService<ICollectionsContext>().ScaffoldAsync(ct).ConfigureAwait(false);
         }
 
         // TODO: Quick-update collections? E.g. the world collection could be updated every 5m to better represent lock state.
@@ -82,7 +82,7 @@ public class CollectionBuildWorker : BackgroundService
                 IServerDataCacheService serverDataCache = services.GetRequiredService<IServerDataCacheService>();
                 ILocaleDataCacheService localeDataCache = services.GetRequiredService<ILocaleDataCacheService>();
                 IPatchDataCacheService patchDataCache = services.GetRequiredService<IPatchDataCacheService>();
-                IMongoContext mongoContext = services.GetRequiredService<IMongoContext>();
+                ICollectionsContext collectionsContext = services.GetRequiredService<ICollectionsContext>();
 
                 try
                 {
@@ -124,7 +124,7 @@ public class CollectionBuildWorker : BackgroundService
                     try
                     {
                         // TODO: We need to remove old data, and tie this in with a diff system
-                        await collectionBuilder.BuildAsync(mongoContext,ct);
+                        await collectionBuilder.BuildAsync(collectionsContext,ct);
                         _logger.LogDebug("[{Environment}] Successfully ran the {CollectionBuilder}", env, collectionBuilder);
                     }
                     catch (Exception ex)

@@ -15,5 +15,5 @@ public interface ICollectionBuilder
     /// <param name="dbContext">The collections context.</param>
     /// <param name="ct">A <see cref="CancellationToken"/> that can be used to stop the operation.</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-    Task BuildAsync(IMongoContext dbContext, CancellationToken ct = default);
+    Task BuildAsync(ICollectionsContext dbContext, CancellationToken ct = default);
 }

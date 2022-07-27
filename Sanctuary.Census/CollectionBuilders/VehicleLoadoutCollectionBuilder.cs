@@ -21,10 +21,7 @@ public class VehicleLoadoutCollectionBuilder : ICollectionBuilder
     /// Initializes a new instance of the <see cref="VehicleLoadoutCollectionBuilder"/> class.
     /// </summary>
     /// <param name="clientDataCache">The client data cache.</param>
-    public VehicleLoadoutCollectionBuilder
-    (
-        IClientDataCacheService clientDataCache
-    )
+    public VehicleLoadoutCollectionBuilder(IClientDataCacheService clientDataCache)
     {
         _clientDataCache = clientDataCache;
     }
@@ -32,7 +29,7 @@ public class VehicleLoadoutCollectionBuilder : ICollectionBuilder
     /// <inheritdoc />
     public async Task BuildAsync
     (
-        IMongoContext dbContext,
+        ICollectionsContext dbContext,
         CancellationToken ct
     )
     {

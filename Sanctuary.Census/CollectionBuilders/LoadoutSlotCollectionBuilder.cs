@@ -37,7 +37,7 @@ public class LoadoutSlotCollectionBuilder : ICollectionBuilder
     /// <inheritdoc />
     public async Task BuildAsync
     (
-        IMongoContext dbContext,
+        ICollectionsContext dbContext,
         CancellationToken ct
     )
     {

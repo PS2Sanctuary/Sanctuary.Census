@@ -28,7 +28,7 @@ public class FacilityLinkCollectionBuilder : ICollectionBuilder
     }
 
     /// <inheritdoc />
-    public async Task BuildAsync(IMongoContext dbContext, CancellationToken ct = default)
+    public async Task BuildAsync(ICollectionsContext dbContext, CancellationToken ct = default)
     {
         if (_patchDataCache.FacilityLinks.Count == 0)
             throw new MissingCacheDataException(typeof(FacilityLinkPatch));

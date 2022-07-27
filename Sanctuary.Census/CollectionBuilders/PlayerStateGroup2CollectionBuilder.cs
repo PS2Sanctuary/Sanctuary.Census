@@ -21,10 +21,7 @@ public class PlayerStateGroup2CollectionBuilder : ICollectionBuilder
     /// Initializes a new instance of the <see cref="PlayerStateGroup2CollectionBuilder"/> class.
     /// </summary>
     /// <param name="serverDataCache">The server data cache.</param>
-    public PlayerStateGroup2CollectionBuilder
-    (
-        IServerDataCacheService serverDataCache
-    )
+    public PlayerStateGroup2CollectionBuilder(IServerDataCacheService serverDataCache)
     {
         _serverDataCache = serverDataCache;
     }
@@ -32,7 +29,7 @@ public class PlayerStateGroup2CollectionBuilder : ICollectionBuilder
     /// <inheritdoc />
     public async Task BuildAsync
     (
-        IMongoContext dbContext,
+        ICollectionsContext dbContext,
         CancellationToken ct
     )
     {

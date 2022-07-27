@@ -70,6 +70,8 @@ public static class Program
 
         builder.Services.AddSingleton(new MongoClient("mongodb://localhost:27017"))
             .AddScoped<IMongoContext, MongoContext>()
+            .AddScoped<ICollectionsContext, CollectionsContext>()
+            .AddScoped<ICollectionDiffService, CollectionDiffService>()
             .RegisterCollectionBuilders()
             .AddHostedService<CollectionBuildWorker>();
 

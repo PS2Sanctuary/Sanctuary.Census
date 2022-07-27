@@ -186,6 +186,7 @@ public static class Program
             .RegisterCollectionBuilder<ProfileCollectionBuilder>()
             .RegisterCollectionBuilder<ProjectileCollectionBuilder>()
             .RegisterCollectionBuilder<VehicleCollectionBuilder>()
+            .RegisterCollectionBuilder<VehicleAttachmentCollectionBuilder>()
             .RegisterCollectionBuilder<VehicleLoadoutCollectionBuilder>()
             .RegisterCollectionBuilder<VehicleLoadoutSlotCollectionBuilder>()
             .RegisterCollectionBuilder<WeaponCollectionBuilder>()

@@ -187,6 +187,14 @@ public interface IMongoContext
     Task UpsertVehiclesAsync(IEnumerable<Vehicle> collection, CancellationToken ct = default);
 
     /// <summary>
+    /// Upserts the <see cref="VehicleAttachment"/> collection.
+    /// </summary>
+    /// <param name="collection">The collection.</param>
+    /// <param name="ct">A <see cref="CancellationToken"/> that can be used to stop the operation.</param>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    Task UpsertVehicleAttachmentsAsync(IEnumerable<VehicleAttachment> collection, CancellationToken ct = default);
+
+    /// <summary>
     /// Upserts the <see cref="VehicleLoadout"/> collection.
     /// </summary>
     /// <param name="collection">The collection.</param>

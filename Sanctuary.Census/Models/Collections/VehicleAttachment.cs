@@ -18,8 +18,8 @@ public record VehicleAttachment
 (
     [property: Key] uint ItemID,
     [property: Key] uint VehicleLoadoutID,
-    uint VehicleID,
+    [property: Key] uint VehicleID,
     uint FactionID,
-    uint VehicleLoadoutSlotID,
+    uint? VehicleLoadoutSlotID,
     LocaleString? Description
 );

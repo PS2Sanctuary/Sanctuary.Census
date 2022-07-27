@@ -85,6 +85,7 @@ public class MongoContext : IMongoContext
         await CreateUniqueKeyIndex<Profile>(x => x.ProfileId, ct).ConfigureAwait(false);
         await CreateUniqueKeyIndex<Projectile>(x => x.ProjectileId, ct).ConfigureAwait(false);
         await CreateUniqueKeyIndex<Vehicle>(x => x.VehicleId, ct).ConfigureAwait(false);
+        await CreateNonUniqueKeyIndexes<VehicleAttachment>(ct, x => x.ItemID, x => x.VehicleLoadoutID, x => x.VehicleID).ConfigureAwait(false);
         await CreateUniqueKeyIndex<VehicleLoadout>(x => x.LoadoutID, ct).ConfigureAwait(false);
         await CreateNonUniqueKeyIndexes<VehicleLoadoutSlot>(ct, x => x.LoadoutID, x => x.SlotID).ConfigureAwait(false);
         await CreateUniqueKeyIndex<Weapon>(x => x.WeaponId, ct).ConfigureAwait(false);
@@ -279,6 +280,15 @@ public class MongoContext : IMongoContext
         ).ConfigureAwait(false);
 
     /// <inheritdoc />
+    public async Task UpsertVehicleAttachmentsAsync(IEnumerable<VehicleAttachment> collection, CancellationToken ct = default)
+        => await UpsertCollectionAsync
+        (
+            collection,
+            e => Builders<VehicleAttachment>.Filter.Where(x => x.ItemID == e.ItemID && x.VehicleLoadoutID == e.VehicleLoadoutID),
+            ct
+        ).ConfigureAwait(false);
+
+    /// <inheritdoc />
     public async Task UpsertVehicleLoadoutsAsync(IEnumerable<VehicleLoadout> collection, CancellationToken ct = default)
         => await UpsertCollectionAsync
         (
@@ -393,6 +403,7 @@ public class MongoContext : IMongoContext
         BsonClassMap.RegisterClassMap<Profile>(AutoMap);
         BsonClassMap.RegisterClassMap<Projectile>(AutoMap);
         BsonClassMap.RegisterClassMap<Vehicle>(AutoMap);
+        BsonClassMap.RegisterClassMap<VehicleAttachment>(AutoMap);
         BsonClassMap.RegisterClassMap<VehicleLoadout>(AutoMap);
         BsonClassMap.RegisterClassMap<VehicleLoadoutSlot>(AutoMap);
         BsonClassMap.RegisterClassMap<Weapon>(AutoMap);

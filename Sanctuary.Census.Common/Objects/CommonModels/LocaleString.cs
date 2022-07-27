@@ -3,7 +3,6 @@
 /// <summary>
 /// Represents a globalized string model.
 /// </summary>
-/// <param name="ID">The ID of the locale string.</param>
 /// <param name="De">The German translation of the string.</param>
 /// <param name="En">The English translation of the string.</param>
 /// <param name="Es">The Spanish translation of the string.</param>
@@ -16,7 +15,6 @@
 /// <param name="Zh">The Chinese translation of the string.</param>
 public record LocaleString
 (
-    uint ID,
     string? De,
     string? En,
     string? Es,

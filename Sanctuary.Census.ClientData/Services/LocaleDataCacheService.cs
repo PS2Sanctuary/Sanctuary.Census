@@ -83,7 +83,6 @@ public class LocaleDataCacheService : ILocaleDataCacheService
 
         localeString = new LocaleString
         (
-            actualID,
             german,
             english,
             spanish,

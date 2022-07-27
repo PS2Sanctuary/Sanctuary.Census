@@ -4,6 +4,7 @@ Date format: DD/MM/YYYY
 
 ## vNext
 
+- Added the `vehicle_attachment` collection.
 - Added the `loadout` and `vehicle_loadout` collections.
 - Added the `loadout_slot` and `vehicle_loadout_slot` collections.
 - Fixed an error when using `c:lang` and attempting to show/hide a locale field.

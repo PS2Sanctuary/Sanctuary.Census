@@ -59,8 +59,10 @@ but is likely to be very similar.
 - fire_mode_to_projectile
 - item_category
 - item_to_weapon
+- ⚠ player_state_group - please query on `player_state_group_2` instead, which is a direct upgrade
 - player_state_group_2
-- ⚠ profile_2 - please query on `profile` instead, which contains all the data of this collection
+- ⚠ profile_2 - please query on `profile` instead, which is a direct upgrade
+- vehicle_attachment
 - weapon_to_fire_group
 
 ### 🌟 Silver Tier Collections

@@ -90,6 +90,12 @@ public class CollectionDiffService : ICollectionDiffService
     /// <inheritdoc />
     public async Task CommitAsync(CancellationToken ct = default)
     {
+        if (_entries.Count == 0)
+        {
+            _diffStarted = DateTime.UtcNow;
+            return;
+        }
+
         IMongoDatabase database = _mongoContext.GetDatabase();
         IMongoCollection<CollectionDiffEntry> diffEntryColl = database.GetCollection<CollectionDiffEntry>(ENTRY_COLLECTION_NAME);
 

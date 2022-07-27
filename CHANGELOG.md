@@ -2,6 +2,10 @@
 
 Date format: DD/MM/YYYY
 
+## vNext
+
+- Added the `loadout_slot` collection.
+
 ## 25/07/2022
 
 - Added full support for the `c:join` command.

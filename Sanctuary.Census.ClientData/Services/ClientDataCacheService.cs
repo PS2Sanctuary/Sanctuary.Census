@@ -53,6 +53,9 @@ public class ClientDataCacheService : IClientDataCacheService
     public IReadOnlyList<ItemProfile> ItemProfiles { get; private set; }
 
     /// <inheritdoc />
+    public IReadOnlyList<LoadoutSlot> LoadoutSlots { get; private set; }
+
+    /// <inheritdoc />
     public IReadOnlyList<ResourceType> ResourceTypes { get; private set; }
 
     /// <inheritdoc />
@@ -155,6 +158,14 @@ public class ClientDataCacheService : IClientDataCacheService
             ct
         ).ConfigureAwait(false);
 
+        LoadoutSlots = await ExtractDatasheet<LoadoutSlot>
+        (
+            "LoadoutSlots.txt",
+            assetHeaders,
+            reader,
+            ct
+        ).ConfigureAwait(false);
+
         ResourceTypes = await ExtractDatasheet<ResourceType>
         (
             "ResourceTypes.txt",
@@ -183,6 +194,7 @@ public class ClientDataCacheService : IClientDataCacheService
     [MemberNotNull(nameof(FireModeDisplayStats))]
     [MemberNotNull(nameof(ImageSetMappings))]
     [MemberNotNull(nameof(ItemProfiles))]
+    [MemberNotNull(nameof(LoadoutSlots))]
     [MemberNotNull(nameof(ResourceTypes))]
     [MemberNotNull(nameof(Vehicles))]
     public void Clear()
@@ -196,6 +208,7 @@ public class ClientDataCacheService : IClientDataCacheService
         FireModeDisplayStats = new List<FireModeDisplayStat>();
         ImageSetMappings = new List<ImageSetMapping>();
         ItemProfiles = new List<ItemProfile>();
+        LoadoutSlots = new List<LoadoutSlot>();
         ResourceTypes = new List<ResourceType>();
         Vehicles = new List<Vehicle>();
     }

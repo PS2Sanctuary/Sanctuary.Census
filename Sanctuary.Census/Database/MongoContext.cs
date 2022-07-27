@@ -78,6 +78,7 @@ public class MongoContext : IMongoContext
         );
         await CreateUniqueKeyIndex<ItemCategory>(x => x.ItemCategoryID, ct).ConfigureAwait(false);
         await CreateNonUniqueKeyIndexes<ItemToWeapon>(ct, x => x.ItemId, x => x.WeaponId).ConfigureAwait(false);
+        await CreateNonUniqueKeyIndexes<LoadoutSlot>(ct, x => x.LoadoutID, x => x.SlotID).ConfigureAwait(false);
         await CreateUniqueKeyIndex<MapRegion>(x => x.MapRegionId, ct).ConfigureAwait(false);
         await CreateNonUniqueKeyIndexes<PlayerStateGroup2>(ct, x => x.PlayerStateGroupId, x => x.PlayerStateId).ConfigureAwait(false);
         await CreateUniqueKeyIndex<Profile>(x => x.ProfileId, ct).ConfigureAwait(false);
@@ -208,6 +209,15 @@ public class MongoContext : IMongoContext
         (
             collection,
             e => Builders<ItemToWeapon>.Filter.Where(x => x.ItemId == e.ItemId && x.WeaponId == e.WeaponId),
+            ct
+        ).ConfigureAwait(false);
+
+    /// <inheritdoc />
+    public async Task UpsertLoadoutSlotsAsync(IEnumerable<LoadoutSlot> collection, CancellationToken ct = default)
+        => await UpsertCollectionAsync
+        (
+            collection,
+            e => Builders<LoadoutSlot>.Filter.Where(x => x.LoadoutID == e.LoadoutID && x.SlotID == e.SlotID),
             ct
         ).ConfigureAwait(false);
 
@@ -346,6 +356,7 @@ public class MongoContext : IMongoContext
         BsonClassMap.RegisterClassMap<Item>(AutoMap);
         BsonClassMap.RegisterClassMap<ItemCategory>(AutoMap);
         BsonClassMap.RegisterClassMap<ItemToWeapon>(AutoMap);
+        BsonClassMap.RegisterClassMap<LoadoutSlot>(AutoMap);
         BsonClassMap.RegisterClassMap<MapRegion>(AutoMap);
         BsonClassMap.RegisterClassMap<PlayerStateGroup2>(AutoMap);
         BsonClassMap.RegisterClassMap<Profile>(AutoMap);

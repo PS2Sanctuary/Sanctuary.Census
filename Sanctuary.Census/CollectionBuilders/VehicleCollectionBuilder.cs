@@ -12,7 +12,7 @@ using MVehicle = Sanctuary.Census.Models.Collections.Vehicle;
 namespace Sanctuary.Census.CollectionBuilders;
 
 /// <summary>
-/// Builds the <see cref="ClientData.ClientDataModels.Vehicle"/> collection.
+/// Builds the <see cref="MVehicle"/> collection.
 /// </summary>
 public class VehicleCollectionBuilder : ICollectionBuilder
 {
@@ -20,7 +20,7 @@ public class VehicleCollectionBuilder : ICollectionBuilder
     private readonly ILocaleDataCacheService _localeDataCache;
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="WeaponCollectionBuilder"/> class.
+    /// Initializes a new instance of the <see cref="VehicleCollectionBuilder"/> class.
     /// </summary>
     /// <param name="clientDataCache">The client data cache.</param>
     /// <param name="localeDataCache">The locale data cache.</param>

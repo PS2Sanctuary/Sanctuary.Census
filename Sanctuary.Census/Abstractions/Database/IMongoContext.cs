@@ -131,6 +131,14 @@ public interface IMongoContext
     Task UpsertItemsToWeaponsAsync(IEnumerable<ItemToWeapon> collection, CancellationToken ct = default);
 
     /// <summary>
+    /// Upserts the <see cref="LoadoutSlot"/> collection.
+    /// </summary>
+    /// <param name="collection">The collection.</param>
+    /// <param name="ct">A <see cref="CancellationToken"/> that can be used to stop the operation.</param>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    Task UpsertLoadoutSlotsAsync(IEnumerable<LoadoutSlot> collection, CancellationToken ct = default);
+
+    /// <summary>
     /// Upserts the <see cref="MapRegion"/> collection.
     /// </summary>
     /// <param name="collection">The collection.</param>

@@ -83,6 +83,7 @@ public class CollectionBuildWorker : BackgroundService
                 ILocaleDataCacheService localeDataCache = services.GetRequiredService<ILocaleDataCacheService>();
                 IPatchDataCacheService patchDataCache = services.GetRequiredService<IPatchDataCacheService>();
                 ICollectionsContext collectionsContext = services.GetRequiredService<ICollectionsContext>();
+                ICollectionDiffService collectionDiffService = services.GetRequiredService<ICollectionDiffService>();
 
                 try
                 {
@@ -123,7 +124,6 @@ public class CollectionBuildWorker : BackgroundService
 
                     try
                     {
-                        // TODO: We need to remove old data, and tie this in with a diff system
                         await collectionBuilder.BuildAsync(collectionsContext,ct);
                         _logger.LogDebug("[{Environment}] Successfully ran the {CollectionBuilder}", env, collectionBuilder);
                     }
@@ -134,6 +134,9 @@ public class CollectionBuildWorker : BackgroundService
                 }
                 _memoryCache.Remove((typeof(Datatype), env));
                 _logger.LogInformation("[{Environment}] Collection build complete", env);
+
+                await collectionDiffService.CommitAsync(ct).ConfigureAwait(false);
+                _logger.LogInformation("[{Environment}] Collection diff committed", env);
 
                 clientDataCache.Clear();
                 serverDataCache.Clear();

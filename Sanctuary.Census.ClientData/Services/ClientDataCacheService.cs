@@ -53,6 +53,9 @@ public class ClientDataCacheService : IClientDataCacheService
     public IReadOnlyList<ItemProfile> ItemProfiles { get; private set; }
 
     /// <inheritdoc />
+    public IReadOnlyList<ItemVehicle> ItemVehicles { get; set; }
+
+    /// <inheritdoc />
     public IReadOnlyList<Loadout> Loadouts { get; private set; }
 
     /// <inheritdoc />
@@ -69,6 +72,9 @@ public class ClientDataCacheService : IClientDataCacheService
 
     /// <inheritdoc />
     public IReadOnlyList<VehicleLoadoutSlot> VehicleLoadoutSlots { get; private set; }
+
+    /// <inheritdoc />
+    public IReadOnlyList<VehicleLoadoutSlotItemClass> VehicleLoadoutSlotItemClasses { get; private set; }
 
     /// <summary>
     /// Initializes a new instance of the <see cref="ClientDataCacheService"/> class.
@@ -167,6 +173,14 @@ public class ClientDataCacheService : IClientDataCacheService
             ct
         ).ConfigureAwait(false);
 
+        ItemVehicles = await ExtractDatasheet<ItemVehicle>
+        (
+            "ItemVehicles.txt",
+            assetHeaders,
+            reader,
+            ct
+        ).ConfigureAwait(false);
+
         Loadouts = await ExtractDatasheet<Loadout>
         (
             "Loadouts.txt",
@@ -215,6 +229,14 @@ public class ClientDataCacheService : IClientDataCacheService
             ct
         ).ConfigureAwait(false);
 
+        VehicleLoadoutSlotItemClasses = await ExtractDatasheet<VehicleLoadoutSlotItemClass>
+        (
+            "VehicleLoadoutSlotItemClasses.txt",
+            assetHeaders,
+            reader,
+            ct
+        ).ConfigureAwait(false);
+
         LastPopulated = DateTimeOffset.UtcNow;
     }
 
@@ -227,12 +249,14 @@ public class ClientDataCacheService : IClientDataCacheService
     [MemberNotNull(nameof(FireModeDisplayStats))]
     [MemberNotNull(nameof(ImageSetMappings))]
     [MemberNotNull(nameof(ItemProfiles))]
+    [MemberNotNull(nameof(ItemVehicles))]
     [MemberNotNull(nameof(Loadouts))]
     [MemberNotNull(nameof(LoadoutSlots))]
     [MemberNotNull(nameof(ResourceTypes))]
     [MemberNotNull(nameof(Vehicles))]
     [MemberNotNull(nameof(VehicleLoadouts))]
     [MemberNotNull(nameof(VehicleLoadoutSlots))]
+    [MemberNotNull(nameof(VehicleLoadoutSlotItemClasses))]
     public void Clear()
     {
         LastPopulated = DateTimeOffset.MinValue;
@@ -244,12 +268,14 @@ public class ClientDataCacheService : IClientDataCacheService
         FireModeDisplayStats = new List<FireModeDisplayStat>();
         ImageSetMappings = new List<ImageSetMapping>();
         ItemProfiles = new List<ItemProfile>();
+        ItemVehicles = new List<ItemVehicle>();
         Loadouts = new List<Loadout>();
         LoadoutSlots = new List<LoadoutSlot>();
         ResourceTypes = new List<ResourceType>();
         Vehicles = new List<Vehicle>();
         VehicleLoadouts = new List<VehicleLoadout>();
         VehicleLoadoutSlots = new List<VehicleLoadoutSlot>();
+        VehicleLoadoutSlotItemClasses = new List<VehicleLoadoutSlotItemClass>();
     }
 
     private static async Task<List<TDataType>> ExtractDatasheet<TDataType>

@@ -60,6 +60,11 @@ public interface IClientDataCacheService : IDataCacheService
     IReadOnlyList<Loadout>? Loadouts { get; }
 
     /// <summary>
+    /// Gets the cached <see cref="LoadoutAttachmentGroupMap"/> objects.
+    /// </summary>
+    IReadOnlyList<LoadoutAttachmentGroupMap>? LoadoutAttachmentGroupMaps { get; }
+
+    /// <summary>
     /// Gets the cached <see cref="LoadoutSlot"/> objects.
     /// </summary>
     IReadOnlyList<LoadoutSlot>? LoadoutSlots { get; }

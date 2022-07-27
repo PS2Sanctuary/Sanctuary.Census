@@ -58,6 +58,9 @@ public class ClientDataCacheService : IClientDataCacheService
     public IReadOnlyList<Loadout>? Loadouts { get; private set; }
 
     /// <inheritdoc />
+    public IReadOnlyList<LoadoutAttachmentGroupMap>? LoadoutAttachmentGroupMaps { get; private set; }
+
+    /// <inheritdoc />
     public IReadOnlyList<LoadoutSlot>? LoadoutSlots { get; private set; }
 
     /// <inheritdoc />
@@ -188,6 +191,14 @@ public class ClientDataCacheService : IClientDataCacheService
             ct
         ).ConfigureAwait(false);
 
+        LoadoutAttachmentGroupMaps = await ExtractDatasheet<LoadoutAttachmentGroupMap>
+        (
+            "LoadoutAttachmentGroupMap.txt",
+            assetHeaders,
+            reader,
+            ct
+        ).ConfigureAwait(false);
+
         LoadoutSlots = await ExtractDatasheet<LoadoutSlot>
         (
             "LoadoutSlots.txt",
@@ -254,6 +265,7 @@ public class ClientDataCacheService : IClientDataCacheService
         ItemProfiles = null;
         ItemVehicles = null;
         Loadouts = null;
+        LoadoutAttachmentGroupMaps = null;
         LoadoutSlots = null;
         ResourceTypes = null;
         Vehicles = null;

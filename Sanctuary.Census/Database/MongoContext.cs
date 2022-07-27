@@ -1,4 +1,5 @@
-﻿using MongoDB.Bson.Serialization;
+﻿using MongoDB.Bson;
+using MongoDB.Bson.Serialization;
 using MongoDB.Driver;
 using Sanctuary.Census.Abstractions.Database;
 using Sanctuary.Census.Common.Objects;
@@ -99,23 +100,60 @@ public class MongoContext : IMongoContext
     public async Task UpsertCollectionAsync<T>
     (
         IEnumerable<T> data,
+        Func<T, Predicate<T>> comparator,
         Func<T, FilterDefinition<T>> elementFilter,
         CancellationToken ct
-    )
+    ) where T : class
     {
-        IMongoCollection<T> collection = GetCollection<T>();
+        List<T> dataList = data as List<T> ?? data.ToList();
 
-        List<WriteModel<T>> upserts = new();
-        foreach (T element in data)
+        IMongoCollection<T> collection = GetCollection<T>();
+        List<WriteModel<T>> dbWriteModels = new();
+        bool shouldDiffAdd = false;
+
+        // Iterate over each document that's currently in the collection
+        IAsyncCursor<T> cursor = await collection.FindAsync(new BsonDocument(), cancellationToken: ct).ConfigureAwait(false);
+        while (await cursor.MoveNextAsync(ct).ConfigureAwait(false))
         {
-            ReplaceOneModel<T> upsertModel = new(elementFilter(element), element)
+            shouldDiffAdd = true;
+
+            foreach (T document in cursor.Current)
             {
-                IsUpsert = true
-            };
-            upserts.Add(upsertModel);
+                // Attempt to find the DB document in our upsert data
+                int itemIndex = dataList.FindIndex(comparator(document));
+
+                if (itemIndex == -1)
+                {
+                    // We don't have the document in our upsert data, so it must have been deleted
+                    DeleteOneModel<T> deleteModel = new(elementFilter(document));
+                    dbWriteModels.Add(deleteModel);
+                    // TODO: Diff remove
+                }
+                else if (!dataList[itemIndex].Equals(document))
+                {
+                    // The documents don't match, so there's been a change
+                    ReplaceOneModel<T> upsertModel = new(elementFilter(dataList[itemIndex]), dataList[itemIndex]);
+                    dbWriteModels.Add(upsertModel);
+                    // TODO: Diff change
+                }
+
+                // No need to worry about the document any more
+                if (itemIndex > -1)
+                    dataList.RemoveAt(itemIndex);
+            }
         }
 
-        await collection.BulkWriteAsync(upserts, null, ct);
+        // We've previously removed any deleted or updated documents
+        // so what's remaining must be new
+        foreach (T item in dataList)
+        {
+            InsertOneModel<T> insertModel = new(item);
+            dbWriteModels.Add(insertModel);
+            // TODO: Diff add
+        }
+
+        if (dbWriteModels.Count > 0)
+            await collection.BulkWriteAsync(dbWriteModels, null, ct);
     }
 
     /// <inheritdoc />
@@ -123,6 +161,7 @@ public class MongoContext : IMongoContext
         => await UpsertCollectionAsync
         (
             collection,
+            e => x => x.CurrencyID == e.CurrencyID,
             e => Builders<Currency>.Filter.Eq(x => x.CurrencyID, e.CurrencyID),
             ct
         ).ConfigureAwait(false);
@@ -132,6 +171,7 @@ public class MongoContext : IMongoContext
         => await UpsertCollectionAsync
         (
             collection,
+            e => x => x.ExperienceID == e.ExperienceID,
             e => Builders<Experience>.Filter.Eq(x => x.ExperienceID, e.ExperienceID),
             ct
         ).ConfigureAwait(false);
@@ -141,6 +181,7 @@ public class MongoContext : IMongoContext
         => await UpsertCollectionAsync
         (
             collection,
+            e => x => x.FacilityIdA == e.FacilityIdA && x.FacilityIdB == e.FacilityIdB,
             e => Builders<FacilityLink>.Filter.Where(x => x.FacilityIdA == e.FacilityIdA && x.FacilityIdB == e.FacilityIdB),
             ct
         ).ConfigureAwait(false);
@@ -150,6 +191,7 @@ public class MongoContext : IMongoContext
         => await UpsertCollectionAsync
         (
             collection,
+            e => x => x.FactionID == e.FactionID,
             e => Builders<Faction>.Filter.Eq(x => x.FactionID, e.FactionID),
             ct
         ).ConfigureAwait(false);
@@ -159,6 +201,7 @@ public class MongoContext : IMongoContext
         => await UpsertCollectionAsync
         (
             collection,
+            e => x => x.FireGroupID == e.FireGroupID,
             e => Builders<FireGroup>.Filter.Eq(x => x.FireGroupID, e.FireGroupID),
             ct
         ).ConfigureAwait(false);
@@ -168,7 +211,8 @@ public class MongoContext : IMongoContext
         => await UpsertCollectionAsync
         (
             collection,
-            e => Builders<FireGroupToFireMode>.Filter.Where(x => x.FireGroupId == e.FireGroupId && x.FireModeId == e.FireModeId),
+            e => x => x.FireGroupId == e.FireGroupId && x.FireModeId == e.FireModeId && x.FireModeIndex == e.FireModeIndex,
+            e => Builders<FireGroupToFireMode>.Filter.Where(x => x.FireGroupId == e.FireGroupId && x.FireModeId == e.FireModeId && x.FireModeIndex == e.FireModeIndex),
             ct
         ).ConfigureAwait(false);
 
@@ -177,6 +221,7 @@ public class MongoContext : IMongoContext
         => await UpsertCollectionAsync
         (
             collection,
+            e => x => x.FireModeID == e.FireModeID,
             e => Builders<FireMode2>.Filter.Eq(x => x.FireModeID, e.FireModeID),
             ct
         ).ConfigureAwait(false);
@@ -186,6 +231,7 @@ public class MongoContext : IMongoContext
         => await UpsertCollectionAsync
         (
             collection,
+            e => x => x.FireModeID == e.FireModeID && x.ProjectileID == e.ProjectileID,
             e => Builders<FireModeToProjectile>.Filter.Where(x => x.FireModeID == e.FireModeID && x.ProjectileID == e.ProjectileID),
             ct
         ).ConfigureAwait(false);
@@ -195,6 +241,7 @@ public class MongoContext : IMongoContext
         => await UpsertCollectionAsync
         (
             collection,
+            e => x => x.ItemID == e.ItemID,
             e => Builders<Item>.Filter.Eq(x => x.ItemID, e.ItemID),
             ct
         ).ConfigureAwait(false);
@@ -204,6 +251,7 @@ public class MongoContext : IMongoContext
         => await UpsertCollectionAsync
         (
             collection,
+            e => x => x.ItemCategoryID == e.ItemCategoryID,
             e => Builders<ItemCategory>.Filter.Eq(x => x.ItemCategoryID, e.ItemCategoryID),
             ct
         ).ConfigureAwait(false);
@@ -213,6 +261,7 @@ public class MongoContext : IMongoContext
         => await UpsertCollectionAsync
         (
             collection,
+            e => x => x.ItemId == e.ItemId && x.WeaponId == e.WeaponId,
             e => Builders<ItemToWeapon>.Filter.Where(x => x.ItemId == e.ItemId && x.WeaponId == e.WeaponId),
             ct
         ).ConfigureAwait(false);
@@ -222,6 +271,7 @@ public class MongoContext : IMongoContext
         => await UpsertCollectionAsync
         (
             collection,
+            e => x => x.LoadoutID == e.LoadoutID,
             e => Builders<Loadout>.Filter.Eq(x => x.LoadoutID, e.LoadoutID),
             ct
         ).ConfigureAwait(false);
@@ -231,6 +281,7 @@ public class MongoContext : IMongoContext
         => await UpsertCollectionAsync
         (
             collection,
+            e => x => x.LoadoutID == e.LoadoutID && x.SlotID == e.SlotID,
             e => Builders<LoadoutSlot>.Filter.Where(x => x.LoadoutID == e.LoadoutID && x.SlotID == e.SlotID),
             ct
         ).ConfigureAwait(false);
@@ -240,6 +291,7 @@ public class MongoContext : IMongoContext
         => await UpsertCollectionAsync
         (
             collection,
+            e => x => x.MapRegionId == e.MapRegionId,
             e => Builders<MapRegion>.Filter.Eq(x => x.MapRegionId, e.MapRegionId),
             ct
         ).ConfigureAwait(false);
@@ -249,6 +301,7 @@ public class MongoContext : IMongoContext
         => await UpsertCollectionAsync
         (
             collection,
+            e => x => x.PlayerStateGroupId == e.PlayerStateGroupId && x.PlayerStateId == e.PlayerStateId,
             e => Builders<PlayerStateGroup2>.Filter.Where(x => x.PlayerStateGroupId == e.PlayerStateGroupId && x.PlayerStateId == e.PlayerStateId),
             ct
         ).ConfigureAwait(false);
@@ -258,6 +311,7 @@ public class MongoContext : IMongoContext
         => await UpsertCollectionAsync
         (
             collection,
+            e => x => x.ProfileId == e.ProfileId,
             e => Builders<Profile>.Filter.Eq(x => x.ProfileId, e.ProfileId),
             ct
         ).ConfigureAwait(false);
@@ -267,6 +321,7 @@ public class MongoContext : IMongoContext
         => await UpsertCollectionAsync
         (
             collection,
+            e => x => x.ProjectileId == e.ProjectileId,
             e => Builders<Projectile>.Filter.Eq(x => x.ProjectileId, e.ProjectileId),
             ct
         ).ConfigureAwait(false);
@@ -276,6 +331,7 @@ public class MongoContext : IMongoContext
         => await UpsertCollectionAsync
         (
             collection,
+            e => x => x.VehicleId == e.VehicleId,
             e => Builders<Vehicle>.Filter.Eq(x => x.VehicleId, e.VehicleId),
             ct
         ).ConfigureAwait(false);
@@ -285,6 +341,7 @@ public class MongoContext : IMongoContext
         => await UpsertCollectionAsync
         (
             collection,
+            e => x => x.ItemID == e.ItemID && x.VehicleLoadoutID == e.VehicleLoadoutID,
             e => Builders<VehicleAttachment>.Filter.Where(x => x.ItemID == e.ItemID && x.VehicleLoadoutID == e.VehicleLoadoutID),
             ct
         ).ConfigureAwait(false);
@@ -294,6 +351,7 @@ public class MongoContext : IMongoContext
         => await UpsertCollectionAsync
         (
             collection,
+            e => x => x.LoadoutID == e.LoadoutID,
             e => Builders<VehicleLoadout>.Filter.Eq(x => x.LoadoutID, e.LoadoutID),
             ct
         ).ConfigureAwait(false);
@@ -303,6 +361,7 @@ public class MongoContext : IMongoContext
         => await UpsertCollectionAsync
         (
             collection,
+            e => x => x.LoadoutID == e.LoadoutID && x.SlotID == e.SlotID,
             e => Builders<VehicleLoadoutSlot>.Filter.Where(x => x.LoadoutID == e.LoadoutID && x.SlotID == e.SlotID),
             ct
         ).ConfigureAwait(false);
@@ -312,6 +371,7 @@ public class MongoContext : IMongoContext
         => await UpsertCollectionAsync
         (
             collection,
+            e => x => x.WeaponId == e.WeaponId,
             e => Builders<Weapon>.Filter.Eq(x => x.WeaponId, e.WeaponId),
             ct
         ).ConfigureAwait(false);
@@ -321,6 +381,7 @@ public class MongoContext : IMongoContext
         => await UpsertCollectionAsync
         (
             collection,
+            e => x => x.WeaponId == e.WeaponId && x.WeaponSlotIndex == e.WeaponSlotIndex,
             e => Builders<WeaponAmmoSlot>.Filter.Where(x => x.WeaponId == e.WeaponId && x.WeaponSlotIndex == e.WeaponSlotIndex),
             ct
         ).ConfigureAwait(false);
@@ -330,6 +391,7 @@ public class MongoContext : IMongoContext
         => await UpsertCollectionAsync
         (
             collection,
+            e => x => x.AttachmentID == e.AttachmentID && x.ItemID == e.ItemID,
             e => Builders<WeaponToAttachment>.Filter.Where(x => x.AttachmentID == e.AttachmentID && x.ItemID == e.ItemID),
             ct
         ).ConfigureAwait(false);
@@ -339,7 +401,8 @@ public class MongoContext : IMongoContext
         => await UpsertCollectionAsync
         (
             collection,
-            e => Builders<WeaponToFireGroup>.Filter.Where(x => x.WeaponId == e.WeaponId && x.FireGroupId == e.FireGroupId),
+            e => x => x.WeaponId == e.WeaponId && x.FireGroupId == e.FireGroupId && x.FireGroupIndex == e.FireGroupIndex,
+            e => Builders<WeaponToFireGroup>.Filter.Where(x => x.WeaponId == e.WeaponId && x.FireGroupId == e.FireGroupId && x.FireGroupIndex == e.FireGroupIndex),
             ct
         ).ConfigureAwait(false);
 
@@ -348,6 +411,7 @@ public class MongoContext : IMongoContext
         => await UpsertCollectionAsync
         (
             collection,
+            e => x => x.WorldID == e.WorldID,
             e => Builders<World>.Filter.Eq(x => x.WorldID, e.WorldID),
             ct
         ).ConfigureAwait(false);
@@ -422,11 +486,7 @@ public class MongoContext : IMongoContext
         BsonClassMap.RegisterClassMap<WeaponToFireGroup>(AutoMap);
         BsonClassMap.RegisterClassMap<World>(AutoMap);
 
-        BsonClassMap.RegisterClassMap<LocaleString>(cm =>
-        {
-            AutoMap(cm);
-            cm.UnmapProperty(x => x.ID);
-        });
+        BsonClassMap.RegisterClassMap<LocaleString>(AutoMap);
     }
 
     private static void AutoMap<T>(BsonClassMap<T> cm)

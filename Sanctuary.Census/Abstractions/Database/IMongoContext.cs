@@ -32,15 +32,17 @@ public interface IMongoContext
     /// </summary>
     /// <typeparam name="T">The type of the collection.</typeparam>
     /// <param name="collection">The collection.</param>
-    /// <param name="matchFilter">The filter used to match elements.</param>
+    /// <param name="comparator">A comparator to use between CLR objects.</param>
+    /// <param name="matchFilter">The Mongo filter used to match elements.</param>
     /// <param name="ct">A <see cref="CancellationToken"/> that can be used to stop the operation.</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
     Task UpsertCollectionAsync<T>
     (
         IEnumerable<T> collection,
+        Func<T, Predicate<T>> comparator,
         Func<T, FilterDefinition<T>> matchFilter,
         CancellationToken ct = default
-    );
+    ) where T : class;
 
     /// <summary>
     /// Upserts the <see cref="Currency"/> collection.

@@ -63,6 +63,7 @@ but is likely to be very similar.
 - player_state_group_2
 - ⚠ profile_2 - please query on `profile` instead, which is a direct upgrade
 - vehicle_attachment
+- weapon_to_attachment
 - weapon_to_fire_group
 
 ### 🌟 Silver Tier Collections

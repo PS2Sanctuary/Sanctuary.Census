@@ -191,6 +191,7 @@ public static class Program
             .RegisterCollectionBuilder<VehicleLoadoutSlotCollectionBuilder>()
             .RegisterCollectionBuilder<WeaponCollectionBuilder>()
             .RegisterCollectionBuilder<WeaponAmmoSlotCollectionBuilder>()
+            .RegisterCollectionBuilder<WeaponToAttachmentCollectionBuilder>()
             .RegisterCollectionBuilder<WeaponToFireGroupCollectionBuilder>()
             .RegisterCollectionBuilder<WorldCollectionBuilder>();
     }

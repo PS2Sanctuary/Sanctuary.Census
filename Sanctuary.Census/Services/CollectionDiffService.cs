@@ -98,6 +98,7 @@ public class CollectionDiffService : ICollectionDiffService
 
         IMongoDatabase database = _mongoContext.GetDatabase();
         IMongoCollection<CollectionDiffEntry> diffEntryColl = database.GetCollection<CollectionDiffEntry>(ENTRY_COLLECTION_NAME);
+        IMongoCollection<DiffRecord> diffRecordColl = database.GetCollection<DiffRecord>(RECORD_COLLECTION_NAME);
 
         await diffEntryColl.Indexes.CreateManyAsync
         (
@@ -108,10 +109,19 @@ public class CollectionDiffService : ICollectionDiffService
             ct
         ).ConfigureAwait(false);
 
+        await diffRecordColl.Indexes.CreateOneAsync
+        (
+            new CreateIndexModel<DiffRecord>(Builders<DiffRecord>.IndexKeys.Descending
+            (
+                x => x.GeneratedAt),
+                new CreateIndexOptions { Unique = true }
+            ),
+            cancellationToken: ct
+        ).ConfigureAwait(false);
+
         await diffEntryColl.InsertManyAsync(_entries, cancellationToken: ct).ConfigureAwait(false);
         _entries.Clear();
 
-        IMongoCollection<DiffRecord> diffRecordColl = database.GetCollection<DiffRecord>(RECORD_COLLECTION_NAME);
         DiffRecord record = new(_diffStarted, _collectionChangeCounts);
         await diffRecordColl.InsertOneAsync(record, cancellationToken: ct).ConfigureAwait(false);
 

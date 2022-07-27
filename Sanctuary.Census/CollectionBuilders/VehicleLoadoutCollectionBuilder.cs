@@ -36,8 +36,8 @@ public class VehicleLoadoutCollectionBuilder : ICollectionBuilder
         CancellationToken ct
     )
     {
-        if (_clientDataCache.Vehicles.Count == 0)
-            throw new MissingCacheDataException(typeof(LoadoutSlot));
+        if (_clientDataCache.VehicleLoadouts.Count == 0)
+            throw new MissingCacheDataException(typeof(VehicleLoadout));
 
         List<MVehicleLoadout> builtLoadouts = new();
         foreach (VehicleLoadout loadout in _clientDataCache.VehicleLoadouts)

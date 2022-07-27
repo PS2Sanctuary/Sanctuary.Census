@@ -50,7 +50,7 @@ public class FireModeCollectionBuilder : ICollectionBuilder
         if (_serverDataCache.WeaponDefinitions is null)
             throw new MissingCacheDataException(typeof(WeaponDefinitions));
 
-        if (_clientDataCache.FireModeDisplayStats.Count == 0)
+        if (_clientDataCache.FireModeDisplayStats is null)
             throw new MissingCacheDataException(typeof(FireModeDisplayStat));
 
         Dictionary<uint, FireModeDisplayStat> clientDisplayStats = new();

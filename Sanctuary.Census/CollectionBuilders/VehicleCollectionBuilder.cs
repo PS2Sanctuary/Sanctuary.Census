@@ -41,7 +41,10 @@ public class VehicleCollectionBuilder : ICollectionBuilder
         CancellationToken ct
     )
     {
-        if (_clientDataCache.Vehicles.Count == 0)
+        if (_clientDataCache.ImageSetMappings is null)
+            throw new MissingCacheDataException(typeof(ImageSetMapping));
+
+        if (_clientDataCache.Vehicles is null)
             throw new MissingCacheDataException(typeof(Vehicle));
 
         Dictionary<uint, uint> imageSetToPrimaryImageMap = new();

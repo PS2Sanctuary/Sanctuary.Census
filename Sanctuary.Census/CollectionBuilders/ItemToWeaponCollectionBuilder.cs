@@ -37,7 +37,7 @@ public class ItemToWeaponCollectionBuilder : ICollectionBuilder
         CancellationToken ct
     )
     {
-        if (_clientDataCache.ClientItemDatasheetDatas.Count == 0)
+        if (_clientDataCache.ClientItemDatasheetDatas is null)
             throw new MissingCacheDataException(typeof(ClientItemDatasheetData));
 
         IEnumerable<ItemToWeapon> builtItemsToWeapon = _clientDataCache.ClientItemDatasheetDatas

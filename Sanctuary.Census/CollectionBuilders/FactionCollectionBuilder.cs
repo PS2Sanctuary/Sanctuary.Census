@@ -41,10 +41,10 @@ public class FactionCollectionBuilder : ICollectionBuilder
         CancellationToken ct
     )
     {
-        if (_clientDataCache.Factions.Count == 0)
+        if (_clientDataCache.Factions is null)
             throw new MissingCacheDataException(typeof(Faction));
 
-        if (_clientDataCache.ImageSetMappings.Count == 0)
+        if (_clientDataCache.ImageSetMappings is null)
             throw new MissingCacheDataException(typeof(ImageSetMapping));
 
         Dictionary<uint, uint> imageSetToPrimaryImageMap = new();

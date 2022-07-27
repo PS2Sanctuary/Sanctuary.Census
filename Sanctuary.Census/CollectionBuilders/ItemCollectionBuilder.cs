@@ -41,13 +41,13 @@ public class ItemCollectionBuilder : ICollectionBuilder
         CancellationToken ct
     )
     {
-        if (_clientDataCache.ClientItemDefinitions.Count == 0)
+        if (_clientDataCache.ClientItemDefinitions is null)
             throw new MissingCacheDataException(typeof(ClientItemDefinition));
 
-        if (_clientDataCache.ItemProfiles.Count == 0)
+        if (_clientDataCache.ItemProfiles is null)
             throw new MissingCacheDataException(typeof(ItemProfile));
 
-        if (_clientDataCache.ImageSetMappings.Count == 0)
+        if (_clientDataCache.ImageSetMappings is null)
             throw new MissingCacheDataException(typeof(ImageSetMapping));
 
         Dictionary<uint, FactionDefinition> itemFactionMap = new();

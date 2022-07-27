@@ -11,7 +11,6 @@ using Sanctuary.Census.Common.Objects;
 using Sanctuary.Census.Common.Services;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
 using System.Threading;
@@ -29,52 +28,52 @@ public class ClientDataCacheService : IClientDataCacheService
     public DateTimeOffset LastPopulated { get; private set; }
 
     /// <inheritdoc />
-    public IReadOnlyList<ClientItemDatasheetData> ClientItemDatasheetDatas { get; private set; }
+    public IReadOnlyList<ClientItemDatasheetData>? ClientItemDatasheetDatas { get; private set; }
 
     /// <inheritdoc />
-    public IReadOnlyList<ClientItemDefinition> ClientItemDefinitions { get; private set; }
+    public IReadOnlyList<ClientItemDefinition>? ClientItemDefinitions { get; private set; }
 
     /// <inheritdoc />
-    public IReadOnlyList<Currency> Currencies { get; private set; }
+    public IReadOnlyList<Currency>? Currencies { get; private set; }
 
     /// <inheritdoc />
-    public IReadOnlyList<Experience> Experiences { get; private set; }
+    public IReadOnlyList<Experience>? Experiences { get; private set; }
 
     /// <inheritdoc />
-    public IReadOnlyList<Faction> Factions { get; private set; }
+    public IReadOnlyList<Faction>? Factions { get; private set; }
 
     /// <inheritdoc />
-    public IReadOnlyList<FireModeDisplayStat> FireModeDisplayStats { get; private set; }
+    public IReadOnlyList<FireModeDisplayStat>? FireModeDisplayStats { get; private set; }
 
     /// <inheritdoc />
-    public IReadOnlyList<ImageSetMapping> ImageSetMappings { get; private set; }
+    public IReadOnlyList<ImageSetMapping>? ImageSetMappings { get; private set; }
 
     /// <inheritdoc />
-    public IReadOnlyList<ItemProfile> ItemProfiles { get; private set; }
+    public IReadOnlyList<ItemProfile>? ItemProfiles { get; private set; }
 
     /// <inheritdoc />
-    public IReadOnlyList<ItemVehicle> ItemVehicles { get; set; }
+    public IReadOnlyList<ItemVehicle>? ItemVehicles { get; set; }
 
     /// <inheritdoc />
-    public IReadOnlyList<Loadout> Loadouts { get; private set; }
+    public IReadOnlyList<Loadout>? Loadouts { get; private set; }
 
     /// <inheritdoc />
-    public IReadOnlyList<LoadoutSlot> LoadoutSlots { get; private set; }
+    public IReadOnlyList<LoadoutSlot>? LoadoutSlots { get; private set; }
 
     /// <inheritdoc />
-    public IReadOnlyList<ResourceType> ResourceTypes { get; private set; }
+    public IReadOnlyList<ResourceType>? ResourceTypes { get; private set; }
 
     /// <inheritdoc />
-    public IReadOnlyList<Vehicle> Vehicles { get; private set; }
+    public IReadOnlyList<Vehicle>? Vehicles { get; private set; }
 
     /// <inheritdoc />
-    public IReadOnlyList<VehicleLoadout> VehicleLoadouts { get; private set; }
+    public IReadOnlyList<VehicleLoadout>? VehicleLoadouts { get; private set; }
 
     /// <inheritdoc />
-    public IReadOnlyList<VehicleLoadoutSlot> VehicleLoadoutSlots { get; private set; }
+    public IReadOnlyList<VehicleLoadoutSlot>? VehicleLoadoutSlots { get; private set; }
 
     /// <inheritdoc />
-    public IReadOnlyList<VehicleLoadoutSlotItemClass> VehicleLoadoutSlotItemClasses { get; private set; }
+    public IReadOnlyList<VehicleLoadoutSlotItemClass>? VehicleLoadoutSlotItemClasses { get; private set; }
 
     /// <summary>
     /// Initializes a new instance of the <see cref="ClientDataCacheService"/> class.
@@ -241,41 +240,26 @@ public class ClientDataCacheService : IClientDataCacheService
     }
 
     /// <inheritdoc />
-    [MemberNotNull(nameof(ClientItemDatasheetDatas))]
-    [MemberNotNull(nameof(ClientItemDefinitions))]
-    [MemberNotNull(nameof(Currencies))]
-    [MemberNotNull(nameof(Experiences))]
-    [MemberNotNull(nameof(Factions))]
-    [MemberNotNull(nameof(FireModeDisplayStats))]
-    [MemberNotNull(nameof(ImageSetMappings))]
-    [MemberNotNull(nameof(ItemProfiles))]
-    [MemberNotNull(nameof(ItemVehicles))]
-    [MemberNotNull(nameof(Loadouts))]
-    [MemberNotNull(nameof(LoadoutSlots))]
-    [MemberNotNull(nameof(ResourceTypes))]
-    [MemberNotNull(nameof(Vehicles))]
-    [MemberNotNull(nameof(VehicleLoadouts))]
-    [MemberNotNull(nameof(VehicleLoadoutSlots))]
-    [MemberNotNull(nameof(VehicleLoadoutSlotItemClasses))]
+
     public void Clear()
     {
         LastPopulated = DateTimeOffset.MinValue;
-        ClientItemDatasheetDatas = new List<ClientItemDatasheetData>();
-        ClientItemDefinitions = new List<ClientItemDefinition>();
-        Currencies = new List<Currency>();
-        Experiences = new List<Experience>();
-        Factions = new List<Faction>();
-        FireModeDisplayStats = new List<FireModeDisplayStat>();
-        ImageSetMappings = new List<ImageSetMapping>();
-        ItemProfiles = new List<ItemProfile>();
-        ItemVehicles = new List<ItemVehicle>();
-        Loadouts = new List<Loadout>();
-        LoadoutSlots = new List<LoadoutSlot>();
-        ResourceTypes = new List<ResourceType>();
-        Vehicles = new List<Vehicle>();
-        VehicleLoadouts = new List<VehicleLoadout>();
-        VehicleLoadoutSlots = new List<VehicleLoadoutSlot>();
-        VehicleLoadoutSlotItemClasses = new List<VehicleLoadoutSlotItemClass>();
+        ClientItemDatasheetDatas = null;
+        ClientItemDefinitions = null;
+        Currencies = null;
+        Experiences = null;
+        Factions = null;
+        FireModeDisplayStats = null;
+        ImageSetMappings = null;
+        ItemProfiles = null;
+        ItemVehicles = null;
+        Loadouts = null;
+        LoadoutSlots = null;
+        ResourceTypes = null;
+        Vehicles = null;
+        VehicleLoadouts = null;
+        VehicleLoadoutSlots = null;
+        VehicleLoadoutSlotItemClasses = null;
     }
 
     private static async Task<List<TDataType>> ExtractDatasheet<TDataType>

@@ -41,7 +41,7 @@ public class CurrencyCollectionBuilder : ICollectionBuilder
         CancellationToken ct
     )
     {
-        if (_clientDataCache.Currencies.Count == 0)
+        if (_clientDataCache.Currencies is null)
             throw new MissingCacheDataException(typeof(CCurrency));
 
         Dictionary<uint, MCurrency> builtCurrencies = new();

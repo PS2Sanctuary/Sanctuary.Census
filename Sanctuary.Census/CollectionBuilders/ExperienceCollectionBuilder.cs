@@ -41,7 +41,7 @@ public class ExperienceCollectionBuilder : ICollectionBuilder
         CancellationToken ct
     )
     {
-        if (_clientDataCache.Experiences.Count == 0)
+        if (_clientDataCache.Experiences is null)
             throw new MissingCacheDataException(typeof(CExperience));
 
         Dictionary<uint, MExperience> builtItems = new();

@@ -41,7 +41,7 @@ public class LoadoutSlotCollectionBuilder : ICollectionBuilder
         CancellationToken ct
     )
     {
-        if (_clientDataCache.LoadoutSlots.Count == 0)
+        if (_clientDataCache.LoadoutSlots is null)
             throw new MissingCacheDataException(typeof(LoadoutSlot));
 
         List<MLoadoutSlot> builtSlots = new();

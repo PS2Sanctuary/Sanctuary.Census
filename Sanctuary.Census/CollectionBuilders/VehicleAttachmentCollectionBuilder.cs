@@ -40,13 +40,13 @@ public class VehicleAttachmentCollectionBuilder : ICollectionBuilder
         CancellationToken ct
     )
     {
-        if (_clientDataCache.ClientItemDefinitions.Count == 0)
+        if (_clientDataCache.ClientItemDefinitions is null)
             throw new MissingCacheDataException(typeof(ClientItemDefinition));
 
-        if (_clientDataCache.ItemVehicles.Count == 0)
+        if (_clientDataCache.ItemVehicles is null)
             throw new MissingCacheDataException(typeof(ItemVehicle));
 
-        if (_clientDataCache.VehicleLoadoutSlotItemClasses.Count == 0)
+        if (_clientDataCache.VehicleLoadoutSlotItemClasses is null)
             throw new MissingCacheDataException(typeof(VehicleLoadoutSlotItemClass));
 
         List<VehicleAttachment> builtAttachments = new();

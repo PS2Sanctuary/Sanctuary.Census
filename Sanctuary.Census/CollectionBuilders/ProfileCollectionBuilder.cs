@@ -50,8 +50,11 @@ public class ProfileCollectionBuilder : ICollectionBuilder
         if (_serverDataCache.ProfileDefinitions is null)
             throw new MissingCacheDataException(typeof(ProfileDefinitions));
 
-        if (_clientDataCache.ItemProfiles.Count == 0)
+        if (_clientDataCache.ItemProfiles is null)
             throw new MissingCacheDataException(typeof(ItemProfile));
+
+        if (_clientDataCache.ImageSetMappings is null)
+            throw new MissingCacheDataException(typeof(ImageSetMapping));
 
         Dictionary<uint, FactionDefinition> profileFactionMap = new();
         foreach (ItemProfile profile in _clientDataCache.ItemProfiles)

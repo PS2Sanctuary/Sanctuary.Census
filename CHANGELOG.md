@@ -4,6 +4,10 @@ Date format: DD/MM/YYYY
 
 ## vNext
 
+- Added automatic collection diffing.
+
+## 27/07/2022
+
 - Added the `vehicle_attachment` and `weapon_to_attachment` collections.
 - Added the `loadout` and `vehicle_loadout` collections.
 - Added the `loadout_slot` and `vehicle_loadout_slot` collections.

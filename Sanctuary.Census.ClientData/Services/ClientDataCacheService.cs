@@ -53,6 +53,9 @@ public class ClientDataCacheService : IClientDataCacheService
     public IReadOnlyList<ItemProfile> ItemProfiles { get; private set; }
 
     /// <inheritdoc />
+    public IReadOnlyList<Loadout> Loadouts { get; private set; }
+
+    /// <inheritdoc />
     public IReadOnlyList<LoadoutSlot> LoadoutSlots { get; private set; }
 
     /// <inheritdoc />
@@ -60,6 +63,9 @@ public class ClientDataCacheService : IClientDataCacheService
 
     /// <inheritdoc />
     public IReadOnlyList<Vehicle> Vehicles { get; private set; }
+
+    /// <inheritdoc />
+    public IReadOnlyList<VehicleLoadout> VehicleLoadouts { get; private set; }
 
     /// <inheritdoc />
     public IReadOnlyList<VehicleLoadoutSlot> VehicleLoadoutSlots { get; private set; }
@@ -161,6 +167,14 @@ public class ClientDataCacheService : IClientDataCacheService
             ct
         ).ConfigureAwait(false);
 
+        Loadouts = await ExtractDatasheet<Loadout>
+        (
+            "Loadouts.txt",
+            assetHeaders,
+            reader,
+            ct
+        ).ConfigureAwait(false);
+
         LoadoutSlots = await ExtractDatasheet<LoadoutSlot>
         (
             "LoadoutSlots.txt",
@@ -180,6 +194,14 @@ public class ClientDataCacheService : IClientDataCacheService
         Vehicles = await ExtractDatasheet<Vehicle>
         (
             "Vehicles.txt",
+            assetHeaders,
+            reader,
+            ct
+        ).ConfigureAwait(false);
+
+        VehicleLoadouts = await ExtractDatasheet<VehicleLoadout>
+        (
+            "VehicleLoadouts.txt",
             assetHeaders,
             reader,
             ct
@@ -205,9 +227,11 @@ public class ClientDataCacheService : IClientDataCacheService
     [MemberNotNull(nameof(FireModeDisplayStats))]
     [MemberNotNull(nameof(ImageSetMappings))]
     [MemberNotNull(nameof(ItemProfiles))]
+    [MemberNotNull(nameof(Loadouts))]
     [MemberNotNull(nameof(LoadoutSlots))]
     [MemberNotNull(nameof(ResourceTypes))]
     [MemberNotNull(nameof(Vehicles))]
+    [MemberNotNull(nameof(VehicleLoadouts))]
     [MemberNotNull(nameof(VehicleLoadoutSlots))]
     public void Clear()
     {
@@ -220,9 +244,11 @@ public class ClientDataCacheService : IClientDataCacheService
         FireModeDisplayStats = new List<FireModeDisplayStat>();
         ImageSetMappings = new List<ImageSetMapping>();
         ItemProfiles = new List<ItemProfile>();
+        Loadouts = new List<Loadout>();
         LoadoutSlots = new List<LoadoutSlot>();
         ResourceTypes = new List<ResourceType>();
         Vehicles = new List<Vehicle>();
+        VehicleLoadouts = new List<VehicleLoadout>();
         VehicleLoadoutSlots = new List<VehicleLoadoutSlot>();
     }
 

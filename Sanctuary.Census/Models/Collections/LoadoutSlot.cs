@@ -13,6 +13,7 @@ namespace Sanctuary.Census.Models.Collections;
 /// <param name="Description">The slot's description.</param>
 /// <param name="IsAutoEquipped">Whether this slot is automatically equipped.</param>
 /// <param name="IsRequired">Whether this slot is required to be equipped.</param>
+/// <param name="IsVisible">Whether this slot is visible to the user.</param>
 /// <param name="UiTag">The UI section that this slot appears under.</param>
 [Collection]
 public record LoadoutSlot

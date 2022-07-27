@@ -50,6 +50,11 @@ public interface IClientDataCacheService : IDataCacheService
     IReadOnlyList<ItemProfile> ItemProfiles { get; }
 
     /// <summary>
+    /// Gets the cached <see cref="Loadout"/> objects.
+    /// </summary>
+    IReadOnlyList<Loadout> Loadouts { get; }
+
+    /// <summary>
     /// Gets the cached <see cref="LoadoutSlot"/> objects.
     /// </summary>
     IReadOnlyList<LoadoutSlot> LoadoutSlots { get; }
@@ -63,6 +68,11 @@ public interface IClientDataCacheService : IDataCacheService
     /// Gets the cached <see cref="Vehicle"/> objects.
     /// </summary>
     IReadOnlyList<Vehicle> Vehicles { get; }
+
+    /// <summary>
+    /// Gets the cached <see cref="VehicleLoadout"/> objects.
+    /// </summary>
+    IReadOnlyList<VehicleLoadout> VehicleLoadouts { get; }
 
     /// <summary>
     /// Gets the cached <see cref="VehicleLoadoutSlot"/> objects.

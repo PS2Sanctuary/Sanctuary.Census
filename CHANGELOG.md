@@ -4,7 +4,7 @@ Date format: DD/MM/YYYY
 
 ## vNext
 
-- Added the `loadout_slot` collection.
+- Added the `loadout_slot` and `vehicle_loadout_slot` collections.
 
 ## 25/07/2022
 

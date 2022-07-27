@@ -131,6 +131,14 @@ public interface IMongoContext
     Task UpsertItemsToWeaponsAsync(IEnumerable<ItemToWeapon> collection, CancellationToken ct = default);
 
     /// <summary>
+    /// Upserts the <see cref="Loadout"/> collection.
+    /// </summary>
+    /// <param name="collection">The collection.</param>
+    /// <param name="ct">A <see cref="CancellationToken"/> that can be used to stop the operation.</param>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    Task UpsertLoadoutsAsync(IEnumerable<Loadout> collection, CancellationToken ct = default);
+
+    /// <summary>
     /// Upserts the <see cref="LoadoutSlot"/> collection.
     /// </summary>
     /// <param name="collection">The collection.</param>
@@ -177,6 +185,14 @@ public interface IMongoContext
     /// <param name="ct">A <see cref="CancellationToken"/> that can be used to stop the operation.</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
     Task UpsertVehiclesAsync(IEnumerable<Vehicle> collection, CancellationToken ct = default);
+
+    /// <summary>
+    /// Upserts the <see cref="VehicleLoadout"/> collection.
+    /// </summary>
+    /// <param name="collection">The collection.</param>
+    /// <param name="ct">A <see cref="CancellationToken"/> that can be used to stop the operation.</param>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    Task UpsertVehicleLoadoutsAsync(IEnumerable<VehicleLoadout> collection, CancellationToken ct = default);
 
     /// <summary>
     /// Upserts the <see cref="VehicleLoadoutSlot"/> collection.

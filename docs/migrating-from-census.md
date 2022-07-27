@@ -69,6 +69,7 @@ These collections are missing small amounts of data as compared to their DBG Cen
 in such a way that retrieving certain data may not be immediately obvious.
 
 - item
+- loadout
 - map_region
 - projectile
 - vehicle
@@ -80,6 +81,10 @@ in such a way that retrieving certain data may not be immediately obvious.
 
 Missing the `is_vehicle_weapon` and `is_default_attachment` fields. The former can be replaced by checking
 if the `item_category_id` matches or inherits from **item_category** `104 - Vehicle Weapons`.
+
+#### loadout
+
+Missing the `code_name` field. This is replaced by querying for the name of the loadout's associated profile.
 
 #### map_region
 

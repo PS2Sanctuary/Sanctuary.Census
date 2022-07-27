@@ -78,12 +78,14 @@ public class MongoContext : IMongoContext
         );
         await CreateUniqueKeyIndex<ItemCategory>(x => x.ItemCategoryID, ct).ConfigureAwait(false);
         await CreateNonUniqueKeyIndexes<ItemToWeapon>(ct, x => x.ItemId, x => x.WeaponId).ConfigureAwait(false);
+        await CreateUniqueKeyIndex<Loadout>(x => x.LoadoutID, ct).ConfigureAwait(false);
         await CreateNonUniqueKeyIndexes<LoadoutSlot>(ct, x => x.LoadoutID, x => x.SlotID).ConfigureAwait(false);
         await CreateUniqueKeyIndex<MapRegion>(x => x.MapRegionId, ct).ConfigureAwait(false);
         await CreateNonUniqueKeyIndexes<PlayerStateGroup2>(ct, x => x.PlayerStateGroupId, x => x.PlayerStateId).ConfigureAwait(false);
         await CreateUniqueKeyIndex<Profile>(x => x.ProfileId, ct).ConfigureAwait(false);
         await CreateUniqueKeyIndex<Projectile>(x => x.ProjectileId, ct).ConfigureAwait(false);
         await CreateUniqueKeyIndex<Vehicle>(x => x.VehicleId, ct).ConfigureAwait(false);
+        await CreateUniqueKeyIndex<VehicleLoadout>(x => x.LoadoutID, ct).ConfigureAwait(false);
         await CreateNonUniqueKeyIndexes<VehicleLoadoutSlot>(ct, x => x.LoadoutID, x => x.SlotID).ConfigureAwait(false);
         await CreateUniqueKeyIndex<Weapon>(x => x.WeaponId, ct).ConfigureAwait(false);
         await CreateNonUniqueKeyIndexes<WeaponAmmoSlot>(ct, x => x.WeaponId).ConfigureAwait(false);
@@ -214,6 +216,15 @@ public class MongoContext : IMongoContext
         ).ConfigureAwait(false);
 
     /// <inheritdoc />
+    public async Task UpsertLoadoutsAsync(IEnumerable<Loadout> collection, CancellationToken ct = default)
+        => await UpsertCollectionAsync
+        (
+            collection,
+            e => Builders<Loadout>.Filter.Eq(x => x.LoadoutID, e.LoadoutID),
+            ct
+        ).ConfigureAwait(false);
+
+    /// <inheritdoc />
     public async Task UpsertLoadoutSlotsAsync(IEnumerable<LoadoutSlot> collection, CancellationToken ct = default)
         => await UpsertCollectionAsync
         (
@@ -264,6 +275,15 @@ public class MongoContext : IMongoContext
         (
             collection,
             e => Builders<Vehicle>.Filter.Eq(x => x.VehicleId, e.VehicleId),
+            ct
+        ).ConfigureAwait(false);
+
+    /// <inheritdoc />
+    public async Task UpsertVehicleLoadoutsAsync(IEnumerable<VehicleLoadout> collection, CancellationToken ct = default)
+        => await UpsertCollectionAsync
+        (
+            collection,
+            e => Builders<VehicleLoadout>.Filter.Eq(x => x.LoadoutID, e.LoadoutID),
             ct
         ).ConfigureAwait(false);
 
@@ -366,12 +386,14 @@ public class MongoContext : IMongoContext
         BsonClassMap.RegisterClassMap<Item>(AutoMap);
         BsonClassMap.RegisterClassMap<ItemCategory>(AutoMap);
         BsonClassMap.RegisterClassMap<ItemToWeapon>(AutoMap);
+        BsonClassMap.RegisterClassMap<Loadout>(AutoMap);
         BsonClassMap.RegisterClassMap<LoadoutSlot>(AutoMap);
         BsonClassMap.RegisterClassMap<MapRegion>(AutoMap);
         BsonClassMap.RegisterClassMap<PlayerStateGroup2>(AutoMap);
         BsonClassMap.RegisterClassMap<Profile>(AutoMap);
         BsonClassMap.RegisterClassMap<Projectile>(AutoMap);
         BsonClassMap.RegisterClassMap<Vehicle>(AutoMap);
+        BsonClassMap.RegisterClassMap<VehicleLoadout>(AutoMap);
         BsonClassMap.RegisterClassMap<VehicleLoadoutSlot>(AutoMap);
         BsonClassMap.RegisterClassMap<Weapon>(AutoMap);
         BsonClassMap.RegisterClassMap<WeaponAmmoSlot>(AutoMap);

@@ -1,5 +1,6 @@
 ﻿using Sanctuary.Census.Attributes;
 using Sanctuary.Census.Common.Objects.CommonModels;
+using System;
 using System.ComponentModel.DataAnnotations;
 
 namespace Sanctuary.Census.Models.Collections;
@@ -16,7 +17,28 @@ namespace Sanctuary.Census.Models.Collections;
 [Collection]
 public record ItemCategory
 (
-    [property:Key] uint ItemCategoryID,
+    [property: Key] uint ItemCategoryID,
     LocaleString Name,
     uint[]? ParentCategoryIds
-);
+)
+{
+    /// <inheritdoc />
+    public virtual bool Equals(ItemCategory? obj)
+        => obj is not null && GetHashCode() == obj.GetHashCode();
+
+    /// <inheritdoc />
+    public override int GetHashCode()
+    {
+        HashCode hash = new();
+        hash.Add(ItemCategoryID);
+        hash.Add(Name);
+
+        if (ParentCategoryIds is not null)
+        {
+            foreach (uint value in ParentCategoryIds)
+                hash.Add(value);
+        }
+
+        return hash.ToHashCode();
+    }
+}

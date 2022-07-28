@@ -2,6 +2,8 @@
 using MongoDB.Bson;
 using MongoDB.Driver;
 using Sanctuary.Census.Abstractions.Database;
+using Sanctuary.Census.Common.Objects;
+using Sanctuary.Census.Exceptions;
 using Sanctuary.Census.Models;
 using System;
 using System.Collections.Generic;
@@ -15,6 +17,11 @@ namespace Sanctuary.Census.Pages;
 public class DiffRecordsPage : PageModel
 {
     private readonly IMongoContext _mongoContext;
+
+    /// <summary>
+    /// Gets the environment to pull diffs from.
+    /// </summary>
+    public PS2Environment Environment { get; private set; }
 
     /// <summary>
     /// Gets the list of diff records to display.
@@ -33,16 +40,20 @@ public class DiffRecordsPage : PageModel
     /// <summary>
     /// Called when a GET request is made to this page.
     /// </summary>
-    public async Task OnGetAsync()
+    public async Task OnGetAsync(string environment)
     {
-        ViewData["Title"] = "Diff Viewer";
+        Environment = ParseEnvironment(environment);
 
-        IMongoCollection<DiffRecord> diffRecords = _mongoContext.GetCollection<DiffRecord>();
+        IMongoCollection<DiffRecord> diffRecords = _mongoContext.GetCollection<DiffRecord>(Environment);
         DiffRecords = await diffRecords.Find(new BsonDocument())
             .Sort(Builders<DiffRecord>.Sort.Descending(x => x.GeneratedAt))
             .Limit(100)
             .ToListAsync();
-
-        Console.WriteLine("test");
     }
+
+    private static PS2Environment ParseEnvironment(string environment)
+        => environment.ToLower() switch {
+            "pts" => PS2Environment.PTS,
+            _ => PS2Environment.PS2
+        };
 }

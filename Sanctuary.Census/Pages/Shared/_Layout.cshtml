@@ -4,11 +4,16 @@
     <meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <title>@ViewData["Title"] - Sanctuary.Census</title>
-    @* <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css"/> *@
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true"/>
-    @* <link rel="stylesheet" href="~/WebApplication1.styles.css" asp-append-version="true"/> *@
 </head>
 <body>
+<section class="hero is-primary is-small is-success">
+    <div class="hero-body">
+        <p class="title">
+            @ViewData["Title"]
+        </p>
+    </div>
+</section>
 <section class="section">
     <div class="container">
         <main role="main">

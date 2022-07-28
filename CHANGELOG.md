@@ -2,7 +2,7 @@
 
 Date format: DD/MM/YYYY
 
-## vNext
+## 29/07/2022
 
 - Added automatic collection diffing.
 - Added a diff viewer - head to [https://census.lithafalcon.cc/diff/ps2](https://census.lithafalcon.cc/diff/ps2).

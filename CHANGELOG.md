@@ -5,6 +5,7 @@ Date format: DD/MM/YYYY
 ## vNext
 
 - Added automatic collection diffing.
+- Added a diff viewer - head to [https://census.lithafalcon.cc/diff/ps2](https://census.lithafalcon.cc/diff/ps2).
 - When servers are locked, the collection build interval is reduced to 30m, so that we can get back up-to-date faster
   once the servers unlock again.
 

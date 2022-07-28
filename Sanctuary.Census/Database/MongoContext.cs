@@ -45,4 +45,8 @@ public class MongoContext : IMongoContext
     /// <inheritdoc />
     public IMongoDatabase GetDatabase(PS2Environment? environment = null)
         => _mongoClient.GetDatabase((environment ?? _environmentContextProvider.Environment) + "-collections");
+
+    /// <inheritdoc />
+    public IMongoCollection<T> GetCollection<T>(PS2Environment? environment = null)
+        => GetDatabase(environment).GetCollection<T>(SnakeCaseJsonNamingPolicy.Default.ConvertName(typeof(T).Name));
 }

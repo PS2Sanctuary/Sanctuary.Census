@@ -15,9 +15,6 @@ namespace Sanctuary.Census.Services;
 /// <inheritdoc />
 public class CollectionDiffService : ICollectionDiffService
 {
-    private const string ENTRY_COLLECTION_NAME = "collection_diffs";
-    private const string RECORD_COLLECTION_NAME = "diff_records";
-
     private readonly IMongoContext _mongoContext;
     private readonly List<CollectionDiffEntry> _entries;
     private readonly Dictionary<Type, string> _collectionNames;
@@ -96,9 +93,8 @@ public class CollectionDiffService : ICollectionDiffService
             return;
         }
 
-        IMongoDatabase database = _mongoContext.GetDatabase();
-        IMongoCollection<CollectionDiffEntry> diffEntryColl = database.GetCollection<CollectionDiffEntry>(ENTRY_COLLECTION_NAME);
-        IMongoCollection<DiffRecord> diffRecordColl = database.GetCollection<DiffRecord>(RECORD_COLLECTION_NAME);
+        IMongoCollection<CollectionDiffEntry> diffEntryColl = _mongoContext.GetCollection<CollectionDiffEntry>();
+        IMongoCollection<DiffRecord> diffRecordColl = _mongoContext.GetCollection<DiffRecord>();
 
         await diffEntryColl.Indexes.CreateManyAsync
         (

@@ -1,0 +1,20 @@
+﻿@page "/diff"
+@using Sanctuary.Census.Models
+@model Sanctuary.Census.Pages.DiffRecordsPage
+
+<div>
+    <h1 class="title">
+        Hello World
+    </h1>
+    <p class="subtitle">
+        My first website with <strong>Bulma</strong>!
+    </p>
+    
+    @if (Model.DiffRecords is not null)
+    {
+        foreach (DiffRecord record in Model.DiffRecords)
+        {
+            <span>@record.GeneratedAt</span>
+        }
+    }
+</div>

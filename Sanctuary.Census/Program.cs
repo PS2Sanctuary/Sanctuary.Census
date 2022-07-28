@@ -83,6 +83,7 @@ public static class Program
                 options.JsonSerializerOptions.Converters.Add(new DataResponseJsonConverter());
                 options.JsonSerializerOptions.Converters.Add(new BsonDocumentJsonConverter());
             });
+        builder.Services.AddRazorPages();
 
         // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
         builder.Services.AddEndpointsApiExplorer();
@@ -148,6 +149,7 @@ public static class Program
         });
 
         app.UseHttpsRedirection();
+        app.UseStaticFiles();
         app.UseMiddleware<ServiceIDMiddleware>();
 
         app.MapGet("/", [ApiExplorerSettings(IgnoreApi = true)](c) =>
@@ -159,6 +161,7 @@ public static class Program
         app.UseRouting();
         app.UseAuthorization();
         app.MapControllers();
+        app.MapRazorPages();
 
         app.Run();
     }

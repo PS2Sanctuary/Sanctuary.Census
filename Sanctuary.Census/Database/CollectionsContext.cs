@@ -44,6 +44,7 @@ public class CollectionsContext : ICollectionsContext
     {
         await CreateUniqueKeyIndex<Currency>(x => x.CurrencyID, ct).ConfigureAwait(false);
         await CreateUniqueKeyIndex<Experience>(x => x.ExperienceID, ct).ConfigureAwait(false);
+        await CreateNonUniqueKeyIndexes<FacilityInfo>(ct, x => x.ZoneID, x => x.FacilityID).ConfigureAwait(false);
         await CreateNonUniqueKeyIndexes<FacilityLink>(ct, x => x.ZoneID, x => x.FacilityIdA, x => x.FacilityIdB).ConfigureAwait(false);
         await CreateUniqueKeyIndex<Faction>(x => x.FactionID, ct).ConfigureAwait(false);
         await CreateUniqueKeyIndex<FireGroup>(x => x.FireGroupID, ct).ConfigureAwait(false);
@@ -168,6 +169,16 @@ public class CollectionsContext : ICollectionsContext
             collection,
             e => x => x.ExperienceID == e.ExperienceID,
             e => Builders<Experience>.Filter.Eq(x => x.ExperienceID, e.ExperienceID),
+            ct
+        ).ConfigureAwait(false);
+
+    /// <inheritdoc />
+    public async Task UpsertFacilityInfosAsync(IEnumerable<FacilityInfo> collection, CancellationToken ct = default)
+        => await UpsertCollectionAsync
+        (
+            collection,
+            e => x => x.FacilityID == e.FacilityID,
+            e => Builders<FacilityInfo>.Filter.Where(x => x.FacilityID == e.FacilityID),
             ct
         ).ConfigureAwait(false);
 
@@ -456,6 +467,7 @@ public class CollectionsContext : ICollectionsContext
     {
         BsonClassMap.RegisterClassMap<Currency>(MongoContext.AutoClassMap);
         BsonClassMap.RegisterClassMap<Experience>(MongoContext.AutoClassMap);
+        BsonClassMap.RegisterClassMap<FacilityInfo>(MongoContext.AutoClassMap);
         BsonClassMap.RegisterClassMap<FacilityLink>(MongoContext.AutoClassMap);
         BsonClassMap.RegisterClassMap<Faction>(MongoContext.AutoClassMap);
         BsonClassMap.RegisterClassMap<FireGroup>(MongoContext.AutoClassMap);

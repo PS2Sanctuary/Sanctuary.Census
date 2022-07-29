@@ -2,13 +2,13 @@
 
 Date format: DD/MM/YYYY
 
-## 29/07/2022 #2
+## 30/07/2022
 
 - Added the `facility_info` collection. This collection is currently manually updated. Compared to the current iteration of map_region,
   it is guaranteed to contain positional data and is more likely to contain all known facilities.
 - Fixed querying on the `item.faction_id` field.
 
-## 29/07/2022 #1
+## 29/07/2022
 
 - Added automatic collection diffing.
 - Added a diff viewer - head to [https://census.lithafalcon.cc/diff/ps2](https://census.lithafalcon.cc/diff/ps2).

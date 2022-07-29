@@ -2,7 +2,6 @@
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
-using MongoDB.Driver;
 using Sanctuary.Census.Abstractions.CollectionBuilders;
 using Sanctuary.Census.Abstractions.Database;
 using Sanctuary.Census.Abstractions.Services;
@@ -64,17 +63,6 @@ public class CollectionBuildWorker : BackgroundService
 
             services.GetRequiredService<EnvironmentContextProvider>().Environment = env;
             await services.GetRequiredService<ICollectionsContext>().ScaffoldAsync(ct).ConfigureAwait(false);
-
-            try
-            {
-                IMongoDatabase db = services.GetRequiredService<IMongoContext>().GetDatabase();
-                await db.RenameCollectionAsync("collection_diffs", "collection_diff_entry", cancellationToken: ct);
-                await db.RenameCollectionAsync("diff_records", "diff_record", cancellationToken: ct);
-            }
-            catch
-            {
-                _logger.LogWarning("[{Environment}] Collections already renamed", env);
-            }
         }
 
         // TODO: Quick-update collections? E.g. the world collection could be updated every 5m to better represent lock state.

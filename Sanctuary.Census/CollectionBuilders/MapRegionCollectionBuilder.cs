@@ -30,7 +30,7 @@ public class MapRegionCollectionBuilder : ICollectionBuilder
     /// <inheritdoc />
     public async Task BuildAsync(ICollectionsContext dbContext, CancellationToken ct = default)
     {
-        if (_patchDataCache.MapRegions.Count == 0)
+        if (_patchDataCache.MapRegions is null)
             throw new MissingCacheDataException(typeof(MapRegionPatch));
 
         IEnumerable<MapRegion> links = _patchDataCache.MapRegions

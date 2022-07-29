@@ -30,7 +30,7 @@ public class FacilityLinkCollectionBuilder : ICollectionBuilder
     /// <inheritdoc />
     public async Task BuildAsync(ICollectionsContext dbContext, CancellationToken ct = default)
     {
-        if (_patchDataCache.FacilityLinks.Count == 0)
+        if (_patchDataCache.FacilityLinks is null)
             throw new MissingCacheDataException(typeof(FacilityLinkPatch));
 
         IEnumerable<FacilityLink> links = _patchDataCache.FacilityLinks

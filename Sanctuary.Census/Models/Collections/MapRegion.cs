@@ -23,7 +23,7 @@ public record MapRegion
     uint FacilityId,
     string FacilityName,
     uint FacilityTypeId,
-    string FacilityType,
+    string? FacilityType,
     float? LocationX,
     float? LocationY,
     float? LocationZ

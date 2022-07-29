@@ -698,7 +698,7 @@
     "regionID": 18263,
     "name": "Mirror Bay Watchtower",
     "typeID": 6,
-    "typeName": "<missing type name>",
+    "typeName": null,
     "locationX": -388.2071,
     "locationY": 0,
     "locationZ": 179.0138
@@ -709,7 +709,7 @@
     "regionID": 18265,
     "name": "Pommel Gardens",
     "typeID": 6,
-    "typeName": "<missing type name>",
+    "typeName": null,
     "locationX": 344.6868,
     "locationY": 0,
     "locationZ": -44.9972
@@ -720,7 +720,7 @@
     "regionID": 18266,
     "name": "Centri Import Hub",
     "typeID": 9,
-    "typeName": "<missing type name>",
+    "typeName": null,
     "locationX": -648.1004,
     "locationY": 0,
     "locationZ": -1005.545
@@ -731,7 +731,7 @@
     "regionID": 18267,
     "name": "Binusilan Interlink",
     "typeID": 8,
-    "typeName": "<missing type name>",
+    "typeName": null,
     "locationX": -542.6374,
     "locationY": 0,
     "locationZ": -1495.814
@@ -742,7 +742,7 @@
     "regionID": 18268,
     "name": "Ligalai Station",
     "typeID": 9,
-    "typeName": "<missing type name>",
+    "typeName": null,
     "locationX": -232.1133,
     "locationY": 0,
     "locationZ": -1430.166
@@ -1820,7 +1820,7 @@
     "regionID": 18264,
     "name": "Astira Hydroelectric",
     "typeID": 6,
-    "typeName": "<missing type name>",
+    "typeName": null,
     "locationX": 168.3114,
     "locationY": 0,
     "locationZ": -637.5933
@@ -1831,7 +1831,7 @@
     "regionID": 18329,
     "name": "Seapost J5",
     "typeID": 6,
-    "typeName": "<missing type name>",
+    "typeName": null,
     "locationX": 1785.761,
     "locationY": 0,
     "locationZ": 951.1047
@@ -1842,7 +1842,7 @@
     "regionID": 18330,
     "name": "Seapost K10",
     "typeID": 6,
-    "typeName": "<missing type name>",
+    "typeName": null,
     "locationX": -641.0547,
     "locationY": 0,
     "locationZ": 1457.195
@@ -1853,7 +1853,7 @@
     "regionID": 18331,
     "name": "Seapost K12",
     "typeID": 6,
-    "typeName": "<missing type name>",
+    "typeName": null,
     "locationX": -1684.534,
     "locationY": 0,
     "locationZ": 1492.227
@@ -1864,7 +1864,7 @@
     "regionID": 18269,
     "name": "Outpost Kalis",
     "typeID": 6,
-    "typeName": "<missing type name>",
+    "typeName": null,
     "locationX": -1048.934,
     "locationY": 0,
     "locationZ": -1629.705
@@ -1875,7 +1875,7 @@
     "regionID": 18271,
     "name": "Viridian Genetics Lab",
     "typeID": 5,
-    "typeName": "<missing type name>",
+    "typeName": null,
     "locationX": -386.5371,
     "locationY": 0,
     "locationZ": 1114.843
@@ -1886,7 +1886,7 @@
     "regionID": 18273,
     "name": "Centri Mining Operation",
     "typeID": 5,
-    "typeName": "<missing type name>",
+    "typeName": null,
     "locationX": -1140.793,
     "locationY": 0,
     "locationZ": 508.2936
@@ -1897,7 +1897,7 @@
     "regionID": 18275,
     "name": "Pilay Interlink",
     "typeID": 8,
-    "typeName": "<missing type name>",
+    "typeName": null,
     "locationX": -1240.26,
     "locationY": 0,
     "locationZ": 1423.053
@@ -1908,7 +1908,7 @@
     "regionID": 18277,
     "name": "Lamplight Security",
     "typeID": 6,
-    "typeName": "<missing type name>",
+    "typeName": null,
     "locationX": 1120.782,
     "locationY": 0,
     "locationZ": -224.7163
@@ -1919,7 +1919,7 @@
     "regionID": 18279,
     "name": "Wavecrest Beachhead",
     "typeID": 9,
-    "typeName": "<missing type name>",
+    "typeName": null,
     "locationX": 798.5482,
     "locationY": 0,
     "locationZ": 689.5516
@@ -1930,7 +1930,7 @@
     "regionID": 18280,
     "name": "Anat Interlink",
     "typeID": 8,
-    "typeName": "<missing type name>",
+    "typeName": null,
     "locationX": 1488.94,
     "locationY": 0,
     "locationZ": 301.3568
@@ -1941,7 +1941,7 @@
     "regionID": 18281,
     "name": "Sage R&D Labs",
     "typeID": 6,
-    "typeName": "<missing type name>",
+    "typeName": null,
     "locationX": 402.2295,
     "locationY": 0,
     "locationZ": -2580.796
@@ -2051,7 +2051,7 @@
     "regionID": 18270,
     "name": "Seaside Bluffs",
     "typeID": 9,
-    "typeName": "<missing type name>",
+    "typeName": null,
     "locationX": -709.4533,
     "locationY": 0,
     "locationZ": -2171.245
@@ -2062,7 +2062,7 @@
     "regionID": 18272,
     "name": "Viridian Decontamination",
     "typeID": 9,
-    "typeName": "<missing type name>",
+    "typeName": null,
     "locationX": -758.4912,
     "locationY": 0,
     "locationZ": 881.5787
@@ -2073,7 +2073,7 @@
     "regionID": 18274,
     "name": "Mirror Bay Checkpoint",
     "typeID": 6,
-    "typeName": "<missing type name>",
+    "typeName": null,
     "locationX": -332.9899,
     "locationY": 0,
     "locationZ": 634.0948
@@ -2084,7 +2084,7 @@
     "regionID": 18276,
     "name": "Gildad Cliffs",
     "typeID": 6,
-    "typeName": "<missing type name>",
+    "typeName": null,
     "locationX": 971.4791,
     "locationY": 0,
     "locationZ": 303.6563
@@ -2095,7 +2095,7 @@
     "regionID": 18278,
     "name": "Hopeswell Beachhead",
     "typeID": 9,
-    "typeName": "<missing type name>",
+    "typeName": null,
     "locationX": 1435.755,
     "locationY": 0,
     "locationZ": -163.0333
@@ -2106,7 +2106,7 @@
     "regionID": 18343,
     "name": "Veridad Pass",
     "typeID": 9,
-    "typeName": "<missing type name>",
+    "typeName": null,
     "locationX": -185.9929,
     "locationY": 0,
     "locationZ": -2597.929
@@ -2117,7 +2117,7 @@
     "regionID": 18344,
     "name": "Solstice Pass",
     "typeID": 9,
-    "typeName": "<missing type name>",
+    "typeName": null,
     "locationX": -2020.088,
     "locationY": 0,
     "locationZ": 75.05101
@@ -2128,7 +2128,7 @@
     "regionID": 18282,
     "name": "Tannae Power",
     "typeID": 5,
-    "typeName": "<missing type name>",
+    "typeName": null,
     "locationX": -823.1804,
     "locationY": 0,
     "locationZ": -2778.746
@@ -2777,7 +2777,7 @@
     "regionID": 18346,
     "name": "Wakerift Beachhead",
     "typeID": 9,
-    "typeName": "<missing type name>",
+    "typeName": null,
     "locationX": -381.0081,
     "locationY": 0,
     "locationZ": -519.2697
@@ -2788,7 +2788,7 @@
     "regionID": 18284,
     "name": "K&H Tech Station",
     "typeID": 9,
-    "typeName": "<missing type name>",
+    "typeName": null,
     "locationX": -1591.091,
     "locationY": 0,
     "locationZ": -2124.225
@@ -2799,7 +2799,7 @@
     "regionID": 18286,
     "name": "Dekat Interlink",
     "typeID": 8,
-    "typeName": "<missing type name>",
+    "typeName": null,
     "locationX": -2051.873,
     "locationY": 0,
     "locationZ": -593.2458
@@ -2810,7 +2810,7 @@
     "regionID": 18288,
     "name": "Southpeak Meadows",
     "typeID": 9,
-    "typeName": "<missing type name>",
+    "typeName": null,
     "locationX": -2394.977,
     "locationY": 0,
     "locationZ": 1156.29
@@ -2821,7 +2821,7 @@
     "regionID": 18290,
     "name": "Remnant Cove",
     "typeID": 9,
-    "typeName": "<missing type name>",
+    "typeName": null,
     "locationX": -1740.145,
     "locationY": 0,
     "locationZ": 2165.526
@@ -2832,7 +2832,7 @@
     "regionID": 18292,
     "name": "South Viridian Beachhead",
     "typeID": 9,
-    "typeName": "<missing type name>",
+    "typeName": null,
     "locationX": -903.4184,
     "locationY": 0,
     "locationZ": 1828.76
@@ -2843,7 +2843,7 @@
     "regionID": 18294,
     "name": "Sibo Interlink",
     "typeID": 8,
-    "typeName": "<missing type name>",
+    "typeName": null,
     "locationX": 1141.803,
     "locationY": 0,
     "locationZ": 1995.087
@@ -2854,7 +2854,7 @@
     "regionID": 18296,
     "name": "Palaso Supply Depot",
     "typeID": 6,
-    "typeName": "<missing type name>",
+    "typeName": null,
     "locationX": 2329.087,
     "locationY": 0,
     "locationZ": 1056.979
@@ -2865,7 +2865,7 @@
     "regionID": 18298,
     "name": "Eagle Outpost",
     "typeID": 6,
-    "typeName": "<missing type name>",
+    "typeName": null,
     "locationX": 2288.571,
     "locationY": 0,
     "locationZ": 95.03036
@@ -2876,7 +2876,7 @@
     "regionID": 18300,
     "name": "Imbanon Interlink",
     "typeID": 8,
-    "typeName": "<missing type name>",
+    "typeName": null,
     "locationX": 1388.479,
     "locationY": 0,
     "locationZ": -1761.946
@@ -2887,7 +2887,7 @@
     "regionID": 18302,
     "name": "Emerald Arboretum",
     "typeID": 5,
-    "typeName": "<missing type name>",
+    "typeName": null,
     "locationX": -1449.924,
     "locationY": 0,
     "locationZ": 2487.479
@@ -2898,7 +2898,7 @@
     "regionID": 18304,
     "name": "Oshur Southwest Flotilla",
     "typeID": 7,
-    "typeName": "<missing type name>",
+    "typeName": null,
     "locationX": -1669.63,
     "locationY": 0,
     "locationZ": -3260.855
@@ -2909,7 +2909,7 @@
     "regionID": 18307,
     "name": "Sirinan Trident",
     "typeID": 12,
-    "typeName": "<missing type name>",
+    "typeName": null,
     "locationX": 569.9388,
     "locationY": 0,
     "locationZ": -1287.73
@@ -2920,7 +2920,7 @@
     "regionID": 18309,
     "name": "Anlabban Trident",
     "typeID": 12,
-    "typeName": "<missing type name>",
+    "typeName": null,
     "locationX": -1299.012,
     "locationY": 0,
     "locationZ": -411.4696
@@ -3184,7 +3184,7 @@
     "regionID": 18283,
     "name": "Hunter's Ravine",
     "typeID": 9,
-    "typeName": "<missing type name>",
+    "typeName": null,
     "locationX": -1207.701,
     "locationY": 0,
     "locationZ": -2570.101
@@ -3195,7 +3195,7 @@
     "regionID": 18285,
     "name": "High Ridge Security",
     "typeID": 6,
-    "typeName": "<missing type name>",
+    "typeName": null,
     "locationX": -1522.509,
     "locationY": 0,
     "locationZ": -1369.563
@@ -3206,7 +3206,7 @@
     "regionID": 18287,
     "name": "Astira Solar Station",
     "typeID": 9,
-    "typeName": "<missing type name>",
+    "typeName": null,
     "locationX": -1850.98,
     "locationY": 0,
     "locationZ": 527.9398
@@ -3217,7 +3217,7 @@
     "regionID": 18289,
     "name": "Emerald Research Co.",
     "typeID": 6,
-    "typeName": "<missing type name>",
+    "typeName": null,
     "locationX": -2410.425,
     "locationY": 0,
     "locationZ": 1435.602
@@ -3228,7 +3228,7 @@
     "regionID": 18291,
     "name": "Viridian East Terrace",
     "typeID": 6,
-    "typeName": "<missing type name>",
+    "typeName": null,
     "locationX": -598.8274,
     "locationY": 0,
     "locationZ": 1962.872
@@ -3239,7 +3239,7 @@
     "regionID": 18293,
     "name": "Terran Genetics Inc.",
     "typeID": 6,
-    "typeName": "<missing type name>",
+    "typeName": null,
     "locationX": 479.267,
     "locationY": 0,
     "locationZ": 2340.539
@@ -3250,7 +3250,7 @@
     "regionID": 18295,
     "name": "Wellerman Watch",
     "typeID": 5,
-    "typeName": "<missing type name>",
+    "typeName": null,
     "locationX": 1196.986,
     "locationY": 0,
     "locationZ": 1079.018
@@ -3261,7 +3261,7 @@
     "regionID": 18297,
     "name": "Fort Arceo",
     "typeID": 5,
-    "typeName": "<missing type name>",
+    "typeName": null,
     "locationX": 2060.398,
     "locationY": 0,
     "locationZ": 537.5415
@@ -3272,7 +3272,7 @@
     "regionID": 18299,
     "name": "Meridian Listening Post",
     "typeID": 9,
-    "typeName": "<missing type name>",
+    "typeName": null,
     "locationX": 1654.332,
     "locationY": 0,
     "locationZ": -728.0424
@@ -3283,7 +3283,7 @@
     "regionID": 18301,
     "name": "Nascent Shipping and Storage",
     "typeID": 6,
-    "typeName": "<missing type name>",
+    "typeName": null,
     "locationX": 941.3618,
     "locationY": 0,
     "locationZ": -2250.606
@@ -3294,7 +3294,7 @@
     "regionID": 18303,
     "name": "Oshur Northern Flotilla",
     "typeID": 7,
-    "typeName": "<missing type name>",
+    "typeName": null,
     "locationX": 3097.18,
     "locationY": 0,
     "locationZ": 555.3164
@@ -3305,7 +3305,7 @@
     "regionID": 18305,
     "name": "Oshur Southeast Flotilla",
     "typeID": 7,
-    "typeName": "<missing type name>",
+    "typeName": null,
     "locationX": -2778.318,
     "locationY": 0,
     "locationZ": 2904.415
@@ -3558,7 +3558,7 @@
     "regionID": 18308,
     "name": "Bago Trident",
     "typeID": 12,
-    "typeName": "<missing type name>",
+    "typeName": null,
     "locationX": 305.173,
     "locationY": 0,
     "locationZ": 1234.573

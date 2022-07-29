@@ -29,7 +29,7 @@ public record Item
     [property:Key] uint ItemID,
     uint ItemTypeID,
     uint ItemCategoryID,
-    FactionDefinition FactionID,
+    uint FactionID,
     LocaleString? Name,
     LocaleString? Description,
     uint? ActivatableAbilityID,

@@ -92,7 +92,7 @@ public class ItemCollectionBuilder : ICollectionBuilder
                 definition.ID,
                 definition.ItemType,
                 definition.CategoryID,
-                faction,
+                (uint)faction,
                 name,
                 description,
                 definition.ActivatableAbilityID == 0 ? null : definition.ActivatableAbilityID,

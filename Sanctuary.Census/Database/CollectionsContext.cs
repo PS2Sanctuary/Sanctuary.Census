@@ -98,17 +98,11 @@ public class CollectionsContext : ICollectionsContext
 
         IMongoCollection<T> collection = GetCollection<T>();
         List<WriteModel<T>> dbWriteModels = new();
-        bool shouldDiffAdd = false;
 
         // Iterate over each document that's currently in the collection
         IAsyncCursor<T> cursor = await collection.FindAsync(new BsonDocument(), cancellationToken: ct).ConfigureAwait(false);
         while (await cursor.MoveNextAsync(ct).ConfigureAwait(false))
         {
-            // We only want to set items as 'added' in the diff
-            // if the collection isn't brand new. Hence, wait
-            // till we've found documents to set this flag
-            shouldDiffAdd = true;
-
             foreach (T document in cursor.Current)
             {
                 // Attempt to find the DB document in our upsert data
@@ -143,9 +137,7 @@ public class CollectionsContext : ICollectionsContext
         {
             InsertOneModel<T> insertModel = new(item);
             dbWriteModels.Add(insertModel);
-
-            if (shouldDiffAdd)
-                _diffService.SetAdded(item);
+            _diffService.SetAdded(item);
         }
 
         if (dbWriteModels.Count > 0)

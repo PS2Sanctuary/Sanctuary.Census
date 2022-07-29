@@ -1,6 +1,5 @@
 ﻿using Sanctuary.Census.PatchData.Abstractions.Services;
 using Sanctuary.Census.PatchData.PatchDataModels;
-using System.Diagnostics.CodeAnalysis;
 using System.Text.Json;
 
 namespace Sanctuary.Census.PatchData.Services;
@@ -14,18 +13,13 @@ public class PatchDataCacheService : IPatchDataCacheService
     public DateTimeOffset LastPopulated { get; private set; }
 
     /// <inheritdoc />
-    public IReadOnlyList<FacilityLinkPatch> FacilityLinks { get; private set; }
+    public IReadOnlyList<FacilityLinkPatch>? FacilityLinks { get; private set; }
 
     /// <inheritdoc />
-    public IReadOnlyList<MapRegionPatch> MapRegions { get; private set; }
+    public IReadOnlyList<MapRegionPatch>? MapRegions { get; private set; }
 
-    /// <summary>
-    /// Initializes a new instance of the <see cref="PatchDataCacheService"/> class.
-    /// </summary>
-    public PatchDataCacheService()
-    {
-        Clear();
-    }
+    /// <inheritdoc />
+    public IReadOnlyList<StaticFacilityInfo>? StaticFacilityInfos { get; private set; }
 
     /// <inheritdoc />
     public async Task RepopulateAsync(CancellationToken ct = default)
@@ -54,15 +48,29 @@ public class PatchDataCacheService : IPatchDataCacheService
 
         regions.Sort((x1, x2) => x1.RegionID.CompareTo(x2.RegionID));
         MapRegions = regions;
+
+        await using FileStream staticFacilitiesStream = new(Path.Combine(basePath, "static_facility_info.json"), FileMode.Open);
+        List<StaticFacilityInfo>? staticFacilities = await JsonSerializer.DeserializeAsync<List<StaticFacilityInfo>>
+        (
+            staticFacilitiesStream,
+            JsonOptions,
+            ct
+        );
+
+        if (staticFacilities is null)
+            throw new Exception("Failed to deserialize map regions");
+
+        StaticFacilityInfos = staticFacilities.OrderBy(x => x.ZoneDefinition)
+            .ThenBy(x => x.FacilityID)
+            .ToList();
     }
 
     /// <inheritdoc />
-    [MemberNotNull(nameof(FacilityLinks))]
-    [MemberNotNull(nameof(MapRegions))]
     public void Clear()
     {
         LastPopulated = DateTimeOffset.MinValue;
-        FacilityLinks = new List<FacilityLinkPatch>();
-        MapRegions = new List<MapRegionPatch>();
+        FacilityLinks = null;
+        MapRegions = null;
+        StaticFacilityInfos = null;
     }
 }

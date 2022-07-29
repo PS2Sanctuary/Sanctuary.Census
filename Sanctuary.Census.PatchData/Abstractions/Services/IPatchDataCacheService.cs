@@ -11,10 +11,15 @@ public interface IPatchDataCacheService : IDataCacheService
     /// <summary>
     /// Gets the cached <see cref="FacilityLinkPatch"/> objects.
     /// </summary>
-    IReadOnlyList<FacilityLinkPatch> FacilityLinks { get; }
+    IReadOnlyList<FacilityLinkPatch>? FacilityLinks { get; }
 
     /// <summary>
     /// Gets the cached <see cref="MapRegionPatch"/> objects.
     /// </summary>
-    IReadOnlyList<MapRegionPatch> MapRegions { get; }
+    IReadOnlyList<MapRegionPatch>? MapRegions { get; }
+
+    /// <summary>
+    /// Gets the cached <see cref="StaticFacilityInfo"/> objects.
+    /// </summary>
+    IReadOnlyList<StaticFacilityInfo>? StaticFacilityInfos { get; }
 }

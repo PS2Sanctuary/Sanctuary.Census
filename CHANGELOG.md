@@ -2,6 +2,11 @@
 
 Date format: DD/MM/YYYY
 
+04/08/2022
+
+- Fixed the use of sibling joins within child joins.
+- Darkened some aspects of the diff interface.
+
 ## 30/07/2022
 
 - Added the `facility_info` collection. This collection is currently manually updated. Compared to the current iteration of map_region,

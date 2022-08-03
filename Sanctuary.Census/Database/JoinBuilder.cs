@@ -99,10 +99,46 @@ public class JoinBuilder
         List<JoinBuilder> builders = new();
 
         SpanReader<char> reader = new(value);
-        while (reader.TryReadTo(out ReadOnlySpan<char> joinValue, ','))
-            builders.Add(ParseIndividualJoin(joinValue));
+        while (reader.TryReadToAny(out ReadOnlySpan<char> joinValue, ",(", false))
+        {
+            int childDepth = 0;
 
-        if (reader.TryReadExact(out ReadOnlySpan<char> finalJoinValue, reader.Remaining))
+            if (reader.IsNext(',', true))
+            {
+                builders.Add(ParseIndividualJoin(joinValue));
+                continue;
+            }
+
+            childDepth++;
+            reader.Advance(1);
+            int startIndex = reader.Consumed - joinValue.Length + - 1;
+
+            while (reader.TryAdvanceToAny("()", false))
+            {
+                if (reader.IsNext("("))
+                    childDepth++;
+                else
+                    childDepth--;
+
+                reader.Advance(1);
+                if (childDepth != 0)
+                    continue;
+
+                JoinBuilder join = ParseIndividualJoin(reader.Span[startIndex..reader.Consumed]);
+                builders.Add(join);
+            }
+
+            if (childDepth > 0)
+            {
+                throw new QueryException
+                (
+                    QueryErrorCode.Malformed,
+                    $"Missing a closing bracket on a child join. Join path begins with '{joinValue}'"
+                );
+            }
+        }
+
+        if (reader.TryReadExact(out ReadOnlySpan<char> finalJoinValue, reader.Remaining) && !finalJoinValue.IsEmpty)
             builders.Add(ParseIndividualJoin(finalJoinValue));
 
         return builders;
@@ -164,21 +200,21 @@ public class JoinBuilder
         SpanReader<char> reader = new(value);
         JoinBuilder builder = new();
 
-        while (reader.TryReadToAny(out ReadOnlySpan<char> keyValue, new[] { '^', '(' }, false))
+        while (reader.TryReadToAny(out ReadOnlySpan<char> keyValue, "^(", false))
         {
             ParseKeyValuePair(keyValue, builder);
 
             if (reader.IsNext('(', true))
             {
-                builder.Children = Parse(reader.Span[^reader.Remaining..]);
+                builder.Children = Parse(reader.Span[reader.Consumed..]);
                 return builder;
             }
 
             reader.Advance(1);
         }
 
-        if (!reader.IsNext(')'))
-            ParseKeyValuePair(reader.Span[^reader.Remaining..], builder);
+        if (!reader.IsNext(')') && !reader.End)
+            ParseKeyValuePair(reader.Span[reader.Consumed..], builder);
 
         return builder;
     }
@@ -202,7 +238,7 @@ public class JoinBuilder
             return;
         }
 
-        if (!reader.TryReadExact(out ReadOnlySpan<char> value, reader.Remaining))
+        if (!reader.TryReadExact(out ReadOnlySpan<char> value, reader.Remaining) && !value.IsEmpty)
             throw new QueryException(QueryErrorCode.ServerError, string.Empty);
 
         if (value.Length == 0)
@@ -239,7 +275,7 @@ public class JoinBuilder
             while (valueReader.TryReadTo(out ReadOnlySpan<char> show, VALUE_DELIMITER))
                 builder.Projection.Project(show.ToString());
 
-            if (valueReader.TryReadExact(out ReadOnlySpan<char> finalShow, valueReader.Remaining))
+            if (valueReader.TryReadExact(out ReadOnlySpan<char> finalShow, valueReader.Remaining) && !finalShow.IsEmpty)
                 builder.Projection.Project(finalShow.ToString());
         }
         else if (key.SequenceEqual(HideKey))
@@ -252,7 +288,7 @@ public class JoinBuilder
             while (valueReader.TryReadTo(out ReadOnlySpan<char> hide, VALUE_DELIMITER))
                 builder.Projection.Project(hide.ToString());
 
-            if (valueReader.TryReadExact(out ReadOnlySpan<char> finalHide, valueReader.Remaining))
+            if (valueReader.TryReadExact(out ReadOnlySpan<char> finalHide, valueReader.Remaining) && !finalHide.IsEmpty)
                 builder.Projection.Project(finalHide.ToString());
         }
         else if (key.SequenceEqual(TermsKey))
@@ -260,7 +296,7 @@ public class JoinBuilder
             while (valueReader.TryReadTo(out ReadOnlySpan<char> term, VALUE_DELIMITER))
                 builder.Terms.Add(term.ToString());
 
-            if (valueReader.TryReadExact(out ReadOnlySpan<char> finalTerm, valueReader.Remaining))
+            if (valueReader.TryReadExact(out ReadOnlySpan<char> finalTerm, valueReader.Remaining) && !finalTerm.IsEmpty)
                 builder.Terms.Add(finalTerm.ToString());
         }
     }

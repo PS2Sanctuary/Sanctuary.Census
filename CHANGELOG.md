@@ -2,7 +2,7 @@
 
 Date format: DD/MM/YYYY
 
-04/08/2022
+## 04/08/2022
 
 - Fixed the use of sibling joins within child joins.
 - Darkened some aspects of the diff interface.

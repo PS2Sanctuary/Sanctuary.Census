@@ -33,13 +33,13 @@
         foreach (DiffRecord record in Model.DiffRecords)
         {
             <article class="message is-link">
-                <div class="message-header">
+                <div class="message-header has-background-link-dark">
                     <p>@record.GeneratedAt.ToLocalTime()</p>
                     <a class="button" asp-page="./DiffViewerPage" asp-route-environment="@Model.Environment" asp-route-time="@record.GeneratedAt.Ticks">
                         View
                     </a>
                 </div>
-                <div class="message-body">
+                <div class="message-body has-background-link has-text-link-light">
                     <ul>
                         @foreach ((string collection, uint changeCount) in record.CollectionChangeCounts)
                         {

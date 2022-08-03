@@ -4,7 +4,9 @@ using MongoDB.Driver;
 using Sanctuary.Census.Abstractions.Database;
 using Sanctuary.Census.Abstractions.Services;
 using Sanctuary.Census.Common.Objects.CommonModels;
+using Sanctuary.Census.Common.Services;
 using Sanctuary.Census.Json;
+using Sanctuary.Census.Models;
 using Sanctuary.Census.Models.Collections;
 using System;
 using System.Collections.Generic;
@@ -23,20 +25,24 @@ public class CollectionsContext : ICollectionsContext
 
     private readonly IMongoDatabase _database;
     private readonly ICollectionDiffService _diffService;
+    private readonly EnvironmentContextProvider _environmentContextProvider;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="CollectionsContext"/> class.
     /// </summary>
     /// <param name="mongoContext">The MongoDB context.</param>
     /// <param name="diffService">The collection diff service.</param>
+    /// <param name="environmentContextProvider">The environment context provider.</param>
     public CollectionsContext
     (
         IMongoContext mongoContext,
-        ICollectionDiffService diffService
+        ICollectionDiffService diffService,
+        EnvironmentContextProvider environmentContextProvider
     )
     {
         _database = mongoContext.GetDatabase();
         _diffService = diffService;
+        _environmentContextProvider = environmentContextProvider;
     }
 
     /// <inheritdoc />
@@ -99,12 +105,16 @@ public class CollectionsContext : ICollectionsContext
         IMongoCollection<T> collection = GetCollection<T>();
         List<WriteModel<T>> dbWriteModels = new();
 
+        bool isNewCollection = true;
+
         // Iterate over each document that's currently in the collection
         IAsyncCursor<T> cursor = await collection.FindAsync(new BsonDocument(), cancellationToken: ct).ConfigureAwait(false);
         while (await cursor.MoveNextAsync(ct).ConfigureAwait(false))
         {
             foreach (T document in cursor.Current)
             {
+                isNewCollection = false;
+
                 // Attempt to find the DB document in our upsert data
                 int itemIndex = dataList.FindIndex(comparator(document));
 
@@ -131,13 +141,25 @@ public class CollectionsContext : ICollectionsContext
             }
         }
 
-        // We've previously removed any deleted or updated documents
-        // so what's remaining must be new
-        foreach (T item in dataList)
+        if (isNewCollection)
         {
-            InsertOneModel<T> insertModel = new(item);
-            dbWriteModels.Add(insertModel);
-            _diffService.SetAdded(item);
+            string collName = NameConverter.ConvertName(typeof(T).Name);
+            _diffService.SetAdded(new NewCollection
+            (
+                collName,
+                $"/get/{_environmentContextProvider.Environment}/{collName}"
+            ));
+        }
+        else
+        {
+            // We've previously removed any deleted or updated documents
+            // so what's remaining must be new
+            foreach (T item in dataList)
+            {
+                InsertOneModel<T> insertModel = new(item);
+                dbWriteModels.Add(insertModel);
+                _diffService.SetAdded(item);
+            }
         }
 
         if (dbWriteModels.Count > 0)

@@ -232,7 +232,7 @@ public class JoinBuilder
 
         SpanReader<char> reader = new(keyValuePair);
 
-        if (!reader.TryReadTo(out ReadOnlySpan<char> key, ':') || key.SequenceEqual(TypeKey))
+        if (!reader.TryReadTo(out ReadOnlySpan<char> key, ':'))
         {
             builder.ToCollection = keyValuePair.ToString();
             return;
@@ -245,6 +245,10 @@ public class JoinBuilder
             throw new QueryException(QueryErrorCode.Malformed, $"The {key} key requires a value");
         SpanReader<char> valueReader = new(value);
 
+        if (key.SequenceEqual(TypeKey))
+        {
+            builder.ToCollection = value.ToString();
+        }
         if (key.SequenceEqual(OnFieldKey))
         {
             builder.OnField = value.ToString();

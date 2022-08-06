@@ -2,6 +2,10 @@
 
 Date format: DD/MM/YYYY
 
+## 07/08/2022
+
+- Fixed the `type` key being unusable on joins.
+
 ## 04/08/2022
 
 - Fixed the use of sibling joins within child joins.

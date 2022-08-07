@@ -7,6 +7,7 @@ Date format: DD/MM/YYYY
 - Added the `projectile.proximity_lockon_range_half_meters` field.
 - Added the `projectile.tether_distance` field.
 - Fixed the `type` key being unusable on joins.
+- Improved text wrapping in the diff viewer.
 
 ## 04/08/2022
 

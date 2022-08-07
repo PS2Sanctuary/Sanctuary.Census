@@ -18,6 +18,7 @@ namespace Sanctuary.Census.Models.Collections;
 /// <param name="LockonAcceleration">Unknown.</param>
 /// <param name="LockonLifespan">The amount of time for which a projectile will maintain a lock.</param>
 /// <param name="ArmDistance">The distance after which a projectile becomes 'active'. E.g., under-barrel grenades only explode after travelling 10m.</param>
+/// <param name="TetherDistance">The distance that a projectile can travel from its origin entity.</param>
 /// <param name="DetonateDistance">The distance a projectile must travel before it can be detonated.</param>
 /// <param name="ProximityLockonRangeHalfMeters">
 /// The range, in half-meters (divide by two in order to match in-game meters), at which a proximity projectile will lock on to a target.
@@ -43,6 +44,7 @@ public record Projectile
     float? LockonAcceleration,
     float? LockonLifespan,
     ushort? ArmDistance,
+    float? TetherDistance,
     ushort? DetonateDistance,
     float? ProximityLockonRangeHalfMeters,
     bool Sticky,

@@ -56,6 +56,7 @@ public class ProjectileCollectionBuilder : ICollectionBuilder
                 projectile.LockonAcceleration == 0 ? null : projectile.LockonAcceleration,
                 projectile.LockonLifespan == 0 ? null : projectile.LockonLifespan,
                 projectile.ArmDistance == 0 ? null : projectile.ArmDistance,
+                projectile.TetherDistance == 0 ? null : projectile.TetherDistance,
                 projectile.DetonateDistance == 0 ? null : projectile.DetonateDistance,
                 projectile.ProximityLockonRangeHalfMeters == 0 ? null : projectile.ProximityLockonRangeHalfMeters,
                 (projectile.Flags & ProjectileFlags.Sticky) != 0,

@@ -62,6 +62,7 @@ but is likely to be very similar.
 - ⚠ player_state_group - please query on `player_state_group_2` instead, which is a direct upgrade
 - player_state_group_2
 - ⚠ profile_2 - please query on `profile` instead, which is a direct upgrade
+- projectile
 - vehicle_attachment
 - weapon_to_attachment
 - weapon_to_fire_group
@@ -74,7 +75,6 @@ in such a way that retrieving certain data may not be immediately obvious.
 - item
 - loadout
 - map_region
-- projectile
 - vehicle
 - weapon
 - weapon_ammo_slot
@@ -92,10 +92,6 @@ Missing the `code_name` field. This is replaced by querying for the name of the 
 #### map_region
 
 Missing the `reward_amount` and `reward_currency_id` fields.
-
-#### projectile
-
-Missing the `tether_distance` field.
 
 #### vehicle
 

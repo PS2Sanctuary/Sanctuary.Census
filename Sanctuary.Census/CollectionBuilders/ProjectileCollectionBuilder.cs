@@ -57,6 +57,7 @@ public class ProjectileCollectionBuilder : ICollectionBuilder
                 projectile.LockonLifespan == 0 ? null : projectile.LockonLifespan,
                 projectile.ArmDistance == 0 ? null : projectile.ArmDistance,
                 projectile.DetonateDistance == 0 ? null : projectile.DetonateDistance,
+                projectile.ProximityLockonRangeHalfMeters == 0 ? null : projectile.ProximityLockonRangeHalfMeters,
                 (projectile.Flags & ProjectileFlags.Sticky) != 0,
                 (projectile.Flags & ProjectileFlags.SticksToPlayer) != 0,
                 (projectile.Flags & ProjectileFlags.DetonateOnContact) != 0,

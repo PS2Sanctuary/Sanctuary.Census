@@ -15,7 +15,7 @@ namespace Sanctuary.Census.Models.Collections;
 /// <param name="Lifespan">The lifespan of the projectile.</param>
 /// <param name="Drag">The force of drag on the projectile.</param>
 /// <param name="Gravity">The force of gravity on the projectile.</param>
-/// <param name="ProjectileSize">The size of the projectile.</param>
+/// <param name="ProjectileRadiusMeters">The radius of the projectile in meters.</param>
 /// <param name="LockonAcceleration">Unknown.</param>
 /// <param name="LockonLifespan">The amount of time for which a projectile will maintain a lock.</param>
 /// <param name="ArmDistance">The distance after which a projectile becomes 'active'. E.g., under-barrel grenades only explode after travelling 10m.</param>
@@ -42,7 +42,7 @@ public record Projectile
     float Lifespan,
     float Drag,
     float Gravity,
-    float ProjectileSize,
+    float ProjectileRadiusMeters,
     float? LockonAcceleration,
     float? LockonLifespan,
     ushort? ArmDistance,

@@ -198,7 +198,8 @@ public static class Program
             .RegisterCollectionBuilder<WeaponAmmoSlotCollectionBuilder>()
             .RegisterCollectionBuilder<WeaponToAttachmentCollectionBuilder>()
             .RegisterCollectionBuilder<WeaponToFireGroupCollectionBuilder>()
-            .RegisterCollectionBuilder<WorldCollectionBuilder>();
+            .RegisterCollectionBuilder<WorldCollectionBuilder>()
+            .RegisterCollectionBuilder<VehicleSkillSetCollectionBuilder>();
     }
 
     private static IServiceCollection RegisterCollectionBuilder<TBuilder>(this IServiceCollection services)

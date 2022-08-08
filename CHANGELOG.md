@@ -2,6 +2,10 @@
 
 Date format: DD/MM/YYYY
 
+## vNext
+
+- Added the `vehicle_skill_set` collection.
+
 ## 08/08/2022
 
 - Added the `projectile.projectile_radius_meters` field.

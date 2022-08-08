@@ -84,6 +84,7 @@ public class CollectionsContext : ICollectionsContext
         await CreateNonUniqueKeyIndexes<VehicleAttachment>(ct, x => x.ItemID, x => x.VehicleLoadoutID, x => x.VehicleID).ConfigureAwait(false);
         await CreateUniqueKeyIndex<VehicleLoadout>(x => x.LoadoutID, ct).ConfigureAwait(false);
         await CreateNonUniqueKeyIndexes<VehicleLoadoutSlot>(ct, x => x.LoadoutID, x => x.SlotID).ConfigureAwait(false);
+        await CreateNonUniqueKeyIndexes<VehicleSkillSet>(ct, x => x.VehicleID, x => x.SkillSetID, x => x.FactionID).ConfigureAwait(false);
         await CreateUniqueKeyIndex<Weapon>(x => x.WeaponId, ct).ConfigureAwait(false);
         await CreateNonUniqueKeyIndexes<WeaponAmmoSlot>(ct, x => x.WeaponId).ConfigureAwait(false);
         await CreateNonUniqueKeyIndexes<WeaponToAttachment>(ct, x => x.AttachmentID, x => x.ItemID).ConfigureAwait(false);
@@ -150,16 +151,16 @@ public class CollectionsContext : ICollectionsContext
                 $"/get/{_environmentContextProvider.Environment}/{collName}"
             ));
         }
-        else
+
+        // We've previously removed any deleted or updated documents
+        // so what's remaining must be new
+        foreach (T item in dataList)
         {
-            // We've previously removed any deleted or updated documents
-            // so what's remaining must be new
-            foreach (T item in dataList)
-            {
-                InsertOneModel<T> insertModel = new(item);
-                dbWriteModels.Add(insertModel);
+            InsertOneModel<T> insertModel = new(item);
+            dbWriteModels.Add(insertModel);
+
+            if (!isNewCollection)
                 _diffService.SetAdded(item);
-            }
         }
 
         if (dbWriteModels.Count > 0)
@@ -387,6 +388,16 @@ public class CollectionsContext : ICollectionsContext
         ).ConfigureAwait(false);
 
     /// <inheritdoc />
+    public async Task UpsertVehicleSkillSetsAsync(IEnumerable<VehicleSkillSet> collection, CancellationToken ct = default)
+        => await UpsertCollectionAsync
+        (
+            collection,
+            e => x => x.VehicleID == e.VehicleID && x.SkillSetID == e.SkillSetID && x.FactionID == e.FactionID,
+            e => Builders<VehicleSkillSet>.Filter.Where(x => x.VehicleID == e.VehicleID && x.SkillSetID == e.SkillSetID && x.FactionID == e.FactionID),
+            ct
+        ).ConfigureAwait(false);
+
+    /// <inheritdoc />
     public async Task UpsertWeaponsAsync(IEnumerable<Weapon> collection, CancellationToken ct = default)
         => await UpsertCollectionAsync
         (
@@ -501,6 +512,7 @@ public class CollectionsContext : ICollectionsContext
         BsonClassMap.RegisterClassMap<VehicleAttachment>(MongoContext.AutoClassMap);
         BsonClassMap.RegisterClassMap<VehicleLoadout>(MongoContext.AutoClassMap);
         BsonClassMap.RegisterClassMap<VehicleLoadoutSlot>(MongoContext.AutoClassMap);
+        BsonClassMap.RegisterClassMap<VehicleSkillSet>(MongoContext.AutoClassMap);
         BsonClassMap.RegisterClassMap<Weapon>(MongoContext.AutoClassMap);
         BsonClassMap.RegisterClassMap<WeaponAmmoSlot>(MongoContext.AutoClassMap);
         BsonClassMap.RegisterClassMap<WeaponToAttachment>(MongoContext.AutoClassMap);

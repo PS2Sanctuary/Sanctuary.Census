@@ -78,6 +78,9 @@ public class ClientDataCacheService : IClientDataCacheService
     /// <inheritdoc />
     public IReadOnlyList<VehicleLoadoutSlotItemClass>? VehicleLoadoutSlotItemClasses { get; private set; }
 
+    /// <inheritdoc />
+    public IReadOnlyList<VehicleSkillSet>? VehicleSkillSets { get; private set; }
+
     /// <summary>
     /// Initializes a new instance of the <see cref="ClientDataCacheService"/> class.
     /// </summary>
@@ -247,6 +250,14 @@ public class ClientDataCacheService : IClientDataCacheService
             ct
         ).ConfigureAwait(false);
 
+        VehicleSkillSets = await ExtractDatasheet<VehicleSkillSet>
+        (
+            "VehicleSkillSets.txt",
+            assetHeaders,
+            reader,
+            ct
+        ).ConfigureAwait(false);
+
         LastPopulated = DateTimeOffset.UtcNow;
     }
 
@@ -272,6 +283,7 @@ public class ClientDataCacheService : IClientDataCacheService
         VehicleLoadouts = null;
         VehicleLoadoutSlots = null;
         VehicleLoadoutSlotItemClasses = null;
+        VehicleSkillSets = null;
     }
 
     private static async Task<List<TDataType>> ExtractDatasheet<TDataType>

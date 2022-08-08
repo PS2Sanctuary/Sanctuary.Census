@@ -93,4 +93,9 @@ public interface IClientDataCacheService : IDataCacheService
     /// Gets the cached <see cref="VehicleLoadoutSlotItemClass"/> objects.
     /// </summary>
     IReadOnlyList<VehicleLoadoutSlotItemClass>? VehicleLoadoutSlotItemClasses { get; }
+
+    /// <summary>
+    /// Gets the cached <see cref="VehicleSkillSet"/> objects.
+    /// </summary>
+    IReadOnlyList<VehicleSkillSet>? VehicleSkillSets { get; }
 }

@@ -64,6 +64,7 @@ but is likely to be very similar.
 - ⚠ profile_2 - please query on `profile` instead, which is a direct upgrade
 - projectile
 - vehicle_attachment
+- vehicle_skill_set
 - weapon_to_attachment
 - weapon_to_fire_group
 

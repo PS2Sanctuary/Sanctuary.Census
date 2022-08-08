@@ -54,7 +54,7 @@ public class BsonDocumentJsonConverter : JsonConverter<BsonDocument>
             }
             case BsonType.Double:
             {
-                writer.WriteNumberValue(value.AsDouble);
+                writer.WriteNumberValue(Math.Round((decimal)value.AsDouble, 3));
                 break;
             }
             case BsonType.Int32:

@@ -5,6 +5,7 @@ Date format: DD/MM/YYYY
 ## 08/08/2022
 
 - Added the `projectile.projectile_size` field.
+- All floating point values are now rounded to 3dp.
 
 ## 07/08/2022
 

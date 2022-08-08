@@ -2,6 +2,10 @@
 
 Date format: DD/MM/YYYY
 
+## 08/08/2022
+
+- Added the `projectile.projectile_size` field.
+
 ## 07/08/2022
 
 - Added the `projectile.proximity_lockon_range_half_meters` field.

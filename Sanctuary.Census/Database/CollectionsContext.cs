@@ -544,5 +544,6 @@ public class CollectionsContext : ICollectionsContext
         BsonClassMap.RegisterClassMap<Models.Collections.Zone>(MongoContext.AutoClassMap);
 
         BsonClassMap.RegisterClassMap<LocaleString>(MongoContext.AutoClassMap);
+        BsonClassMap.RegisterClassMap<NewCollection>(MongoContext.AutoClassMap);
     }
 }

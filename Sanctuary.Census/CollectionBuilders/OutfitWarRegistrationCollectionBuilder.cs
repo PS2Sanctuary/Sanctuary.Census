@@ -5,6 +5,7 @@ using Sanctuary.Census.Models.Collections;
 using Sanctuary.Census.ServerData.Internal.Abstractions.Services;
 using Sanctuary.Zone.Packets.OutfitWars;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -40,7 +41,7 @@ public class OutfitWarRegistrationCollectionBuilder : ICollectionBuilder
             throw new MissingCacheDataException(typeof(RegisteredOutfits));
 
         Dictionary<ulong, OutfitWarRegistration> builtOutfits = new();
-        foreach (RegisteredOutfit outfit in _serverDataCache.RegisteredOutfits.Outfits)
+        foreach (RegisteredOutfit outfit in _serverDataCache.RegisteredOutfits.Values.SelectMany(x => x.Outfits))
         {
             OutfitWarRegistration built = new
             (

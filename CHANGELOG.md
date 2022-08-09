@@ -2,7 +2,12 @@
 
 Date format: DD/MM/YYYY
 
-## 10/08/2022
+## 10/08/2022 #2
+
+- Added the `outfit_war_registration.world_id` field.
+- Prevented outfit registrations from being removed if we fail to retrieve data from certain servers.
+
+## 10/08/2022 #1
 
 - The `facility_info` collection is now automatically updated.
 - Added the `outfit_war_registration` collection.

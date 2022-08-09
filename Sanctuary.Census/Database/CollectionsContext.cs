@@ -100,7 +100,8 @@ public class CollectionsContext : ICollectionsContext
         IEnumerable<T> data,
         Func<T, Predicate<T>> comparator,
         Func<T, FilterDefinition<T>> elementFilter,
-        CancellationToken ct
+        CancellationToken ct,
+        bool removeOld = true
     ) where T : class
     {
         List<T> dataList = data as List<T> ?? data.ToList();
@@ -121,7 +122,7 @@ public class CollectionsContext : ICollectionsContext
                 // Attempt to find the DB document in our upsert data
                 int itemIndex = dataList.FindIndex(comparator(document));
 
-                if (itemIndex == -1)
+                if (itemIndex == -1 && removeOld)
                 {
                     // We don't have the document in our upsert data, so it must have been deleted
                     DeleteOneModel<T> deleteModel = new(elementFilter(document));
@@ -326,7 +327,8 @@ public class CollectionsContext : ICollectionsContext
             collection,
             e => x => x.OutfitID == e.OutfitID,
             e => Builders<OutfitWarRegistration>.Filter.Eq(x => x.OutfitID, e.OutfitID),
-            ct
+            ct,
+            false
         ).ConfigureAwait(false);
 
     /// <inheritdoc />
@@ -466,7 +468,8 @@ public class CollectionsContext : ICollectionsContext
             collection,
             e => x => x.ZoneID == e.ZoneID,
             e => Builders<Models.Collections.Zone>.Filter.Eq(x => x.ZoneID, e.ZoneID),
-            ct
+            ct,
+            false
         ).ConfigureAwait(false);
 
     private IMongoCollection<T> GetCollection<T>()

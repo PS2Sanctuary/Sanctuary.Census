@@ -195,12 +195,13 @@ public static class Program
             .RegisterCollectionBuilder<VehicleAttachmentCollectionBuilder>()
             .RegisterCollectionBuilder<VehicleLoadoutCollectionBuilder>()
             .RegisterCollectionBuilder<VehicleLoadoutSlotCollectionBuilder>()
+            .RegisterCollectionBuilder<VehicleSkillSetCollectionBuilder>()
             .RegisterCollectionBuilder<WeaponCollectionBuilder>()
             .RegisterCollectionBuilder<WeaponAmmoSlotCollectionBuilder>()
             .RegisterCollectionBuilder<WeaponToAttachmentCollectionBuilder>()
             .RegisterCollectionBuilder<WeaponToFireGroupCollectionBuilder>()
             .RegisterCollectionBuilder<WorldCollectionBuilder>()
-            .RegisterCollectionBuilder<VehicleSkillSetCollectionBuilder>();
+            .RegisterCollectionBuilder<ZoneCollectionBuilder>();
     }
 
     private static IServiceCollection RegisterCollectionBuilder<TBuilder>(this IServiceCollection services)

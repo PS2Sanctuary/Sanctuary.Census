@@ -91,6 +91,7 @@ public class CollectionsContext : ICollectionsContext
         await CreateNonUniqueKeyIndexes<WeaponToAttachment>(ct, x => x.AttachmentID, x => x.ItemID).ConfigureAwait(false);
         await CreateNonUniqueKeyIndexes<WeaponToFireGroup>(ct, x => x.WeaponId, x => x.FireGroupId).ConfigureAwait(false);
         await CreateUniqueKeyIndex<World>(x => x.WorldID, ct).ConfigureAwait(false);
+        await CreateUniqueKeyIndex<Models.Collections.Zone>(x => x.ZoneID, ct).ConfigureAwait(false);
     }
 
     /// <inheritdoc />
@@ -458,6 +459,16 @@ public class CollectionsContext : ICollectionsContext
             ct
         ).ConfigureAwait(false);
 
+    /// <inheritdoc />
+    public async Task UpsertZonesAsync(IEnumerable<Models.Collections.Zone> collection, CancellationToken ct = default)
+        => await UpsertCollectionAsync
+        (
+            collection,
+            e => x => x.ZoneID == e.ZoneID,
+            e => Builders<Models.Collections.Zone>.Filter.Eq(x => x.ZoneID, e.ZoneID),
+            ct
+        ).ConfigureAwait(false);
+
     private IMongoCollection<T> GetCollection<T>()
         => _database.GetCollection<T>(NameConverter.ConvertName(typeof(T).Name));
 
@@ -530,6 +541,7 @@ public class CollectionsContext : ICollectionsContext
         BsonClassMap.RegisterClassMap<WeaponToAttachment>(MongoContext.AutoClassMap);
         BsonClassMap.RegisterClassMap<WeaponToFireGroup>(MongoContext.AutoClassMap);
         BsonClassMap.RegisterClassMap<World>(MongoContext.AutoClassMap);
+        BsonClassMap.RegisterClassMap<Models.Collections.Zone>(MongoContext.AutoClassMap);
 
         BsonClassMap.RegisterClassMap<LocaleString>(MongoContext.AutoClassMap);
     }

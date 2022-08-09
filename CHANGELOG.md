@@ -6,6 +6,7 @@ Date format: DD/MM/YYYY
 
 - The `facility_info` collection is now automatically updated.
 - Added the `outfit_war_registration` collection.
+- Added the `zone` collection.
 - Added the `vehicle_skill_set` collection.
 
 ## 08/08/2022

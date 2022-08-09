@@ -267,4 +267,12 @@ public interface ICollectionsContext
     /// <param name="ct">A <see cref="CancellationToken"/> that can be used to stop the operation.</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
     Task UpsertWorldsAsync(IEnumerable<World> collection, CancellationToken ct = default);
+
+    /// <summary>
+    /// Upserts the <see cref="Zone"/> collection.
+    /// </summary>
+    /// <param name="collection">The collection.</param>
+    /// <param name="ct">A <see cref="CancellationToken"/> that can be used to stop the operation.</param>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    Task UpsertZonesAsync(IEnumerable<Models.Collections.Zone> collection, CancellationToken ct = default);
 }

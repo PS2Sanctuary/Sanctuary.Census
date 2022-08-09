@@ -187,6 +187,7 @@ public static class Program
             .RegisterCollectionBuilder<LoadoutCollectionBuilder>()
             .RegisterCollectionBuilder<LoadoutSlotCollectionBuilder>()
             .RegisterCollectionBuilder<MapRegionCollectionBuilder>()
+            .RegisterCollectionBuilder<OutfitWarRegistrationCollectionBuilder>()
             .RegisterCollectionBuilder<PlayerStateGroup2CollectionBuilder>()
             .RegisterCollectionBuilder<ProfileCollectionBuilder>()
             .RegisterCollectionBuilder<ProjectileCollectionBuilder>()

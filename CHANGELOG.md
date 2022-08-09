@@ -4,6 +4,7 @@ Date format: DD/MM/YYYY
 
 ## vNext
 
+- Added the `outfit_war_registration` collection.
 - Added the `vehicle_skill_set` collection.
 
 ## 08/08/2022

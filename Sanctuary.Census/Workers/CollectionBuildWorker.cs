@@ -108,6 +108,11 @@ public class CollectionBuildWorker : BackgroundService
                     _logger.LogWarning("[{Environment}] Servers are locked. Collection build could not complete", env);
                     continue;
                 }
+                catch (NoCharactersOnAccountException ncex)
+                {
+                    _logger.LogError(ncex, "No characters on the account {Username}", ncex.AccountName);
+                    continue;
+                }
                 catch (Exception ex)
                 {
                     if (++dataCacheFailureCount >= 5)

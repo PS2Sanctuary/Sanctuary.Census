@@ -53,7 +53,7 @@ public class ProjectileCollectionBuilder : ICollectionBuilder
                 projectile.Lifespan,
                 projectile.Drag,
                 projectile.Gravity,
-                projectile.ProjectileSize,
+                projectile.ProjectileRadiusMeters,
                 projectile.LockonAcceleration == 0 ? null : projectile.LockonAcceleration,
                 projectile.LockonLifespan == 0 ? null : projectile.LockonLifespan,
                 projectile.ArmDistance == 0 ? null : projectile.ArmDistance,

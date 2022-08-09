@@ -4,6 +4,7 @@ Date format: DD/MM/YYYY
 
 ## vNext
 
+- The `facility_info` collection is now automatically updated.
 - Added the `outfit_war_registration` collection.
 - Added the `vehicle_skill_set` collection.
 

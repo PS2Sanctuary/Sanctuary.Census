@@ -3,9 +3,9 @@ using Sanctuary.Census.Abstractions.Database;
 using Sanctuary.Census.Exceptions;
 using Sanctuary.Census.Models.Collections;
 using Sanctuary.Census.ServerData.Internal.Abstractions.Services;
+using Sanctuary.Common.Objects;
 using Sanctuary.Zone.Packets.OutfitWars;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -41,16 +41,20 @@ public class OutfitWarRegistrationCollectionBuilder : ICollectionBuilder
             throw new MissingCacheDataException(typeof(RegisteredOutfits));
 
         Dictionary<ulong, OutfitWarRegistration> builtOutfits = new();
-        foreach (RegisteredOutfit outfit in _serverDataCache.RegisteredOutfits.Values.SelectMany(x => x.Outfits))
+        foreach ((ServerDefinition server, RegisteredOutfits outfits) in _serverDataCache.RegisteredOutfits)
         {
-            OutfitWarRegistration built = new
-            (
-                outfit.OutfitID,
-                (uint)outfit.FactionID,
-                outfit.RegistrationOrder,
-                outfit.MemberSignupCount
-            );
-            builtOutfits.Add(built.OutfitID, built);
+            foreach (RegisteredOutfit outfit in outfits.Outfits)
+            {
+                OutfitWarRegistration built = new
+                (
+                    outfit.OutfitID,
+                    (uint)outfit.FactionID,
+                    (uint)server,
+                    outfit.RegistrationOrder,
+                    outfit.MemberSignupCount
+                );
+                builtOutfits.Add(built.OutfitID, built);
+            }
         }
 
         await dbContext.UpsertOutfitWarRegistrationsAsync(builtOutfits.Values, ct);

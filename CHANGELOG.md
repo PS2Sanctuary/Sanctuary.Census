@@ -2,7 +2,7 @@
 
 Date format: DD/MM/YYYY
 
-## vNext
+## 10/08/2022
 
 - The `facility_info` collection is now automatically updated.
 - Added the `outfit_war_registration` collection.

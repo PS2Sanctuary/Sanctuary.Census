@@ -64,7 +64,7 @@ public class BsonDocumentJsonConverter : JsonConverter<BsonDocument>
             }
             case BsonType.Int64:
             {
-                writer.WriteNumberValue(value.AsInt64);
+                writer.WriteStringValue(value.ToString());
                 break;
             }
             case BsonType.Null:

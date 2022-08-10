@@ -188,7 +188,13 @@ public class CollectionController : ControllerBase
                 (
                     records,
                     collectionName,
-                    queryParams.ShowTimings ? st.Elapsed : null
+                    queryParams.ShowTimings
+                        ? new QueryTimes
+                        (
+                            st.Elapsed.Milliseconds,
+                            CollectionUtils.GetCollectionUpdateTime(collectionName).ToUnixTimeSeconds()
+                        )
+                        : null
                 ),
                 queryParams.IncludeNullFields ? _includeNullOptions : _noIncludeNullOptions
             );

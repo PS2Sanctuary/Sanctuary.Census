@@ -74,7 +74,7 @@ public class DataResponseJsonConverter : JsonConverterFactory
             if (value.Timing is not null)
             {
                 writer.WritePropertyName(_timingName);
-                JsonSerializer.Serialize(writer, value.Timing.Value, options);
+                JsonSerializer.Serialize(writer, value.Timing, options);
             }
 
             writer.WritePropertyName(name);

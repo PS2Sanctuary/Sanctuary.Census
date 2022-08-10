@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 namespace Sanctuary.Census.Models;
 
@@ -16,7 +15,7 @@ public record DataResponse<TDataType>
     IEnumerable<TDataType> Data,
     int Returned,
     string DataTypeName,
-    TimeSpan? Timing
+    QueryTimes? Timing
 )
 {
     /// <summary>
@@ -25,7 +24,7 @@ public record DataResponse<TDataType>
     /// <param name="data">The data.</param>
     /// <param name="dataTypeName">The name of the data type.</param>
     /// <param name="timing">The time taken to generate the response.</param>
-    public DataResponse(IReadOnlyCollection<TDataType> data, string dataTypeName, TimeSpan? timing)
+    public DataResponse(IReadOnlyCollection<TDataType> data, string dataTypeName, QueryTimes? timing)
         : this(data, data.Count, dataTypeName, timing)
     {
     }
@@ -36,7 +35,7 @@ public record DataResponse<TDataType>
     /// <param name="data">The data.</param>
     /// <param name="dataTypeName">The name of the data type.</param>
     /// <param name="timing">The time taken to generate the response.</param>
-    public DataResponse(TDataType data, string dataTypeName, TimeSpan? timing)
+    public DataResponse(TDataType data, string dataTypeName, QueryTimes? timing)
         : this(new[] { data }, 1, dataTypeName, timing)
     {
     }

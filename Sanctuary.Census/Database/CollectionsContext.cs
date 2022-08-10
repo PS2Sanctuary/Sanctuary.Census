@@ -8,6 +8,7 @@ using Sanctuary.Census.Common.Services;
 using Sanctuary.Census.Json;
 using Sanctuary.Census.Models;
 using Sanctuary.Census.Models.Collections;
+using Sanctuary.Census.Util;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -171,6 +172,8 @@ public class CollectionsContext : ICollectionsContext
 
         if (dbWriteModels.Count > 0)
             await collection.BulkWriteAsync(dbWriteModels, null, ct);
+
+        CollectionUtils.SetCollectionUpdateTime<T>();
     }
 
     /// <inheritdoc />

@@ -1,9 +1,12 @@
-﻿using MongoDB.Bson.Serialization;
+﻿using MongoDB.Bson;
+using MongoDB.Bson.Serialization;
+using MongoDB.Bson.Serialization.Serializers;
 using MongoDB.Driver;
 using Sanctuary.Census.Abstractions.Database;
 using Sanctuary.Census.Common.Objects;
 using Sanctuary.Census.Common.Services;
 using Sanctuary.Census.Json;
+using System;
 using System.Reflection;
 
 namespace Sanctuary.Census.Database;
@@ -39,7 +42,19 @@ public class MongoContext : IMongoContext
     public static void AutoClassMap<T>(BsonClassMap<T> cm)
     {
         foreach (PropertyInfo prop in typeof(T).GetProperties())
-            cm.MapProperty(prop.Name).SetElementName(SnakeCaseJsonNamingPolicy.Default.ConvertName(prop.Name));
+        {
+            BsonMemberMap map = cm.MapProperty(prop.Name);
+            map.SetElementName(SnakeCaseJsonNamingPolicy.Default.ConvertName(prop.Name));
+
+            if (!prop.PropertyType.IsEnum)
+                continue;
+
+            Type serializerType = typeof(EnumSerializer<>).MakeGenericType(prop.PropertyType);
+            object? serializer = Activator.CreateInstance(serializerType, BsonType.String);
+            if (serializer is null)
+                throw new Exception("Couldn't create instance of enum serializer");
+            map.SetSerializer((IBsonSerializer)serializer);
+        }
     }
 
     /// <inheritdoc />

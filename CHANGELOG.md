@@ -4,6 +4,7 @@ Date format: DD/MM/YYYY
 
 ## 10/08/2022 #2
 
+- :warning: `long/int64` numbers are now serialized as strings.
 - Update timings model to include `collection_last_updated`
 - `map_region` will now automatically contain accurate facility info, but still isn't automatically retrieving new regions.
 - Added the `outfit_war_registration.world_id` field.

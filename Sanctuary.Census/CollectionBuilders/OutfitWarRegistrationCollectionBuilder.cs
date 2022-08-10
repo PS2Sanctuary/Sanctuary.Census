@@ -51,7 +51,10 @@ public class OutfitWarRegistrationCollectionBuilder : ICollectionBuilder
                     (uint)outfit.FactionID,
                     (uint)server,
                     outfit.RegistrationOrder,
-                    outfit.MemberSignupCount
+                    outfit.Status,
+                    outfit.Status is RegistrationStatus.Full or RegistrationStatus.WaitingOnNextFullReg
+                        ? 48
+                        : outfit.MemberSignupCount
                 );
                 builtOutfits.Add(built.OutfitID, built);
             }

@@ -4,6 +4,8 @@ An unofficial supplement to Daybreak Game Company's Census API, which aims to pr
 The methods through which Sanctuary.Census retrieves data allow it to keep itself up-to-date automatically, until
 such a time as the structure of the data it depends on, or the methods required to retrieve it, change.
 
+This collection updating process is currently performed every three hours.
+
 ## Getting Started
 
 An instance of Sanctuary.Census can be found at `https://census.lithafalcon.cc/`. It largely provides the same query interface

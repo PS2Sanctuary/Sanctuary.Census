@@ -122,12 +122,15 @@ public class CollectionsContext : ICollectionsContext
                 // Attempt to find the DB document in our upsert data
                 int itemIndex = dataList.FindIndex(comparator(document));
 
-                if (itemIndex == -1 && removeOld)
+                if (itemIndex == -1)
                 {
-                    // We don't have the document in our upsert data, so it must have been deleted
-                    DeleteOneModel<T> deleteModel = new(elementFilter(document));
-                    dbWriteModels.Add(deleteModel);
-                    _diffService.SetDeleted(document);
+                    if (removeOld)
+                    {
+                        // We don't have the document in our upsert data, so it must have been deleted
+                        DeleteOneModel<T> deleteModel = new(elementFilter(document));
+                        dbWriteModels.Add(deleteModel);
+                        _diffService.SetDeleted(document);
+                    }
                 }
                 else if (!dataList[itemIndex].Equals(document))
                 {

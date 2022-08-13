@@ -149,7 +149,7 @@ public class CollectionsContext : ICollectionsContext
             }
         }
 
-        if (isNewCollection)
+        if (isNewCollection && dataList.Count > 0)
         {
             string collName = NameConverter.ConvertName(typeof(T).Name);
             _diffService.SetAdded(new NewCollection

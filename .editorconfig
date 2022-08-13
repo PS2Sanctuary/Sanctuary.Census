@@ -18,7 +18,7 @@ csharp_new_line_before_finally = true
 #require members of object intializers to be on separate lines
 csharp_new_line_before_members_in_object_initializers = true
 #require braces to be on a new line for lambdas, types, methods, object_collection_array_initializers, and control_blocks (also known as "Allman" style)
-csharp_new_line_before_open_brace = lambdas, types, methods, object_collection_array_initializers, control_blocks
+csharp_new_line_before_open_brace = anonymous_methods,control_blocks,lambdas,local_functions,methods,object_collection_array_initializers,types
 
 #Formatting - organize using options
 
@@ -105,12 +105,12 @@ csharp_style_pattern_local_over_anonymous_function = true:suggestion
 #Style - modifier options
 
 #prefer accessibility modifiers to be declared except for public interface members. This will currently not differ from always and will act as future proofing for if C# adds default interface methods.
-dotnet_style_require_accessibility_modifiers = for_non_interface_members:suggestion
+dotnet_style_require_accessibility_modifiers = for_non_interface_members:error
 
 #Style - Modifier preferences
 
 #when this rule is set to a list of modifiers, prefer the specified ordering.
-csharp_preferred_modifier_order = public,private,protected,internal,abstract,static,virtual,readonly,sealed,override,async,unsafe,volatile,new:suggestion
+csharp_preferred_modifier_order = public, private, protected, internal, abstract, static, virtual, readonly, sealed, override, async, unsafe, volatile, new, extern, required:suggestion
 
 #Style - Pattern matching
 
@@ -125,15 +125,18 @@ dotnet_style_qualification_for_field = false:suggestion
 dotnet_style_qualification_for_method = false:suggestion
 #prefer properties not to be prefaced with this. or Me. in Visual Basic
 dotnet_style_qualification_for_property = false:suggestion
-insert_final_newline=true
-csharp_style_namespace_declarations=file_scoped:warning
+insert_final_newline = true
+csharp_style_namespace_declarations = file_scoped:warning
 
-[*.{cs,vb}]
-end_of_line=crlf
-dotnet_style_require_accessibility_modifiers=for_non_interface_members:error
+end_of_line = crlf
 
 [/Sanctuary.Census.Common/7zip/**]
 dotnet_diagnostic.CS1570.severity = none
 dotnet_diagnostic.CS8618.severity = none
 dotnet_diagnostic.CS8625.severity = none
 dotnet_diagnostic.CS1591.severity = none
+
+[*.{appxmanifest,asax,ascx,aspx,axaml,build,c,c++,cc,cginc,compute,cp,cpp,cs,cshtml,cu,cuh,cxx,dtd,fx,fxh,h,hh,hlsl,hlsli,hlslinc,hpp,hxx,inc,inl,ino,ipp,master,mpp,mq4,mq5,mqh,nuspec,paml,razor,resw,resx,skin,tpp,usf,ush,vb,xaml,xamlx,xoml,xsd}]
+indent_style = space
+indent_size = 4
+tab_width = 4

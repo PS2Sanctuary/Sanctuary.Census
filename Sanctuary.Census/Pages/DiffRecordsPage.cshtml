@@ -34,7 +34,7 @@
         {
             <article class="message is-link">
                 <div class="message-header has-background-link-dark">
-                    <p>@record.GeneratedAt.ToLocalTime()</p>
+                    <p>@record.GeneratedAt</p>
                     <a class="button" asp-page="./DiffViewerPage" asp-route-environment="@Model.Environment" asp-route-time="@record.GeneratedAt.Ticks">
                         View
                     </a>

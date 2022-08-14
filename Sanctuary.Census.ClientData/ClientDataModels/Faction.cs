@@ -1,4 +1,6 @@
-﻿namespace Sanctuary.Census.ClientData.ClientDataModels;
+﻿using Sanctuary.Census.ClientData.Attributes;
+
+namespace Sanctuary.Census.ClientData.ClientDataModels;
 
 /// <summary>
 /// Represents client faction data.
@@ -14,7 +16,8 @@
 /// <param name="CodeTag">The code tag of this faction.</param>
 /// <param name="OverseerSpeechPackID">The ID of this faction's overseer speech pack.</param>
 /// <param name="ShortNameID">The locale string ID of the faction's short name.</param>
-public record Faction
+[Datasheet]
+public partial record Faction
 (
     uint ID,
     uint NameID,

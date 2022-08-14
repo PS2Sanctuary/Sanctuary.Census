@@ -1,4 +1,6 @@
-﻿namespace Sanctuary.Census.ClientData.ClientDataModels;
+﻿using Sanctuary.Census.ClientData.Attributes;
+
+namespace Sanctuary.Census.ClientData.ClientDataModels;
 
 /// <summary>
 /// Represents client currency data.
@@ -14,7 +16,8 @@
 /// <param name="ExemptFromBuffs">Unknown.</param>
 /// <param name="PriorityUpdate">Unknown.</param>
 /// <param name="BuffCharacterStatID">The ID of the stat that this currency buffs.</param>
-public record Currency
+[Datasheet]
+public partial record Currency
 (
     uint ID,
     uint NameID,

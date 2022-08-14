@@ -1,4 +1,6 @@
-﻿namespace Sanctuary.Census.ClientData.ClientDataModels;
+﻿using Sanctuary.Census.ClientData.Attributes;
+
+namespace Sanctuary.Census.ClientData.ClientDataModels;
 
 /// <summary>
 /// Represents a mapping between loadout slots and item classes.
@@ -7,7 +9,8 @@
 /// <param name="SlotID">The ID of the slot.</param>
 /// <param name="ItemClass">The class of items that can be used in this slot.</param>
 /// <param name="FlagLocked">Unknown.</param>
-public record VehicleLoadoutSlotItemClass
+[Datasheet]
+public partial record VehicleLoadoutSlotItemClass
 (
     uint LoadoutID,
     uint SlotID,

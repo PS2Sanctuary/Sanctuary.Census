@@ -171,7 +171,9 @@ public class DatasheetGenerator : IIncrementalGenerator
                 .Append("\"");
         }
 
-        return $@"using Sanctuary.Census.Common.Util;
+        return $@"#nullable enable
+
+using Sanctuary.Census.Common.Util;
 using System;
 using System.Buffers.Text;
 using System.Collections.Generic;
@@ -247,176 +249,251 @@ public partial record {@class.Name}
         "
             );
 
-            switch (param.Type.SpecialType)
+            sb.Append
+            (
+                $@"{param.Type} {paramName};
+        "
+            );
+
+            if (param.Type.NullableAnnotation is NullableAnnotation.Annotated)
             {
-                case SpecialType.System_Boolean:
-                {
-                    sb.Append
-                    (
-                        $@"bool {paramName} = {paramName}Span[0] switch
-            {{
-                {(byte)'0'} => false, // '0'
-                {(byte)'1'} => true, // '1'
-                _ => Utf8Parser.TryParse({paramName}Span, out bool {paramName}Value, out _) ? {paramName}Value : throw new Exception(""Failed to parse '{param}' parameter"")
-            }};
+                sb.Append
+                (
+                    $@"if ({paramName}Span.Length != 0)
+                    {{
+            "
+                );
+            }
 
-        "
-                    );
-                    break;
-                }
-                case SpecialType.System_Byte:
-                {
-                    sb.Append
-                    (
-                        $@"byte {paramName} = Utf8Parser.TryParse({paramName}Span, out byte {paramName}Value, out _)
-            ? {paramName}Value
-            : throw new Exception(""Failed to parse '{param}' parameter"");
+            GenerateFieldDeserializationString(sb, param.Type, paramName, paramName + "Span", param, c, reportDiagnostic);
 
-        "
-                    );
-                    break;
-                }
-                case SpecialType.System_SByte:
-                {
-                    sb.Append
-                    (
-                        $@"sbyte {paramName} = Utf8Parser.TryParse({paramName}Span, out sbyte {paramName}Value, out _)
-            ? {paramName}Value
-            : throw new Exception(""Failed to parse '{param}' parameter"");
-
-        "
-                    );
-                    break;
-                }
-                case SpecialType.System_UInt16:
-                {
-                    sb.Append
-                    (
-                        $@"ushort {paramName} = Utf8Parser.TryParse({paramName}Span, out ushort {paramName}Value, out _)
-            ? {paramName}Value
-            : throw new Exception(""Failed to parse '{param}' parameter"");
-
-        "
-                    );
-                    break;
-                }
-                case SpecialType.System_Int16:
-                {
-                    sb.Append
-                    (
-                        $@"short {paramName} = Utf8Parser.TryParse({paramName}Span, out short {paramName}Value, out _)
-            ? {paramName}Value
-            : throw new Exception(""Failed to parse '{param}' parameter"");
-
-        "
-                    );
-                    break;
-                }
-                case SpecialType.System_UInt32:
-                {
-                    sb.Append
-                    (
-                        $@"uint {paramName} = Utf8Parser.TryParse({paramName}Span, out uint {paramName}Value, out _)
-            ? {paramName}Value
-            : throw new Exception(""Failed to parse '{param}' parameter"");
-
-        "
-                    );
-                    break;
-                }
-                case SpecialType.System_Int32:
-                {
-                    sb.Append
-                    (
-                        $@"int {paramName} = Utf8Parser.TryParse({paramName}Span, out int {paramName}Value, out _)
-            ? {paramName}Value
-            : throw new Exception(""Failed to parse '{param}' parameter"");
-
-        "
-                    );
-                    break;
-                }
-                case SpecialType.System_UInt64:
-                {
-                    sb.Append
-                    (
-                        $@"ulong {paramName} = Utf8Parser.TryParse({paramName}Span, out ulong {paramName}Value, out _)
-            ? {paramName}Value
-            : throw new Exception(""Failed to parse '{param}' parameter"");
-
-        "
-                    );
-                    break;
-                }
-                case SpecialType.System_Int64:
-                {
-                    sb.Append
-                    (
-                        $@"long {paramName} = Utf8Parser.TryParse({paramName}Span, out long {paramName}Value, out _)
-            ? {paramName}Value
-            : throw new Exception(""Failed to parse '{param}' parameter"");
-
-        "
-                    );
-                    break;
-                }
-                case SpecialType.System_Single:
-                {
-                    sb.Append
-                    (
-                        $@"float {paramName} = Utf8Parser.TryParse({paramName}Span, out float {paramName}Value, out _)
-            ? {paramName}Value
-            : throw new Exception(""Failed to parse '{param}' parameter"");
-
-        "
-                    );
-                    break;
-                }
-                case SpecialType.System_Double:
-                {
-                    sb.Append
-                    (
-                        $@"double {paramName} = Utf8Parser.TryParse({paramName}Span, out double {paramName}Value, out _)
-            ? {paramName}Value
-            : throw new Exception(""Failed to parse '{param}' parameter"");
-
-        "
-                    );
-                    break;
-                }
-                case SpecialType.System_String:
-                {
-                    sb.Append
-                    (
-                        $@"string {paramName} = System.Text.Encoding.UTF8.GetString({paramName}Span);
-
-        "
-                    );
-                    break;
-                }
-                default:
-                {
-                    Diagnostic d = Diagnostic.Create
-                    (
-                        DiagnosticDescriptors.GetStringGenerationFailure
-                        (
-                            $"{c.Name}.{param.Name}: {param.Type} types are not yet supported for datasheet deserialization"
-                        ),
-                        c.Locations[0]
-                    );
-                    reportDiagnostic(d);
-                    sb.Append
-                    (
-                        $@"throw new Exception(""{param.Type} types are not yet supported (property: {param.Name})"");
-
-        "
-                    );
-                    break;
-                }
+            if (param.Type.NullableAnnotation is NullableAnnotation.Annotated)
+            {
+                sb.Append
+                (
+                    $@"}}
+        else
+        {{
+            {paramName} = null;
+        }}
+            "
+                );
             }
         }
 
-        sb.Append("return new ").Append(c.Name).Append("(").Append(ctorSb).Append(");");
+        sb.Append
+        (
+            $@"reader.IsNext({(byte)'\r'}, true); // '\r'
+        reader.IsNext({(byte)'\n'}, true); // '\n'
+
+        return new {c.Name}({ctorSb});"
+        );
         return sb.ToString();
+    }
+
+    private static void GenerateFieldDeserializationString
+    (
+        StringBuilder sb,
+        ITypeSymbol paramType,
+        string paramName,
+        string paramValueSpanName,
+        IParameterSymbol originalParam,
+        ClassToAugment c,
+        Action<Diagnostic> reportDiagnostic
+    )
+    {
+        switch (paramType.SpecialType)
+        {
+            case SpecialType.System_Boolean:
+            {
+                sb.Append
+                (
+                    $@"{paramName} = {paramValueSpanName}[0] switch
+            {{
+                {(byte)'0'} => false, // '0'
+                {(byte)'1'} => true, // '1'
+                _ => Utf8Parser.TryParse({paramValueSpanName}, out bool {paramName}Value, out _) ? {paramName}Value : throw new Exception(""Failed to parse '{originalParam}' parameter"")
+            }};
+
+        "
+                );
+                break;
+            }
+            case SpecialType.System_Byte:
+            {
+                sb.Append
+                (
+                    $@"{paramName} = Utf8Parser.TryParse({paramValueSpanName}, out byte {paramName}Value, out _)
+            ? {paramName}Value
+            : throw new Exception(""Failed to parse '{originalParam}' parameter"");
+
+        "
+                );
+                break;
+            }
+            case SpecialType.System_SByte:
+            {
+                sb.Append
+                (
+                    $@"{paramName} = Utf8Parser.TryParse({paramValueSpanName}, out sbyte {paramName}Value, out _)
+            ? {paramName}Value
+            : throw new Exception(""Failed to parse '{originalParam}' parameter"");
+
+        "
+                );
+                break;
+            }
+            case SpecialType.System_UInt16:
+            {
+                sb.Append
+                (
+                    $@"{paramName} = Utf8Parser.TryParse({paramValueSpanName}, out ushort {paramName}Value, out _)
+            ? {paramName}Value
+            : throw new Exception(""Failed to parse '{originalParam}' parameter"");
+
+        "
+                );
+                break;
+            }
+            case SpecialType.System_Int16:
+            {
+                sb.Append
+                (
+                    $@"{paramName} = Utf8Parser.TryParse({paramValueSpanName}, out short {paramName}Value, out _)
+            ? {paramName}Value
+            : throw new Exception(""Failed to parse '{originalParam}' parameter"");
+
+        "
+                );
+                break;
+            }
+            case SpecialType.System_UInt32:
+            {
+                sb.Append
+                (
+                    $@"{paramName} = Utf8Parser.TryParse({paramValueSpanName}, out uint {paramName}Value, out _)
+            ? {paramName}Value
+            : throw new Exception(""Failed to parse '{originalParam}' parameter"");
+
+        "
+                );
+                break;
+            }
+            case SpecialType.System_Int32:
+            {
+                sb.Append
+                (
+                    $@"{paramName} = Utf8Parser.TryParse({paramValueSpanName}, out int {paramName}Value, out _)
+            ? {paramName}Value
+            : throw new Exception(""Failed to parse '{originalParam}' parameter"");
+
+        "
+                );
+                break;
+            }
+            case SpecialType.System_UInt64:
+            {
+                sb.Append
+                (
+                    $@"{paramName} = Utf8Parser.TryParse({paramValueSpanName}, out ulong {paramName}Value, out _)
+            ? {paramName}Value
+            : throw new Exception(""Failed to parse '{originalParam}' parameter"");
+
+        "
+                );
+                break;
+            }
+            case SpecialType.System_Int64:
+            {
+                sb.Append
+                (
+                    $@"{paramName} = Utf8Parser.TryParse({paramValueSpanName}, out long {paramName}Value, out _)
+            ? {paramName}Value
+            : throw new Exception(""Failed to parse '{originalParam}' parameter"");
+
+        "
+                );
+                break;
+            }
+            case SpecialType.System_Single:
+            {
+                sb.Append
+                (
+                    $@"{paramName} = Utf8Parser.TryParse({paramValueSpanName}, out float {paramName}Value, out _)
+            ? {paramName}Value
+            : throw new Exception(""Failed to parse '{originalParam}' parameter"");
+
+        "
+                );
+                break;
+            }
+            case SpecialType.System_Double:
+            {
+                sb.Append
+                (
+                    $@"{paramName} = Utf8Parser.TryParse({paramValueSpanName}, out double {paramName}Value, out _)
+            ? {paramName}Value
+            : throw new Exception(""Failed to parse '{originalParam}' parameter"");
+
+        "
+                );
+                break;
+            }
+            case SpecialType.System_String:
+            {
+                sb.Append
+                (
+                    $@"{paramName} = System.Text.Encoding.UTF8.GetString({paramValueSpanName});
+
+        "
+                );
+                break;
+            }
+            case SpecialType.None when paramType is INamedTypeSymbol { EnumUnderlyingType: {} } enumType:
+            {
+                string enumField = paramName + "EnumValue";
+                sb.Append
+                (
+                    $@"{enumType.EnumUnderlyingType} {enumField};
+        "
+                );
+                GenerateFieldDeserializationString
+                (
+                    sb,
+                    enumType.EnumUnderlyingType,
+                    enumField,
+                    paramValueSpanName,
+                    originalParam,
+                    c,
+                    reportDiagnostic
+                );
+                sb.Append
+                (
+                    $@"{paramName} = ({paramType}){enumField};
+
+        "
+                );
+                break;
+            }
+            default:
+            {
+                Diagnostic d = Diagnostic.Create
+                (
+                    DiagnosticDescriptors.GetStringGenerationFailure
+                    (
+                        $"{c.Name}.{originalParam}: {originalParam.Type} types are not yet supported for datasheet deserialization"
+                    ),
+                    c.Locations[0]
+                );
+                reportDiagnostic(d);
+                sb.Append
+                (
+                    $@"throw new Exception(""{originalParam.Type} types are not yet supported (property: {originalParam})"");
+
+    "
+                );
+                break;
+            }
+        }
     }
 }

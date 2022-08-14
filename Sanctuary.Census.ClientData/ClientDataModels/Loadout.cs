@@ -1,4 +1,6 @@
-﻿namespace Sanctuary.Census.ClientData.ClientDataModels;
+﻿using Sanctuary.Census.ClientData.Attributes;
+
+namespace Sanctuary.Census.ClientData.ClientDataModels;
 
 /// <summary>
 /// Represents client loadout data.
@@ -7,7 +9,8 @@
 /// <param name="ProfileID">The profile used by this loadout.</param>
 /// <param name="FactionID">The faction that this loadout can be used by.</param>
 /// <param name="DisplayIndex">The UI display index of the loadout.</param>
-public record Loadout
+[Datasheet]
+public partial record Loadout
 (
     uint LoadoutID,
     uint ProfileID,

@@ -1,4 +1,5 @@
-﻿using Sanctuary.Census.Common.Objects.CommonModels;
+﻿using Sanctuary.Census.ClientData.Attributes;
+using Sanctuary.Census.Common.Objects.CommonModels;
 
 namespace Sanctuary.Census.ClientData.ClientDataModels;
 
@@ -76,7 +77,8 @@ namespace Sanctuary.Census.ClientData.ClientDataModels;
 /// <param name="ResourceType">Gets the ID of the resource type that this item consumes.</param>
 /// <param name="ResourceCost">Gets the amount of the given resource type that this item consumes.</param>
 /// <param name="NoGift">Indicates whether this item can be gifted.</param>
-public record ClientItemDefinition
+[Datasheet]
+public partial record ClientItemDefinition
 (
     uint ID,
     string CodeFactoryName,
@@ -127,7 +129,7 @@ public record ClientItemDefinition
     bool FlagAccountScope,
     uint UIModelCameraID,
     ushort EquipCountMax,
-    CurrencyDefinition CurrencyType,
+    uint CurrencyType,
     uint DatasheetID,
     uint ItemType,
     uint SkillSetID,

@@ -24,13 +24,16 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\..\Sanctuary.Census.ClientData\Sanctuary.Census.ClientData.csproj" />
+        <ProjectReference Include="..\..\Sanctuary.Census.ClientData\Sanctuary.Census.ClientData.csproj" />
     </ItemGroup>
 
     <ItemGroup>
-      <None Update="Data\ManifestService\manifest.xml">
-        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      </None>
+        <None Update="Data\ManifestService\manifest.xml">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        <None Update="Data\ClientItemDatasheetData.txt">
+          <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
     </ItemGroup>
 
 </Project>

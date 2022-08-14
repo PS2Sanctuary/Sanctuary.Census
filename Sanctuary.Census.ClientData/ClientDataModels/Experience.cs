@@ -1,4 +1,6 @@
-﻿namespace Sanctuary.Census.ClientData.ClientDataModels;
+﻿using Sanctuary.Census.ClientData.Attributes;
+
+namespace Sanctuary.Census.ClientData.ClientDataModels;
 
 /// <summary>
 /// Represents client experience data.
@@ -9,7 +11,8 @@
 /// <param name="StringIDSecondary">The secondary locale string ID of this experience point.</param>
 /// <param name="XP">The amount of XP granted by this experience point.</param>
 /// <param name="NotableEvent">Indicates whether this experience point denotes an important player action.</param>
-public record Experience
+[Datasheet]
+public partial record Experience
 (
     uint ID,
     uint AwardTypeID,

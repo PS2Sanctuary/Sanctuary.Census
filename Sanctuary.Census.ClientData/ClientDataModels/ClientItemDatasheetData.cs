@@ -1,4 +1,6 @@
-﻿namespace Sanctuary.Census.ClientData.ClientDataModels;
+﻿using Sanctuary.Census.ClientData.Attributes;
+
+namespace Sanctuary.Census.ClientData.ClientDataModels;
 
 /// <summary>
 /// Represents client display data for weaponry.
@@ -15,7 +17,8 @@
 /// <param name="ClipSize">The clip size of the weapon.</param>
 /// <param name="RangeStringID">The locale ID of the general range category that the weapon falls into.</param>
 /// <param name="MinConeOfFire">The weapon's starting cone of fire.</param>
-public record ClientItemDatasheetData
+[Datasheet]
+public partial record ClientItemDatasheetData
 (
     uint ItemID,
     uint DatasheetID,

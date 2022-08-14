@@ -1,7 +1,10 @@
-﻿namespace Sanctuary.Census.ClientData.ClientDataModels;
+﻿using Sanctuary.Census.ClientData.Attributes;
+
+namespace Sanctuary.Census.ClientData.ClientDataModels;
 
 #pragma warning disable CS1591
-public record Vehicle
+[Datasheet]
+public partial record Vehicle
 (
     int Id,
     byte VehicleType,

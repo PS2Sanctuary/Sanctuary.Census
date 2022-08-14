@@ -1,4 +1,6 @@
-﻿namespace Sanctuary.Census.ClientData.ClientDataModels;
+﻿using Sanctuary.Census.ClientData.Attributes;
+
+namespace Sanctuary.Census.ClientData.ClientDataModels;
 
 /// <summary>
 /// Represents client vehicle attachment data.
@@ -8,7 +10,8 @@
 /// <param name="VehicleNameID">The locale string ID of the vehicle's name.</param>
 /// <param name="FactionID">The ID of a faction that the attachment can be used on.</param>
 /// <param name="VehicleLoadoutID">The ID of a loadout that the attachment can be used on.</param>
-public record ItemVehicle
+[Datasheet]
+public partial record ItemVehicle
 (
     uint ItemID,
     uint VehicleID,

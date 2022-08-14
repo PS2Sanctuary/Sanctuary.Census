@@ -1,4 +1,6 @@
-﻿namespace Sanctuary.Census.ClientData.ClientDataModels;
+﻿using Sanctuary.Census.ClientData.Attributes;
+
+namespace Sanctuary.Census.ClientData.ClientDataModels;
 
 /// <summary>
 /// Represents a client resource type.
@@ -7,7 +9,8 @@
 /// <param name="TypeName">The name of the resource type.</param>
 /// <param name="ImageSet">The ID of the resource type's image set.</param>
 /// <param name="NameID">The locale ID of the resource type.</param>
-public record ResourceType
+[Datasheet]
+public partial record ResourceType
 (
     uint TypeID,
     string? TypeName,

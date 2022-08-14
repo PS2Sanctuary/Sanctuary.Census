@@ -1,4 +1,6 @@
-﻿namespace Sanctuary.Census.ClientData.ClientDataModels;
+﻿using Sanctuary.Census.ClientData.Attributes;
+
+namespace Sanctuary.Census.ClientData.ClientDataModels;
 
 /// <summary>
 /// Represents client loadout slot data.
@@ -23,7 +25,8 @@
 /// <param name="DoNotPersist">Unknown.</param>
 /// <param name="Wheelable">Unknown.</param>
 /// <param name="PersistRespawn">Unknown.</param>
-public record LoadoutSlot
+[Datasheet]
+public partial record LoadoutSlot
 (
     uint LoadoutID,
     uint SlotID,

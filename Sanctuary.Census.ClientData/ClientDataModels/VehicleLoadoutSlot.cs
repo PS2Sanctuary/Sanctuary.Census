@@ -1,4 +1,6 @@
-﻿namespace Sanctuary.Census.ClientData.ClientDataModels;
+﻿using Sanctuary.Census.ClientData.Attributes;
+
+namespace Sanctuary.Census.ClientData.ClientDataModels;
 
 /// <summary>
 /// Represents client vehicle loadout slot data.
@@ -21,7 +23,8 @@
 /// <param name="EquipSlotID">The equipment slot ID that this slot uses.</param>
 /// <param name="SlotUITag">The UI section that this slot appears under.</param>
 /// <param name="UnlockHintStringID">Unknown.</param>
-public record VehicleLoadoutSlot
+[Datasheet]
+public partial record VehicleLoadoutSlot
 (
     uint LoadoutID,
     uint SlotID,

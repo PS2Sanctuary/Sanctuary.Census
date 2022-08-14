@@ -1,4 +1,5 @@
-﻿using Sanctuary.Census.Common.Objects.CommonModels;
+﻿using Sanctuary.Census.ClientData.Attributes;
+using Sanctuary.Census.Common.Objects.CommonModels;
 
 namespace Sanctuary.Census.ClientData.ClientDataModels;
 
@@ -10,7 +11,8 @@ namespace Sanctuary.Census.ClientData.ClientDataModels;
 /// <param name="ProfileNameID">The locale ID of the profile.</param>
 /// <param name="FactionID">The faction that this item/profile combination may be used on.</param>
 /// <param name="LoadoutID">The loadout that this item/profile combination may be used on.</param>
-public record ItemProfile
+[Datasheet]
+public partial record ItemProfile
 (
     uint ItemID,
     uint ProfileID,

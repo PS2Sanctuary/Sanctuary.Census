@@ -1,4 +1,6 @@
-﻿namespace Sanctuary.Census.ClientData.ClientDataModels;
+﻿using Sanctuary.Census.ClientData.Attributes;
+
+namespace Sanctuary.Census.ClientData.ClientDataModels;
 
 /// <summary>
 /// Represents client vehicle loadout data.
@@ -12,7 +14,8 @@
 /// <param name="GuildTintItemID">Unknown.</param>
 /// <param name="DecalItemID">Unknown.</param>
 /// <param name="HideFromLoadoutScreen">Whether the loadout is hidden in the UI.</param>
-public record VehicleLoadout
+[Datasheet]
+public partial record VehicleLoadout
 (
     uint ID,
     uint VehicleID,

@@ -1,4 +1,6 @@
-﻿namespace Sanctuary.Census.ClientData.ClientDataModels;
+﻿using Sanctuary.Census.ClientData.Attributes;
+
+namespace Sanctuary.Census.ClientData.ClientDataModels;
 
 /// <summary>
 /// Represents client fire mode stats.
@@ -14,7 +16,8 @@
 /// <param name="MaxDamageIndRadius">The maximum radius at which the fire mode will deals its <paramref name="MaxDamageInd"/>.</param>
 /// <param name="MinDamageInd">The minimum indirect damage of the fire mode.</param>
 /// <param name="MinDamageIndRadius">The radius at, and beyond which the fire mode will deal its <paramref name="MinDamageInd"/>.</param>
-public record FireModeDisplayStat
+[Datasheet]
+public partial record FireModeDisplayStat
 (
     uint ID,
     int MaxDamage,

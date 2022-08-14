@@ -4,6 +4,7 @@ using Sanctuary.Census.Common.Abstractions.Services;
 using Sanctuary.Census.Common.Objects;
 using Sanctuary.Census.Common.Objects.CommonModels;
 using Sanctuary.Census.Common.Services;
+using Sanctuary.Census.Common.Util;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
@@ -158,12 +159,26 @@ public class LocaleDataCacheService : ILocaleDataCacheService
             if (string.IsNullOrEmpty(line))
                 continue;
 
-            string[] components = line.Split('\t');
-            if (components.Length < 3)
-                continue;
-
-            uint id = uint.Parse(components[0]);
-            store.TryAdd(id, components[2]);
+            ProcessLine(line, store);
         }
+    }
+
+    private static void ProcessLine(string line, Dictionary<uint, string> store)
+    {
+        SpanReader<char> reader = new(line);
+
+        if (!reader.TryReadTo(out ReadOnlySpan<char> idSpan, '\t'))
+            return;
+
+        if (!uint.TryParse(idSpan, out uint id))
+            return;
+
+        if (!reader.TryAdvanceTo('\t'))
+            return;
+
+        if (!reader.TryReadExact(out ReadOnlySpan<char> value, reader.Remaining))
+            return;
+
+        store.TryAdd(id, value.ToString());
     }
 }

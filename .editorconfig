@@ -136,6 +136,9 @@ dotnet_diagnostic.CS8618.severity = none
 dotnet_diagnostic.CS8625.severity = none
 dotnet_diagnostic.CS1591.severity = none
 
+[/Sanctuary.Census.SourceGeneration/**]
+dotnet_diagnostic.CS1591.severity = none
+
 [*.{appxmanifest,asax,ascx,aspx,axaml,build,c,c++,cc,cginc,compute,cp,cpp,cs,cshtml,cu,cuh,cxx,dtd,fx,fxh,h,hh,hlsl,hlsli,hlslinc,hpp,hxx,inc,inl,ino,ipp,master,mpp,mq4,mq5,mqh,nuspec,paml,razor,resw,resx,skin,tpp,usf,ush,vb,xaml,xamlx,xoml,xsd}]
 indent_style = space
 indent_size = 4

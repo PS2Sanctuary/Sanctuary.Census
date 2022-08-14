@@ -3,9 +3,9 @@ using Mandible.Abstractions.Pack2;
 using Mandible.Pack2;
 using Mandible.Services;
 using Mandible.Util;
+using Sanctuary.Census.ClientData.Abstractions.ClientDataModels;
 using Sanctuary.Census.ClientData.Abstractions.Services;
 using Sanctuary.Census.ClientData.ClientDataModels;
-using Sanctuary.Census.ClientData.Util;
 using Sanctuary.Census.Common.Abstractions.Services;
 using Sanctuary.Census.Common.Objects;
 using Sanctuary.Census.Common.Services;
@@ -292,12 +292,12 @@ public class ClientDataCacheService : IClientDataCacheService
         IEnumerable<Asset2Header> assetHeaders,
         IPack2Reader packReader,
         CancellationToken ct
-    )
+    ) where TDataType : class, IDatasheet<TDataType>
     {
         ulong nameHash = PackCrc64.Calculate(datasheetFileName);
         Asset2Header header = assetHeaders.First(ah => ah.NameHash == nameHash);
 
         using MemoryOwner<byte> data = await packReader.ReadAssetDataAsync(header, ct).ConfigureAwait(false);
-        return DatasheetSerializer.Deserialize<TDataType>(data.Memory).ToList();
+        return TDataType.Deserialize(data.Span);
     }
 }

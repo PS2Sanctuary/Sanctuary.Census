@@ -173,6 +173,7 @@ public class DatasheetGenerator : IIncrementalGenerator
 
         return $@"#nullable enable
 
+using Sanctuary.Census.ClientData.Abstractions.ClientDataModels;
 using Sanctuary.Census.Common.Util;
 using System;
 using System.Buffers.Text;
@@ -180,7 +181,7 @@ using System.Collections.Generic;
 
 namespace {@class.Namespace};
 
-public partial record {@class.Name}
+public partial record {@class.Name} : IDatasheet<{@class.Name}>
 {{
     /// <inheritdoc />
     public static List<{@class.Name}> Deserialize(ReadOnlySpan<byte> buffer)

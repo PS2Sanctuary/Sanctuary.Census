@@ -259,7 +259,7 @@ public class FilterBuilder
         if (propertyType == typeof(string))
             return s => s;
         if (propertyType.IsEnum)
-            return s => Enum.Parse(propertyType, s);
+            return s => s; // Enums are stored as strings
         if (Nullable.GetUnderlyingType(propertyType) != null)
             return GetConverter(Nullable.GetUnderlyingType(propertyType)!);
 

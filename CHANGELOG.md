@@ -2,6 +2,13 @@
 
 Date format: DD/MM/YYYY
 
+## vNext
+
+- Fixed querying on enum fields.
+- Implemented a somewhat-correct local timezone display in the diff viewer.
+- Updated `item.item_category` to be nullable.
+- Many under the hood fixes and optimisations.
+
 ## 10/08/2022 #2
 
 - :warning: `long/int64` numbers are now serialized as strings.

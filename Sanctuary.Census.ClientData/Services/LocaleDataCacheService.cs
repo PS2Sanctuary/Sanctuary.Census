@@ -179,6 +179,8 @@ public class LocaleDataCacheService : ILocaleDataCacheService
         if (!reader.TryReadExact(out ReadOnlySpan<char> value, reader.Remaining))
             return;
 
+        if (value[^1] == '\t')
+            value = value[..^1];
         store.TryAdd(id, value.ToString());
     }
 }

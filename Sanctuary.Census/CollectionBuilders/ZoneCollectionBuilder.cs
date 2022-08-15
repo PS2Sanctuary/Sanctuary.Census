@@ -1,9 +1,9 @@
 ﻿using Sanctuary.Census.Abstractions.CollectionBuilders;
 using Sanctuary.Census.Abstractions.Database;
 using Sanctuary.Census.ClientData.Abstractions.Services;
+using Sanctuary.Census.Common.Objects.Collections;
 using Sanctuary.Census.Common.Objects.CommonModels;
 using Sanctuary.Census.Exceptions;
-using Sanctuary.Census.Models.Collections;
 using Sanctuary.Census.ServerData.Internal.Abstractions.Services;
 using Sanctuary.Zone.Packets.Server;
 using System.Collections.Generic;
@@ -46,13 +46,13 @@ public class ZoneCollectionBuilder : ICollectionBuilder
         if (_serverDataCache.ContinentBattleInfos is null)
             throw new MissingCacheDataException(typeof(ContinentBattleInfo));
 
-        Dictionary<uint, Models.Collections.Zone> builtZones = new();
+        Dictionary<uint, Common.Objects.Collections.Zone> builtZones = new();
         foreach (ZonePopulationInfo zone in _serverDataCache.ContinentBattleInfos.Zones.OrderBy(x => x.ZoneID))
         {
             _localeDataCache.TryGetLocaleString(zone.NameID, out LocaleString? name);
             _localeDataCache.TryGetLocaleString(zone.DescriptionID, out LocaleString? description);
 
-            Models.Collections.Zone built = new
+            Common.Objects.Collections.Zone built = new
             (
                 (uint)zone.ZoneID,
                 zone.Name,

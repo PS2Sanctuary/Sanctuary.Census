@@ -7,7 +7,7 @@ using Sanctuary.Census.Exceptions;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
-using MVehicleLoadoutSlot = Sanctuary.Census.Models.Collections.VehicleLoadoutSlot;
+using MVehicleLoadoutSlot = Sanctuary.Census.Common.Objects.Collections.VehicleLoadoutSlot;
 
 namespace Sanctuary.Census.CollectionBuilders;
 

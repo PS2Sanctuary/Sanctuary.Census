@@ -9,12 +9,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using MItemCategory = Sanctuary.Census.Models.Collections.ItemCategory;
+using MItemCategory = Sanctuary.Census.Common.Objects.Collections.ItemCategory;
 
 namespace Sanctuary.Census.CollectionBuilders;
 
 /// <summary>
-/// Builds the <see cref="Models.Collections.ItemCategory"/> collection.
+/// Builds the <see cref="Common.Objects.Collections.ItemCategory"/> collection.
 /// </summary>
 public class ItemCategoryCollectionBuilder : ICollectionBuilder
 {

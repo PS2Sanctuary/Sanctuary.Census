@@ -1,9 +1,9 @@
 ﻿using Sanctuary.Census.Abstractions.CollectionBuilders;
 using Sanctuary.Census.Abstractions.Database;
 using Sanctuary.Census.ClientData.Abstractions.Services;
+using Sanctuary.Census.Common.Objects.Collections;
 using Sanctuary.Census.Common.Objects.CommonModels;
 using Sanctuary.Census.Exceptions;
-using Sanctuary.Census.Models.Collections;
 using Sanctuary.Census.ServerData.Internal.Abstractions.Services;
 using Sanctuary.Common.Objects;
 using Sanctuary.Zone.Packets.OutfitWars;
@@ -96,7 +96,7 @@ public class OutfitWarCollectionsBuilder : ICollectionBuilder
                 rounds.Add(new OutfitWarRounds.Round
                 (
                     sRound.Order,
-                    sRound.Stage,
+                    (OutfitWarRounds.RoundStage)sRound.Stage,
                     DateTimeOffset.FromUnixTimeSeconds((long)sRound.StartTime),
                     DateTimeOffset.FromUnixTimeSeconds((long)sRound.EndTime)
                 ));

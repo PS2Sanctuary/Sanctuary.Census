@@ -2,6 +2,7 @@
 using MongoDB.Driver;
 using Sanctuary.Census.Abstractions.Database;
 using Sanctuary.Census.Common.Objects;
+using Sanctuary.Census.Common.Objects.DiffModels;
 using Sanctuary.Census.Json;
 using Sanctuary.Census.Models;
 using System;

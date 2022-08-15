@@ -10,12 +10,12 @@ using Sanctuary.Zone.Packets.StaticFacilityInfo;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
-using MFacilityInfo = Sanctuary.Census.Models.Collections.FacilityInfo;
+using MFacilityInfo = Sanctuary.Census.Common.Objects.Collections.FacilityInfo;
 
 namespace Sanctuary.Census.CollectionBuilders;
 
 /// <summary>
-/// Builds the <see cref="Models.Collections.FacilityInfo"/> collection.
+/// Builds the <see cref="Common.Objects.Collections.FacilityInfo"/> collection.
 /// </summary>
 public class FacilityInfoCollectionBuilder : ICollectionBuilder
 {

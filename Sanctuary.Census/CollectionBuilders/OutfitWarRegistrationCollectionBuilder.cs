@@ -1,7 +1,7 @@
 ﻿using Sanctuary.Census.Abstractions.CollectionBuilders;
 using Sanctuary.Census.Abstractions.Database;
+using Sanctuary.Census.Common.Objects.Collections;
 using Sanctuary.Census.Exceptions;
-using Sanctuary.Census.Models.Collections;
 using Sanctuary.Census.ServerData.Internal.Abstractions.Services;
 using Sanctuary.Common.Objects;
 using Sanctuary.Zone.Packets.OutfitWars;
@@ -51,7 +51,7 @@ public class OutfitWarRegistrationCollectionBuilder : ICollectionBuilder
                     (uint)outfit.FactionID,
                     (uint)server,
                     outfit.RegistrationOrder,
-                    outfit.Status,
+                    (OutfitWarRegistration.RegistrationStatus)outfit.Status,
                     outfit.Status is RegistrationStatus.Full or RegistrationStatus.WaitingOnNextFullReg
                         ? 48
                         : outfit.MemberSignupCount

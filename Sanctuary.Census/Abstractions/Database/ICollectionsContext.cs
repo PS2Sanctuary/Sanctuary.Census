@@ -1,5 +1,5 @@
 ﻿using MongoDB.Driver;
-using Sanctuary.Census.Models.Collections;
+using Sanctuary.Census.Common.Objects.Collections;
 using System;
 using System.Collections.Generic;
 using System.Threading;
@@ -292,5 +292,5 @@ public interface ICollectionsContext
     /// <param name="collection">The collection.</param>
     /// <param name="ct">A <see cref="CancellationToken"/> that can be used to stop the operation.</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-    Task UpsertZonesAsync(IEnumerable<Models.Collections.Zone> collection, CancellationToken ct = default);
+    Task UpsertZonesAsync(IEnumerable<Common.Objects.Collections.Zone> collection, CancellationToken ct = default);
 }

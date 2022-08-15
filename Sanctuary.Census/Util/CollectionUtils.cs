@@ -1,4 +1,4 @@
-﻿using Sanctuary.Census.Attributes;
+﻿using Sanctuary.Census.Common.Attributes;
 using Sanctuary.Census.Common.Objects.CommonModels;
 using Sanctuary.Census.Json;
 using Sanctuary.Census.Services;

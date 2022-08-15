@@ -6,7 +6,7 @@ using Sanctuary.Census.Exceptions;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
-using MLoadout = Sanctuary.Census.Models.Collections.Loadout;
+using MLoadout = Sanctuary.Census.Common.Objects.Collections.Loadout;
 
 namespace Sanctuary.Census.CollectionBuilders;
 

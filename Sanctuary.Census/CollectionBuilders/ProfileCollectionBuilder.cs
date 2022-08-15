@@ -9,7 +9,7 @@ using Sanctuary.Zone.Packets.ReferenceData;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
-using MProfile = Sanctuary.Census.Models.Collections.Profile;
+using MProfile = Sanctuary.Census.Common.Objects.Collections.Profile;
 
 namespace Sanctuary.Census.CollectionBuilders;
 

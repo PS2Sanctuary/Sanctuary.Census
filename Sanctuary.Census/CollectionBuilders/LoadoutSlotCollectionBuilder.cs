@@ -7,7 +7,7 @@ using Sanctuary.Census.Exceptions;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
-using MLoadoutSlot = Sanctuary.Census.Models.Collections.LoadoutSlot;
+using MLoadoutSlot = Sanctuary.Census.Common.Objects.Collections.LoadoutSlot;
 
 namespace Sanctuary.Census.CollectionBuilders;
 

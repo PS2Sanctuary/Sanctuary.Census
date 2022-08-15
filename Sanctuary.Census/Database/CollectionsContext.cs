@@ -3,11 +3,12 @@ using MongoDB.Bson.Serialization;
 using MongoDB.Driver;
 using Sanctuary.Census.Abstractions.Database;
 using Sanctuary.Census.Abstractions.Services;
+using Sanctuary.Census.Common.Objects.Collections;
 using Sanctuary.Census.Common.Objects.CommonModels;
+using Sanctuary.Census.Common.Objects.DiffModels;
 using Sanctuary.Census.Common.Services;
 using Sanctuary.Census.Json;
 using Sanctuary.Census.Models;
-using Sanctuary.Census.Models.Collections;
 using Sanctuary.Census.Util;
 using System;
 using System.Collections.Generic;
@@ -94,7 +95,7 @@ public class CollectionsContext : ICollectionsContext
         await CreateNonUniqueKeyIndexes<WeaponToAttachment>(ct, x => x.AttachmentID, x => x.ItemID).ConfigureAwait(false);
         await CreateNonUniqueKeyIndexes<WeaponToFireGroup>(ct, x => x.WeaponId, x => x.FireGroupId).ConfigureAwait(false);
         await CreateUniqueKeyIndex<World>(x => x.WorldID, ct).ConfigureAwait(false);
-        await CreateUniqueKeyIndex<Models.Collections.Zone>(x => x.ZoneID, ct).ConfigureAwait(false);
+        await CreateUniqueKeyIndex<Common.Objects.Collections.Zone>(x => x.ZoneID, ct).ConfigureAwait(false);
     }
 
     /// <inheritdoc />
@@ -492,12 +493,12 @@ public class CollectionsContext : ICollectionsContext
         ).ConfigureAwait(false);
 
     /// <inheritdoc />
-    public async Task UpsertZonesAsync(IEnumerable<Models.Collections.Zone> collection, CancellationToken ct = default)
+    public async Task UpsertZonesAsync(IEnumerable<Common.Objects.Collections.Zone> collection, CancellationToken ct = default)
         => await UpsertCollectionAsync
         (
             collection,
             e => x => x.ZoneID == e.ZoneID,
-            e => Builders<Models.Collections.Zone>.Filter.Eq(x => x.ZoneID, e.ZoneID),
+            e => Builders<Common.Objects.Collections.Zone>.Filter.Eq(x => x.ZoneID, e.ZoneID),
             ct,
             false
         ).ConfigureAwait(false);
@@ -574,7 +575,7 @@ public class CollectionsContext : ICollectionsContext
         BsonClassMap.RegisterClassMap<WeaponToAttachment>(MongoContext.AutoClassMap);
         BsonClassMap.RegisterClassMap<WeaponToFireGroup>(MongoContext.AutoClassMap);
         BsonClassMap.RegisterClassMap<World>(MongoContext.AutoClassMap);
-        BsonClassMap.RegisterClassMap<Models.Collections.Zone>(MongoContext.AutoClassMap);
+        BsonClassMap.RegisterClassMap<Common.Objects.Collections.Zone>(MongoContext.AutoClassMap);
 
         BsonClassMap.RegisterClassMap<LocaleString>(MongoContext.AutoClassMap);
         BsonClassMap.RegisterClassMap<NewCollection>(MongoContext.AutoClassMap);

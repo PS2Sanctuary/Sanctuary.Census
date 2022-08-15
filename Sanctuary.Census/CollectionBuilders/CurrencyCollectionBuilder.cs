@@ -7,7 +7,7 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using CCurrency = Sanctuary.Census.ClientData.ClientDataModels.Currency;
-using MCurrency = Sanctuary.Census.Models.Collections.Currency;
+using MCurrency = Sanctuary.Census.Common.Objects.Collections.Currency;
 
 namespace Sanctuary.Census.CollectionBuilders;
 

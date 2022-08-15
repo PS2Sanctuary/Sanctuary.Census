@@ -6,7 +6,7 @@ using Sanctuary.Census.Exceptions;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
-using MVehicleSkillSet = Sanctuary.Census.Models.Collections.VehicleSkillSet;
+using MVehicleSkillSet = Sanctuary.Census.Common.Objects.Collections.VehicleSkillSet;
 
 namespace Sanctuary.Census.CollectionBuilders;
 

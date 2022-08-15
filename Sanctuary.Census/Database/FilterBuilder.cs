@@ -1,6 +1,6 @@
 ﻿using MongoDB.Bson;
 using MongoDB.Driver;
-using Sanctuary.Census.Attributes;
+using Sanctuary.Census.Common.Attributes;
 using Sanctuary.Census.Common.Util;
 using Sanctuary.Census.Exceptions;
 using Sanctuary.Census.Json;

@@ -7,7 +7,7 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using CExperience = Sanctuary.Census.ClientData.ClientDataModels.Experience;
-using MExperience = Sanctuary.Census.Models.Collections.Experience;
+using MExperience = Sanctuary.Census.Common.Objects.Collections.Experience;
 
 namespace Sanctuary.Census.CollectionBuilders;
 

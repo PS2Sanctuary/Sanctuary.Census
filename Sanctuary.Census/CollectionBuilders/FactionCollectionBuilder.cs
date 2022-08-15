@@ -7,7 +7,7 @@ using Sanctuary.Census.Exceptions;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
-using MFaction = Sanctuary.Census.Models.Collections.Faction;
+using MFaction = Sanctuary.Census.Common.Objects.Collections.Faction;
 
 namespace Sanctuary.Census.CollectionBuilders;
 

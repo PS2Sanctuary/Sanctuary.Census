@@ -3,6 +3,7 @@ using MongoDB.Bson;
 using MongoDB.Driver;
 using Sanctuary.Census.Abstractions.Database;
 using Sanctuary.Census.Common.Objects;
+using Sanctuary.Census.Common.Objects.DiffModels;
 using Sanctuary.Census.Models;
 using System.Collections.Generic;
 using System.Threading.Tasks;

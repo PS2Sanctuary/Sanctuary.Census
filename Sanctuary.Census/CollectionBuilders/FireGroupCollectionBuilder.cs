@@ -6,7 +6,7 @@ using Sanctuary.Zone.Packets.ReferenceData;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
-using MFireGroup = Sanctuary.Census.Models.Collections.FireGroup;
+using MFireGroup = Sanctuary.Census.Common.Objects.Collections.FireGroup;
 using SFireGroup = Sanctuary.Zone.Packets.ReferenceData.FireGroup;
 
 namespace Sanctuary.Census.CollectionBuilders;

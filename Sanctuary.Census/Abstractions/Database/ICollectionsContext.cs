@@ -159,12 +159,28 @@ public interface ICollectionsContext
     Task UpsertMapRegionsAsync(IEnumerable<MapRegion> collection, CancellationToken ct = default);
 
     /// <summary>
+    /// Upserts the <see cref="OutfitWar"/> collection.
+    /// </summary>
+    /// <param name="collection">The collection.</param>
+    /// <param name="ct">A <see cref="CancellationToken"/> that can be used to stop the operation.</param>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    Task UpsertOutfitWarsAsync(IEnumerable<OutfitWar> collection, CancellationToken ct = default);
+
+    /// <summary>
     /// Upserts the <see cref="OutfitWarRegistration"/> collection.
     /// </summary>
     /// <param name="collection">The collection.</param>
     /// <param name="ct">A <see cref="CancellationToken"/> that can be used to stop the operation.</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
     Task UpsertOutfitWarRegistrationsAsync(IEnumerable<OutfitWarRegistration> collection, CancellationToken ct = default);
+
+    /// <summary>
+    /// Upserts the <see cref="OutfitWarRounds"/> collection.
+    /// </summary>
+    /// <param name="collection">The collection.</param>
+    /// <param name="ct">A <see cref="CancellationToken"/> that can be used to stop the operation.</param>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    Task UpsertOutfitWarRoundsAsync(IEnumerable<OutfitWarRounds> collection, CancellationToken ct = default);
 
     /// <summary>
     /// Upserts the <see cref="PlayerStateGroup2"/> collection.

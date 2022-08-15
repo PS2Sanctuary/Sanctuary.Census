@@ -37,7 +37,7 @@ public class OutfitWarRegistrationCollectionBuilder : ICollectionBuilder
         CancellationToken ct
     )
     {
-        if (_serverDataCache.RegisteredOutfits is null)
+        if (_serverDataCache.RegisteredOutfits.Count == 0)
             throw new MissingCacheDataException(typeof(RegisteredOutfits));
 
         Dictionary<ulong, OutfitWarRegistration> builtOutfits = new();

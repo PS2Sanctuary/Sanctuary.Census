@@ -91,7 +91,7 @@ public class ItemCollectionBuilder : ICollectionBuilder
             (
                 definition.ID,
                 definition.ItemType,
-                definition.CategoryID,
+                definition.CategoryID == 0 ? null : definition.CategoryID,
                 (uint)faction,
                 name,
                 description,

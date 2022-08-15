@@ -28,7 +28,7 @@ public record Item
 (
     [property:Key] uint ItemID,
     uint ItemTypeID,
-    uint ItemCategoryID,
+    uint? ItemCategoryID,
     uint FactionID,
     LocaleString? Name,
     LocaleString? Description,

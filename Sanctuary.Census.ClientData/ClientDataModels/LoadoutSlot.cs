@@ -43,7 +43,7 @@ public partial record LoadoutSlot
     uint ReqSetID,
     uint ClientUseRequirementID,
     uint EquipSlotID,
-    string SlotUITag,
+    string? SlotUITag,
     uint UnlockHintStringID, // Nullable
     bool DoNotPersist,
     bool Wheelable,

@@ -42,6 +42,6 @@ public partial record VehicleLoadoutSlot
     bool FlagIsVisible,
     uint ReqSetID,
     uint EquipSlotID,
-    string SlotUITag,
+    string? SlotUITag,
     uint UnlockHintStringID
 );

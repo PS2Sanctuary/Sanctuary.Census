@@ -1,19 +1,24 @@
 ﻿@page "/diffview/{environment}/{time:long}"
 @using Sanctuary.Census.Pages
+@using Sanctuary.Census.Pages.Shared
 @model Sanctuary.Census.Pages.DiffViewerPage
 @addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
 
 @{
-    ViewData["Title"] = $"Diff Viewer - {Model.DiffTime}";
+    ViewData["Title"] = "Diff Viewer";
 }
 
 <div>
+    <div class="box has-background-primary-dark has-text-weight-bold has-text-primary-light	">
+        Generated at @Html.LocalDateDisplay(Model.DiffTime)
+    </div>
+    
     <div class="block">
         <a class="button is-warning" asp-page="./DiffRecordsPage" asp-route-environment="@Model.Environment">
             ❮ Back to Diff List
         </a>
     </div>
-    
+
     <div class="message">
         <div class="message-header">
             <p>Jump to</p>
@@ -29,7 +34,7 @@
             </ul>
         </div>
     </div>
-    
+
     <div class="columns">
         <div class="column is-6">
             <div class="notification is-danger is-light content">
@@ -49,7 +54,7 @@
             <p class="notification is-link">
                 @collectionName
             </p>
-            
+
             @foreach (DiffViewerPage.DiffObjectsDisplay entry in entries)
             {
                 <div class="columns">
@@ -70,7 +75,7 @@
                         }
                     </div>
                 </div>
-                <hr />
+                <hr/>
             }
         </div>
     }

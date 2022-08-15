@@ -2,6 +2,7 @@
 @using Microsoft.AspNetCore.Mvc.TagHelpers
 @using Sanctuary.Census.Common.Objects
 @using Sanctuary.Census.Models
+@using Sanctuary.Census.Pages.Shared
 @model Sanctuary.Census.Pages.DiffRecordsPage
 @addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
 
@@ -27,14 +28,14 @@
             </div>
         </div>
     </div>
-    
+
     @if (Model.DiffRecords is not null)
     {
         foreach (DiffRecord record in Model.DiffRecords)
         {
             <article class="message is-link">
                 <div class="message-header has-background-link-dark">
-                    <p>@record.GeneratedAt</p>
+                    @Html.LocalDateDisplay(record.GeneratedAt)
                     <a class="button" asp-page="./DiffViewerPage" asp-route-environment="@Model.Environment" asp-route-time="@record.GeneratedAt.Ticks">
                         View
                     </a>

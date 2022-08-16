@@ -193,9 +193,8 @@ public class CollectionController : ControllerBase
                         ? new QueryTimes
                         (
                             st.Elapsed.Milliseconds,
-                            _memoryCache.TryGetValue((typeof(Datatype), environment), out IReadOnlyList<Datatype> types)
-                                ? types.FirstOrDefault(d => d.Name == collectionName)?.LastUpdated
-                                : null
+                            (await GetAndCacheDatatypeListAsync(ParseEnvironment(environment), ct).ConfigureAwait(false))
+                                .FirstOrDefault(d => d.Name == collectionName)?.LastUpdated
                         )
                         : null
                 ),

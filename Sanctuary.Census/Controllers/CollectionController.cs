@@ -4,7 +4,8 @@ using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Primitives;
 using MongoDB.Bson;
 using MongoDB.Driver;
-using Sanctuary.Census.Abstractions.Database;
+using Sanctuary.Census.Common;
+using Sanctuary.Census.Common.Abstractions.Services;
 using Sanctuary.Census.Common.Objects;
 using Sanctuary.Census.Database;
 using Sanctuary.Census.Exceptions;
@@ -192,7 +193,9 @@ public class CollectionController : ControllerBase
                         ? new QueryTimes
                         (
                             st.Elapsed.Milliseconds,
-                            CollectionUtils.GetCollectionUpdateTime(collectionName).ToUnixTimeSeconds()
+                            _memoryCache.TryGetValue((typeof(Datatype), environment), out IReadOnlyList<Datatype> types)
+                                ? types.FirstOrDefault(d => d.Name == collectionName)?.LastUpdated
+                                : null
                         )
                         : null
                 ),
@@ -366,21 +369,12 @@ public class CollectionController : ControllerBase
         if (_memoryCache.TryGetValue((typeof(Datatype), environment), out List<Datatype>? dataTypes) && dataTypes is not null)
             return dataTypes;
 
-        dataTypes = new List<Datatype>();
-        IMongoDatabase db = _mongoContext.GetDatabase(environment);
-        IAsyncCursor<string> collNames = await db.ListCollectionNamesAsync(cancellationToken: ct);
-        while (await collNames.MoveNextAsync(ct))
-        {
-            foreach (string collName in collNames.Current)
-            {
-                IMongoCollection<BsonDocument> coll = db.GetCollection<BsonDocument>(collName);
-                long count = await coll.CountDocumentsAsync(new BsonDocument(), null, ct);
-                dataTypes.Add(new Datatype(collName, (int)count));
-            }
-        }
-        dataTypes.Sort((d1, d2) => string.Compare(d1.Name, d2.Name, StringComparison.Ordinal));
+        IMongoCollection<Datatype> db = _mongoContext.GetCollection<Datatype>(environment);
+        dataTypes = await db.Find(new BsonDocument())
+            .Sort(Builders<Datatype>.Sort.Ascending(x => x.Name))
+            .ToListAsync(ct);
 
-        _memoryCache.Set((typeof(Datatype), environment), dataTypes, TimeSpan.FromHours(1));
+        _memoryCache.Set((typeof(Datatype), environment), dataTypes, TimeSpan.FromMinutes(15));
         return dataTypes;
     }
 

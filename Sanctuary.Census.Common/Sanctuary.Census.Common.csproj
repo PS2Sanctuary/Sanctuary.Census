@@ -1,21 +1,22 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
     <ItemGroup>
-        <Compile Update="Util\MemoryReader.Search.cs">
-            <DependentUpon>MemoryReader.cs</DependentUpon>
-        </Compile>
-        <Compile Update="Util\SpanReader.Search.cs">
-          <DependentUpon>SpanReader.cs</DependentUpon>
-        </Compile>
-    </ItemGroup>
-
-    <ItemGroup>
         <PackageReference Include="carlst99.Mandible" Version="1.2.0" />
         <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="6.0.0" />
         <PackageReference Include="Microsoft.Extensions.Http" Version="6.0.0" />
         <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="6.0.1" />
         <PackageReference Include="Microsoft.Extensions.Options" Version="6.0.0" />
+        <PackageReference Include="MongoDB.Driver" Version="2.17.1" />
         <PackageReference Include="System.IO.Abstractions" Version="17.0.24" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <Compile Update="Util\MemoryReader.Search.cs">
+            <DependentUpon>MemoryReader.cs</DependentUpon>
+        </Compile>
+        <Compile Update="Util\SpanReader.Search.cs">
+            <DependentUpon>SpanReader.cs</DependentUpon>
+        </Compile>
     </ItemGroup>
 
 </Project>

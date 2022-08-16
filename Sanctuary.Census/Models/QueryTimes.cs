@@ -10,5 +10,5 @@ namespace Sanctuary.Census.Models;
 public record QueryTimes
 (
     int TotalMS,
-    long CollectionLastUpdated
+    long? CollectionLastUpdated
 );

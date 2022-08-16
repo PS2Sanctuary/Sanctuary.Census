@@ -50,13 +50,13 @@ public record OutfitWarRounds
     /// </summary>
     /// <param name="Order">The order of the round among its siblings.</param>
     /// <param name="Stage">The stage that the round belongs to.</param>
-    /// <param name="StartTime">The start time of the round.</param>
-    /// <param name="EndTime">The end time of the round.</param>
+    /// <param name="StartTime">The start time of the round, as a unix seconds timestamp.</param>
+    /// <param name="EndTime">The end time of the round, as a unix seconds timestamp.</param>
     public record Round
     (
         uint Order,
         RoundStage Stage,
-        DateTimeOffset StartTime,
-        DateTimeOffset EndTime
+        ulong StartTime,
+        ulong EndTime
     );
 }

@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc.RazorPages;
 using MongoDB.Driver;
-using Sanctuary.Census.Abstractions.Database;
+using Sanctuary.Census.Common;
+using Sanctuary.Census.Common.Abstractions.Services;
 using Sanctuary.Census.Common.Objects;
 using Sanctuary.Census.Common.Objects.DiffModels;
 using Sanctuary.Census.Json;

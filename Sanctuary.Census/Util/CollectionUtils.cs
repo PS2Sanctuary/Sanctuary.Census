@@ -1,7 +1,6 @@
-﻿using Sanctuary.Census.Common.Attributes;
+﻿using Sanctuary.Census.Common;
+using Sanctuary.Census.Common.Attributes;
 using Sanctuary.Census.Common.Objects.CommonModels;
-using Sanctuary.Census.Json;
-using Sanctuary.Census.Services;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -18,16 +17,14 @@ public static class CollectionUtils
     private static readonly Dictionary<string, HashSet<string>> _collectionNamesAndFields;
     private static readonly Dictionary<string, List<string>> _keyFields;
     private static readonly Dictionary<string, List<string>> _langFields;
-    private static readonly Dictionary<string, DateTimeOffset> _collectionUpdateTimes;
 
     static CollectionUtils()
     {
         _collectionNamesAndFields = new Dictionary<string, HashSet<string>>();
         _keyFields = new Dictionary<string, List<string>>();
         _langFields = new Dictionary<string, List<string>>();
-        _collectionUpdateTimes = new Dictionary<string, DateTimeOffset>();
 
-        IEnumerable<Type> collTypes = typeof(CollectionBuilderRepository).Assembly
+        IEnumerable<Type> collTypes = typeof(CollectionAttribute).Assembly
             .GetTypes()
             .Where(t => t.IsDefined(typeof(CollectionAttribute)));
 
@@ -53,27 +50,6 @@ public static class CollectionUtils
             }
         }
     }
-
-    /// <summary>
-    /// Sets the time that a collection was last updated.
-    /// </summary>
-    /// <typeparam name="T">The type of the collection.</typeparam>
-    /// <param name="updateTime">The update time.</param>
-    public static void SetCollectionUpdateTime<T>(DateTimeOffset? updateTime = null)
-    {
-        string name = SnakeCaseJsonNamingPolicy.Default.ConvertName(typeof(T).Name);
-        _collectionUpdateTimes[name] = updateTime ?? DateTimeOffset.UtcNow;
-    }
-
-    /// <summary>
-    /// Gets the time that a collection was last updated.
-    /// </summary>
-    /// <param name="collectionName">The name of the collection.</param>
-    /// <returns>The last updated time, or <see cref="DateTimeOffset.MinValue"/> if the collection has not been updated.</returns>
-    public static DateTimeOffset GetCollectionUpdateTime(string collectionName)
-        => _collectionUpdateTimes.ContainsKey(collectionName)
-            ? _collectionUpdateTimes[collectionName]
-            : DateTimeOffset.MinValue;
 
     /// <summary>
     /// Checks that a collection exists.

@@ -5,24 +5,13 @@ using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Options;
-using MongoDB.Driver;
-using Sanctuary.Census.Abstractions.CollectionBuilders;
-using Sanctuary.Census.Abstractions.Database;
-using Sanctuary.Census.Abstractions.Services;
-using Sanctuary.Census.ClientData.Extensions;
-using Sanctuary.Census.CollectionBuilders;
+using Sanctuary.Census.Common;
+using Sanctuary.Census.Common.Extensions;
 using Sanctuary.Census.Common.Objects;
-using Sanctuary.Census.Database;
 using Sanctuary.Census.Exceptions;
 using Sanctuary.Census.Json;
 using Sanctuary.Census.Middleware;
 using Sanctuary.Census.Models;
-using Sanctuary.Census.PatchData.Extensions;
-using Sanctuary.Census.ServerData.Internal.Extensions;
-using Sanctuary.Census.ServerData.Internal.Objects;
-using Sanctuary.Census.Services;
-using Sanctuary.Census.Workers;
 using Serilog;
 using Serilog.Events;
 using System;
@@ -41,8 +30,6 @@ namespace Sanctuary.Census;
 /// </summary>
 public static class Program
 {
-    private const string LOGGING_OPTIONS_NAME = "LoggingOptions";
-
     /// <summary>
     /// The entry point of the application.
     /// </summary>
@@ -50,30 +37,16 @@ public static class Program
     public static void Main(string[] args)
     {
         WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
+        builder.Host.UseSystemd();
 
-        if (!builder.Environment.IsDevelopment() && OperatingSystem.IsLinux())
-            builder.Host.UseSystemd();
-
-        string? seqIngestionEndpoint = builder.Configuration.GetSection(LOGGING_OPTIONS_NAME).GetSection("SeqIngestionEndpoint").Value;
-        string? seqApiKey = builder.Configuration.GetSection(LOGGING_OPTIONS_NAME).GetSection("SeqApiKey").Value;
+        string? seqIngestionEndpoint = builder.Configuration["LoggingOptions:SeqIngestionEndpoint"];
+        string? seqApiKey = builder.Configuration["LoggingOptions:SeqApiKey"];
         SetupLogger(seqIngestionEndpoint, seqApiKey);
         builder.Host.UseSerilog();
 
-        builder.Services.Configure<CommonOptions>(builder.Configuration.GetSection(nameof(CommonOptions)))
-            .Configure<LoginClientOptions>(builder.Configuration.GetSection(nameof(LoginClientOptions)))
-            .Configure<GatewayClientOptions>(builder.Configuration.GetSection(nameof(GatewayClientOptions)));
+        builder.Services.Configure<CommonOptions>(builder.Configuration.GetSection(nameof(CommonOptions)));
 
-        builder.Services.AddMemoryCache()
-            .AddClientDataServices()
-            .AddInternalServerDataServices()
-            .AddPatchDataServices();
-
-        builder.Services.AddSingleton(new MongoClient("mongodb://localhost:27017"))
-            .AddScoped<IMongoContext, MongoContext>()
-            .AddScoped<ICollectionsContext, CollectionsContext>()
-            .AddScoped<ICollectionDiffService, CollectionDiffService>()
-            .RegisterCollectionBuilders()
-            .AddHostedService<CollectionBuildWorker>();
+        builder.Services.AddCommonServices();
 
         builder.Services.AddControllers()
             .AddJsonOptions(options =>
@@ -163,54 +136,6 @@ public static class Program
         app.MapRazorPages();
 
         app.Run();
-    }
-
-    private static IServiceCollection RegisterCollectionBuilders(this IServiceCollection services)
-    {
-        services.AddSingleton<ICollectionBuilderRepository>
-        (
-            s => s.GetRequiredService<IOptions<CollectionBuilderRepository>>().Value
-        );
-
-        return services.RegisterCollectionBuilder<CurrencyCollectionBuilder>()
-            .RegisterCollectionBuilder<ExperienceCollectionBuilder>()
-            .RegisterCollectionBuilder<FacilityInfoCollectionBuilder>()
-            .RegisterCollectionBuilder<FacilityLinkCollectionBuilder>()
-            .RegisterCollectionBuilder<FactionCollectionBuilder>()
-            .RegisterCollectionBuilder<FireGroupCollectionBuilder>()
-            .RegisterCollectionBuilder<FireGroupToFireModeCollectionBuilder>()
-            .RegisterCollectionBuilder<FireModeCollectionBuilder>()
-            .RegisterCollectionBuilder<FireModeToProjectileCollectionBuilder>()
-            .RegisterCollectionBuilder<ItemCollectionBuilder>()
-            .RegisterCollectionBuilder<ItemCategoryCollectionBuilder>()
-            .RegisterCollectionBuilder<ItemToWeaponCollectionBuilder>()
-            .RegisterCollectionBuilder<LoadoutCollectionBuilder>()
-            .RegisterCollectionBuilder<LoadoutSlotCollectionBuilder>()
-            .RegisterCollectionBuilder<MapRegionCollectionBuilder>()
-            .RegisterCollectionBuilder<OutfitWarCollectionsBuilder>()
-            .RegisterCollectionBuilder<OutfitWarRegistrationCollectionBuilder>()
-            .RegisterCollectionBuilder<PlayerStateGroup2CollectionBuilder>()
-            .RegisterCollectionBuilder<ProfileCollectionBuilder>()
-            .RegisterCollectionBuilder<ProjectileCollectionBuilder>()
-            .RegisterCollectionBuilder<VehicleCollectionBuilder>()
-            .RegisterCollectionBuilder<VehicleAttachmentCollectionBuilder>()
-            .RegisterCollectionBuilder<VehicleLoadoutCollectionBuilder>()
-            .RegisterCollectionBuilder<VehicleLoadoutSlotCollectionBuilder>()
-            .RegisterCollectionBuilder<VehicleSkillSetCollectionBuilder>()
-            .RegisterCollectionBuilder<WeaponCollectionBuilder>()
-            .RegisterCollectionBuilder<WeaponAmmoSlotCollectionBuilder>()
-            .RegisterCollectionBuilder<WeaponToAttachmentCollectionBuilder>()
-            .RegisterCollectionBuilder<WeaponToFireGroupCollectionBuilder>()
-            .RegisterCollectionBuilder<WorldCollectionBuilder>()
-            .RegisterCollectionBuilder<ZoneCollectionBuilder>();
-    }
-
-    private static IServiceCollection RegisterCollectionBuilder<TBuilder>(this IServiceCollection services)
-        where TBuilder : class, ICollectionBuilder
-    {
-        services.AddScoped<TBuilder>();
-        services.Configure<CollectionBuilderRepository>(x => x.Register<TBuilder>());
-        return services;
     }
 
     // ReSharper disable twice UnusedParameter.Local

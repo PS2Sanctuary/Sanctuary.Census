@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
+using MongoDB.Driver;
 using Sanctuary.Census.Common.Abstractions.Services;
 using Sanctuary.Census.Common.Services;
 using System.IO.Abstractions;
@@ -20,6 +21,9 @@ public static class IServiceCollectionExtensions
     {
         services.TryAddSingleton<IFileSystem, FileSystem>();
         services.TryAddScoped<EnvironmentContextProvider>();
+
+        services.AddSingleton(new MongoClient("mongodb://localhost:27017"))
+            .AddScoped<IMongoContext, MongoContext>();
 
         services.AddHttpClient(nameof(ManifestService));
 #if DEBUG

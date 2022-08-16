@@ -4,7 +4,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sanctuary.Census.ClientData
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sanctuary.Census.Common", "Sanctuary.Census.Common\Sanctuary.Census.Common.csproj", "{36A0DB4F-62E7-4154-B7BF-74C0E4A18D07}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sanctuary.Census", "Sanctuary.Census\Sanctuary.Census.csproj", "{F776D411-5CD6-4D17-B8DB-AA728E170349}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sanctuary.Census.Api", "Sanctuary.Census.Api\Sanctuary.Census.Api.csproj", "{F776D411-5CD6-4D17-B8DB-AA728E170349}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{31F4FD0F-3EA6-44E0-8CD9-1B019984FE13}"
 EndProject

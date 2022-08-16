@@ -1,7 +1,7 @@
 ﻿{
   "$schema": "https://json.schemastore.org/launchsettings.json",
   "profiles": {
-    "Sanctuary.Census": {
+    "Sanctuary.Census.Api": {
       "commandName": "Project",
       "dotnetRunMessages": true,
       "launchBrowser": false,

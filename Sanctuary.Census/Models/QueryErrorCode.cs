@@ -1,4 +1,4 @@
-﻿namespace Sanctuary.Census.Models;
+﻿namespace Sanctuary.Census.Api.Models;
 
 /// <summary>
 /// Defines the possible query error codes.

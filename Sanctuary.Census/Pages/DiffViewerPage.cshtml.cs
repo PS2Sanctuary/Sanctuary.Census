@@ -4,15 +4,13 @@ using Sanctuary.Census.Common;
 using Sanctuary.Census.Common.Abstractions.Services;
 using Sanctuary.Census.Common.Objects;
 using Sanctuary.Census.Common.Objects.DiffModels;
-using Sanctuary.Census.Json;
-using Sanctuary.Census.Models;
 using System;
 using System.Collections.Generic;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
-namespace Sanctuary.Census.Pages;
+namespace Sanctuary.Census.Api.Pages;
 
 /// <summary>
 /// The page responsible for showing a diff set.

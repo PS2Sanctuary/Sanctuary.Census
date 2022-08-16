@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Sanctuary.Census.Models;
+﻿namespace Sanctuary.Census.Api.Models;
 
 /// <summary>
 /// Represents various times relevant to a query.

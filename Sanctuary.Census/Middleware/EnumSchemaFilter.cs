@@ -3,7 +3,7 @@ using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.SwaggerGen;
 using System;
 
-namespace Sanctuary.Census.Middleware;
+namespace Sanctuary.Census.Api.Middleware;
 
 /// <summary>
 /// A Swagger filter to show enums by their name.

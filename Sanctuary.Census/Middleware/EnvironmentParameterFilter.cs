@@ -5,7 +5,7 @@ using Swashbuckle.AspNetCore.SwaggerGen;
 using System;
 using System.Linq;
 
-namespace Sanctuary.Census.Middleware;
+namespace Sanctuary.Census.Api.Middleware;
 
 /// <summary>
 /// A Swagger filter to show the possible values of an <c>environment</c> query parameter.

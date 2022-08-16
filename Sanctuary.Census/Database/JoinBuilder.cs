@@ -2,15 +2,15 @@
 using MongoDB.Bson.Serialization;
 using MongoDB.Driver;
 using Sanctuary.Census.Common.Util;
-using Sanctuary.Census.Exceptions;
-using Sanctuary.Census.Models;
+using Sanctuary.Census.Api.Exceptions;
+using Sanctuary.Census.Api.Models;
 using Sanctuary.Census.Util;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Text.Encodings.Web;
 
-namespace Sanctuary.Census.Database;
+namespace Sanctuary.Census.Api.Database;
 
 /// <summary>
 /// Builds a MongoDB aggregate lookup stage from a query join string.

@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace Sanctuary.Census.Models;
+namespace Sanctuary.Census.Api.Models;
 
 /// <summary>
 /// Represents a data response.

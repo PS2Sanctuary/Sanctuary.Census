@@ -3,7 +3,7 @@ using System;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
-namespace Sanctuary.Census.Json;
+namespace Sanctuary.Census.Api.Json;
 
 /// <inheritdoc />
 public class BsonDocumentJsonConverter : JsonConverter<BsonDocument>

@@ -1,12 +1,11 @@
 ﻿using Sanctuary.Census.Common;
 using Sanctuary.Census.Common.Objects.CommonModels;
-using Sanctuary.Census.Json;
 using Sanctuary.Census.Util;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 
-namespace Sanctuary.Census.Database;
+namespace Sanctuary.Census.Api.Database;
 
 /// <summary>
 /// Stores data related to the query lang command, and appends

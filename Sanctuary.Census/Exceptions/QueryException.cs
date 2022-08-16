@@ -1,7 +1,7 @@
-﻿using Sanctuary.Census.Models;
+﻿using Sanctuary.Census.Api.Models;
 using System;
 
-namespace Sanctuary.Census.Exceptions;
+namespace Sanctuary.Census.Api.Exceptions;
 
 /// <summary>
 /// Represents an exception that occurs as part of a query.

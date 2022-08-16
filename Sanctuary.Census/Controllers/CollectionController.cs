@@ -7,10 +7,10 @@ using MongoDB.Driver;
 using Sanctuary.Census.Common;
 using Sanctuary.Census.Common.Abstractions.Services;
 using Sanctuary.Census.Common.Objects;
-using Sanctuary.Census.Database;
-using Sanctuary.Census.Exceptions;
-using Sanctuary.Census.Json;
-using Sanctuary.Census.Models;
+using Sanctuary.Census.Api.Database;
+using Sanctuary.Census.Api.Exceptions;
+using Sanctuary.Census.Api.Json;
+using Sanctuary.Census.Api.Models;
 using Sanctuary.Census.Util;
 using System;
 using System.Collections.Generic;
@@ -21,7 +21,7 @@ using System.Text.Json.Serialization;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Sanctuary.Census.Controllers;
+namespace Sanctuary.Census.Api.Controllers;
 
 /// <summary>
 /// Returns collection data.

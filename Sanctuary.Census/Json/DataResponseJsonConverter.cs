@@ -1,9 +1,9 @@
-﻿using Sanctuary.Census.Models;
+﻿using Sanctuary.Census.Api.Models;
 using System;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
-namespace Sanctuary.Census.Json;
+namespace Sanctuary.Census.Api.Json;
 
 /// <summary>
 /// Defines a JSON converter for the <see cref="DataResponse{TDataType}"/> type.

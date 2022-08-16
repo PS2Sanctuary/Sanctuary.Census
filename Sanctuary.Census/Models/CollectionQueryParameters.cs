@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 
-namespace Sanctuary.Census.Models;
+namespace Sanctuary.Census.Api.Models;
 
 /// <summary>
 /// Represents parameters that can be used when querying a collection.

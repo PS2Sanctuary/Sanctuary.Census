@@ -4,11 +4,10 @@ using MongoDB.Driver;
 using Sanctuary.Census.Common.Abstractions.Services;
 using Sanctuary.Census.Common.Objects;
 using Sanctuary.Census.Common.Objects.DiffModels;
-using Sanctuary.Census.Models;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace Sanctuary.Census.Pages;
+namespace Sanctuary.Census.Api.Pages;
 
 /// <summary>
 /// The page responsible for showing diff records.

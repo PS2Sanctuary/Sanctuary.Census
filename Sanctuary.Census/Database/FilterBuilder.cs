@@ -3,14 +3,14 @@ using MongoDB.Driver;
 using Sanctuary.Census.Common;
 using Sanctuary.Census.Common.Attributes;
 using Sanctuary.Census.Common.Util;
-using Sanctuary.Census.Exceptions;
-using Sanctuary.Census.Models;
+using Sanctuary.Census.Api.Exceptions;
+using Sanctuary.Census.Api.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 
-namespace Sanctuary.Census.Database;
+namespace Sanctuary.Census.Api.Database;
 
 /// <summary>
 /// Builds a MongoDB aggregate filter operator from a query filter string.

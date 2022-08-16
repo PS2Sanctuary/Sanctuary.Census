@@ -1,4 +1,4 @@
-﻿namespace Sanctuary.Census.Models;
+﻿namespace Sanctuary.Census.Api.Models;
 
 /// <summary>
 /// A simple Census-like model for a collection count.

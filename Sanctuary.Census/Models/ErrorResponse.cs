@@ -1,6 +1,6 @@
 ﻿using System.Text.Json.Serialization;
 
-namespace Sanctuary.Census.Models;
+namespace Sanctuary.Census.Api.Models;
 
 /// <summary>
 /// Represents an error response.

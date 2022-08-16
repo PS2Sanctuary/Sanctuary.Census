@@ -1,11 +1,11 @@
 ﻿using MongoDB.Bson;
 using MongoDB.Driver;
 using Sanctuary.Census.Common.Util;
-using Sanctuary.Census.Exceptions;
-using Sanctuary.Census.Models;
+using Sanctuary.Census.Api.Exceptions;
+using Sanctuary.Census.Api.Models;
 using System;
 
-namespace Sanctuary.Census.Database;
+namespace Sanctuary.Census.Api.Database;
 
 /// <summary>
 /// Builds a MongoDB aggregate group stage from a query tree string.

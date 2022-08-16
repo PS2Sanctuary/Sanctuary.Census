@@ -2,7 +2,7 @@
 using MongoDB.Driver;
 using System.Collections.Generic;
 
-namespace Sanctuary.Census.Database;
+namespace Sanctuary.Census.Api.Database;
 
 /// <summary>
 /// Builds a MongoDB aggregate projection operator from a query show/hide string.

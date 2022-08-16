@@ -3,7 +3,7 @@ using System;
 using System.Net;
 using System.Threading.Tasks;
 
-namespace Sanctuary.Census.Middleware;
+namespace Sanctuary.Census.Api.Middleware;
 
 /// <summary>
 /// Middleware for handling service ID route parameters.

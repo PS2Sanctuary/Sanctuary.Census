@@ -8,10 +8,10 @@ using Microsoft.Extensions.Hosting;
 using Sanctuary.Census.Common;
 using Sanctuary.Census.Common.Extensions;
 using Sanctuary.Census.Common.Objects;
-using Sanctuary.Census.Exceptions;
-using Sanctuary.Census.Json;
-using Sanctuary.Census.Middleware;
-using Sanctuary.Census.Models;
+using Sanctuary.Census.Api.Exceptions;
+using Sanctuary.Census.Api.Json;
+using Sanctuary.Census.Api.Middleware;
+using Sanctuary.Census.Api.Models;
 using Serilog;
 using Serilog.Events;
 using System;
@@ -23,7 +23,7 @@ using System.Reflection;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
-namespace Sanctuary.Census;
+namespace Sanctuary.Census.Api;
 
 /// <summary>
 /// The main class of the application.

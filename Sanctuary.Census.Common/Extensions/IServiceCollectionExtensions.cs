@@ -26,7 +26,7 @@ public static class IServiceCollectionExtensions
     private static bool _classMapsRegistered;
 
     /// <summary>
-    /// Adds services common Sanctuary.Census services to the service collection.
+    /// Adds common Sanctuary.Census services to the service collection.
     /// </summary>
     /// <param name="services">The service collection.</param>
     /// <returns>The <see cref="IServiceCollection"/> instance, so that calls may be chained.</returns>

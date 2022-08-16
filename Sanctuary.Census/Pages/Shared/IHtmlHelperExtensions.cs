@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System;
 
-namespace Sanctuary.Census.Pages.Shared;
+namespace Sanctuary.Census.Api.Pages.Shared;
 
 /// <summary>
 /// Contains extension methods for the <see cref="IHtmlHelper{TModel}"/> class.

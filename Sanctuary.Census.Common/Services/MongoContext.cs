@@ -31,15 +31,27 @@ public class MongoContext : IMongoContext
     }
 
     /// <summary>
-    /// Sets up a <see cref="BsonClassMap{TClass}"/> for the given
+    /// Sets up a <see cref="BsonClassMap"/> for the given
     /// type, automatically converting property names using the
     /// <see cref="SnakeCaseJsonNamingPolicy"/>.
     /// </summary>
     /// <typeparam name="T">The type to map.</typeparam>
-    /// <param name="cm">The class map to setup.</param>
-    public static void AutoClassMap<T>(BsonClassMap<T> cm)
+    /// <returns>The class map.</returns>
+    public static BsonClassMap AutoClassMap<T>()
+        => AutoClassMap(typeof(T));
+
+    /// <summary>
+    /// Sets up a <see cref="BsonClassMap"/> for the given
+    /// type, automatically converting property names using the
+    /// <see cref="SnakeCaseJsonNamingPolicy"/>.
+    /// </summary>
+    /// <param name="type">The type to map.</param>
+    /// <returns>The class map.</returns>
+    public static BsonClassMap AutoClassMap(Type type)
     {
-        foreach (PropertyInfo prop in typeof(T).GetProperties())
+        BsonClassMap cm = new(type);
+
+        foreach (PropertyInfo prop in type.GetProperties())
         {
             BsonMemberMap map = cm.MapProperty(prop.Name);
             map.SetElementName(SnakeCaseJsonNamingPolicy.Default.ConvertName(prop.Name));
@@ -53,6 +65,8 @@ public class MongoContext : IMongoContext
                 throw new Exception("Couldn't create instance of enum serializer");
             map.SetSerializer((IBsonSerializer)serializer);
         }
+
+        return cm;
     }
 
     /// <inheritdoc />

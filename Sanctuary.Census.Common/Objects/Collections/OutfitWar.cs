@@ -40,6 +40,7 @@ public record OutfitWar
     /// <param name="Description">The description of the phase.</param>
     /// <param name="StartTime">The start time of the phase, as a unix seconds timestamp.</param>
     /// <param name="EndTime">The end time of the phase, as a unix seconds timestamp.</param>
+    [Collection]
     public record Phase
     (
         uint Order,

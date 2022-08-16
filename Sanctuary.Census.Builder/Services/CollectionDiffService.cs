@@ -22,12 +22,6 @@ public class CollectionDiffService : ICollectionDiffService
 
     private DateTime _diffStarted;
 
-    static CollectionDiffService()
-    {
-        BsonClassMap.RegisterClassMap<CollectionDiffEntry>(MongoContext.AutoClassMap);
-        BsonClassMap.RegisterClassMap<DiffRecord>(MongoContext.AutoClassMap);
-    }
-
     /// <summary>
     /// Initializes a new instance of the <see cref="CollectionDiffService"/> class.
     /// </summary>

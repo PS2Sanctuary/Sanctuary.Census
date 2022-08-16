@@ -3,12 +3,16 @@ using Microsoft.Extensions.DependencyInjection.Extensions;
 using MongoDB.Bson.Serialization;
 using MongoDB.Driver;
 using Sanctuary.Census.Common.Abstractions.Services;
+using Sanctuary.Census.Common.Attributes;
 using Sanctuary.Census.Common.Objects;
-using Sanctuary.Census.Common.Objects.Collections;
 using Sanctuary.Census.Common.Objects.CommonModels;
 using Sanctuary.Census.Common.Objects.DiffModels;
 using Sanctuary.Census.Common.Services;
+using System;
+using System.Collections.Generic;
 using System.IO.Abstractions;
+using System.Linq;
+using System.Reflection;
 
 namespace Sanctuary.Census.Common.Extensions;
 
@@ -17,6 +21,8 @@ namespace Sanctuary.Census.Common.Extensions;
 /// </summary>
 public static class IServiceCollectionExtensions
 {
+    private static bool _classMapsRegistered;
+
     /// <summary>
     /// Adds services common Sanctuary.Census services to the service collection.
     /// </summary>
@@ -27,8 +33,8 @@ public static class IServiceCollectionExtensions
         services.TryAddSingleton<IFileSystem, FileSystem>();
         services.TryAddScoped<EnvironmentContextProvider>();
 
-        services.AddSingleton(new MongoClient("mongodb://localhost:27017"))
-            .AddScoped<IMongoContext, MongoContext>();
+        services.TryAddSingleton(new MongoClient("mongodb://localhost:27017"));
+        services.TryAddScoped<IMongoContext, MongoContext>();
         RegisterCollectionClassMaps();
 
         services.AddHttpClient(nameof(ManifestService));
@@ -43,41 +49,22 @@ public static class IServiceCollectionExtensions
 
     private static void RegisterCollectionClassMaps()
     {
-        BsonClassMap.RegisterClassMap<Currency>(MongoContext.AutoClassMap);
-        BsonClassMap.RegisterClassMap<Experience>(MongoContext.AutoClassMap);
-        BsonClassMap.RegisterClassMap<FacilityInfo>(MongoContext.AutoClassMap);
-        BsonClassMap.RegisterClassMap<FacilityLink>(MongoContext.AutoClassMap);
-        BsonClassMap.RegisterClassMap<Faction>(MongoContext.AutoClassMap);
-        BsonClassMap.RegisterClassMap<FireGroup>(MongoContext.AutoClassMap);
-        BsonClassMap.RegisterClassMap<FireGroupToFireMode>(MongoContext.AutoClassMap);
-        BsonClassMap.RegisterClassMap<FireMode2>(MongoContext.AutoClassMap);
-        BsonClassMap.RegisterClassMap<FireModeToProjectile>(MongoContext.AutoClassMap);
-        BsonClassMap.RegisterClassMap<Item>(MongoContext.AutoClassMap);
-        BsonClassMap.RegisterClassMap<ItemCategory>(MongoContext.AutoClassMap);
-        BsonClassMap.RegisterClassMap<ItemToWeapon>(MongoContext.AutoClassMap);
-        BsonClassMap.RegisterClassMap<Loadout>(MongoContext.AutoClassMap);
-        BsonClassMap.RegisterClassMap<LoadoutSlot>(MongoContext.AutoClassMap);
-        BsonClassMap.RegisterClassMap<MapRegion>(MongoContext.AutoClassMap);
-        BsonClassMap.RegisterClassMap<OutfitWar>(MongoContext.AutoClassMap);
-        BsonClassMap.RegisterClassMap<OutfitWarRegistration>(MongoContext.AutoClassMap);
-        BsonClassMap.RegisterClassMap<OutfitWarRounds>(MongoContext.AutoClassMap);
-        BsonClassMap.RegisterClassMap<PlayerStateGroup2>(MongoContext.AutoClassMap);
-        BsonClassMap.RegisterClassMap<Profile>(MongoContext.AutoClassMap);
-        BsonClassMap.RegisterClassMap<Projectile>(MongoContext.AutoClassMap);
-        BsonClassMap.RegisterClassMap<Vehicle>(MongoContext.AutoClassMap);
-        BsonClassMap.RegisterClassMap<VehicleAttachment>(MongoContext.AutoClassMap);
-        BsonClassMap.RegisterClassMap<VehicleLoadout>(MongoContext.AutoClassMap);
-        BsonClassMap.RegisterClassMap<VehicleLoadoutSlot>(MongoContext.AutoClassMap);
-        BsonClassMap.RegisterClassMap<VehicleSkillSet>(MongoContext.AutoClassMap);
-        BsonClassMap.RegisterClassMap<Weapon>(MongoContext.AutoClassMap);
-        BsonClassMap.RegisterClassMap<WeaponAmmoSlot>(MongoContext.AutoClassMap);
-        BsonClassMap.RegisterClassMap<WeaponToAttachment>(MongoContext.AutoClassMap);
-        BsonClassMap.RegisterClassMap<WeaponToFireGroup>(MongoContext.AutoClassMap);
-        BsonClassMap.RegisterClassMap<World>(MongoContext.AutoClassMap);
-        BsonClassMap.RegisterClassMap<Zone>(MongoContext.AutoClassMap);
+        if (_classMapsRegistered)
+            return;
 
-        BsonClassMap.RegisterClassMap<Datatype>(MongoContext.AutoClassMap);
-        BsonClassMap.RegisterClassMap<LocaleString>(MongoContext.AutoClassMap);
-        BsonClassMap.RegisterClassMap<NewCollection>(MongoContext.AutoClassMap);
+        IEnumerable<Type> collTypes = typeof(CollectionAttribute).Assembly
+            .GetTypes()
+            .Where(t => t.IsDefined(typeof(CollectionAttribute)));
+
+        foreach (Type collType in collTypes)
+            BsonClassMap.RegisterClassMap(MongoContext.AutoClassMap(collType));
+
+        BsonClassMap.RegisterClassMap(MongoContext.AutoClassMap<CollectionDiffEntry>());
+        BsonClassMap.RegisterClassMap(MongoContext.AutoClassMap<Datatype>());
+        BsonClassMap.RegisterClassMap(MongoContext.AutoClassMap<DiffRecord>());
+        BsonClassMap.RegisterClassMap(MongoContext.AutoClassMap<LocaleString>());
+        BsonClassMap.RegisterClassMap(MongoContext.AutoClassMap<NewCollection>());
+
+        _classMapsRegistered = true;
     }
 }

@@ -1,5 +1,6 @@
 ﻿using Sanctuary.Census.Common.Attributes;
 using Sanctuary.Census.Common.Objects.CommonModels;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 
 namespace Sanctuary.Census.Common.Objects.Collections;
@@ -17,6 +18,7 @@ namespace Sanctuary.Census.Common.Objects.Collections;
 /// <param name="IsVisible">Whether this slot is visible to the user.</param>
 /// <param name="UiTag">The UI section that this slot appears under.</param>
 [Collection]
+[Description("Represents a slot of a vehicle loadout; i.e. the primary weapon or defensive slot")]
 public record VehicleLoadoutSlot
 (
     [property: Key] uint LoadoutID,

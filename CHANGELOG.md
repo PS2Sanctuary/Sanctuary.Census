@@ -7,6 +7,7 @@ Date format: DD/MM/YYYY
 - Fixed querying on enum fields.
 - Implemented a somewhat-correct local timezone display in the diff viewer.
 - Updated `item.item_category` to be nullable.
+- Added the `description` and `last_updated` fields to the datatype list (i.e. `/get/<environment>`)
 - Many under the hood fixes and optimisations.
 
 ## 10/08/2022 #2

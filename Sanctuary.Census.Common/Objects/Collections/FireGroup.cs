@@ -1,4 +1,5 @@
 ﻿using Sanctuary.Census.Common.Attributes;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 
 namespace Sanctuary.Census.Common.Objects.Collections;
@@ -13,6 +14,7 @@ namespace Sanctuary.Census.Common.Objects.Collections;
 /// <param name="SpoolUpInitialRefireTimeMS"></param>
 /// <param name="CanChamberIronsights"></param>
 [Collection]
+[Description("Common properties of a weapon's firing characteristics. Link to more specific properties via fire_group_to_fire_mode")]
 public record FireGroup
 (
     [property:Key] uint FireGroupID,

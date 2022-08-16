@@ -1,4 +1,5 @@
 ﻿using Sanctuary.Census.Common.Attributes;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 
 namespace Sanctuary.Census.Common.Objects.Collections;
@@ -13,6 +14,7 @@ namespace Sanctuary.Census.Common.Objects.Collections;
 /// <param name="Status">The registration status of the outfit.</param>
 /// <param name="MemberSignupCount">The number of members who have signed up for the war.</param>
 [Collection]
+[Description("Information about outfit signups to the active outfit war")]
 public record OutfitWarRegistration
 (
     [property: Key] ulong OutfitID,

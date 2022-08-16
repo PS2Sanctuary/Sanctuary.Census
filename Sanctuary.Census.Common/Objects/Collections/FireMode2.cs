@@ -1,11 +1,13 @@
 ﻿using Sanctuary.Census.Common.Attributes;
 using Sanctuary.Census.Common.Objects.CommonModels;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 
 namespace Sanctuary.Census.Common.Objects.Collections;
 
 #pragma warning disable CS1591
 [Collection]
+[Description("Specific properties of a weapon's firing characteristics")]
 public record FireMode2
 (
     [property:Key] uint FireModeID,

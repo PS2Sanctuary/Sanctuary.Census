@@ -1,4 +1,5 @@
 ﻿using Sanctuary.Census.Common.Attributes;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 
 namespace Sanctuary.Census.Common.Objects.Collections;
@@ -16,6 +17,7 @@ namespace Sanctuary.Census.Common.Objects.Collections;
 /// <param name="LocationY">The Y coordinate of the center of the region.</param>
 /// <param name="LocationZ">The Z coordinate of the center of the region.</param>
 [Collection]
+[Description("Note that this collection will not have new regions added automatically at this time")]
 public record MapRegion
 (
     [property:Key] uint MapRegionId,

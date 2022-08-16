@@ -2,6 +2,7 @@
 using Sanctuary.Census.Common.Objects.CommonModels;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 
 namespace Sanctuary.Census.Common.Objects.Collections;

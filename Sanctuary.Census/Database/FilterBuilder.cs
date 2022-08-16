@@ -4,7 +4,6 @@ using Sanctuary.Census.Common;
 using Sanctuary.Census.Common.Attributes;
 using Sanctuary.Census.Common.Util;
 using Sanctuary.Census.Exceptions;
-using Sanctuary.Census.Json;
 using Sanctuary.Census.Models;
 using System;
 using System.Collections.Generic;
@@ -27,7 +26,7 @@ public class FilterBuilder
 
     static FilterBuilder()
     {
-        IEnumerable<Type> collTypes = typeof(ProjectionBuilder).Assembly
+        IEnumerable<Type> collTypes = typeof(CollectionAttribute).Assembly
             .GetTypes()
             .Where(t => t.IsDefined(typeof(CollectionAttribute)));
 

@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Sanctuary.Census.Common.Objects;
+﻿namespace Sanctuary.Census.Common.Objects;
 
 /// <summary>
 /// Represents information about a collection.

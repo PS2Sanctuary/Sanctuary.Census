@@ -40,9 +40,24 @@ public interface IClientDataCacheService : IDataCacheService
     IReadOnlyList<FireModeDisplayStat>? FireModeDisplayStats { get; }
 
     /// <summary>
+    /// Gets the cached <see cref="Image"/> objects.
+    /// </summary>
+    IReadOnlyList<Image>? Images { get; }
+
+    /// <summary>
+    /// Gets the cached <see cref="ImageSet"/> objects.
+    /// </summary>
+    IReadOnlyList<ImageSet>? ImageSets { get; }
+
+    /// <summary>
     /// Gets the cached <see cref="ImageSetMapping"/> objects.
     /// </summary>
     IReadOnlyList<ImageSetMapping>? ImageSetMappings { get; }
+
+    /// <summary>
+    /// Gets the cached <see cref="ImageSetType"/> objects.
+    /// </summary>
+    IReadOnlyList<ImageSetType>? ImageSetTypes { get; }
 
     /// <summary>
     /// Gets the cached <see cref="ItemProfile"/> objects.

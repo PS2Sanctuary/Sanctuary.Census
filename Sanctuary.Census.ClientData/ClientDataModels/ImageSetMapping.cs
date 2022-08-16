@@ -12,6 +12,6 @@ namespace Sanctuary.Census.ClientData.ClientDataModels;
 public partial record ImageSetMapping
 (
     uint ImageSetID,
-    ImageSetType ImageType,
+    ImageSetType.Type ImageType,
     uint ImageID
 );

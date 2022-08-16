@@ -46,7 +46,16 @@ public class ClientDataCacheService : IClientDataCacheService
     public IReadOnlyList<FireModeDisplayStat>? FireModeDisplayStats { get; private set; }
 
     /// <inheritdoc />
+    public IReadOnlyList<Image>? Images { get; private set; }
+
+    /// <inheritdoc />
+    public IReadOnlyList<ImageSet>? ImageSets { get; private set; }
+
+    /// <inheritdoc />
     public IReadOnlyList<ImageSetMapping>? ImageSetMappings { get; private set; }
+
+    /// <inheritdoc />
+    public IReadOnlyList<ImageSetType>? ImageSetTypes { get; private set; }
 
     /// <inheritdoc />
     public IReadOnlyList<ItemProfile>? ItemProfiles { get; private set; }
@@ -162,9 +171,33 @@ public class ClientDataCacheService : IClientDataCacheService
             ct
         ).ConfigureAwait(false);
 
+        Images = await ExtractDatasheet<Image>
+        (
+            "Images.txt",
+            assetHeaders,
+            reader,
+            ct
+        ).ConfigureAwait(false);
+
+        ImageSets = await ExtractDatasheet<ImageSet>
+        (
+            "ImageSets.txt",
+            assetHeaders,
+            reader,
+            ct
+        ).ConfigureAwait(false);
+
         ImageSetMappings = await ExtractDatasheet<ImageSetMapping>
         (
             "ImageSetMappings.txt",
+            assetHeaders,
+            reader,
+            ct
+        ).ConfigureAwait(false);
+
+        ImageSetTypes = await ExtractDatasheet<ImageSetType>
+        (
+            "ImageSetTypes.txt",
             assetHeaders,
             reader,
             ct
@@ -272,7 +305,10 @@ public class ClientDataCacheService : IClientDataCacheService
         Experiences = null;
         Factions = null;
         FireModeDisplayStats = null;
+        Images = null;
+        ImageSets = null;
         ImageSetMappings = null;
+        ImageSetTypes = null;
         ItemProfiles = null;
         ItemVehicles = null;
         Loadouts = null;

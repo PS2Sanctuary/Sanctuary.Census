@@ -50,7 +50,7 @@ public class VehicleCollectionBuilder : ICollectionBuilder
         Dictionary<uint, uint> imageSetToPrimaryImageMap = new();
         foreach (ImageSetMapping mapping in _clientDataCache.ImageSetMappings)
         {
-            if (mapping.ImageType is not ImageSetType.Large)
+            if (mapping.ImageType is not ImageSetType.Type.Large)
                 continue;
 
             imageSetToPrimaryImageMap[mapping.ImageSetID] = mapping.ImageID;

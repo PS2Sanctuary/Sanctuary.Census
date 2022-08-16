@@ -5,6 +5,7 @@ Date format: DD/MM/YYYY
 ## vNext
 
 - Added the `outfit_war` and `outfit_war_rounds` collections.
+- Added the `image_set` collection.
 - Fixed the storage and querying of decimal (previously, floating point) values.
 - Updated `item.item_category` to be nullable.
 - Added the `description` and `last_updated` fields to the datatype list (i.e. `/get/<environment>`)

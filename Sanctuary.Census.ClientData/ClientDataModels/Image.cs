@@ -12,6 +12,6 @@ namespace Sanctuary.Census.ClientData.ClientDataModels;
 public partial record Image
 (
     uint ID,
-    string FileName,
+    string? FileName,
     uint ContentID
 );

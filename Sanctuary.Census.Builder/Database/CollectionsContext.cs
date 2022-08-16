@@ -56,6 +56,7 @@ public class CollectionsContext : ICollectionsContext
         await CreateNonUniqueKeyIndexes<FireGroupToFireMode>(ct, x => x.FireGroupId, x => x.FireModeId);
         await CreateUniqueKeyIndex<FireMode2>(x => x.FireModeID, ct).ConfigureAwait(false);
         await CreateNonUniqueKeyIndexes<FireModeToProjectile>(ct, x => x.FireModeID, x => x.ProjectileID);
+        await CreateNonUniqueKeyIndexes<ImageSet>(ct, x => x.ImageSetID, x => x.ImageID);
         await CreateUniqueKeyIndex<Item>(x => x.ItemID, ct).ConfigureAwait(false);
         await CreateNonUniqueKeyIndexes<Item>
         (
@@ -263,6 +264,16 @@ public class CollectionsContext : ICollectionsContext
             collection,
             e => x => x.FireModeID == e.FireModeID && x.ProjectileID == e.ProjectileID,
             e => Builders<FireModeToProjectile>.Filter.Where(x => x.FireModeID == e.FireModeID && x.ProjectileID == e.ProjectileID),
+            ct
+        ).ConfigureAwait(false);
+
+    /// <inheritdoc />
+    public async Task UpsertImageSetsAsync(IEnumerable<ImageSet> collection, CancellationToken ct = default)
+        => await UpsertCollectionAsync
+        (
+            collection,
+            e => x => x.ImageSetID == e.ImageSetID && x.ImageID == e.ImageID,
+            e => Builders<ImageSet>.Filter.Where(x => x.ImageSetID == e.ImageSetID && x.ImageID == e.ImageID),
             ct
         ).ConfigureAwait(false);
 

@@ -22,6 +22,16 @@ public partial record ImageSetType
     public enum Type
     {
         /// <summary>
+        /// Not yet used.
+        /// </summary>
+        NotYetUsed1 = 1,
+
+        /// <summary>
+        /// Not yet used.
+        /// </summary>
+        NotYetUsed2 = 2,
+
+        /// <summary>
         /// Images with an 8 pixel height.
         /// </summary>
         ExtremelySmall = 3,
@@ -50,6 +60,11 @@ public partial record ImageSetType
         /// Images with a 256 pixel height.
         /// </summary>
         VeryLarge = 8,
+
+        /// <summary>
+        /// Not yet used.
+        /// </summary>
+        NotYetUsed9 = 9,
 
         /// <summary>
         /// Images with no set pixel height.

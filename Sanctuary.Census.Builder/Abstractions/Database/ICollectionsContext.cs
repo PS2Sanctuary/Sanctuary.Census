@@ -111,6 +111,14 @@ public interface ICollectionsContext
     Task UpsertFireModesToProjectilesAsync(IEnumerable<FireModeToProjectile> collection, CancellationToken ct = default);
 
     /// <summary>
+    /// Upserts the <see cref="ImageSet"/> collection.
+    /// </summary>
+    /// <param name="collection">The collection.</param>
+    /// <param name="ct">A <see cref="CancellationToken"/> that can be used to stop the operation.</param>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    Task UpsertImageSetsAsync(IEnumerable<ImageSet> collection, CancellationToken ct = default);
+
+    /// <summary>
     /// Upserts the <see cref="Item"/> collection.
     /// </summary>
     /// <param name="collection">The collection.</param>

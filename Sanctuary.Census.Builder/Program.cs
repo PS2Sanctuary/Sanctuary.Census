@@ -73,6 +73,7 @@ public static class Program
             .RegisterCollectionBuilder<FireGroupToFireModeCollectionBuilder>()
             .RegisterCollectionBuilder<FireModeCollectionBuilder>()
             .RegisterCollectionBuilder<FireModeToProjectileCollectionBuilder>()
+            .RegisterCollectionBuilder<ImageSetCollectionBuilder>()
             .RegisterCollectionBuilder<ItemCollectionBuilder>()
             .RegisterCollectionBuilder<ItemCategoryCollectionBuilder>()
             .RegisterCollectionBuilder<ItemToWeaponCollectionBuilder>()

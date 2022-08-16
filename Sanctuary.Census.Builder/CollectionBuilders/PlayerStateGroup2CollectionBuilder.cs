@@ -47,14 +47,14 @@ public class PlayerStateGroup2CollectionBuilder : ICollectionBuilder
                     stateGroup.PlayerStateGroupID,
                     state.PlayerStateID,
                     state.CanIronSight,
-                    state.CofGrowRate,
-                    state.CofMax,
-                    state.CofMin,
+                    new decimal(state.CofGrowRate),
+                    new decimal(state.CofMax),
+                    new decimal(state.CofMin),
                     state.CofRecoveryDelayMs,
-                    state.CofRecoveryRate,
+                    new decimal(state.CofRecoveryRate),
                     state.CofShotsBeforePenalty,
                     state.CofRecoveryDelayThreshold,
-                    state.CofTurnPenalty
+                    new decimal(state.CofTurnPenalty)
                 ));
             }
         }

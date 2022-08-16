@@ -79,15 +79,15 @@ public class VehicleCollectionBuilder : ICollectionBuilder
                 vehicle.CurrencyType,
                 vehicle.LandingHeight == 0 ? null : vehicle.LandingHeight,
                 vehicle.ImpactDamageBlocked,
-                vehicle.ImpactDamageMultiplier == 0 ? null : vehicle.ImpactDamageMultiplier,
-                vehicle.ImpactDamageInflictedMult == 0 ? null : vehicle.ImpactDamageInflictedMult,
+                vehicle.ImpactDamageMultiplier == 0 ? null : new decimal(vehicle.ImpactDamageMultiplier),
+                vehicle.ImpactDamageInflictedMult == 0 ? null : new decimal(vehicle.ImpactDamageInflictedMult),
                 vehicle.PropulsionType,
                 vehicle.SchematicImageSetId == 0 ? null : vehicle.SchematicImageSetId,
                 vehicle.HealthImageSetId == 0 ? null : vehicle.HealthImageSetId,
                 vehicle.MinimapRange,
                 vehicle.AutoDetectRadius,
                 vehicle.LockonTimeAdd == 0 ? null : vehicle.LockonTimeAdd,
-                vehicle.LockonTimeMult == 0 ? null : vehicle.LockonTimeMult
+                vehicle.LockonTimeMult == 0 ? null : new decimal(vehicle.LockonTimeMult)
             );
             builtVehicles.TryAdd(built.VehicleId, built);
         }

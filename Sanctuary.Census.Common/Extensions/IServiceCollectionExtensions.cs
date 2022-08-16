@@ -1,6 +1,8 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
+using MongoDB.Bson;
 using MongoDB.Bson.Serialization;
+using MongoDB.Bson.Serialization.Serializers;
 using MongoDB.Driver;
 using Sanctuary.Census.Common.Abstractions.Services;
 using Sanctuary.Census.Common.Attributes;
@@ -51,6 +53,8 @@ public static class IServiceCollectionExtensions
     {
         if (_classMapsRegistered)
             return;
+
+        BsonSerializer.RegisterSerializer(new DecimalSerializer(BsonType.Decimal128));
 
         IEnumerable<Type> collTypes = typeof(CollectionAttribute).Assembly
             .GetTypes()

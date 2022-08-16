@@ -10,13 +10,13 @@ public record PlayerStateGroup2
     [property:Key] uint PlayerStateGroupId,
     [property:Key] uint PlayerStateId,
     bool CanIronSight,
-    float CofGrowRate,
-    float CofMax,
-    float CofMin,
+    decimal CofGrowRate,
+    decimal CofMax,
+    decimal CofMin,
     ushort CofRecoveryDelayMs,
-    float CofRecoveryRate,
+    decimal CofRecoveryRate,
     byte CofShotsBeforePenalty,
     uint CofRecoveryDelayThreshold,
-    float CofTurnPenalty
+    decimal CofTurnPenalty
 );
 #pragma warning restore CS1591

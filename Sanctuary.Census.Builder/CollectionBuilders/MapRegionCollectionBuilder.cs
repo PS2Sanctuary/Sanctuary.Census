@@ -66,9 +66,9 @@ public class MapRegionCollectionBuilder : ICollectionBuilder
                 mapRegion.Name,
                 mapRegion.TypeID,
                 mapRegion.TypeName,
-                mapRegion.LocationX,
-                mapRegion.LocationY,
-                mapRegion.LocationZ
+                mapRegion.LocationX is null ? null : new decimal(mapRegion.LocationX.Value),
+                mapRegion.LocationY is null ? null : new decimal(mapRegion.LocationY.Value),
+                mapRegion.LocationZ is null ? null : new decimal(mapRegion.LocationZ.Value)
             );
 
             if (facilityInfos.TryGetValue(built.FacilityId, out FacilityInfo? facility))
@@ -78,9 +78,9 @@ public class MapRegionCollectionBuilder : ICollectionBuilder
                 built = built with {
                     FacilityName = name!.En!,
                     FacilityTypeId = facility.FacilityType,
-                    LocationX = facility.LocationX,
-                    LocationY = facility.LocationY,
-                    LocationZ = facility.LocationZ,
+                    LocationX = new decimal(facility.LocationX),
+                    LocationY = new decimal(facility.LocationY),
+                    LocationZ = new decimal(facility.LocationZ),
                     ZoneId = facility.ZoneDefinition
                 };
             }

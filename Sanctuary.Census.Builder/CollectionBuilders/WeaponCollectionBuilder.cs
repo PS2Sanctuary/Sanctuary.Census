@@ -66,16 +66,16 @@ public class WeaponCollectionBuilder : ICollectionBuilder
                 definition.FromIronSightsAnimMs,
                 definition.SprintRecoveryMs,
                 definition.NextUseDelayMs,
-                definition.TurnRateModifier,
-                definition.MoveSpeedModifier,
+                new decimal(definition.TurnRateModifier),
+                new decimal(definition.MoveSpeedModifier),
                 definition.HeatBleedoffRate == 0 ? null : definition.HeatBleedoffRate,
                 definition.HeatOverheatPenaltyMs == 0 ? null : definition.HeatOverheatPenaltyMs,
                 rangeDescription,
-                definition.MeleeDetectWidth == 0 ? null : definition.MeleeDetectWidth,
-                definition.MeleeDetectHeight == 0 ? null : definition.MeleeDetectHeight,
+                definition.MeleeDetectWidth == 0 ? null : new decimal(definition.MeleeDetectWidth),
+                definition.MeleeDetectHeight == 0 ? null : new decimal(definition.MeleeDetectHeight),
                 animWieldTypeName,
-                definition.MinPitch == 0 ? null : definition.MinPitch,
-                definition.MaxPitch == 0 ? null : definition.MaxPitch
+                definition.MinPitch == 0 ? null : new decimal(definition.MinPitch),
+                definition.MaxPitch == 0 ? null : new decimal(definition.MaxPitch)
             );
             builtWeapons.TryAdd(built.WeaponId, built);
         }

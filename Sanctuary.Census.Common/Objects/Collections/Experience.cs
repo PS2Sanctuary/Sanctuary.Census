@@ -18,6 +18,6 @@ public record Experience
     [property:Key] uint ExperienceID,
     uint AwardTypeID,
     LocaleString Description,
-    float XP,
+    decimal XP,
     bool IsNotableEvent
 );

@@ -54,7 +54,7 @@ public class ExperienceCollectionBuilder : ICollectionBuilder
                 experience.ID,
                 experience.AwardTypeID,
                 name!,
-                experience.XP,
+                new decimal(experience.XP),
                 experience.NotableEvent
             );
             builtItems.TryAdd(built.ExperienceID, built);

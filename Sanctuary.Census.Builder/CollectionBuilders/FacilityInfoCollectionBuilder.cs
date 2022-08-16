@@ -61,9 +61,9 @@ public class FacilityInfoCollectionBuilder : ICollectionBuilder
                 fi.FacilityID,
                 name!,
                 fi.FacilityType,
-                fi.LocationX,
-                fi.LocationY,
-                fi.LocationZ
+                new decimal(fi.LocationX),
+                new decimal(fi.LocationY),
+                new decimal(fi.LocationZ)
             );
             builtFacilities.TryAdd(built.FacilityID, built);
         }
@@ -78,9 +78,9 @@ public class FacilityInfoCollectionBuilder : ICollectionBuilder
                 sfi.FacilityID,
                 name!,
                 sfi.FacilityType,
-                sfi.LocationX,
-                sfi.LocationY,
-                sfi.LocationZ
+                new decimal(sfi.LocationX),
+                new decimal(sfi.LocationY),
+                new decimal(sfi.LocationZ)
             );
             builtFacilities.TryAdd(built.FacilityID, built);
         }

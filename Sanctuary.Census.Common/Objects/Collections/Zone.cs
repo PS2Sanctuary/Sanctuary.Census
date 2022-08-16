@@ -17,7 +17,7 @@ public record Zone
 (
     [property: Key] uint ZoneID,
     string Code,
-    float HexSize,
+    decimal HexSize,
     LocaleString Name,
     LocaleString Description
 );

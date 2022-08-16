@@ -23,7 +23,7 @@ public record FacilityInfo
     [property: Key] uint FacilityID,
     LocaleString FacilityName,
     byte FacilityTypeID,
-    float LocationX,
-    float LocationY,
-    float LocationZ
+    decimal LocationX,
+    decimal LocationY,
+    decimal LocationZ
 );

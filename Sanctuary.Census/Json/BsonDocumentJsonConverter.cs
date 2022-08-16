@@ -57,6 +57,11 @@ public class BsonDocumentJsonConverter : JsonConverter<BsonDocument>
                 writer.WriteNumberValue(Math.Round((decimal)value.AsDouble, 3));
                 break;
             }
+            case BsonType.Decimal128:
+            {
+                writer.WriteNumberValue(value.AsDecimal);
+                break;
+            }
             case BsonType.Int32:
             {
                 writer.WriteNumberValue(value.AsInt32);

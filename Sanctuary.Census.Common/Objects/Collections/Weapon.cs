@@ -40,14 +40,14 @@ public record Weapon
     ushort FromIronSightsAnimMs,
     ushort SprintRecoveryMs,
     uint NextUseDelayMs,
-    float TurnModifier,
-    float MoveModifier,
+    decimal TurnModifier,
+    decimal MoveModifier,
     ushort? HeatBleedOffRate,
     ushort? HeatOverheatPenaltyMs,
     LocaleString? RangeDescription,
-    float? MeleeDetectWidth,
-    float? MeleeDetectHeight,
+    decimal? MeleeDetectWidth,
+    decimal? MeleeDetectHeight,
     string? AnimationWieldTypeName,
-    float? MinViewPitch,
-    float? MaxViewPitch
+    decimal? MinViewPitch,
+    decimal? MaxViewPitch
 );

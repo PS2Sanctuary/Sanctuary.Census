@@ -4,10 +4,12 @@ Date format: DD/MM/YYYY
 
 ## vNext
 
-- Fixed querying on enum fields.
-- Implemented a somewhat-correct local timezone display in the diff viewer.
+- Added the `outfit_war` and `outfit_war_rounds` collections.
+- Fixed the storage and querying of decimal (previously, floating point) values.
 - Updated `item.item_category` to be nullable.
 - Added the `description` and `last_updated` fields to the datatype list (i.e. `/get/<environment>`)
+- Fixed querying on enum fields.
+- Implemented a somewhat-correct local timezone display in the diff viewer.
 - Many under the hood fixes and optimisations.
 
 ## 10/08/2022 #2

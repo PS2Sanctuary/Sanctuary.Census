@@ -255,7 +255,7 @@ public class FilterBuilder
         if (propertyType == typeof(double))
             return s => double.Parse(s);
         if (propertyType == typeof(decimal))
-            return s => decimal.Parse(s);
+            return s => Decimal128.Parse(s);
         if (propertyType == typeof(string))
             return s => s;
         if (propertyType.IsEnum)

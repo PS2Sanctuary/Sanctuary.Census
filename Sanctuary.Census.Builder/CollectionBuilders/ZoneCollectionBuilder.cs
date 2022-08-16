@@ -56,7 +56,7 @@ public class ZoneCollectionBuilder : ICollectionBuilder
             (
                 (uint)zone.ZoneID,
                 zone.Name,
-                zone.HexSize,
+                new decimal(zone.HexSize),
                 name!,
                 description!
             );

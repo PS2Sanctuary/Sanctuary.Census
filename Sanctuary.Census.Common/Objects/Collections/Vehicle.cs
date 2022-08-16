@@ -47,13 +47,13 @@ public record Vehicle
     uint CostResourceId,
     uint? LandingHeight,
     uint ImpactDamageBlocked,
-    float? ImpactDamageMultiplier,
-    float? ImpactDamageInflictedMultiplier,
+    decimal? ImpactDamageMultiplier,
+    decimal? ImpactDamageInflictedMultiplier,
     byte PropulsionType,
     uint? SchematicImageSetId,
     uint? HealthImageSetId,
     uint MinimapRange,
     uint AutoDetectRadius,
     ushort? LockonTimeAdd,
-    float? LockonTimeMult
+    decimal? LockonTimeMult
 );

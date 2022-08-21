@@ -50,12 +50,21 @@ public class ItemCollectionBuilder : ICollectionBuilder
         if (_clientDataCache.ImageSetMappings is null)
             throw new MissingCacheDataException(typeof(ImageSetMapping));
 
+        if (_clientDataCache.ItemVehicles is null)
+            throw new MissingCacheDataException(typeof(ItemVehicle));
+
         Dictionary<uint, FactionDefinition> itemFactionMap = new();
         foreach (ItemProfile profile in _clientDataCache.ItemProfiles)
         {
             itemFactionMap.TryAdd(profile.ItemID, profile.FactionID);
             if (itemFactionMap[profile.ItemID] != profile.FactionID)
                 itemFactionMap[profile.ItemID] = FactionDefinition.All;
+        }
+        foreach (ItemVehicle vItem in _clientDataCache.ItemVehicles)
+        {
+            itemFactionMap.TryAdd(vItem.ItemID, (FactionDefinition)vItem.FactionID);
+            if (itemFactionMap[vItem.ItemID] != (FactionDefinition)vItem.FactionID)
+                itemFactionMap[vItem.ItemID] = FactionDefinition.All;
         }
 
         Dictionary<uint, uint> imageSetToPrimaryImageMap = new();

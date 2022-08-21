@@ -4,6 +4,10 @@ Date format: DD/MM/YYYY
 
 ## vNext
 
+- Fixed vehicle items missing the `faction_id` field.
+
+## 16/08/2022
+
 - Added the `outfit_war` and `outfit_war_rounds` collections.
 - Added the `image_set` collection.
 - Fixed the storage and querying of decimal (previously, floating point) values.

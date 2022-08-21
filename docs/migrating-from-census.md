@@ -10,26 +10,23 @@ Both the `get` and `count` verbs are supported.
 
 Filtering (searching, querying) is fully supported.
 
-Supported commands:
+Unsupported commands:
+- `c:resolve`.
+- `c:exactMatchFirst`.
+- `c:retry`.
 
-- `c:case`.
-- `c:limit` (default `100`, max `10 000`).
-- `c:limitPerDB` (overrides `c:limit`).
-- `c:join` - unlike DBG Census, all siblings may use child joins. However, a single query is limited to 25 joins total.
-- `c:start`.
-- `c:show`.
-- `c:hide`.
-- `c:has`.
-- `c:includeNull`.
-- `c:lang` - allows a comma-separated list of language codes, rather than a single code.
-- `c:sort`.
-- `c:tree` - the `start` key is not yet supported.
-- `c:timing` - inserts a timestamp indicating the time taken to query the database, rather than the more specific model of the DBG Census.
+Command behaviour differences:
+- `c:limit` is set to `100` by default, and has a maximum value of `10 000`.
+- `c:limitPerDB` simply overrides `c:limit`.
+- `c:join` allows all siblings to use child joins, however, a single query is limited to 25 joins in total.
+- `c:lang` allows a comma-separated list of language codes.
+- `c:tree` does not support the `start` key.
+- `c:timing` inserts a slightly different model.
 
 ## Response Shape
 
 The shape of the response document should be exactly the same as DBG Census. Please note however that
-number, boolean and `null` values are represented appropriately, rather than as strings.
+non-int64 numbers, boolean and `null` values are represented appropriately, rather than as strings.
 
 ### Error Responses
 
@@ -38,12 +35,13 @@ Please note that the error response format is not consistent, although it should
 
 ## Collections
 
-ℹ️ Please see the [collection model definitions here](../Sanctuary.Census/Models/Collections).
+ℹ Please see the [collection model definitions here](../Sanctuary.Census/Models/Collections).
 
 This section lists the Collections provided by Sanctuary.Census, and compares them to the DBG Census.
-Many collections also add additional data on top of the DBG Census data, but this is not documented here.
+Many collections add additional data on top of the DBG Census data, and collections which DBG Census does
+not provide also exist, but this is not documented here.
 
-⚠️ If a DBG Census collection is not listed here, it not supported.
+⚠ If a DBG Census collection is not listed here, it not supported.
 
 ### 🌠 Gold Tier Collections
 

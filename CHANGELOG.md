@@ -2,6 +2,10 @@
 
 Date format: DD/MM/YYYY
 
+## vNext
+
+- Added support for the `c:distinct` command.
+
 ## 21/08/2022
 
 - Fixed vehicle items missing the `faction_id` field.

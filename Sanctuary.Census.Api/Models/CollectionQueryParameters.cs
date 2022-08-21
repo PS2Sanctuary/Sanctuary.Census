@@ -9,6 +9,13 @@ namespace Sanctuary.Census.Api.Models;
 public class CollectionQueryParameters
 {
     /// <summary>
+    /// Gets the distinct values of the given field.
+    /// E.g. <c>/get/ps2/item?c:distinct=max_stack_size</c>.
+    /// </summary>
+    [FromQuery(Name = "c:distinct")]
+    public string? Distinct { get; set; }
+
+    /// <summary>
     /// Indicates whether queries on string fields should be
     /// case insensitive. Defaults to <c>true</c>. Note
     /// that disabling this may slow down the query.

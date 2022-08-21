@@ -49,8 +49,9 @@ public class CollectionController : ControllerBase
             DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull,
             PropertyNamingPolicy = new SnakeCaseJsonNamingPolicy()
         };
-        _noIncludeNullOptions.Converters.Add(new DataResponseJsonConverter());
         _noIncludeNullOptions.Converters.Add(new BsonDocumentJsonConverter());
+        _noIncludeNullOptions.Converters.Add(new DataResponseJsonConverter());
+        _noIncludeNullOptions.Converters.Add(new BsonDecimal128JsonConverter());
 
         _includeNullOptions = new JsonSerializerOptions(_noIncludeNullOptions)
         {
@@ -125,70 +126,92 @@ public class CollectionController : ControllerBase
     {
         try
         {
-            LangProjectionBuilder? langProjections = queryParams.Lang is null
-                ? null
-                : new LangProjectionBuilder(queryParams.Lang.Split(','));
+            IMongoCollection<BsonDocument> collection = ValidateAndGetCollection
+            (
+                collectionName,
+                environment,
+                queryParams
+            );
+            List<object> results;
+            Stopwatch st = new();
 
-            IAggregateFluent<BsonDocument> query = ConstructBasicQuery
-                (
-                    environment,
-                    collectionName,
-                    queryParams,
-                    langProjections,
-                    out IMongoCollection<BsonDocument> mongoCollection
-                );
-
-            if (queryParams.Join is not null)
+            if (queryParams.Distinct is not null)
             {
-                int totalLookups = 0;
-                foreach (string value in queryParams.Join)
-                {
-                    List<JoinBuilder> builders = JoinBuilder.Parse(value);
-                    foreach (JoinBuilder b in builders)
-                    {
-                        b.Build
-                        (
-                            ref query,
-                            collectionName,
-                            mongoCollection.DocumentSerializer,
-                            mongoCollection.Settings.SerializerRegistry,
-                            !queryParams.IsCaseSensitive,
-                            langProjections,
-                            out int builtLookups
-                        );
-                        totalLookups += builtLookups;
-                    }
+                st.Start();
+                results = await collection.Distinct<object>
+                (
+                    queryParams.Distinct,
+                    BuildFilter(collectionName, queryParams),
+                    new DistinctOptions { MaxTime = TimeSpan.FromSeconds(1) },
+                    ct
+                ).ToListAsync(ct).ConfigureAwait(false);
+                st.Stop();
+            }
+            else
+            {
+                LangProjectionBuilder? langProjections = queryParams.Lang is null
+                    ? null
+                    : new LangProjectionBuilder(queryParams.Lang.Split(','));
 
-                    if (totalLookups > JoinBuilder.MAX_JOINS)
+                IAggregateFluent<BsonDocument> query = ConstructBasicQuery
+                    (
+                        collection,
+                        collectionName,
+                        queryParams,
+                        langProjections
+                    );
+
+                if (queryParams.Join is not null)
+                {
+                    int totalLookups = 0;
+                    foreach (string value in queryParams.Join)
                     {
-                        throw new QueryException
-                        (
-                            QueryErrorCode.JoinLimitExceeded,
-                            $"Up to {JoinBuilder.MAX_JOINS} may be performed in a single query"
-                        );
+                        List<JoinBuilder> builders = JoinBuilder.Parse(value);
+                        foreach (JoinBuilder b in builders)
+                        {
+                            b.Build
+                            (
+                                ref query,
+                                collectionName,
+                                collection.DocumentSerializer,
+                                collection.Settings.SerializerRegistry,
+                                !queryParams.IsCaseSensitive,
+                                langProjections,
+                                out int builtLookups
+                            );
+                            totalLookups += builtLookups;
+                        }
+
+                        if (totalLookups > JoinBuilder.MAX_JOINS)
+                        {
+                            throw new QueryException
+                            (
+                                QueryErrorCode.JoinLimitExceeded,
+                                $"Up to {JoinBuilder.MAX_JOINS} may be performed in a single query"
+                            );
+                        }
                     }
                 }
+
+                query = query.Skip(queryParams.Start)
+                    .Limit(queryParams.LimitPerDb ?? queryParams.Limit);
+
+                if (queryParams.Tree is not null)
+                {
+                    GroupBuilder groupBuilder = GroupBuilder.ParseFromTreeCommand(queryParams.Tree);
+                    groupBuilder.BuildAndAppendTo(ref query);
+                }
+
+                st.Start();
+                results = (await query.ToListAsync(ct).ConfigureAwait(false)).Cast<object>().ToList();
+                st.Stop();
             }
-
-            query = query.Skip(queryParams.Start)
-                .Limit(queryParams.LimitPerDb ?? queryParams.Limit);
-
-            if (queryParams.Tree is not null)
-            {
-                GroupBuilder groupBuilder = GroupBuilder.ParseFromTreeCommand(queryParams.Tree);
-                groupBuilder.BuildAndAppendTo(ref query);
-            }
-
-            Stopwatch st = new();
-            st.Start();
-            List<BsonDocument> records = await query.ToListAsync(ct);
-            st.Stop();
 
             return new JsonResult
             (
-                new DataResponse<BsonDocument>
+                new DataResponse<object>
                 (
-                    records,
+                    results,
                     collectionName,
                     queryParams.ShowTimings
                         ? new QueryTimes
@@ -239,13 +262,19 @@ public class CollectionController : ControllerBase
     {
         try
         {
+            IMongoCollection<BsonDocument> collection = ValidateAndGetCollection
+            (
+                collectionName,
+                environment,
+                queryParams
+            );
+
             IAggregateFluent<AggregateCountResult> count = ConstructBasicQuery
             (
-                environment,
+                collection,
                 collectionName,
                 queryParams,
-                null,
-                out _
+                null
             ).Count();
 
             AggregateCountResult res = await count.FirstAsync(ct);
@@ -264,42 +293,48 @@ public class CollectionController : ControllerBase
         }
     }
 
-    private IAggregateFluent<BsonDocument> ConstructBasicQuery
+    private IMongoCollection<BsonDocument> ValidateAndGetCollection
     (
-        string environment,
         string collectionName,
-        CollectionQueryParameters queryParams,
-        LangProjectionBuilder? langProjections,
-        out IMongoCollection<BsonDocument> mongoCollection
+        string environment,
+        CollectionQueryParameters queryParams
     )
     {
-        ValidateQueryParams(queryParams);
         if (!CollectionUtils.CheckCollectionExists(collectionName))
             throw new QueryException(QueryErrorCode.UnknownCollection, $"The {collectionName} collection does not exist");
 
+        if (queryParams.Limit > MAX_LIMIT || queryParams.LimitPerDb > MAX_LIMIT)
+        {
+            throw new QueryException
+            (
+                QueryErrorCode.InvalidCommandValue,
+                "The maximum value of the c:limit command is " + MAX_LIMIT
+            );
+        }
+
+        if (queryParams.Hide is not null && queryParams.Show is not null)
+        {
+            throw new QueryException
+            (
+                QueryErrorCode.Malformed,
+                "The c:show and c:hide commands are not compatible with each other"
+            );
+        }
+
         PS2Environment env = ParseEnvironment(environment);
         IMongoDatabase db = _mongoContext.GetDatabase(env);
-        mongoCollection = db.GetCollection<BsonDocument>(collectionName);
+        return db.GetCollection<BsonDocument>(collectionName);
+    }
 
-        FilterDefinitionBuilder<BsonDocument> filterBuilder = Builders<BsonDocument>.Filter;
-        FilterDefinition<BsonDocument> filter = filterBuilder.Empty;
-        if (queryParams.HasFields is not null)
-        {
-            foreach (string value in queryParams.HasFields.SelectMany(s => s.Split(',')))
-                filter &= filterBuilder.Ne(value, BsonNull.Value);
-        }
-
-        foreach ((string paramName, StringValues paramValues) in HttpContext.Request.Query)
-        {
-            if (paramName.AsSpan().StartsWith(QueryCommandIdentifier))
-                continue;
-
-            foreach (string value in paramValues)
-            {
-                FilterBuilder fb = FilterBuilder.Parse(collectionName, paramName, value);
-                fb.Build(ref filter, !queryParams.IsCaseSensitive);
-            }
-        }
+    private IAggregateFluent<BsonDocument> ConstructBasicQuery
+    (
+        IMongoCollection<BsonDocument> mongoCollection,
+        string collectionName,
+        CollectionQueryParameters queryParams,
+        LangProjectionBuilder? langProjections
+    )
+    {
+        FilterDefinition<BsonDocument> filter = BuildFilter(collectionName, queryParams);
 
         ProjectionBuilder projection;
         if (queryParams.Show is not null)
@@ -332,25 +367,29 @@ public class CollectionController : ControllerBase
         return aggregate;
     }
 
-    private static void ValidateQueryParams(CollectionQueryParameters queryParams)
+    private FilterDefinition<BsonDocument> BuildFilter(string collectionName, CollectionQueryParameters queryParams)
     {
-        if (queryParams.Limit > MAX_LIMIT || queryParams.LimitPerDb > MAX_LIMIT)
+        FilterDefinitionBuilder<BsonDocument> filterBuilder = Builders<BsonDocument>.Filter;
+        FilterDefinition<BsonDocument> filter = filterBuilder.Empty;
+        if (queryParams.HasFields is not null)
         {
-            throw new QueryException
-            (
-                QueryErrorCode.InvalidCommandValue,
-                "The maximum value of the c:limit command is " + MAX_LIMIT
-            );
+            foreach (string value in queryParams.HasFields.SelectMany(s => s.Split(',')))
+                filter &= filterBuilder.Ne(value, BsonNull.Value);
         }
 
-        if (queryParams.Hide is not null && queryParams.Show is not null)
+        foreach ((string paramName, StringValues paramValues) in HttpContext.Request.Query)
         {
-            throw new QueryException
-            (
-                QueryErrorCode.Malformed,
-                "The c:show and c:hide commands are not compatible with each other"
-            );
+            if (paramName.AsSpan().StartsWith(QueryCommandIdentifier))
+                continue;
+
+            foreach (string value in paramValues)
+            {
+                FilterBuilder fb = FilterBuilder.Parse(collectionName, paramName, value);
+                fb.Build(ref filter, !queryParams.IsCaseSensitive);
+            }
         }
+
+        return filter;
     }
 
     private static PS2Environment ParseEnvironment(string environment)

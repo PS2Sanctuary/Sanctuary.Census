@@ -136,9 +136,7 @@ public class CollectionController : ControllerBase
                     queryParams,
                     langProjections,
                     out IMongoCollection<BsonDocument> mongoCollection
-                )
-                .Skip(queryParams.Start)
-                .Limit(queryParams.LimitPerDb ?? queryParams.Limit);
+                );
 
             if (queryParams.Join is not null)
             {
@@ -171,6 +169,9 @@ public class CollectionController : ControllerBase
                     }
                 }
             }
+
+            query = query.Skip(queryParams.Start)
+                .Limit(queryParams.LimitPerDb ?? queryParams.Limit);
 
             if (queryParams.Tree is not null)
             {

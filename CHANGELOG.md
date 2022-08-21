@@ -5,6 +5,7 @@ Date format: DD/MM/YYYY
 ## vNext
 
 - Fixed vehicle items missing the `faction_id` field.
+- Fixed joins breaking the `c:limit` and `c:start` commands.
 
 ## 16/08/2022
 

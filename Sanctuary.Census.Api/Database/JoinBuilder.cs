@@ -189,10 +189,21 @@ public class JoinBuilder
         aggregatePipeline = aggregatePipeline.AppendStage(stageDef);
 
         if (!IsOuter)
-            aggregatePipeline.Match(Builders<BsonDocument>.Filter.Ne(InjectAt, Array.Empty<BsonDocument>()));
+        {
+            aggregatePipeline = aggregatePipeline.Match
+            (
+                Builders<BsonDocument>.Filter.Ne(InjectAt, Array.Empty<BsonDocument>())
+            );
+        }
 
         if (!IsList)
-            aggregatePipeline = aggregatePipeline.Unwind(InjectAt);
+        {
+            aggregatePipeline = aggregatePipeline.Unwind
+            (
+                InjectAt,
+                new AggregateUnwindOptions<BsonDocument> { PreserveNullAndEmptyArrays = true }
+            );
+        }
     }
 
     private static JoinBuilder ParseIndividualJoin(ReadOnlySpan<char> value)

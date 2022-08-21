@@ -2,10 +2,12 @@
 
 Date format: DD/MM/YYYY
 
-## vNext
+## 21/08/2022
 
 - Fixed vehicle items missing the `faction_id` field.
 - Fixed joins breaking the `c:limit` and `c:start` commands.
+- Fixed inner joins not taking effect.
+- Fixed non-list joins causing inner join behaviour.
 
 ## 16/08/2022
 

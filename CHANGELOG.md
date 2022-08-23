@@ -6,6 +6,7 @@ Date format: DD/MM/YYYY
 
 - Added support for the `c:distinct` command.
 - Added the `marketing_bundle`, `marketing_bundle_category` and `marketing_bundle_item` collections.
+- Added the `outfit_war_ranking` collection.
 
 ## 21/08/2022
 

@@ -207,6 +207,14 @@ public interface ICollectionsContext
     Task UpsertOutfitWarRegistrationsAsync(IEnumerable<OutfitWarRegistration> collection, CancellationToken ct = default);
 
     /// <summary>
+    /// Upserts the <see cref="OutfitWarRanking"/> collection.
+    /// </summary>
+    /// <param name="collection">The collection.</param>
+    /// <param name="ct">A <see cref="CancellationToken"/> that can be used to stop the operation.</param>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    Task UpsertOutfitWarRankingsAsync(IEnumerable<OutfitWarRanking> collection, CancellationToken ct = default);
+
+    /// <summary>
     /// Upserts the <see cref="OutfitWarRounds"/> collection.
     /// </summary>
     /// <param name="collection">The collection.</param>

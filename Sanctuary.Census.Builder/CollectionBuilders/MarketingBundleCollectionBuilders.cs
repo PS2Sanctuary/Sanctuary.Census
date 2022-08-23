@@ -46,9 +46,7 @@ public class MarketingBundleCollectionBuilders : ICollectionBuilder
             throw new MissingCacheDataException(typeof(StoreBundleCategories));
 
         Dictionary<uint, MarketingBundle> builtBundles = new();
-        Dictionary<uint, MarketingBundleCategory> builtCategories = new();
         List<MarketingBundleItem> builtItems = new();
-
         foreach (StoreBundles_Bundle bundle in _serverDataCache.StoreBundles.Bundles)
         {
             _localeDataCache.TryGetLocaleString(bundle.NameID, out LocaleString? name);
@@ -85,7 +83,10 @@ public class MarketingBundleCollectionBuilders : ICollectionBuilder
                 builtItems.Add(builtItem);
             }
         }
+        await dbContext.UpsertMarketingBundlesAsync(builtBundles.Values, ct).ConfigureAwait(false);
+        await dbContext.UpsertMarketingBundleItemsAsync(builtItems, ct).ConfigureAwait(false);
 
+        Dictionary<uint, MarketingBundleCategory> builtCategories = new();
         foreach (StoreBundleCategories_Category category in _serverDataCache.StoreBundleCategories.Categories)
         {
             _localeDataCache.TryGetLocaleString(category.NameID, out LocaleString? name);
@@ -99,9 +100,6 @@ public class MarketingBundleCollectionBuilders : ICollectionBuilder
             );
             builtCategories.TryAdd(builtCategory.MarketingBundleCategoryID, builtCategory);
         }
-
-        await dbContext.UpsertMarketingBundlesAsync(builtBundles.Values, ct).ConfigureAwait(false);
         await dbContext.UpsertMarketingBundleCategoriesAsync(builtCategories.Values, ct).ConfigureAwait(false);
-        await dbContext.UpsertMarketingBundleItemsAsync(builtItems, ct).ConfigureAwait(false);
     }
 }

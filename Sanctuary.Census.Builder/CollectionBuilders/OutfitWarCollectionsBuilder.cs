@@ -8,13 +8,14 @@ using Sanctuary.Census.ServerData.Internal.Abstractions.Services;
 using Sanctuary.Common.Objects;
 using Sanctuary.Zone.Packets.OutfitWars;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
 namespace Sanctuary.Census.Builder.CollectionBuilders;
 
 /// <summary>
-/// Builds the <see cref="OutfitWar"/> and <see cref="OutfitWarRounds"/> collections.
+/// Builds the <see cref="OutfitWar"/>, <see cref="OutfitWarRanking"/> and <see cref="OutfitWarRounds"/> collections.
 /// </summary>
 public class OutfitWarCollectionsBuilder : ICollectionBuilder
 {
@@ -45,6 +46,9 @@ public class OutfitWarCollectionsBuilder : ICollectionBuilder
     {
         if (_serverDataCache.OutfitWars.Count == 0)
             throw new MissingCacheDataException(typeof(OutfitWarsWar));
+
+        if (_serverDataCache.OutfitWarRankings.Count == 0)
+            throw new MissingCacheDataException(typeof(OutfitWarsRankings));
 
         if (_serverDataCache.OutfitWarRounds.Count == 0)
             throw new MissingCacheDataException(typeof(OutfitWarsRounds));
@@ -85,6 +89,24 @@ public class OutfitWarCollectionsBuilder : ICollectionBuilder
             builtWars.TryAdd(builtWar.OutfitWarID, builtWar);
         }
         await dbContext.UpsertOutfitWarsAsync(builtWars.Values, ct).ConfigureAwait(false);
+
+        List<OutfitWarRanking> builtRankings = new();
+        foreach (OutfitWarsRankings rankingGroup in _serverDataCache.OutfitWarRankings.Values)
+        {
+            foreach (Outfit rankedOutfit in rankingGroup.Outfits)
+            {
+                OutfitWarRanking ranking = new
+                (
+                    rankingGroup.RoundID,
+                    rankedOutfit.OutfitID_1,
+                    rankedOutfit.FactionID,
+                    rankedOutfit.Order,
+                    rankedOutfit.UIParams.ToDictionary(x => x.Name, x => x.Value)
+                );
+                builtRankings.Add(ranking);
+            }
+        }
+        await dbContext.UpsertOutfitWarRankingsAsync(builtRankings, ct).ConfigureAwait(false);
 
         Dictionary<uint, OutfitWarRounds> builtRounds = new();
         foreach (OutfitWarsRounds sRounds in _serverDataCache.OutfitWarRounds.Values)

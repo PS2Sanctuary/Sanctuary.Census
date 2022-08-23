@@ -79,6 +79,7 @@ public class CollectionsContext : ICollectionsContext
         await CreateUniqueKeyIndex<MapRegion>(x => x.MapRegionId, ct).ConfigureAwait(false);
         await CreateUniqueKeyIndex<OutfitWar>(x => x.OutfitWarID, ct).ConfigureAwait(false);
         await CreateNonUniqueKeyIndexes<OutfitWarRegistration>(ct, x => x.OutfitID, x => x.WorldID).ConfigureAwait(false);
+        await CreateNonUniqueKeyIndexes<OutfitWarRanking>(ct, x => x.RoundID, x => x.OutfitID, x => x.FactionID).ConfigureAwait(false);
         await CreateNonUniqueKeyIndexes<OutfitWarRounds>(ct, x => x.OutfitWarID, x => x.PrimaryRoundID).ConfigureAwait(false);
         await CreateNonUniqueKeyIndexes<PlayerStateGroup2>(ct, x => x.PlayerStateGroupId, x => x.PlayerStateId).ConfigureAwait(false);
         await CreateUniqueKeyIndex<Profile>(x => x.ProfileId, ct).ConfigureAwait(false);
@@ -387,6 +388,17 @@ public class CollectionsContext : ICollectionsContext
             collection,
             e => x => x.OutfitID == e.OutfitID,
             e => Builders<OutfitWarRegistration>.Filter.Eq(x => x.OutfitID, e.OutfitID),
+            ct,
+            false
+        ).ConfigureAwait(false);
+
+    /// <inheritdoc />
+    public async Task UpsertOutfitWarRankingsAsync(IEnumerable<OutfitWarRanking> collection, CancellationToken ct = default)
+        => await UpsertCollectionAsync
+        (
+            collection,
+            e => x => x.RoundID == e.RoundID && x.OutfitID == e.OutfitID,
+            e => Builders<OutfitWarRanking>.Filter.Where(x => x.RoundID == e.RoundID && x.OutfitID == e.OutfitID),
             ct,
             false
         ).ConfigureAwait(false);

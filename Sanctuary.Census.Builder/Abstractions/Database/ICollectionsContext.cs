@@ -167,6 +167,30 @@ public interface ICollectionsContext
     Task UpsertMapRegionsAsync(IEnumerable<MapRegion> collection, CancellationToken ct = default);
 
     /// <summary>
+    /// Upserts the <see cref="MarketingBundle"/> collection.
+    /// </summary>
+    /// <param name="collection">The collection.</param>
+    /// <param name="ct">A <see cref="CancellationToken"/> that can be used to stop the operation.</param>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    Task UpsertMarketingBundlesAsync(IEnumerable<MarketingBundle> collection, CancellationToken ct = default);
+
+    /// <summary>
+    /// Upserts the <see cref="MarketingBundleCategory"/> collection.
+    /// </summary>
+    /// <param name="collection">The collection.</param>
+    /// <param name="ct">A <see cref="CancellationToken"/> that can be used to stop the operation.</param>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    Task UpsertMarketingBundleCategoriesAsync(IEnumerable<MarketingBundleCategory> collection, CancellationToken ct = default);
+
+    /// <summary>
+    /// Upserts the <see cref="MarketingBundleItem"/> collection.
+    /// </summary>
+    /// <param name="collection">The collection.</param>
+    /// <param name="ct">A <see cref="CancellationToken"/> that can be used to stop the operation.</param>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    Task UpsertMarketingBundleItemsAsync(IEnumerable<MarketingBundleItem> collection, CancellationToken ct = default);
+
+    /// <summary>
     /// Upserts the <see cref="OutfitWar"/> collection.
     /// </summary>
     /// <param name="collection">The collection.</param>

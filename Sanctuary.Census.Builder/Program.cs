@@ -80,6 +80,7 @@ public static class Program
             .RegisterCollectionBuilder<LoadoutCollectionBuilder>()
             .RegisterCollectionBuilder<LoadoutSlotCollectionBuilder>()
             .RegisterCollectionBuilder<MapRegionCollectionBuilder>()
+            .RegisterCollectionBuilder<MarketingBundleCollectionBuilders>()
             .RegisterCollectionBuilder<OutfitWarCollectionsBuilder>()
             .RegisterCollectionBuilder<OutfitWarRegistrationCollectionBuilder>()
             .RegisterCollectionBuilder<PlayerStateGroup2CollectionBuilder>()

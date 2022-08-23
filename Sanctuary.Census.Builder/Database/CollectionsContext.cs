@@ -78,13 +78,15 @@ public class CollectionsContext : ICollectionsContext
         await CreateNonUniqueKeyIndexes<LoadoutSlot>(ct, x => x.LoadoutID, x => x.SlotID).ConfigureAwait(false);
         await CreateUniqueKeyIndex<MapRegion>(x => x.MapRegionId, ct).ConfigureAwait(false);
         await CreateUniqueKeyIndex<OutfitWar>(x => x.OutfitWarID, ct).ConfigureAwait(false);
-        // TODO: Remove after deployment
-        await _database.GetCollection<OutfitWarRegistration>(NameConverter.ConvertName(nameof(OutfitWarRegistration))).Indexes.DropAllAsync(ct);
         await CreateNonUniqueKeyIndexes<OutfitWarRegistration>(ct, x => x.OutfitID, x => x.WorldID).ConfigureAwait(false);
         await CreateNonUniqueKeyIndexes<OutfitWarRounds>(ct, x => x.OutfitWarID, x => x.PrimaryRoundID).ConfigureAwait(false);
         await CreateNonUniqueKeyIndexes<PlayerStateGroup2>(ct, x => x.PlayerStateGroupId, x => x.PlayerStateId).ConfigureAwait(false);
         await CreateUniqueKeyIndex<Profile>(x => x.ProfileId, ct).ConfigureAwait(false);
         await CreateUniqueKeyIndex<Projectile>(x => x.ProjectileId, ct).ConfigureAwait(false);
+        await CreateUniqueKeyIndex<MarketingBundle>(x => x.MarketingBundleID, ct).ConfigureAwait(false);
+        await CreateNonUniqueKeyIndexes<MarketingBundle>(ct, x => x.MarketingBundleCategoryID, x=> x.Name, x => x.IsOnSale).ConfigureAwait(false);
+        await CreateUniqueKeyIndex<MarketingBundleCategory>(x => x.MarketingBundleCategoryID, ct).ConfigureAwait(false);
+        await CreateNonUniqueKeyIndexes<MarketingBundleItem>(ct, x => x.MarketingBundleID, x => x.ItemID).ConfigureAwait(false);
         await CreateUniqueKeyIndex<Vehicle>(x => x.VehicleId, ct).ConfigureAwait(false);
         await CreateNonUniqueKeyIndexes<VehicleAttachment>(ct, x => x.ItemID, x => x.VehicleLoadoutID, x => x.VehicleID).ConfigureAwait(false);
         await CreateUniqueKeyIndex<VehicleLoadout>(x => x.LoadoutID, ct).ConfigureAwait(false);
@@ -334,6 +336,36 @@ public class CollectionsContext : ICollectionsContext
             collection,
             e => x => x.MapRegionId == e.MapRegionId,
             e => Builders<MapRegion>.Filter.Eq(x => x.MapRegionId, e.MapRegionId),
+            ct
+        ).ConfigureAwait(false);
+
+    /// <inheritdoc />
+    public async Task UpsertMarketingBundlesAsync(IEnumerable<MarketingBundle> collection, CancellationToken ct = default)
+        => await UpsertCollectionAsync
+        (
+            collection,
+            e => x => x.MarketingBundleID == e.MarketingBundleID,
+            e => Builders<MarketingBundle>.Filter.Eq(x => x.MarketingBundleID, e.MarketingBundleID),
+            ct
+        ).ConfigureAwait(false);
+
+    /// <inheritdoc />
+    public async Task UpsertMarketingBundleCategoriesAsync(IEnumerable<MarketingBundleCategory> collection, CancellationToken ct = default)
+        => await UpsertCollectionAsync
+        (
+            collection,
+            e => x => x.MarketingBundleCategoryID == e.MarketingBundleCategoryID,
+            e => Builders<MarketingBundleCategory>.Filter.Eq(x => x.MarketingBundleCategoryID, e.MarketingBundleCategoryID),
+            ct
+        ).ConfigureAwait(false);
+
+    /// <inheritdoc />
+    public async Task UpsertMarketingBundleItemsAsync(IEnumerable<MarketingBundleItem> collection, CancellationToken ct = default)
+        => await UpsertCollectionAsync
+        (
+            collection,
+            e => x => x.MarketingBundleID == e.MarketingBundleID && x.ItemID == e.ItemID,
+            e => Builders<MarketingBundleItem>.Filter.Where(x => x.MarketingBundleID == e.MarketingBundleID && x.ItemID == e.ItemID),
             ct
         ).ConfigureAwait(false);
 

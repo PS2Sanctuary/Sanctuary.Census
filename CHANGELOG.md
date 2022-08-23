@@ -2,7 +2,7 @@
 
 Date format: DD/MM/YYYY
 
-## vNext
+## 23/08/2022
 
 - Added support for the `c:distinct` command.
 - Added the `marketing_bundle`, `marketing_bundle_category` and `marketing_bundle_item` collections.

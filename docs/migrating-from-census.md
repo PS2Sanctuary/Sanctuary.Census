@@ -57,6 +57,8 @@ but is likely to be very similar.
 - fire_mode_to_projectile
 - item_category
 - item_to_weapon
+- marketing_bundle
+- marketing_bundle_item
 - ⚠ player_state_group - please query on `player_state_group_2` instead, which is a direct upgrade
 - player_state_group_2
 - ⚠ profile_2 - please query on `profile` instead, which is a direct upgrade

@@ -1,7 +1,9 @@
 ﻿using Sanctuary.Census.Common.Attributes;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
+using System.Linq;
 
 namespace Sanctuary.Census.Common.Objects.Collections;
 
@@ -22,4 +24,32 @@ public record OutfitWarRanking
     [property: Key] byte FactionID,
     uint Order,
     Dictionary<string, uint> RankingParameters
-);
+)
+{
+    /// <inheritdoc />
+    public virtual bool Equals(OutfitWarRanking? other)
+        => other is not null
+           && RoundID.Equals(other.RoundID)
+           && OutfitID.Equals(other.OutfitID)
+           && FactionID.Equals(other.FactionID)
+           && Order.Equals(other.Order)
+           && RankingParameters.SequenceEqual(other.RankingParameters);
+
+    /// <inheritdoc />
+    public override int GetHashCode()
+    {
+        HashCode hashCode = new();
+        hashCode.Add(RoundID);
+        hashCode.Add(OutfitID);
+        hashCode.Add(FactionID);
+        hashCode.Add(Order);
+
+        foreach ((string key, uint value) in RankingParameters)
+        {
+            hashCode.Add(key);
+            hashCode.Add(value);
+        }
+
+        return hashCode.ToHashCode();
+    }
+}

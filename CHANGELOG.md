@@ -2,10 +2,11 @@
 
 Date format: DD/MM/YYYY
 
-## vNext
+## 28/08/2022
 
 - Added support for serializing all fields in a response as strings, to match DBG Census.
   Use the `c:censusJSON=true` command to achieve this.
+- Updated support for outfit wars data.
 
 ## 23/08/2022
 

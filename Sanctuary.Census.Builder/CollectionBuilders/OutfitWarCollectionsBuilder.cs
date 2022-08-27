@@ -2,7 +2,6 @@
 using Sanctuary.Census.Builder.Abstractions.Database;
 using Sanctuary.Census.Builder.Exceptions;
 using Sanctuary.Census.ClientData.Abstractions.Services;
-using Sanctuary.Census.Common.Objects.Collections;
 using Sanctuary.Census.Common.Objects.CommonModels;
 using Sanctuary.Census.ServerData.Internal.Abstractions.Services;
 using Sanctuary.Common.Objects;
@@ -12,10 +11,14 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
+using MRanking = Sanctuary.Census.Common.Objects.Collections.OutfitWarRanking;
+using MRounds = Sanctuary.Census.Common.Objects.Collections.OutfitWarRounds;
+using MWar = Sanctuary.Census.Common.Objects.Collections.OutfitWar;
+
 namespace Sanctuary.Census.Builder.CollectionBuilders;
 
 /// <summary>
-/// Builds the <see cref="OutfitWar"/>, <see cref="OutfitWarRanking"/> and <see cref="OutfitWarRounds"/> collections.
+/// Builds the <see cref="MWar"/>, <see cref="MRanking"/> and <see cref="MRounds"/> collections.
 /// </summary>
 public class OutfitWarCollectionsBuilder : ICollectionBuilder
 {
@@ -45,24 +48,24 @@ public class OutfitWarCollectionsBuilder : ICollectionBuilder
     )
     {
         if (_serverDataCache.OutfitWars.Count == 0)
-            throw new MissingCacheDataException(typeof(OutfitWarsWar));
+            throw new MissingCacheDataException(typeof(OutfitWarWar));
 
         if (_serverDataCache.OutfitWarRankings.Count == 0)
-            throw new MissingCacheDataException(typeof(OutfitWarsRankings));
+            throw new MissingCacheDataException(typeof(OutfitWarRankings));
 
         if (_serverDataCache.OutfitWarRounds.Count == 0)
-            throw new MissingCacheDataException(typeof(OutfitWarsRounds));
+            throw new MissingCacheDataException(typeof(OutfitWarRounds));
 
-        Dictionary<uint, OutfitWar> builtWars = new();
-        foreach ((ServerDefinition server, OutfitWarsWar war) in _serverDataCache.OutfitWars)
+        Dictionary<uint, MWar> builtWars = new();
+        foreach ((ServerDefinition server, OutfitWarWar war) in _serverDataCache.OutfitWars)
         {
-            List<OutfitWar.Phase> phases = new();
-            foreach (OutfitWarsWar_Phase phase in war.Phases)
+            List<MWar.Phase> phases = new();
+            foreach (OutfitWarWar_Phase phase in war.Phases)
             {
                 _localeDataCache.TryGetLocaleString(phase.NameID, out LocaleString? phaseName);
                 _localeDataCache.TryGetLocaleString(phase.DescriptionID, out LocaleString? phaseDesc);
 
-                phases.Add(new OutfitWar.Phase
+                phases.Add(new MWar.Phase
                 (
                     phase.Order,
                     phaseName!,
@@ -74,7 +77,7 @@ public class OutfitWarCollectionsBuilder : ICollectionBuilder
 
             _localeDataCache.TryGetLocaleString(war.NameID, out LocaleString? name);
 
-            OutfitWar builtWar = new
+            MWar builtWar = new
             (
                 war.OutfitWarID,
                 (uint)server,
@@ -90,12 +93,12 @@ public class OutfitWarCollectionsBuilder : ICollectionBuilder
         }
         await dbContext.UpsertOutfitWarsAsync(builtWars.Values, ct).ConfigureAwait(false);
 
-        List<OutfitWarRanking> builtRankings = new();
-        foreach (OutfitWarsRankings rankingGroup in _serverDataCache.OutfitWarRankings.Values)
+        List<MRanking> builtRankings = new();
+        foreach (OutfitWarRankings rankingGroup in _serverDataCache.OutfitWarRankings.Values)
         {
-            foreach (Outfit rankedOutfit in rankingGroup.Outfits)
+            foreach (OutfitWarRankings_Outfit rankedOutfit in rankingGroup.Outfits)
             {
-                OutfitWarRanking ranking = new
+                MRanking ranking = new
                 (
                     rankingGroup.RoundID,
                     rankedOutfit.OutfitID_1,
@@ -108,22 +111,22 @@ public class OutfitWarCollectionsBuilder : ICollectionBuilder
         }
         await dbContext.UpsertOutfitWarRankingsAsync(builtRankings, ct).ConfigureAwait(false);
 
-        Dictionary<uint, OutfitWarRounds> builtRounds = new();
-        foreach (OutfitWarsRounds sRounds in _serverDataCache.OutfitWarRounds.Values)
+        Dictionary<uint, MRounds> builtRounds = new();
+        foreach (OutfitWarRounds sRounds in _serverDataCache.OutfitWarRounds.Values)
         {
-            List<OutfitWarRounds.Round> rounds = new();
-            foreach (OutfitWarsRounds_Round sRound in sRounds.Rounds)
+            List<MRounds.Round> rounds = new();
+            foreach (OutfitWarRounds_Round sRound in sRounds.Rounds)
             {
-                rounds.Add(new OutfitWarRounds.Round
+                rounds.Add(new MRounds.Round
                 (
                     sRound.Order,
-                    (OutfitWarRounds.RoundStage)sRound.Stage,
+                    (MRounds.RoundStage)sRound.Stage,
                     sRound.StartTime,
                     sRound.EndTime
                 ));
             }
 
-            OutfitWarRounds built = new
+            MRounds built = new
             (
                 sRounds.OutfitWarID,
                 sRounds.ActiveWarInfo.RoundID,

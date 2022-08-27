@@ -3,7 +3,6 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
 
 namespace Sanctuary.Census.Common.Objects.Collections;
 
@@ -33,7 +32,7 @@ public record OutfitWarRanking
            && OutfitID.Equals(other.OutfitID)
            && FactionID.Equals(other.FactionID)
            && Order.Equals(other.Order)
-           && RankingParameters.SequenceEqual(other.RankingParameters);
+           && DictionaryEqual(RankingParameters, other.RankingParameters);
 
     /// <inheritdoc />
     public override int GetHashCode()
@@ -51,5 +50,24 @@ public record OutfitWarRanking
         }
 
         return hashCode.ToHashCode();
+    }
+
+    private bool DictionaryEqual<TKey, TValue>(IReadOnlyDictionary<TKey, TValue>? dictionary1, IReadOnlyDictionary<TKey, TValue>? dictionary2)
+    {
+        if (dictionary1 is null && dictionary2 is null)
+            return true;
+        if (dictionary1 is null || dictionary2 is null)
+            return false;
+
+        foreach (TKey key in dictionary1.Keys)
+        {
+            if (!dictionary2.ContainsKey(key))
+                return false;
+
+            if (dictionary1[key]?.Equals(dictionary2[key]) == false)
+                return false;
+        }
+
+        return true;
     }
 }

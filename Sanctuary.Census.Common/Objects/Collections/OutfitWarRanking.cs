@@ -23,7 +23,7 @@ public record OutfitWarRanking
     [property: Key] ulong OutfitID,
     [property: Key] byte FactionID,
     uint Order,
-    Dictionary<string, uint> RankingParameters
+    Dictionary<string, int> RankingParameters
 )
 {
     /// <inheritdoc />
@@ -44,7 +44,7 @@ public record OutfitWarRanking
         hashCode.Add(FactionID);
         hashCode.Add(Order);
 
-        foreach ((string key, uint value) in RankingParameters)
+        foreach ((string key, int value) in RankingParameters)
         {
             hashCode.Add(key);
             hashCode.Add(value);

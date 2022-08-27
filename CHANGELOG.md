@@ -2,6 +2,11 @@
 
 Date format: DD/MM/YYYY
 
+## vNext
+
+- Added support for serializing all fields in a response as strings, to match DBG Census.
+  Use the `c:censusJSON=true` command to achieve this.
+
 ## 23/08/2022
 
 - Added support for the `c:distinct` command.

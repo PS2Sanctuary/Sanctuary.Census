@@ -9,6 +9,13 @@ namespace Sanctuary.Census.Api.Models;
 public class CollectionQueryParameters
 {
     /// <summary>
+    /// Serializes all fields on the response as strings,
+    /// to be fully compatible with Census.
+    /// </summary>
+    [FromQuery(Name = "c:censusJSON")]
+    public bool CensusJsonMode { get; set; }
+
+    /// <summary>
     /// Gets the distinct values of the given field.
     /// E.g. <c>/get/ps2/item?c:distinct=max_stack_size</c>.
     /// </summary>

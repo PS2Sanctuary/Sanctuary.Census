@@ -25,8 +25,10 @@ Command behaviour differences:
 
 ## Response Shape
 
-The shape of the response document should be exactly the same as DBG Census. Please note however that
-non-int64 numbers, boolean and `null` values are represented appropriately, rather than as strings.
+The shape of the response document should be exactly the same as DBG Census.
+
+:warning: Please note that non-int64 numbers, boolean and `null` values are represented appropriately, rather than as strings.
+You can change this behaviour, in order to be consistent with the DBG Census, by adding the `c:censusJSON=true` command.
 
 ### Error Responses
 

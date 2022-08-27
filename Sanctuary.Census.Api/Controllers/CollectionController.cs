@@ -36,24 +36,35 @@ public class CollectionController : ControllerBase
     public const int MAX_LIMIT = 10000;
 
     private static readonly char[] QueryCommandIdentifier = { 'c', ':' };
-    private static readonly JsonSerializerOptions _noIncludeNullOptions;
-    private static readonly JsonSerializerOptions _includeNullOptions;
+    private static readonly JsonSerializerOptions _defaultOptions;
+    private static readonly JsonSerializerOptions _incNullOptions;
+    private static readonly JsonSerializerOptions _allStringOptions;
+    private static readonly JsonSerializerOptions _incNullAndAllStringOptions;
 
     private readonly IMongoContext _mongoContext;
     private readonly IMemoryCache _memoryCache;
 
     static CollectionController()
     {
-        _noIncludeNullOptions = new JsonSerializerOptions
+        _defaultOptions = new JsonSerializerOptions
         {
             DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull,
             PropertyNamingPolicy = new SnakeCaseJsonNamingPolicy()
         };
-        _noIncludeNullOptions.Converters.Add(new BsonDocumentJsonConverter());
-        _noIncludeNullOptions.Converters.Add(new DataResponseJsonConverter());
-        _noIncludeNullOptions.Converters.Add(new BsonDecimal128JsonConverter());
+        _defaultOptions.Converters.Add(new BsonDocumentJsonConverter(false));
+        _defaultOptions.Converters.Add(new DataResponseJsonConverter());
+        _defaultOptions.Converters.Add(new BsonDecimal128JsonConverter());
 
-        _includeNullOptions = new JsonSerializerOptions(_noIncludeNullOptions)
+        _incNullOptions = new JsonSerializerOptions(_defaultOptions)
+        {
+            DefaultIgnoreCondition = JsonIgnoreCondition.Never
+        };
+
+        _allStringOptions = new JsonSerializerOptions(_defaultOptions);
+        _allStringOptions.Converters.Remove(_allStringOptions.Converters.First(x => x is BsonDocumentJsonConverter));
+        _allStringOptions.Converters.Add(new BsonDocumentJsonConverter(true));
+
+        _incNullAndAllStringOptions = new JsonSerializerOptions(_allStringOptions)
         {
             DefaultIgnoreCondition = JsonIgnoreCondition.Never
         };
@@ -207,6 +218,14 @@ public class CollectionController : ControllerBase
                 st.Stop();
             }
 
+            JsonSerializerOptions options = _defaultOptions;
+            if (queryParams.IncludeNullFields && !queryParams.CensusJsonMode)
+                options = _incNullOptions;
+            else if (queryParams.IncludeNullFields && queryParams.CensusJsonMode)
+                options = _incNullAndAllStringOptions;
+            else if (queryParams.CensusJsonMode)
+                options = _allStringOptions;
+
             return new JsonResult
             (
                 new DataResponse<object>
@@ -222,7 +241,7 @@ public class CollectionController : ControllerBase
                         )
                         : null
                 ),
-                queryParams.IncludeNullFields ? _includeNullOptions : _noIncludeNullOptions
+                options
             );
         }
         catch (QueryException quex)

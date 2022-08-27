@@ -53,7 +53,7 @@ public static class Program
             {
                 options.JsonSerializerOptions.PropertyNamingPolicy = new SnakeCaseJsonNamingPolicy();
                 options.JsonSerializerOptions.DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull;
-                options.JsonSerializerOptions.Converters.Add(new BsonDocumentJsonConverter());
+                options.JsonSerializerOptions.Converters.Add(new BsonDocumentJsonConverter(false));
                 options.JsonSerializerOptions.Converters.Add(new DataResponseJsonConverter());
                 options.JsonSerializerOptions.Converters.Add(new BsonDecimal128JsonConverter());
             });

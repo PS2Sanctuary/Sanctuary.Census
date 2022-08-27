@@ -8,6 +8,17 @@ namespace Sanctuary.Census.Api.Json;
 /// <inheritdoc />
 public class BsonDocumentJsonConverter : JsonConverter<BsonDocument>
 {
+    private readonly bool _stringifyAll;
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="BsonDocumentJsonConverter"/> class.
+    /// </summary>
+    /// <param name="stringifyAll"><c>True</c> to stringify all values.</param>
+    public BsonDocumentJsonConverter(bool stringifyAll)
+    {
+        _stringifyAll = stringifyAll;
+    }
+
     /// <inheritdoc />
     public override BsonDocument Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
         => throw new NotImplementedException();
@@ -44,7 +55,10 @@ public class BsonDocumentJsonConverter : JsonConverter<BsonDocument>
             }
             case BsonType.Boolean:
             {
-                writer.WriteBooleanValue(value.AsBoolean);
+                if (_stringifyAll)
+                    writer.WriteStringValue(value.ToString());
+                else
+                    writer.WriteBooleanValue(value.AsBoolean);
                 break;
             }
             case BsonType.Document:
@@ -54,27 +68,42 @@ public class BsonDocumentJsonConverter : JsonConverter<BsonDocument>
             }
             case BsonType.Double:
             {
-                writer.WriteNumberValue(Math.Round((decimal)value.AsDouble, 3));
+                if (_stringifyAll)
+                    writer.WriteStringValue(value.ToString());
+                else
+                    writer.WriteNumberValue(value.AsDouble);
                 break;
             }
             case BsonType.Decimal128:
             {
-                writer.WriteNumberValue(value.AsDecimal);
+                if (_stringifyAll)
+                    writer.WriteStringValue(value.ToString());
+                else
+                    writer.WriteNumberValue(value.AsDecimal);
                 break;
             }
             case BsonType.Int32:
             {
-                writer.WriteNumberValue(value.AsInt32);
+                if (_stringifyAll)
+                    writer.WriteStringValue(value.ToString());
+                else
+                    writer.WriteNumberValue(value.AsInt32);
                 break;
             }
             case BsonType.Int64:
             {
-                writer.WriteStringValue(value.ToString());
+                if (_stringifyAll)
+                    writer.WriteStringValue(value.ToString());
+                else
+                    writer.WriteStringValue(value.ToString()); // Int64s break JavaScript
                 break;
             }
             case BsonType.Null:
             {
-                writer.WriteNullValue();
+                if (_stringifyAll)
+                    writer.WriteStringValue(value.ToString());
+                else
+                    writer.WriteNullValue();
                 break;
             }
             case BsonType.String:

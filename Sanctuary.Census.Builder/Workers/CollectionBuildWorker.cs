@@ -1,11 +1,13 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using MongoDB.Bson;
 using MongoDB.Driver;
 using Sanctuary.Census.Builder.Abstractions.CollectionBuilders;
 using Sanctuary.Census.Builder.Abstractions.Database;
 using Sanctuary.Census.Builder.Abstractions.Services;
+using Sanctuary.Census.Builder.Objects;
 using Sanctuary.Census.ClientData.Abstractions.Services;
 using Sanctuary.Census.Common;
 using Sanctuary.Census.Common.Abstractions.Services;
@@ -30,9 +32,8 @@ namespace Sanctuary.Census.Builder.Workers;
 /// </summary>
 public class CollectionBuildWorker : BackgroundService
 {
-    private static readonly TimeSpan COLLECTION_BUILD_INTERVAL = TimeSpan.FromHours(3);
-
     private readonly ILogger<CollectionBuildWorker> _logger;
+    private readonly IOptionsMonitor<BuildOptions> _buildOptions;
     private readonly IServiceScopeFactory _serviceScopeFactory;
     private readonly ICollectionBuilderRepository _collectionBuilderRepository;
 
@@ -40,16 +41,19 @@ public class CollectionBuildWorker : BackgroundService
     /// Initializes a new instance of the <see cref="CollectionBuildWorker"/> class.
     /// </summary>
     /// <param name="logger">The logging interface to use.</param>
+    /// <param name="buildOptions">The build options to use.</param>
     /// <param name="serviceScopeFactory">The service provider.</param>
     /// <param name="collectionBuilderRepository">The collection builder repository.</param>
     public CollectionBuildWorker
     (
         ILogger<CollectionBuildWorker> logger,
+        IOptionsMonitor<BuildOptions> buildOptions,
         IServiceScopeFactory serviceScopeFactory,
         ICollectionBuilderRepository collectionBuilderRepository
     )
     {
         _logger = logger;
+        _buildOptions = buildOptions;
         _serviceScopeFactory = serviceScopeFactory;
         _collectionBuilderRepository = collectionBuilderRepository;
     }
@@ -69,7 +73,7 @@ public class CollectionBuildWorker : BackgroundService
 
         // TODO: Quick-update collections? E.g. the world collection could be updated every 5m to better represent lock state.
         int dataCacheFailureCount = 0;
-        TimeSpan currentBuildInterval = COLLECTION_BUILD_INTERVAL;
+        TimeSpan currentBuildInterval = TimeSpan.FromSeconds(_buildOptions.CurrentValue.BuildIntervalSeconds);
 
         while (!ct.IsCancellationRequested)
         {
@@ -103,12 +107,14 @@ public class CollectionBuildWorker : BackgroundService
 
                     dataCacheFailureCount = 0;
                     _logger.LogInformation("[{Environment}] Caches updated successfully", env);
-                    currentBuildInterval = COLLECTION_BUILD_INTERVAL;
+                    currentBuildInterval = TimeSpan.FromSeconds(_buildOptions.CurrentValue.BuildIntervalSeconds);
                 }
                 catch (ServerLockedException)
                 {
                     // Probably down for an update. Let's get back in the game faster!
-                    currentBuildInterval = TimeSpan.FromMinutes(30);
+                    if (TimeSpan.FromMinutes(30) < currentBuildInterval)
+                        currentBuildInterval = TimeSpan.FromMinutes(30);
+
                     _logger.LogWarning("[{Environment}] Servers are locked. Collection build could not complete", env);
                     continue;
                 }
@@ -125,7 +131,6 @@ public class CollectionBuildWorker : BackgroundService
                         return;
                     }
 
-                    currentBuildInterval = COLLECTION_BUILD_INTERVAL;
                     _logger.LogError(ex, "[{Environment}] Failed to cache data!", env);
                     continue;
                 }

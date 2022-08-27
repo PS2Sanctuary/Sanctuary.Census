@@ -6,6 +6,7 @@ using Sanctuary.Census.Builder.Abstractions.Database;
 using Sanctuary.Census.Builder.Abstractions.Services;
 using Sanctuary.Census.Builder.CollectionBuilders;
 using Sanctuary.Census.Builder.Database;
+using Sanctuary.Census.Builder.Objects;
 using Sanctuary.Census.Builder.Services;
 using Sanctuary.Census.Builder.Workers;
 using Sanctuary.Census.ClientData.Extensions;
@@ -41,7 +42,8 @@ public static class Program
             .UseSerilog()
             .ConfigureServices((context, services) =>
             {
-                services.Configure<LoginClientOptions>(context.Configuration.GetSection(nameof(LoginClientOptions)))
+                services.Configure<BuildOptions>(context.Configuration.GetSection(nameof(BuildOptions)))
+                    .Configure<LoginClientOptions>(context.Configuration.GetSection(nameof(LoginClientOptions)))
                     .Configure<GatewayClientOptions>(context.Configuration.GetSection(nameof(GatewayClientOptions)));
 
                 services.AddCommonServices()

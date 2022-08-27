@@ -81,9 +81,9 @@ public class OutfitWarCollectionsBuilder : ICollectionBuilder
             (
                 war.OutfitWarID,
                 (uint)server,
-                name!,
+                name,
                 war.ImageSetID,
-                war.MaybePlayerSize,
+                war.MaybeOutfitSizeRequirement,
                 war.MaybePlayerSignupRequirement,
                 war.StartTime,
                 war.EndTime,

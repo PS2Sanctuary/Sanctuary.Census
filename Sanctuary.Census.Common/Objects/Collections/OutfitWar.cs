@@ -14,8 +14,8 @@ namespace Sanctuary.Census.Common.Objects.Collections;
 /// <param name="WorldID">The world that the war is occuring on.</param>
 /// <param name="Title">The title of the outfit war.</param>
 /// <param name="ImageSetID">The ID of the war's image set.</param>
-/// <param name="TeamSizeLimit">The maximum number of players that can play in a match.</param>
-/// <param name="TeamSignupRequirement">The number of outfit members that must signup before an outfit can participate.</param>
+/// <param name="OutfitSizeRequirement">The maximum number of players that can play in a match.</param>
+/// <param name="OutfitSignupRequirement">The number of outfit members that must signup before an outfit can participate.</param>
 /// <param name="StartTime">The start time of the war, as a unix seconds timestamp.</param>
 /// <param name="EndTime">The end time of the war, as a unix seconds timestamp.</param>
 /// <param name="Phases">The phases of the war.</param>
@@ -24,10 +24,10 @@ public record OutfitWar
 (
     [property: Key] uint OutfitWarID,
     uint WorldID,
-    LocaleString Title,
+    LocaleString? Title,
     uint ImageSetID,
-    uint TeamSizeLimit,
-    uint TeamSignupRequirement,
+    uint OutfitSizeRequirement,
+    uint OutfitSignupRequirement,
     ulong StartTime,
     ulong EndTime,
     IReadOnlyList<OutfitWar.Phase> Phases
@@ -56,10 +56,10 @@ public record OutfitWar
         => other is not null
            && OutfitWarID.Equals(other.OutfitWarID)
            && WorldID.Equals(other.WorldID)
-           && Title.Equals(other.Title)
+           && ((Title is not null && other.Title is not null && Title.Equals(other.Title)) || Title == other.Title)
            && ImageSetID.Equals(other.ImageSetID)
-           && TeamSizeLimit.Equals(other.TeamSizeLimit)
-           && TeamSignupRequirement.Equals(other.TeamSignupRequirement)
+           && OutfitSizeRequirement.Equals(other.OutfitSizeRequirement)
+           && OutfitSignupRequirement.Equals(other.OutfitSignupRequirement)
            && StartTime.Equals(other.StartTime)
            && EndTime.Equals(other.EndTime)
            && Phases.SequenceEqual(other.Phases);
@@ -72,8 +72,8 @@ public record OutfitWar
         hashCode.Add(WorldID);
         hashCode.Add(Title);
         hashCode.Add(ImageSetID);
-        hashCode.Add(TeamSizeLimit);
-        hashCode.Add(TeamSignupRequirement);
+        hashCode.Add(OutfitSizeRequirement);
+        hashCode.Add(OutfitSignupRequirement);
         hashCode.Add(StartTime);
         hashCode.Add(EndTime);
         foreach (Phase phase in Phases)

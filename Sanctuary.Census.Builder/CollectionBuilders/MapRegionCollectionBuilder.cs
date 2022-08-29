@@ -7,6 +7,8 @@ using Sanctuary.Census.Common.Objects.CommonModels;
 using Sanctuary.Census.PatchData.Abstractions.Services;
 using Sanctuary.Census.PatchData.PatchDataModels;
 using Sanctuary.Census.ServerData.Internal.Abstractions.Services;
+using Sanctuary.Common.Objects;
+using Sanctuary.Zone.Packets.MapRegion;
 using Sanctuary.Zone.Packets.StaticFacilityInfo;
 using System.Collections.Generic;
 using System.Threading;
@@ -16,7 +18,7 @@ using FacilityInfo = Sanctuary.Zone.Packets.StaticFacilityInfo.FacilityInfo;
 namespace Sanctuary.Census.Builder.CollectionBuilders;
 
 /// <summary>
-/// Builds the <see cref="MapRegion"/> collection.
+/// Builds the <see cref="Common.Objects.Collections.MapRegion"/> collection.
 /// </summary>
 public class MapRegionCollectionBuilder : ICollectionBuilder
 {
@@ -48,6 +50,9 @@ public class MapRegionCollectionBuilder : ICollectionBuilder
         if (_patchDataCache.MapRegions is null)
             throw new MissingCacheDataException(typeof(MapRegionPatch));
 
+        if (_serverDataCache.MapRegionDatas.Count == 0)
+            throw new MissingCacheDataException(typeof(MapRegionData));
+
         if (_serverDataCache.StaticFacilityInfos is null)
             throw new MissingCacheDataException(typeof(StaticFacilityInfoAllZones));
 
@@ -56,38 +61,48 @@ public class MapRegionCollectionBuilder : ICollectionBuilder
             facilityInfos.TryAdd(fac.FacilityID, fac);
 
         Dictionary<uint, MapRegion> builtRegions = new();
-        foreach (MapRegionPatch mapRegion in _patchDataCache.MapRegions)
+        foreach ((ZoneDefinition zone, MapRegionData regionData) in _serverDataCache.MapRegionDatas)
         {
-            MapRegion built = new
-            (
-                mapRegion.RegionID,
-                mapRegion.ZoneID,
-                mapRegion.FacilityID,
-                mapRegion.Name,
-                mapRegion.TypeID,
-                mapRegion.TypeName,
-                mapRegion.LocationX is null ? null : new decimal(mapRegion.LocationX.Value),
-                mapRegion.LocationY is null ? null : new decimal(mapRegion.LocationY.Value),
-                mapRegion.LocationZ is null ? null : new decimal(mapRegion.LocationZ.Value)
-            );
-
-            if (facilityInfos.TryGetValue(built.FacilityId, out FacilityInfo? facility))
+            foreach (MapRegionData_Region region in regionData.Regions)
             {
-                _localeDataCache.TryGetLocaleString(facility.FacilityNameID, out LocaleString? name);
+                _localeDataCache.TryGetLocaleString(region.FacilityNameID, out LocaleString? name);
+                facilityInfos.TryGetValue(region.FacilityID, out FacilityInfo? facility);
 
-                built = built with {
-                    FacilityName = name!.En!,
-                    FacilityTypeId = facility.FacilityType,
-                    LocationX = new decimal(facility.LocationX),
-                    LocationY = new decimal(facility.LocationY),
-                    LocationZ = new decimal(facility.LocationZ),
-                    ZoneId = facility.ZoneDefinition
-                };
+                builtRegions.TryAdd(region.MapRegionID_1, new MapRegion
+                (
+                    region.MapRegionID_1,
+                    (uint)zone,
+                    region.FacilityID,
+                    name?.En,
+                    name,
+                    region.FacilityTypeID,
+                    FacilityTypeToName(region.FacilityTypeID),
+                    facility is null ? null : new decimal(facility.LocationX),
+                    facility is null ? null : new decimal(facility.LocationY),
+                    facility is null ? null : new decimal(facility.LocationZ)
+                ));
             }
-
-            builtRegions.TryAdd(built.MapRegionId, built);
         }
 
         await dbContext.UpsertMapRegionsAsync(builtRegions.Values, ct).ConfigureAwait(false);
     }
+
+    private static string FacilityTypeToName(byte facilityType)
+        => facilityType switch
+        {
+            1 => "Default",
+            2 => "Amp Station",
+            3 => "Bio Lab",
+            4 => "Tech Plant",
+            5 => "Large Outpost",
+            6 => "Small Outpost",
+            7 => "Warpgate",
+            8 => "Interlink Facility",
+            9 => "Construction Outpost",
+            10 => "Relic Outpost (Desolation)",
+            11 => "Containment Site",
+            12 => "Trident",
+            13 => "Seapost",
+            _ => "Unknown"
+        };
 }

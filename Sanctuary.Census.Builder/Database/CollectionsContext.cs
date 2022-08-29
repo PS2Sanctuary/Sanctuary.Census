@@ -77,6 +77,7 @@ public class CollectionsContext : ICollectionsContext
         await CreateUniqueKeyIndex<Loadout>(x => x.LoadoutID, ct).ConfigureAwait(false);
         await CreateNonUniqueKeyIndexes<LoadoutSlot>(ct, x => x.LoadoutID, x => x.SlotID).ConfigureAwait(false);
         await CreateUniqueKeyIndex<MapRegion>(x => x.MapRegionId, ct).ConfigureAwait(false);
+        await CreateNonUniqueKeyIndexes<MapRegion>(ct, x => x.FacilityId).ConfigureAwait(false);
         await CreateUniqueKeyIndex<OutfitWar>(x => x.OutfitWarID, ct).ConfigureAwait(false);
         await CreateNonUniqueKeyIndexes<OutfitWarRegistration>(ct, x => x.OutfitID, x => x.WorldID).ConfigureAwait(false);
         await CreateNonUniqueKeyIndexes<OutfitWarRanking>(ct, x => x.RoundID, x => x.OutfitID, x => x.FactionID).ConfigureAwait(false);

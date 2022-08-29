@@ -2,6 +2,11 @@
 
 Date format: DD/MM/YYYY
 
+## vNext
+
+- `map_region` is now updated automatically.
+- Added the `map_region.localized_facility_name` field.
+
 ## 28/08/2022
 
 - Added support for serializing all fields in a response as strings, to match DBG Census.

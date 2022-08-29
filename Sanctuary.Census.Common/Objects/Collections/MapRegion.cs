@@ -1,4 +1,5 @@
 ﻿using Sanctuary.Census.Common.Attributes;
+using Sanctuary.Census.Common.Objects.CommonModels;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 
@@ -11,6 +12,7 @@ namespace Sanctuary.Census.Common.Objects.Collections;
 /// <param name="ZoneId">The ID of the zone that this region is on.</param>
 /// <param name="FacilityId">The ID of the facility within this region.</param>
 /// <param name="FacilityName">The name of the facility contained within the region.</param>
+/// <param name="LocalizedFacilityName">The localized name of the facility contained within the region.</param>
 /// <param name="FacilityTypeId">The ID of the type of the facility.</param>
 /// <param name="FacilityType">The name of the type of the facility.</param>
 /// <param name="LocationX">The X coordinate of the center of the region.</param>
@@ -20,10 +22,11 @@ namespace Sanctuary.Census.Common.Objects.Collections;
 [Description("Note that this collection will not have new regions added automatically at this time")]
 public record MapRegion
 (
-    [property:Key] uint MapRegionId,
-    uint ZoneId,
-    uint FacilityId,
-    string FacilityName,
+    [property: Key] uint MapRegionId,
+    [property: Key] uint ZoneId,
+    [property: Key] uint FacilityId,
+    string? FacilityName,
+    LocaleString? LocalizedFacilityName,
     uint FacilityTypeId,
     string? FacilityType,
     decimal? LocationX,

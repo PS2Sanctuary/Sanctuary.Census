@@ -1,5 +1,6 @@
 ﻿using Sanctuary.Census.Common.Abstractions.Services;
 using Sanctuary.Census.PatchData.PatchDataModels;
+using System.Collections.Generic;
 
 namespace Sanctuary.Census.PatchData.Abstractions.Services;
 
@@ -12,14 +13,4 @@ public interface IPatchDataCacheService : IDataCacheService
     /// Gets the cached <see cref="FacilityLinkPatch"/> objects.
     /// </summary>
     IReadOnlyList<FacilityLinkPatch>? FacilityLinks { get; }
-
-    /// <summary>
-    /// Gets the cached <see cref="MapRegionPatch"/> objects.
-    /// </summary>
-    IReadOnlyList<MapRegionPatch>? MapRegions { get; }
-
-    /// <summary>
-    /// Gets the cached <see cref="StaticFacilityInfo"/> objects.
-    /// </summary>
-    IReadOnlyList<StaticFacilityInfo>? StaticFacilityInfos { get; }
 }

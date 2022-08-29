@@ -4,8 +4,6 @@ using Sanctuary.Census.Builder.Exceptions;
 using Sanctuary.Census.ClientData.Abstractions.Services;
 using Sanctuary.Census.Common.Objects.Collections;
 using Sanctuary.Census.Common.Objects.CommonModels;
-using Sanctuary.Census.PatchData.Abstractions.Services;
-using Sanctuary.Census.PatchData.PatchDataModels;
 using Sanctuary.Census.ServerData.Internal.Abstractions.Services;
 using Sanctuary.Common.Objects;
 using Sanctuary.Zone.Packets.MapRegion;
@@ -23,33 +21,26 @@ namespace Sanctuary.Census.Builder.CollectionBuilders;
 public class MapRegionCollectionBuilder : ICollectionBuilder
 {
     private readonly ILocaleDataCacheService _localeDataCache;
-    private readonly IPatchDataCacheService _patchDataCache;
     private readonly IServerDataCacheService _serverDataCache;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="MapRegionCollectionBuilder"/> class.
     /// </summary>
     /// <param name="localeDataCache">The locale data cache.</param>
-    /// <param name="patchDataCache">The patch data cache.</param>
     /// <param name="serverDataCache">The server data cache.</param>
     public MapRegionCollectionBuilder
     (
         ILocaleDataCacheService localeDataCache,
-        IPatchDataCacheService patchDataCache,
         IServerDataCacheService serverDataCache
     )
     {
         _localeDataCache = localeDataCache;
-        _patchDataCache = patchDataCache;
         _serverDataCache = serverDataCache;
     }
 
     /// <inheritdoc />
     public async Task BuildAsync(ICollectionsContext dbContext, CancellationToken ct = default)
     {
-        if (_patchDataCache.MapRegions is null)
-            throw new MissingCacheDataException(typeof(MapRegionPatch));
-
         if (_serverDataCache.MapRegionDatas.Count == 0)
             throw new MissingCacheDataException(typeof(MapRegionData));
 

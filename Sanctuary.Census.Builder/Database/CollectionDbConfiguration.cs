@@ -106,9 +106,6 @@ public class CollectionDbConfiguration<TCollection> : ICollectionDbConfiguration
     public async Task ScaffoldAsync(IMongoContext database, CancellationToken ct = default)
     {
         IMongoCollection<TCollection> collection = database.GetCollection<TCollection>();
-
-        await collection.Indexes.DropAllAsync(ct).ConfigureAwait(false);
-
         await collection.Indexes
             .CreateManyAsync
             (

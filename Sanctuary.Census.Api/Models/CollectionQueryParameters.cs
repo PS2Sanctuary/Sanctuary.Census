@@ -124,6 +124,7 @@ public class CollectionQueryParameters
     /// </summary>
     public CollectionQueryParameters()
     {
+        CensusJsonMode = true;
         IsCaseSensitive = true;
         Limit = 100;
         LimitPerDb = null;

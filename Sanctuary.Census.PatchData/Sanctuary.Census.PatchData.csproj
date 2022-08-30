@@ -5,9 +5,8 @@
     </ItemGroup>
 
     <ItemGroup>
-      <None Update="Data\facility_link.json">
-        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      </None>
+      <Folder Include="Data" />
+      <Folder Include="PatchDataModels" />
     </ItemGroup>
 
 </Project>

@@ -89,6 +89,6 @@ public class ImageSetCollectionBuilder : ICollectionBuilder
             }
         }
 
-        await dbContext.UpsertImageSetsAsync(builtSets, ct).ConfigureAwait(false);
+        await dbContext.UpsertCollectionAsync(builtSets, ct).ConfigureAwait(false);
     }
 }

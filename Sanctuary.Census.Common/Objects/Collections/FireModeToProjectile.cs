@@ -1,4 +1,5 @@
-﻿using Sanctuary.Census.Common.Attributes;
+﻿using Sanctuary.Census.Common.Abstractions.Objects.Collections;
+using Sanctuary.Census.Common.Attributes;
 using System.ComponentModel.DataAnnotations;
 
 namespace Sanctuary.Census.Common.Objects.Collections;
@@ -13,4 +14,4 @@ public record FireModeToProjectile
 (
     [property:Key] uint FireModeID,
     [property:Key] uint ProjectileID
-);
+) : ISanctuaryCollection;

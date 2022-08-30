@@ -50,6 +50,6 @@ public class VehicleLoadoutCollectionBuilder : ICollectionBuilder
             builtLoadouts.Add(built);
         }
 
-        await dbContext.UpsertVehicleLoadoutsAsync(builtLoadouts, ct);
+        await dbContext.UpsertCollectionAsync(builtLoadouts, ct).ConfigureAwait(false);
     }
 }

@@ -43,6 +43,6 @@ public class ItemToWeaponCollectionBuilder : ICollectionBuilder
         IEnumerable<ItemToWeapon> builtItemsToWeapon = _clientDataCache.ClientItemDatasheetDatas
             .Select(i => new ItemToWeapon(i.ItemID, i.WeaponID));
 
-        await dbContext.UpsertItemsToWeaponsAsync(builtItemsToWeapon, ct);
+        await dbContext.UpsertCollectionAsync(builtItemsToWeapon, ct).ConfigureAwait(false);
     }
 }

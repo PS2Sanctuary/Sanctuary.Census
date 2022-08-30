@@ -1,4 +1,5 @@
-﻿using Sanctuary.Census.Common.Attributes;
+﻿using Sanctuary.Census.Common.Abstractions.Objects.Collections;
+using Sanctuary.Census.Common.Attributes;
 using System.ComponentModel.DataAnnotations;
 
 namespace Sanctuary.Census.Common.Objects.Collections;
@@ -19,4 +20,4 @@ public record WeaponAmmoSlot
     ushort ClipSize,
     ushort Capacity,
     string? ClipModelName
-);
+) : ISanctuaryCollection;

@@ -147,6 +147,6 @@ public class FireModeCollectionBuilder : ICollectionBuilder
             builtFireModes.TryAdd(built.FireModeID, built);
         }
 
-        await dbContext.UpsertFireMode2sAsync(builtFireModes.Values, ct);
+        await dbContext.UpsertCollectionAsync(builtFireModes.Values, ct).ConfigureAwait(false);
     }
 }

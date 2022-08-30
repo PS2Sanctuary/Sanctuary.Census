@@ -1,4 +1,5 @@
-﻿using Sanctuary.Census.Common.Attributes;
+﻿using Sanctuary.Census.Common.Abstractions.Objects.Collections;
+using Sanctuary.Census.Common.Attributes;
 using Sanctuary.Census.Common.Objects.CommonModels;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
@@ -88,5 +89,5 @@ public record FireMode2
     decimal? SwayPeriodX,
     decimal? SwayPeriodY,
     decimal ZoomDefault
-);
+) : ISanctuaryCollection;
 #pragma warning restore CS1591

@@ -49,6 +49,6 @@ public class VehicleSkillSetCollectionBuilder : ICollectionBuilder
             builtSets.Add(built);
         }
 
-        await dbContext.UpsertVehicleSkillSetsAsync(builtSets, ct);
+        await dbContext.UpsertCollectionAsync(builtSets, ct).ConfigureAwait(false);
     }
 }

@@ -60,6 +60,6 @@ public class ExperienceCollectionBuilder : ICollectionBuilder
             builtItems.TryAdd(built.ExperienceID, built);
         }
 
-        await dbContext.UpsertExperiencesAsync(builtItems.Values, ct);
+        await dbContext.UpsertCollectionAsync(builtItems.Values, ct).ConfigureAwait(false);
     }
 }

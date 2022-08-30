@@ -1,4 +1,5 @@
-﻿using Sanctuary.Census.Common.Attributes;
+﻿using Sanctuary.Census.Common.Abstractions.Objects.Collections;
+using Sanctuary.Census.Common.Attributes;
 using Sanctuary.Census.Common.Objects.CommonModels;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
@@ -16,7 +17,7 @@ namespace Sanctuary.Census.Common.Objects.Collections;
 /// <param name="LocationY">The Y coordinate of the facility.</param>
 /// <param name="LocationZ">The Z coordinate of the facility.</param>
 [Collection]
-[Description("Information about in-game facilities. While missing some of the fields of map_region, this collection is guaranteed to be up-to-date")]
+[Description("Information about in-game facilities. While missing some of the fields of map_region, this collection is more likely to contain data for all known zones.")]
 public record FacilityInfo
 (
     [property: Key] ushort ZoneID,
@@ -26,4 +27,4 @@ public record FacilityInfo
     decimal LocationX,
     decimal LocationY,
     decimal LocationZ
-);
+) : ISanctuaryCollection;

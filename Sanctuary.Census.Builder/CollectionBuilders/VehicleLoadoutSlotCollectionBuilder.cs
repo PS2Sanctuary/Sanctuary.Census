@@ -65,6 +65,6 @@ public class VehicleLoadoutSlotCollectionBuilder : ICollectionBuilder
             builtSlots.Add(built);
         }
 
-        await dbContext.UpsertVehicleLoadoutSlotsAsync(builtSlots, ct);
+        await dbContext.UpsertCollectionAsync(builtSlots, ct).ConfigureAwait(false);
     }
 }

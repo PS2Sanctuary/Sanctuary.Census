@@ -118,6 +118,6 @@ public class ItemCollectionBuilder : ICollectionBuilder
             builtItems.TryAdd(built.ItemID, built);
         }
 
-        await dbContext.UpsertItemsAsync(builtItems.Values, ct);
+        await dbContext.UpsertCollectionAsync(builtItems.Values, ct).ConfigureAwait(false);
     }
 }

@@ -55,6 +55,6 @@ public class FireGroupCollectionBuilder : ICollectionBuilder
             builtFireGroups.TryAdd(built.FireGroupID, built);
         }
 
-        await dbContext.UpsertFireGroupsAsync(builtFireGroups.Values, ct);
+        await dbContext.UpsertCollectionAsync(builtFireGroups.Values, ct).ConfigureAwait(false);
     }
 }

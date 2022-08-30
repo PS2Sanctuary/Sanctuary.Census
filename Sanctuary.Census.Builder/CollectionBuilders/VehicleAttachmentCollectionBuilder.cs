@@ -85,6 +85,6 @@ public class VehicleAttachmentCollectionBuilder : ICollectionBuilder
             builtAttachments.Add(built);
         }
 
-        await dbContext.UpsertVehicleAttachmentsAsync(builtAttachments, ct).ConfigureAwait(false);
+        await dbContext.UpsertCollectionAsync(builtAttachments, ct).ConfigureAwait(false);
     }
 }

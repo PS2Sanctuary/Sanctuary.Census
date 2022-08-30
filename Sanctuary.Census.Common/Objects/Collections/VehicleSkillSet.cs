@@ -1,4 +1,5 @@
-﻿using Sanctuary.Census.Common.Attributes;
+﻿using Sanctuary.Census.Common.Abstractions.Objects.Collections;
+using Sanctuary.Census.Common.Attributes;
 using System.ComponentModel.DataAnnotations;
 
 namespace Sanctuary.Census.Common.Objects.Collections;
@@ -17,4 +18,4 @@ public record VehicleSkillSet
     [property:Key] uint SkillSetID,
     uint FactionID,
     byte DisplayIndex
-);
+) : ISanctuaryCollection;

@@ -1,4 +1,5 @@
-﻿using Sanctuary.Census.Common.Attributes;
+﻿using Sanctuary.Census.Common.Abstractions.Objects.Collections;
+using Sanctuary.Census.Common.Attributes;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 
@@ -12,11 +13,11 @@ namespace Sanctuary.Census.Common.Objects.Collections;
 /// <param name="FacilityIdB">The second facility involved in the link.</param>
 /// <param name="Description">The description of the link.</param>
 [Collection]
-[Description("Information about lattice links between facilities. Note that this collection is not automatically updated at this time")]
+[Description("Information about lattice links between facilities.")]
 public record FacilityLink
 (
     [property:Key] uint ZoneID,
-    [property:Key] int FacilityIdA,
-    [property:Key] int FacilityIdB,
+    int FacilityIdA,
+    int FacilityIdB,
     string? Description
-);
+) : ISanctuaryCollection;

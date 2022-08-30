@@ -12,8 +12,12 @@ Date format: DD/MM/YYYY
 
 **Additions**
 - Query commands that accept a boolean value, now also support the use of `0 (false)` and `1 (true)`.
-- `map_region` is now updated automatically.
+- `facility_link` and `map_region` are now updated automatically.
 - Added the `map_region.localized_facility_name` field.
+- Added the `map_hex` collection.
+
+**Miscellaneous**
+- Big internal refactor to collection upserting. It's now much easier to add new collections.
 
 ## 28/08/2022
 

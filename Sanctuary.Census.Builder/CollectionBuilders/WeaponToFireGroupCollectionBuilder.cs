@@ -50,6 +50,6 @@ public class WeaponToFireGroupCollectionBuilder : ICollectionBuilder
             }
         }
 
-        await dbContext.UpsertWeaponsToFireGroupsAsync(builtMaps, ct);
+        await dbContext.UpsertCollectionAsync(builtMaps, ct).ConfigureAwait(false);
     }
 }

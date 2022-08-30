@@ -51,6 +51,6 @@ public class WeaponToAttachmentCollectionBuilder : ICollectionBuilder
             builtMaps.Add(built);
         }
 
-        await dbContext.UpsertWeaponToAttachmentsAsync(builtMaps, ct);
+        await dbContext.UpsertCollectionAsync(builtMaps, ct).ConfigureAwait(false);
     }
 }

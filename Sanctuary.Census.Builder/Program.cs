@@ -11,6 +11,7 @@ using Sanctuary.Census.Builder.Services;
 using Sanctuary.Census.Builder.Workers;
 using Sanctuary.Census.ClientData.Extensions;
 using Sanctuary.Census.Common.Extensions;
+using Sanctuary.Census.Common.Objects.Collections;
 using Sanctuary.Census.PatchData.Extensions;
 using Sanctuary.Census.ServerData.Internal.Extensions;
 using Sanctuary.Census.ServerData.Internal.Objects;
@@ -52,11 +53,217 @@ public static class Program
                     .AddInternalServerDataServices()
                     .AddScoped<ICollectionsContext, CollectionsContext>()
                     .AddScoped<ICollectionDiffService, CollectionDiffService>()
+                    .RegisterCollectionConfigurations()
                     .RegisterCollectionBuilders()
                     .AddHostedService<CollectionBuildWorker>();
             });
 
-        await builder.Build().RunAsync();
+        await builder.Build().RunAsync().ConfigureAwait(false);
+    }
+
+    private static IServiceCollection RegisterCollectionConfigurations(this IServiceCollection services)
+    {
+        CollectionConfigurationProvider configProvider = new();
+        services.AddSingleton(configProvider);
+
+        configProvider.Register<Currency>()
+            .WithIndex(x => x.CurrencyID, true)
+            .WithEqualityKey(x => x.CurrencyID);
+
+        configProvider.Register<Experience>()
+            .WithIndex(x => x.ExperienceID, true)
+            .WithEqualityKey(x => x.ExperienceID);
+
+        configProvider.Register<FacilityInfo>()
+            .WithIndex(x => x.FacilityID, true)
+            .WithIndex(x => x.ZoneID, false)
+            .WithEqualityKey(x => x.FacilityID);
+
+        configProvider.Register<FacilityLink>()
+            .WithIndex(x => x.ZoneID, false)
+            .WithIndex(x => x.FacilityIdA, false)
+            .WithIndex(x => x.FacilityIdB, false)
+            .WithEqualityKey(x => x.FacilityIdA)
+            .WithEqualityKey(x => x.FacilityIdB);
+
+        configProvider.Register<Faction>()
+            .WithIndex(x => x.FactionID, true)
+            .WithEqualityKey(x => x.FactionID);
+
+        configProvider.Register<FireGroup>()
+            .WithIndex(x => x.FireGroupID, true)
+            .WithEqualityKey(x => x.FireGroupID);
+
+        configProvider.Register<FireGroupToFireMode>()
+            .WithIndex(x => x.FireGroupId, false)
+            .WithIndex(x => x.FireModeId, false)
+            .WithEqualityKey(x => x.FireGroupId)
+            .WithEqualityKey(x => x.FireModeId)
+            .WithEqualityKey(x => x.FireModeIndex);
+
+        configProvider.Register<FireMode2>()
+            .WithIndex(x => x.FireModeID, true)
+            .WithEqualityKey(x => x.FireModeID);
+
+        configProvider.Register<FireModeToProjectile>()
+            .WithIndex(x => x.FireModeID, false)
+            .WithIndex(x => x.ProjectileID, false)
+            .WithEqualityKey(x => x.FireModeID)
+            .WithEqualityKey(x => x.ProjectileID);
+
+        configProvider.Register<ImageSet>()
+            .WithIndex(x => x.ImageSetID, false)
+            .WithIndex(x => x.ImageID, false)
+            .WithEqualityKey(x => x.ImageSetID)
+            .WithEqualityKey(x => x.ImageID);
+
+        configProvider.Register<Item>()
+            .WithIndex(x => x.ItemID, true)
+            .WithIndex(x => x.Name!.En, false)
+            .WithEqualityKey(x => x.ItemID);
+
+        configProvider.Register<ItemCategory>()
+            .WithIndex(x => x.ItemCategoryID, true)
+            .WithEqualityKey(x => x.ItemCategoryID);
+
+        configProvider.Register<ItemToWeapon>()
+            .WithIndex(x => x.ItemId, false)
+            .WithIndex(x => x.WeaponId, false)
+            .WithEqualityKey(x => x.ItemId)
+            .WithEqualityKey(x => x.WeaponId);
+
+        configProvider.Register<Loadout>()
+            .WithIndex(x => x.LoadoutID, true)
+            .WithEqualityKey(x => x.LoadoutID);
+
+        configProvider.Register<LoadoutSlot>()
+            .WithIndex(x => x.LoadoutID, false)
+            .WithIndex(x => x.SlotID, false)
+            .WithEqualityKey(x => x.LoadoutID)
+            .WithEqualityKey(x => x.SlotID);
+
+        configProvider.Register<MapHex>()
+            .WithIndex(x => x.MapRegionID, false)
+            .WithIndex(x => x.ZoneID, false)
+            .WithEqualityKey(x => x.X)
+            .WithEqualityKey(x => x.Y);
+
+        configProvider.Register<MapRegion>()
+            .WithIndex(x => x.MapRegionId, true)
+            .WithIndex(x => x.FacilityId, true)
+            .WithEqualityKey(x => x.MapRegionId);
+
+        configProvider.Register<MarketingBundle>()
+            .WithIndex(x => x.MarketingBundleID, true)
+            .WithIndex(x => x.MarketingBundleCategoryID, false)
+            .WithIndex(x => x.Name.En, false)
+            .WithIndex(x => x.IsOnSale, false)
+            .WithEqualityKey(x => x.MarketingBundleID);
+
+        configProvider.Register<MarketingBundleCategory>()
+            .WithIndex(x => x.MarketingBundleCategoryID, true)
+            .WithEqualityKey(x => x.MarketingBundleCategoryID);
+
+        configProvider.Register<MarketingBundleItem>()
+            .WithIndex(x => x.MarketingBundleID, false)
+            .WithIndex(x => x.ItemID, false)
+            .WithEqualityKey(x => x.MarketingBundleID)
+            .WithEqualityKey(x => x.ItemID);
+
+        configProvider.Register<OutfitWar>()
+            .WithIndex(x => x.OutfitWarID, true)
+            .WithEqualityKey(x => x.OutfitWarID);
+
+        configProvider.Register<OutfitWarRanking>()
+            .WithIndex(x => x.RoundID, false)
+            .WithIndex(x => x.OutfitID, false)
+            .WithEqualityKey(x => x.RoundID)
+            .WithEqualityKey(x => x.OutfitID);
+
+        configProvider.Register<OutfitWarRegistration>()
+            .WithIndex(x => x.OutfitID, false)
+            .WithIndex(x => x.WorldID, false)
+            .WithEqualityKey(x => x.OutfitID);
+
+        configProvider.Register<OutfitWarRounds>()
+            .WithIndex(x => x.OutfitWarID, true)
+            .WithIndex(x => x.PrimaryRoundID, true)
+            .WithEqualityKey(x => x.OutfitWarID);
+
+        configProvider.Register<PlayerStateGroup2>()
+            .WithIndex(x => x.PlayerStateGroupId, false)
+            .WithIndex(x => x.PlayerStateId, false)
+            .WithEqualityKey(x => x.PlayerStateGroupId)
+            .WithEqualityKey(x => x.PlayerStateId);
+
+        configProvider.Register<Profile>()
+            .WithIndex(x => x.ProfileId, true)
+            .WithEqualityKey(x => x.ProfileId);
+
+        configProvider.Register<Projectile>()
+            .WithIndex(x => x.ProjectileId, true)
+            .WithEqualityKey(x => x.ProjectileId);
+
+        configProvider.Register<Vehicle>()
+            .WithIndex(x => x.VehicleId, true)
+            .WithEqualityKey(x => x.VehicleId);
+
+        configProvider.Register<VehicleAttachment>()
+            .WithIndex(x => x.ItemID, false)
+            .WithIndex(x => x.VehicleID, false)
+            .WithIndex(x => x.VehicleLoadoutID, false)
+            .WithEqualityKey(x => x.ItemID)
+            .WithEqualityKey(x => x.VehicleLoadoutID);
+
+        configProvider.Register<VehicleLoadout>()
+            .WithIndex(x => x.LoadoutID, true)
+            .WithIndex(x => x.VehicleID, false)
+            .WithEqualityKey(x => x.LoadoutID);
+
+        configProvider.Register<VehicleLoadoutSlot>()
+            .WithIndex(x => x.LoadoutID, false)
+            .WithIndex(x => x.SlotID, false)
+            .WithEqualityKey(x => x.LoadoutID)
+            .WithEqualityKey(x => x.SlotID);
+
+        configProvider.Register<VehicleSkillSet>()
+            .WithIndex(x => x.SkillSetID, false)
+            .WithIndex(x => x.VehicleID, false)
+            .WithEqualityKey(x => x.FactionID)
+            .WithEqualityKey(x => x.SkillSetID)
+            .WithEqualityKey(x => x.VehicleID);
+
+        configProvider.Register<Weapon>()
+            .WithIndex(x => x.WeaponId, true)
+            .WithEqualityKey(x => x.WeaponId);
+
+        configProvider.Register<WeaponAmmoSlot>()
+            .WithIndex(x => x.WeaponId, false)
+            .WithEqualityKey(x => x.WeaponId)
+            .WithEqualityKey(x => x.WeaponSlotIndex);
+
+        configProvider.Register<WeaponToAttachment>()
+            .WithIndex(x => x.AttachmentID, false)
+            .WithIndex(x => x.ItemID, false)
+            .WithEqualityKey(x => x.AttachmentID)
+            .WithEqualityKey(x => x.ItemID);
+
+        configProvider.Register<WeaponToFireGroup>()
+            .WithIndex(x => x.FireGroupId, false)
+            .WithIndex(x => x.WeaponId, false)
+            .WithEqualityKey(x => x.FireGroupId)
+            .WithEqualityKey(x => x.FireGroupIndex)
+            .WithEqualityKey(x => x.WeaponId);
+
+        configProvider.Register<World>()
+            .WithIndex(x => x.WorldID, true)
+            .WithEqualityKey(x => x.WorldID);
+
+        configProvider.Register<Common.Objects.Collections.Zone>()
+            .WithIndex(x => x.ZoneID, true)
+            .WithEqualityKey(x => x.ZoneID);
+
+        return services;
     }
 
     private static IServiceCollection RegisterCollectionBuilders(this IServiceCollection services)
@@ -69,7 +276,6 @@ public static class Program
         return services.RegisterCollectionBuilder<CurrencyCollectionBuilder>()
             .RegisterCollectionBuilder<ExperienceCollectionBuilder>()
             .RegisterCollectionBuilder<FacilityInfoCollectionBuilder>()
-            .RegisterCollectionBuilder<FacilityLinkCollectionBuilder>()
             .RegisterCollectionBuilder<FactionCollectionBuilder>()
             .RegisterCollectionBuilder<FireGroupCollectionBuilder>()
             .RegisterCollectionBuilder<FireGroupToFireModeCollectionBuilder>()
@@ -81,7 +287,7 @@ public static class Program
             .RegisterCollectionBuilder<ItemToWeaponCollectionBuilder>()
             .RegisterCollectionBuilder<LoadoutCollectionBuilder>()
             .RegisterCollectionBuilder<LoadoutSlotCollectionBuilder>()
-            .RegisterCollectionBuilder<MapRegionCollectionBuilder>()
+            .RegisterCollectionBuilder<MapRegionDatasCollectionBuilder>()
             .RegisterCollectionBuilder<MarketingBundleCollectionBuilders>()
             .RegisterCollectionBuilder<OutfitWarCollectionsBuilder>()
             .RegisterCollectionBuilder<OutfitWarRegistrationCollectionBuilder>()

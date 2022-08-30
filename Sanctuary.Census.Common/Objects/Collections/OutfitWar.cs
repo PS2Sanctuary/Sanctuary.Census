@@ -1,4 +1,5 @@
-﻿using Sanctuary.Census.Common.Attributes;
+﻿using Sanctuary.Census.Common.Abstractions.Objects.Collections;
+using Sanctuary.Census.Common.Attributes;
 using Sanctuary.Census.Common.Objects.CommonModels;
 using System;
 using System.Collections.Generic;
@@ -31,7 +32,7 @@ public record OutfitWar
     ulong StartTime,
     ulong EndTime,
     IReadOnlyList<OutfitWar.Phase> Phases
-)
+) : ISanctuaryCollection
 {
     /// <summary>
     /// Represents information about an outfit war phase.

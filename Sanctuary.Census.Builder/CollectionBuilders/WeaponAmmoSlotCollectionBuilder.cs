@@ -56,6 +56,6 @@ public class WeaponAmmoSlotCollectionBuilder : ICollectionBuilder
             }
         }
 
-        await dbContext.UpsertWeaponAmmoSlotsAsync(builtAmmoSlots, ct);
+        await dbContext.UpsertCollectionAsync(builtAmmoSlots, ct).ConfigureAwait(false);
     }
 }

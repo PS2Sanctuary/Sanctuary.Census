@@ -92,6 +92,6 @@ public class VehicleCollectionBuilder : ICollectionBuilder
             builtVehicles.TryAdd(built.VehicleId, built);
         }
 
-        await dbContext.UpsertVehiclesAsync(builtVehicles.Values, ct);
+        await dbContext.UpsertCollectionAsync(builtVehicles.Values, ct).ConfigureAwait(false);
     }
 }

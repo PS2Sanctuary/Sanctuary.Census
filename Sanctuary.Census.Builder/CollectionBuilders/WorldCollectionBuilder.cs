@@ -60,6 +60,6 @@ public class WorldCollectionBuilder : ICollectionBuilder
             builtWorlds.TryAdd(built.WorldID, built);
         }
 
-        await dbContext.UpsertWorldsAsync(builtWorlds.Values, ct);
+        await dbContext.UpsertCollectionAsync(builtWorlds.Values, ct).ConfigureAwait(false);
     }
 }

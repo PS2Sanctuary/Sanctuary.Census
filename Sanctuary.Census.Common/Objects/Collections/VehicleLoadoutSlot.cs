@@ -1,4 +1,5 @@
-﻿using Sanctuary.Census.Common.Attributes;
+﻿using Sanctuary.Census.Common.Abstractions.Objects.Collections;
+using Sanctuary.Census.Common.Attributes;
 using Sanctuary.Census.Common.Objects.CommonModels;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
@@ -30,4 +31,4 @@ public record VehicleLoadoutSlot
     bool IsRequired,
     bool IsVisible,
     string? UiTag
-);
+) : ISanctuaryCollection;

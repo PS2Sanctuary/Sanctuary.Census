@@ -1,4 +1,5 @@
-﻿using Sanctuary.Census.Common.Attributes;
+﻿using Sanctuary.Census.Common.Abstractions.Objects.Collections;
+using Sanctuary.Census.Common.Attributes;
 using System.ComponentModel.DataAnnotations;
 
 namespace Sanctuary.Census.Common.Objects.Collections;
@@ -55,4 +56,4 @@ public record Projectile
     ushort? LockonLoseAngle,
     bool LockonSeekInFlight,
     string ActorDefinition
-);
+) : ISanctuaryCollection;

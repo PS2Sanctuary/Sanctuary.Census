@@ -90,6 +90,6 @@ public class FactionCollectionBuilder : ICollectionBuilder
             builtItems.TryAdd(built.FactionID, built);
         }
 
-        await dbContext.UpsertFactionsAsync(builtItems.Values, ct);
+        await dbContext.UpsertCollectionAsync(builtItems.Values, ct).ConfigureAwait(false);
     }
 }

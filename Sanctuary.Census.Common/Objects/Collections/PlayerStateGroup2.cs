@@ -1,4 +1,5 @@
-﻿using Sanctuary.Census.Common.Attributes;
+﻿using Sanctuary.Census.Common.Abstractions.Objects.Collections;
+using Sanctuary.Census.Common.Attributes;
 using System.ComponentModel.DataAnnotations;
 
 namespace Sanctuary.Census.Common.Objects.Collections;
@@ -18,5 +19,5 @@ public record PlayerStateGroup2
     byte CofShotsBeforePenalty,
     uint CofRecoveryDelayThreshold,
     decimal CofTurnPenalty
-);
+) : ISanctuaryCollection;
 #pragma warning restore CS1591

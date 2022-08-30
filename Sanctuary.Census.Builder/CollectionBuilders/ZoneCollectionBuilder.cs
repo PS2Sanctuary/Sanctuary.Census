@@ -63,6 +63,6 @@ public class ZoneCollectionBuilder : ICollectionBuilder
             builtZones.TryAdd(built.ZoneID, built);
         }
 
-        await dbContext.UpsertZonesAsync(builtZones.Values, ct);
+        await dbContext.UpsertCollectionAsync(builtZones.Values, ct).ConfigureAwait(false);
     }
 }

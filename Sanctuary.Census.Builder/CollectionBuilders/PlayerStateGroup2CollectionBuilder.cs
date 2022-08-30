@@ -59,6 +59,6 @@ public class PlayerStateGroup2CollectionBuilder : ICollectionBuilder
             }
         }
 
-        await dbContext.UpsertPlayerStateGroup2Async(builtStateGroups, ct);
+        await dbContext.UpsertCollectionAsync(builtStateGroups, ct).ConfigureAwait(false);
     }
 }

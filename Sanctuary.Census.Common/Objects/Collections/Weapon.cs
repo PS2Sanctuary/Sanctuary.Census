@@ -1,4 +1,5 @@
-﻿using Sanctuary.Census.Common.Attributes;
+﻿using Sanctuary.Census.Common.Abstractions.Objects.Collections;
+using Sanctuary.Census.Common.Attributes;
 using Sanctuary.Census.Common.Objects.CommonModels;
 using System.ComponentModel.DataAnnotations;
 
@@ -50,4 +51,4 @@ public record Weapon
     string? AnimationWieldTypeName,
     decimal? MinViewPitch,
     decimal? MaxViewPitch
-);
+) : ISanctuaryCollection;

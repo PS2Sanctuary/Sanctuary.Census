@@ -44,6 +44,6 @@ public class FireModeToProjectileCollectionBuilder : ICollectionBuilder
             .FireModeToProjectileMaps
             .Select(map => new FireModeToProjectile(map.FireModeID, map.ProjectileID));
 
-        await dbContext.UpsertFireModesToProjectilesAsync(builtMaps, ct);
+        await dbContext.UpsertCollectionAsync(builtMaps, ct).ConfigureAwait(false);
     }
 }

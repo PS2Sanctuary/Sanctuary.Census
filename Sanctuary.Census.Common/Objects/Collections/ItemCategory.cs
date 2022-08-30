@@ -1,4 +1,5 @@
-﻿using Sanctuary.Census.Common.Attributes;
+﻿using Sanctuary.Census.Common.Abstractions.Objects.Collections;
+using Sanctuary.Census.Common.Attributes;
 using Sanctuary.Census.Common.Objects.CommonModels;
 using System;
 using System.ComponentModel.DataAnnotations;
@@ -20,7 +21,7 @@ public record ItemCategory
     [property: Key] uint ItemCategoryID,
     LocaleString Name,
     uint[]? ParentCategoryIds
-)
+) : ISanctuaryCollection
 {
     /// <inheritdoc />
     public virtual bool Equals(ItemCategory? obj)

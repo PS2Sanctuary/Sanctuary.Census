@@ -80,6 +80,6 @@ public class WeaponCollectionBuilder : ICollectionBuilder
             builtWeapons.TryAdd(built.WeaponId, built);
         }
 
-        await dbContext.UpsertWeaponsAsync(builtWeapons.Values, ct);
+        await dbContext.UpsertCollectionAsync(builtWeapons.Values, ct).ConfigureAwait(false);
     }
 }

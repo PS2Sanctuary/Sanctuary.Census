@@ -62,6 +62,6 @@ public class CurrencyCollectionBuilder : ICollectionBuilder
             builtCurrencies.TryAdd(built.CurrencyID, built);
         }
 
-        await dbContext.UpsertCurrenciesAsync(builtCurrencies.Values, ct);
+        await dbContext.UpsertCollectionAsync(builtCurrencies.Values, ct).ConfigureAwait(false);
     }
 }

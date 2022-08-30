@@ -1,4 +1,5 @@
-﻿using Sanctuary.Census.Common.Attributes;
+﻿using Sanctuary.Census.Common.Abstractions.Objects.Collections;
+using Sanctuary.Census.Common.Attributes;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -23,7 +24,7 @@ public record OutfitWarRanking
     [property: Key] byte FactionID,
     uint Order,
     Dictionary<string, int> RankingParameters
-)
+) : ISanctuaryCollection
 {
     /// <inheritdoc />
     public virtual bool Equals(OutfitWarRanking? other)

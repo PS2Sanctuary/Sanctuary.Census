@@ -60,6 +60,6 @@ public class OutfitWarRegistrationCollectionBuilder : ICollectionBuilder
             }
         }
 
-        await dbContext.UpsertOutfitWarRegistrationsAsync(builtOutfits.Values, ct);
+        await dbContext.UpsertCollectionAsync(builtOutfits.Values, ct).ConfigureAwait(false);
     }
 }

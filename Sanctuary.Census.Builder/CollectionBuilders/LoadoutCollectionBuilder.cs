@@ -51,6 +51,6 @@ public class LoadoutCollectionBuilder : ICollectionBuilder
             builtLoadouts.Add(built);
         }
 
-        await dbContext.UpsertLoadoutsAsync(builtLoadouts, ct);
+        await dbContext.UpsertCollectionAsync(builtLoadouts, ct).ConfigureAwait(false);
     }
 }

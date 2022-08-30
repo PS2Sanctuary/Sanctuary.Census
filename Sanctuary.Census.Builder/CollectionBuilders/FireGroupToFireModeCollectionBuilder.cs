@@ -54,6 +54,6 @@ public class FireGroupToFireModeCollectionBuilder : ICollectionBuilder
             }
         }
 
-        await dbContext.UpsertFireGroupsToFireModesAsync(builtMaps, ct);
+        await dbContext.UpsertCollectionAsync(builtMaps, ct).ConfigureAwait(false);
     }
 }

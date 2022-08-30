@@ -97,6 +97,6 @@ public class ProfileCollectionBuilder : ICollectionBuilder
             builtProfiles.Add(built.ProfileId, built);
         }
 
-        await dbContext.UpsertProfilesAsync(builtProfiles.Values, ct);
+        await dbContext.UpsertCollectionAsync(builtProfiles.Values, ct).ConfigureAwait(false);
     }
 }

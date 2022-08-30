@@ -1,4 +1,5 @@
-﻿using Sanctuary.Census.Common.Attributes;
+﻿using Sanctuary.Census.Common.Abstractions.Objects.Collections;
+using Sanctuary.Census.Common.Attributes;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 
@@ -19,4 +20,4 @@ public record MarketingBundleItem
     [property: Key] uint ItemID,
     uint Quantity,
     ulong ReleaseTime
-);
+) : ISanctuaryCollection;

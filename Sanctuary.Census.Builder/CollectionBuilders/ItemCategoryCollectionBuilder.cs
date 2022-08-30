@@ -81,6 +81,6 @@ public class ItemCategoryCollectionBuilder : ICollectionBuilder
             builtCategories.TryAdd(built.ItemCategoryID, built);
         }
 
-        await dbContext.UpsertItemCategorysAsync(builtCategories.Values, ct);
+        await dbContext.UpsertCollectionAsync(builtCategories.Values, ct).ConfigureAwait(false);
     }
 }

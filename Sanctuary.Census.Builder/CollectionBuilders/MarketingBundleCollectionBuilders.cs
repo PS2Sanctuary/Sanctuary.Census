@@ -83,8 +83,8 @@ public class MarketingBundleCollectionBuilders : ICollectionBuilder
                 builtItems.Add(builtItem);
             }
         }
-        await dbContext.UpsertMarketingBundlesAsync(builtBundles.Values, ct).ConfigureAwait(false);
-        await dbContext.UpsertMarketingBundleItemsAsync(builtItems, ct).ConfigureAwait(false);
+        await dbContext.UpsertCollectionAsync(builtBundles.Values, ct).ConfigureAwait(false);
+        await dbContext.UpsertCollectionAsync(builtItems, ct).ConfigureAwait(false);
 
         Dictionary<uint, MarketingBundleCategory> builtCategories = new();
         foreach (StoreBundleCategories_Category category in _serverDataCache.StoreBundleCategories.Categories)
@@ -100,6 +100,6 @@ public class MarketingBundleCollectionBuilders : ICollectionBuilder
             );
             builtCategories.TryAdd(builtCategory.MarketingBundleCategoryID, builtCategory);
         }
-        await dbContext.UpsertMarketingBundleCategoriesAsync(builtCategories.Values, ct).ConfigureAwait(false);
+        await dbContext.UpsertCollectionAsync(builtCategories.Values, ct).ConfigureAwait(false);
     }
 }

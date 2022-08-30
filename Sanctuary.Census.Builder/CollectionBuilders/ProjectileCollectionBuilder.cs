@@ -70,6 +70,6 @@ public class ProjectileCollectionBuilder : ICollectionBuilder
             builtProjectiles.Add(built.ProjectileId, built);
         }
 
-        await dbContext.UpsertProjectilesAsync(builtProjectiles.Values, ct);
+        await dbContext.UpsertCollectionAsync(builtProjectiles.Values, ct).ConfigureAwait(false);
     }
 }

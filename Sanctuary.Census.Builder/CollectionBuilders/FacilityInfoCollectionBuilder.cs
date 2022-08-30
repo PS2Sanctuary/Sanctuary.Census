@@ -59,6 +59,6 @@ public class FacilityInfoCollectionBuilder : ICollectionBuilder
             builtFacilities.TryAdd(built.FacilityID, built);
         }
 
-        await dbContext.UpsertFacilityInfosAsync(builtFacilities.Values, ct).ConfigureAwait(false);
+        await dbContext.UpsertCollectionAsync(builtFacilities.Values, ct).ConfigureAwait(false);
     }
 }

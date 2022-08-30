@@ -64,6 +64,6 @@ public class LoadoutSlotCollectionBuilder : ICollectionBuilder
             builtSlots.Add(built);
         }
 
-        await dbContext.UpsertLoadoutSlotsAsync(builtSlots, ct);
+        await dbContext.UpsertCollectionAsync(builtSlots, ct).ConfigureAwait(false);
     }
 }

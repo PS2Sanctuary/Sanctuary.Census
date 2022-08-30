@@ -2,7 +2,7 @@
 
 Date format: DD/MM/YYYY
 
-## vNext
+## 31/08/2022
 
 :warning: **Breaking Changes**
 - `censusJSON` mode now defaults to true. This means that all fields will be represented as JSON strings.

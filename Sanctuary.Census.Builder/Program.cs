@@ -145,12 +145,13 @@ public static class Program
         configProvider.Register<MapHex>()
             .WithIndex(x => x.MapRegionID, false)
             .WithIndex(x => x.ZoneID, false)
+            .WithEqualityKey(x => x.ZoneID)
             .WithEqualityKey(x => x.X)
             .WithEqualityKey(x => x.Y);
 
         configProvider.Register<MapRegion>()
             .WithIndex(x => x.MapRegionId, true)
-            .WithIndex(x => x.FacilityId, true)
+            .WithIndex(x => x.FacilityId, false)
             .WithEqualityKey(x => x.MapRegionId);
 
         configProvider.Register<MarketingBundle>()

@@ -109,7 +109,7 @@ public class MapRegionDatasCollectionBuilder : ICollectionBuilder
                 (
                     region.MapRegionID_1,
                     (uint)zone,
-                    region.FacilityID,
+                    region.FacilityID == 0 ? null : region.FacilityID,
                     name?.En,
                     name,
                     region.FacilityTypeID,
@@ -147,6 +147,9 @@ public class MapRegionDatasCollectionBuilder : ICollectionBuilder
             {
                 MapRegion regionA = regions[link.MapRegionIDA];
                 MapRegion regionB = regions[link.MapRegionIDB];
+
+                if (regionA.FacilityId is null || regionB.FacilityId is null)
+                    continue;
 
                 builtLinks.Add(new FacilityLink
                 (

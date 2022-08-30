@@ -23,7 +23,7 @@ public record MapRegion
 (
     [property: Key] uint MapRegionId,
     [property: Key] uint ZoneId,
-    [property: Key] uint FacilityId,
+    [property: Key] uint? FacilityId,
     string? FacilityName,
     LocaleString? LocalizedFacilityName,
     uint FacilityTypeId,

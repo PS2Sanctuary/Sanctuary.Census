@@ -2,7 +2,6 @@
 using MongoDB.Driver;
 using Sanctuary.Census.Builder.Abstractions.Database;
 using Sanctuary.Census.Builder.Abstractions.Services;
-using Sanctuary.Census.Builder.Extensions;
 using Sanctuary.Census.Common;
 using Sanctuary.Census.Common.Abstractions.Objects.Collections;
 using Sanctuary.Census.Common.Abstractions.Services;
@@ -52,7 +51,7 @@ public class CollectionsContext : ICollectionsContext
     /// <inheritdoc />
     public async Task ScaffoldAsync(CancellationToken ct = default)
     {
-        foreach (ICollectionDbConfiguration<ISanctuaryCollection> configuration in _collectionConfigProvider.GetAll().Values)
+        foreach (CollectionDbConfiguration<ISanctuaryCollection> configuration in _collectionConfigProvider.GetAll().Values)
             await configuration.ScaffoldAsync(_database, ct).ConfigureAwait(false);
     }
 
@@ -60,7 +59,7 @@ public class CollectionsContext : ICollectionsContext
     public async Task UpsertCollectionAsync<T>(IEnumerable<T> data, CancellationToken ct = default)
         where T : ISanctuaryCollection
     {
-        ICollectionDbConfiguration<T> configuration = _collectionConfigProvider.GetConfiguration<T>();
+        CollectionDbConfiguration<T> configuration = _collectionConfigProvider.GetConfiguration<T>();
         await UpsertCollectionAsync
         (
             data,

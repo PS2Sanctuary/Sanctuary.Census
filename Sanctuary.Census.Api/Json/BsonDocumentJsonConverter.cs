@@ -56,7 +56,7 @@ public class BsonDocumentJsonConverter : JsonConverter<BsonDocument>
             case BsonType.Boolean:
             {
                 if (_stringifyAll)
-                    writer.WriteStringValue(value.ToString());
+                    writer.WriteStringValue(value.AsBoolean ? "1" : "0");
                 else
                     writer.WriteBooleanValue(value.AsBoolean);
                 break;
@@ -95,7 +95,7 @@ public class BsonDocumentJsonConverter : JsonConverter<BsonDocument>
                 if (_stringifyAll)
                     writer.WriteStringValue(value.ToString());
                 else
-                    writer.WriteStringValue(value.ToString()); // Int64s break JavaScript
+                    writer.WriteNumberValue(value.AsInt64);
                 break;
             }
             case BsonType.Null:

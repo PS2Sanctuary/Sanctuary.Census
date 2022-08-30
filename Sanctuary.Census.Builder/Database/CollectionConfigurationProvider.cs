@@ -1,7 +1,6 @@
 ﻿using Sanctuary.Census.Common.Abstractions.Objects.Collections;
 using System;
 using System.Collections.Generic;
-using System.Runtime.CompilerServices;
 
 namespace Sanctuary.Census.Builder.Database;
 
@@ -10,14 +9,14 @@ namespace Sanctuary.Census.Builder.Database;
 /// </summary>
 public class CollectionConfigurationProvider
 {
-    private readonly Dictionary<Type, CollectionDbConfiguration<ISanctuaryCollection>> _configs;
+    private readonly Dictionary<Type, ICollectionDbConfiguration> _configs;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="CollectionConfigurationProvider"/> class.
     /// </summary>
     public CollectionConfigurationProvider()
     {
-        _configs = new Dictionary<Type, CollectionDbConfiguration<ISanctuaryCollection>>();
+        _configs = new Dictionary<Type, ICollectionDbConfiguration>();
     }
 
     /// <summary>
@@ -30,7 +29,7 @@ public class CollectionConfigurationProvider
         where TCollection : ISanctuaryCollection
     {
         CollectionDbConfiguration<TCollection> configuration = new();
-        _configs[typeof(TCollection)] = Unsafe.As<CollectionDbConfiguration<ISanctuaryCollection>>(configuration);
+        _configs[typeof(TCollection)] = configuration;
         return configuration;
     }
 
@@ -43,16 +42,16 @@ public class CollectionConfigurationProvider
     public CollectionDbConfiguration<TCollection> GetConfiguration<TCollection>()
         where TCollection : ISanctuaryCollection
     {
-        if (!_configs.TryGetValue(typeof(TCollection), out CollectionDbConfiguration<ISanctuaryCollection>? configuration))
+        if (!_configs.TryGetValue(typeof(TCollection), out ICollectionDbConfiguration? configuration))
             throw new ArgumentException("A configuration has not been registered for the given collection type");
 
-        return Unsafe.As<CollectionDbConfiguration<TCollection>>(configuration);
+        return (CollectionDbConfiguration<TCollection>)configuration;
     }
 
     /// <summary>
     /// Gets all the registered configurations.
     /// </summary>
     /// <returns>The registered configurations.</returns>
-    public IReadOnlyDictionary<Type, CollectionDbConfiguration<ISanctuaryCollection>> GetAll()
+    public IReadOnlyDictionary<Type, ICollectionDbConfiguration> GetAll()
         => _configs;
 }

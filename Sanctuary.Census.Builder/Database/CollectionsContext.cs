@@ -51,7 +51,7 @@ public class CollectionsContext : ICollectionsContext
     /// <inheritdoc />
     public async Task ScaffoldAsync(CancellationToken ct = default)
     {
-        foreach (CollectionDbConfiguration<ISanctuaryCollection> configuration in _collectionConfigProvider.GetAll().Values)
+        foreach (ICollectionDbConfiguration configuration in _collectionConfigProvider.GetAll().Values)
             await configuration.ScaffoldAsync(_database, ct).ConfigureAwait(false);
     }
 

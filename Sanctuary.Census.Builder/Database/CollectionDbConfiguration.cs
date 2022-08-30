@@ -11,10 +11,24 @@ using System.Threading.Tasks;
 namespace Sanctuary.Census.Builder.Database;
 
 /// <summary>
+/// Represents a configured database collection.
+/// </summary>
+public interface ICollectionDbConfiguration
+{
+    /// <summary>
+    /// Scaffolds the collection within the database.
+    /// </summary>
+    /// <param name="database">The database to scaffold the collection within.</param>
+    /// <param name="ct">A <see cref="CancellationToken"/> that can be used to stop the operation.</param>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    Task ScaffoldAsync(IMongoContext database, CancellationToken ct = default);
+}
+
+/// <summary>
 /// Provides means to configure an <see cref="ISanctuaryCollection"/>.
 /// </summary>
 /// <typeparam name="TCollection">The type of the collection.</typeparam>
-public class CollectionDbConfiguration<TCollection>
+public class CollectionDbConfiguration<TCollection> : ICollectionDbConfiguration
     where TCollection : ISanctuaryCollection
 {
     private readonly List<Expression<Func<TCollection, object?>>> _equalitySelectors;
@@ -88,12 +102,7 @@ public class CollectionDbConfiguration<TCollection>
         return this;
     }
 
-    /// <summary>
-    /// Scaffolds the collection within the database.
-    /// </summary>
-    /// <param name="database">The database to scaffold the collection within.</param>
-    /// <param name="ct">A <see cref="CancellationToken"/> that can be used to stop the operation.</param>
-    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    /// <inheritdoc />
     public async Task ScaffoldAsync(IMongoContext database, CancellationToken ct = default)
     {
         IMongoCollection<TCollection> collection = database.GetCollection<TCollection>();

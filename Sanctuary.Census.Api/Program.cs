@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Sanctuary.Census.Api.Controllers;
 using Sanctuary.Census.Common;
 using Sanctuary.Census.Common.Extensions;
 using Sanctuary.Census.Common.Objects;
@@ -48,7 +49,10 @@ public static class Program
 
         builder.Services.AddCommonServices();
 
-        builder.Services.AddControllers()
+        builder.Services.AddControllers(options =>
+            {
+                options.ModelBinderProviders.Insert(0, new BooleanModelBinderProvider());
+            })
             .AddJsonOptions(options =>
             {
                 options.JsonSerializerOptions.PropertyNamingPolicy = new SnakeCaseJsonNamingPolicy();

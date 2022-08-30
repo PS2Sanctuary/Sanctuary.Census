@@ -4,6 +4,14 @@ Date format: DD/MM/YYYY
 
 ## vNext
 
+:warning: **Breaking Changes**
+- `censusJSON` mode now defaults to true. This means that all fields will be represented as JSON strings.
+  You can disable this behaviour by appending `c:censusJSON=false` to your query.
+- When using `censusJSON` mode, boolean values are represented as `"0" (false)` or `"1" (true)`.
+- When not using `censusJSON` mode, `int64` numbers will once again be represented as number tokens, rather than as strings.
+
+**Additions**
+- Query commands that accept a boolean value, now also support the use of `0 (false)` and `1 (true)`.
 - `map_region` is now updated automatically.
 - Added the `map_region.localized_facility_name` field.
 

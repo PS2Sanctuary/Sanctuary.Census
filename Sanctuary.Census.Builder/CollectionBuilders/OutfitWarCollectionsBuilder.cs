@@ -13,6 +13,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
+using MMatch = Sanctuary.Census.Common.Objects.Collections.OutfitWarMatch;
 using MRanking = Sanctuary.Census.Common.Objects.Collections.OutfitWarRanking;
 using MRounds = Sanctuary.Census.Common.Objects.Collections.OutfitWarRounds;
 using MWar = Sanctuary.Census.Common.Objects.Collections.OutfitWar;
@@ -56,6 +57,7 @@ public class OutfitWarCollectionsBuilder : ICollectionBuilder
         await BuildWarsAsync(dbContext, ct).ConfigureAwait(false);
         await BuildRankingsAsync(dbContext, ct).ConfigureAwait(false);
         await BuildRoundsAsync(dbContext, ct).ConfigureAwait(false);
+        await BuildMatchesAsync(dbContext, ct).ConfigureAwait(false);
     }
 
     private async Task BuildWarsAsync(ICollectionsContext dbContext, CancellationToken ct)
@@ -180,6 +182,70 @@ public class OutfitWarCollectionsBuilder : ICollectionBuilder
         catch (Exception ex)
         {
             _logger.LogError(ex, "Failed to build the OutfitWarRounds collection");
+        }
+    }
+
+    private async Task BuildMatchesAsync(ICollectionsContext dbContext, CancellationToken ct)
+    {
+        try
+        {
+            if (_serverDataCache.OutfitWarMatchParticipants.Count == 0)
+                throw new MissingCacheDataException(typeof(OutfitWarMatchParticipant));
+
+            if (_serverDataCache.OutfitWarMatchTimes.Count == 0)
+                throw new MissingCacheDataException(typeof(OutfitWarMatchTime));
+
+            Dictionary<ulong, MMatch> builtMatches = new();
+
+            foreach ((ServerDefinition world, List<OutfitWarMatchTime> times) in _serverDataCache .OutfitWarMatchTimes)
+            {
+                foreach (OutfitWarMatchTime time in times)
+                {
+                    builtMatches.TryAdd(time.MatchID, new MMatch
+                    (
+                        time.OutfitWarID,
+                        time.MatchID,
+                        0,
+                        0,
+                        time.StartTime,
+                        time.Order,
+                        (uint)world,
+                        0,
+                        0
+                    ));
+                }
+            }
+
+            foreach (List<OutfitWarMatchParticipant> participants in _serverDataCache.OutfitWarMatchParticipants.Values)
+            {
+                foreach (OutfitWarMatchParticipant participant in participants)
+                {
+                    MMatch match = builtMatches[participant.MatchID];
+                    if (match.OutfitAId == 0)
+                    {
+                        match = match with
+                        {
+                            OutfitAId = participant.OutfitID,
+                            OutfitAFactionId = (uint)participant.FactionID
+                        };
+                    }
+                    else
+                    {
+                        match = match with
+                        {
+                            OutfitBId = participant.OutfitID,
+                            OutfitBFactionId = (uint)participant.FactionID
+                        };
+                    }
+                    builtMatches[participant.MatchID] = match;
+                }
+            }
+
+            await dbContext.UpsertCollectionAsync(builtMatches.Values, ct).ConfigureAwait(false);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Failed to build the OutfitWarMatch collection");
         }
     }
 }

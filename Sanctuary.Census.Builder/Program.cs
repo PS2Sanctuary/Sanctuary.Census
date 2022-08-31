@@ -175,6 +175,9 @@ public static class Program
             .WithIndex(x => x.OutfitWarID, true)
             .WithEqualityKey(x => x.OutfitWarID);
 
+        configProvider.Register<OutfitWarMatch>()
+            .WithEqualityKey(x => x.MatchID);
+
         configProvider.Register<OutfitWarRanking>()
             .WithIndex(x => x.RoundID, false)
             .WithIndex(x => x.OutfitID, false)

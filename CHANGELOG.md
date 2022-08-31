@@ -2,6 +2,10 @@
 
 Date format: DD/MM/YYYY
 
+## 01/09/2022
+
+- Added the `outfit_war_match` collection.
+
 ## 31/08/2022
 
 :warning: **Breaking Changes**

@@ -21,7 +21,7 @@ using MWar = Sanctuary.Census.Common.Objects.Collections.OutfitWar;
 namespace Sanctuary.Census.Builder.CollectionBuilders;
 
 /// <summary>
-/// Builds the <see cref="MWar"/>, <see cref="MRanking"/> and <see cref="MRounds"/> collections.
+/// Builds the <see cref="MWar"/>, <see cref="MRanking"/>, <see cref="MRounds"/> and <see cref="MMatch"/> collections.
 /// </summary>
 public class OutfitWarCollectionsBuilder : ICollectionBuilder
 {

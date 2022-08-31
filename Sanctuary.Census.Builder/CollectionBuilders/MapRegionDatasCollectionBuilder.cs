@@ -18,7 +18,7 @@ using FacilityInfo = Sanctuary.Zone.Packets.StaticFacilityInfo.FacilityInfo;
 namespace Sanctuary.Census.Builder.CollectionBuilders;
 
 /// <summary>
-/// Builds the <see cref="Common.Objects.Collections.MapRegion"/> collection.
+/// Builds the <see cref="FacilityLink"/>, <see cref="MapHex"/> and <see cref="MapRegion"/> collections.
 /// </summary>
 public class MapRegionDatasCollectionBuilder : ICollectionBuilder
 {

@@ -2,6 +2,10 @@
 
 Date format: DD/MM/YYYY
 
+## 02/09/2022
+
+- Fixed null fields being serialized to a value of `BsonNull` when using CensusJSON mode.
+
 ## 01/09/2022
 
 - Added the `outfit_war_match` collection.

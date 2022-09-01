@@ -101,7 +101,7 @@ public class BsonDocumentJsonConverter : JsonConverter<BsonDocument>
             case BsonType.Null:
             {
                 if (_stringifyAll)
-                    writer.WriteStringValue(value.ToString());
+                    writer.WriteStringValue("NULL");
                 else
                     writer.WriteNullValue();
                 break;

@@ -81,7 +81,7 @@ public class CollectionsContext : ICollectionsContext
             throw new InvalidOperationException("A collection must have at least one equality key configured. Type: " + typeof(T));
 
         List<T> dataList = data as List<T> ?? data.ToList();
-        List<Func<T, object?>> compiledComparators = equalitySelectors.Select(x => x.Compile()).ToList();
+        List<Func<T, object?>> compiledSelectors = equalitySelectors.Select(x => x.Compile()).ToList();
 
         IMongoCollection<T> collection = _database.GetCollection<T>();
         List<WriteModel<T>> dbWriteModels = new();
@@ -100,7 +100,7 @@ public class CollectionsContext : ICollectionsContext
                 int itemIndex = -1;
                 for (int i = 0; i < dataList.Count; i++)
                 {
-                    bool found = compiledComparators.All
+                    bool found = compiledSelectors.All
                     (
                         comparator => comparator(document)?.Equals(comparator(dataList[i])) is true
                     );
@@ -116,12 +116,10 @@ public class CollectionsContext : ICollectionsContext
                 {
                     if (removeOld)
                     {
-                        FilterDefinition<T> filter = Builders<T>.Filter.Empty;
-                        for (int i = 0; i < equalitySelectors.Count; i++)
-                            filter &= Builders<T>.Filter.Eq(equalitySelectors[i], compiledComparators[i](document));
-
                         // We don't have the document in our upsert data, so it must have been deleted
+                        FilterDefinition<T> filter = BuildFilter(equalitySelectors, compiledSelectors, document);
                         DeleteOneModel<T> deleteModel = new(filter);
+
                         dbWriteModels.Add(deleteModel);
                         _diffService.SetDeleted(document);
                     }
@@ -131,11 +129,9 @@ public class CollectionsContext : ICollectionsContext
                     // The documents don't match, so there's been a change
                     T item = dataList[itemIndex];
 
-                    FilterDefinition<T> filter = Builders<T>.Filter.Empty;
-                    for (int i = 0; i < equalitySelectors.Count; i++)
-                        filter &= Builders<T>.Filter.Eq(equalitySelectors[i], compiledComparators[i](item));
-
+                    FilterDefinition<T> filter = BuildFilter(equalitySelectors, compiledSelectors, item);
                     ReplaceOneModel<T> upsertModel = new(filter, item);
+
                     dbWriteModels.Add(upsertModel);
                     _diffService.SetUpdated(document, item);
                 }
@@ -169,5 +165,33 @@ public class CollectionsContext : ICollectionsContext
 
         if (dbWriteModels.Count > 0)
             await collection.BulkWriteAsync(dbWriteModels, null, ct).ConfigureAwait(false);
+    }
+
+    private FilterDefinition<T> BuildFilter<T>
+    (
+        IReadOnlyList<Expression<Func<T, object?>>> equalitySelectors,
+        IReadOnlyList<Func<T, object?>> compiledSelectors,
+        T searchItem
+    )
+    {
+        if (equalitySelectors.Count == 0)
+            throw new InvalidOperationException("Must provide at least one selector");
+
+        if (equalitySelectors.Count != compiledSelectors.Count)
+            throw new InvalidOperationException("Must provide the same number of compiled selectors as expressions");
+
+        if (equalitySelectors.Count == 1)
+            return Builders<T>.Filter.Eq(equalitySelectors[0], compiledSelectors[0](searchItem));
+
+        // TODO:
+        // Expression expr;
+        // for (int i = 0; i < equalitySelectors.Count; i++)
+        // {
+        //     Expression.Equal(equalitySelectors[i], Expression.)
+        // }
+        FilterDefinition<T> filter = Builders<T>.Filter.Empty;
+        for (int i = 0; i < equalitySelectors.Count; i++)
+            filter &= Builders<T>.Filter.Eq(equalitySelectors[i], compiledSelectors[i](searchItem));
+        return filter;
     }
 }

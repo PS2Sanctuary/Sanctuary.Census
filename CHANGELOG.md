@@ -2,6 +2,14 @@
 
 Date format: DD/MM/YYYY
 
+## vNext
+- Added the `directive_tree` and `directive_tree_category` collections.
+
+## 03/09/2022
+
+- Decreased the collection build time to every one hour.
+- Added the `update_interval_sec` field to the `c:timing` model and datatype listing model.
+
 ## 02/09/2022
 
 - Fixed null fields being serialized to a value of `BsonNull` when using CensusJSON mode.

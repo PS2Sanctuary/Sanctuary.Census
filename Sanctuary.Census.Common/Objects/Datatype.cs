@@ -7,10 +7,12 @@
 /// <param name="Description">A description of the collection.</param>
 /// <param name="Count">The number of elements in the collection.</param>
 /// <param name="LastUpdated">The time that the collection was last updated, as a unix seconds timestamp.</param>
+/// <param name="UpdateIntervalSec">The time in seconds between updates for this collection.</param>
 public record Datatype
 (
     string Name,
     string? Description,
     long Count,
-    long LastUpdated
+    long LastUpdated,
+    int UpdateIntervalSec
 );

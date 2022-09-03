@@ -154,7 +154,7 @@ public class CollectionBuildWorker : BackgroundService
                 }
                 _logger.LogInformation("[{Environment}] Collection build complete", env);
 
-                await UpdateDatatypes(mongoContext, ct).ConfigureAwait(false);
+                await UpdateDatatypes(mongoContext, _buildOptions.CurrentValue.BuildIntervalSeconds, ct).ConfigureAwait(false);
                 _logger.LogInformation("[{Environment}] Datatype upsert complete", env);
 
                 await collectionDiffService.CommitAsync(ct).ConfigureAwait(false);
@@ -170,7 +170,7 @@ public class CollectionBuildWorker : BackgroundService
         }
     }
 
-    private static async Task UpdateDatatypes(IMongoContext database, CancellationToken ct)
+    private static async Task UpdateDatatypes(IMongoContext database, int updateIntervalSec, CancellationToken ct)
     {
         SnakeCaseJsonNamingPolicy nameConv = SnakeCaseJsonNamingPolicy.Default;
         IEnumerable<Type> collTypes = typeof(CollectionAttribute).Assembly
@@ -191,7 +191,8 @@ public class CollectionBuildWorker : BackgroundService
                 name,
                 collType.GetCustomAttribute<DescriptionAttribute>()?.Description,
                 count,
-                DateTimeOffset.UtcNow.ToUnixTimeSeconds()
+                DateTimeOffset.UtcNow.ToUnixTimeSeconds(),
+                updateIntervalSec
             );
 
             ReplaceOneModel<Datatype> upsertModel = new

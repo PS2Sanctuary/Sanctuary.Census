@@ -226,6 +226,11 @@ public class CollectionController : ControllerBase
             else if (queryParams.CensusJsonMode)
                 options = _allStringOptions;
 
+            Datatype? datatypeInfo = queryParams.ShowTimings
+                ? (await GetAndCacheDatatypeListAsync(ParseEnvironment(environment), ct).ConfigureAwait(false))
+                    .FirstOrDefault(d => d.Name == collectionName)
+                : null;
+
             return new JsonResult
             (
                 new DataResponse<object>
@@ -236,8 +241,8 @@ public class CollectionController : ControllerBase
                         ? new QueryTimes
                         (
                             st.Elapsed.Milliseconds,
-                            (await GetAndCacheDatatypeListAsync(ParseEnvironment(environment), ct).ConfigureAwait(false))
-                                .FirstOrDefault(d => d.Name == collectionName)?.LastUpdated
+                            datatypeInfo?.LastUpdated,
+                            datatypeInfo?.UpdateIntervalSec ?? -1
                         )
                         : null
                 ),

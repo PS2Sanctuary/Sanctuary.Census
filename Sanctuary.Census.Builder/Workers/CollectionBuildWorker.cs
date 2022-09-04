@@ -73,10 +73,11 @@ public class CollectionBuildWorker : BackgroundService
 
         // TODO: Quick-update collections? E.g. the world collection could be updated every 5m to better represent lock state.
         int dataCacheFailureCount = 0;
-        TimeSpan currentBuildInterval = TimeSpan.FromSeconds(_buildOptions.CurrentValue.BuildIntervalSeconds);
 
         while (!ct.IsCancellationRequested)
         {
+            TimeSpan currentBuildInterval = TimeSpan.FromSeconds(_buildOptions.CurrentValue.BuildIntervalSeconds);
+
             foreach (PS2Environment env in Enum.GetValues<PS2Environment>())
             {
                 if (ct.IsCancellationRequested)
@@ -107,21 +108,10 @@ public class CollectionBuildWorker : BackgroundService
 
                     dataCacheFailureCount = 0;
                     _logger.LogInformation("[{Environment}] Caches updated successfully", env);
-                    currentBuildInterval = TimeSpan.FromSeconds(_buildOptions.CurrentValue.BuildIntervalSeconds);
                 }
-                catch (ServerLockedException)
+                catch (LoginException lex)
                 {
-                    // Probably down for an update. Let's get back in the game faster!
-                    if (TimeSpan.FromMinutes(30) < currentBuildInterval)
-                        currentBuildInterval = TimeSpan.FromMinutes(30);
-
-                    _logger.LogWarning("[{Environment}] Servers are locked. Collection build could not complete", env);
-                    continue;
-                }
-                catch (NoCharactersOnAccountException ncex)
-                {
-                    _logger.LogError(ncex, "No characters on the account {Username}", ncex.AccountName);
-                    continue;
+                    _logger.LogWarning("Login failure: {Message}", lex.Message);
                 }
                 catch (Exception ex)
                 {

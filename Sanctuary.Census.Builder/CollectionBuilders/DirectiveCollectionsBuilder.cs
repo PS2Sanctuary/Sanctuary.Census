@@ -55,6 +55,9 @@ public class DirectiveCollectionsBuilder : ICollectionBuilder
         CancellationToken ct
     )
     {
+        if (_serverDataCache.DirectiveData.Count == 0)
+            throw new MissingCacheDataException(typeof(DirectiveInitialize));
+
         if (_clientDataCache.ImageSetMappings is null)
             throw new MissingCacheDataException(typeof(ImageSetMapping));
 
@@ -73,9 +76,6 @@ public class DirectiveCollectionsBuilder : ICollectionBuilder
     {
         try
         {
-            if (_serverDataCache.DirectiveData is null)
-                throw new MissingCacheDataException(typeof(DirectiveInitialize));
-
             Dictionary<uint, MCategory> builtCategories = new();
             foreach ((Sanctuary.Common.Objects.FactionDefinition faction, DirectiveInitialize data) in _serverDataCache.DirectiveData)
             {
@@ -117,9 +117,6 @@ public class DirectiveCollectionsBuilder : ICollectionBuilder
     {
         try
         {
-            if (_serverDataCache.DirectiveData is null)
-                throw new MissingCacheDataException(typeof(DirectiveInitialize));
-
             Dictionary<uint, MTree> builtTrees = new();
             foreach ((Sanctuary.Common.Objects.FactionDefinition faction, DirectiveInitialize data) in _serverDataCache.DirectiveData)
             {

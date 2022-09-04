@@ -70,6 +70,17 @@ public static class Program
             .WithIndex(x => x.CurrencyID, true)
             .WithEqualityKey(x => x.CurrencyID);
 
+        configProvider.Register<DirectiveTree>()
+            .WithIndex(x => x.DirectiveTreeID, true)
+            .WithIndex(x => x.DirectiveTreeCategoryID, false)
+            .WithEqualityKey(x => x.DirectiveTreeID)
+            .WithEqualityKey(x => x.FactionID);
+
+        configProvider.Register<DirectiveTreeCategory>()
+            .WithIndex(x => x.DirectiveTreeCategoryID, true)
+            .WithEqualityKey(x => x.DirectiveTreeCategoryID)
+            .WithEqualityKey(x => x.FactionID);
+
         configProvider.Register<Experience>()
             .WithIndex(x => x.ExperienceID, true)
             .WithEqualityKey(x => x.ExperienceID);
@@ -278,6 +289,7 @@ public static class Program
         );
 
         return services.RegisterCollectionBuilder<CurrencyCollectionBuilder>()
+            .RegisterCollectionBuilder<DirectiveCollectionsBuilder>()
             .RegisterCollectionBuilder<ExperienceCollectionBuilder>()
             .RegisterCollectionBuilder<FacilityInfoCollectionBuilder>()
             .RegisterCollectionBuilder<FactionCollectionBuilder>()

@@ -83,13 +83,20 @@ public class DirectiveCollectionsBuilder : ICollectionBuilder
                 {
                     _localeDataCache.TryGetLocaleString(category.NameID, out LocaleString? name);
 
-                    builtCategories.TryAdd(category.DirectiveCategoryID, new MCategory
-                    (
-                        category.DirectiveCategoryID,
-                        (uint)faction,
-                        name!,
-                        category.DisplayOrder
-                    ));
+                    if (builtCategories.TryGetValue(category.DirectiveCategoryID, out MCategory? prevBuilt))
+                    {
+                        prevBuilt.FactionIds.Add((uint)faction);
+                    }
+                    else
+                    {
+                        builtCategories.Add(category.DirectiveCategoryID, new MCategory
+                        (
+                            category.DirectiveCategoryID,
+                            new List<uint> { (uint)faction },
+                            name!,
+                            category.DisplayOrder
+                        ));
+                    }
                 }
             }
 
@@ -120,19 +127,26 @@ public class DirectiveCollectionsBuilder : ICollectionBuilder
                 {
                     _localeDataCache.TryGetLocaleString(tree.NameID, out LocaleString? name);
                     _localeDataCache.TryGetLocaleString(tree.DescriptionID, out LocaleString? description);
-                    uint defaultImage = defaultImages[tree.ImageSetID].ImageID;
+                    defaultImages.TryGetValue(tree.ImageSetID, out ImageSetMapping? defaultImage);
 
-                    builtTrees.TryAdd(tree.DirectiveTreeID_1, new MTree
-                    (
-                        tree.DirectiveTreeID_1,
-                        tree.DirectiveTreeCategoryID,
-                        (uint)faction,
-                        name!,
-                        description,
-                        tree.ImageSetID,
-                        defaultImage,
-                        $"/files/ps2/images/static/{defaultImage}.png"
-                    ));
+                    if (builtTrees.TryGetValue(tree.DirectiveTreeID_1, out MTree? prevBuilt))
+                    {
+                        prevBuilt.FactionIds.Add((uint)faction);
+                    }
+                    else
+                    {
+                        builtTrees.Add(tree.DirectiveTreeID_1, new MTree
+                        (
+                            tree.DirectiveTreeID_1,
+                            tree.DirectiveTreeCategoryID,
+                            new List<uint> { (uint)faction },
+                            name!,
+                            description,
+                            tree.ImageSetID,
+                            defaultImage?.ImageID ?? null,
+                            defaultImage is null ? null : $"/files/ps2/images/static/{defaultImage.ImageID}.png"
+                        ));
+                    }
                 }
             }
 

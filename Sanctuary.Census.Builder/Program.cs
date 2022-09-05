@@ -15,6 +15,7 @@ using Sanctuary.Census.Common.Objects.Collections;
 using Sanctuary.Census.PatchData.Extensions;
 using Sanctuary.Census.ServerData.Internal.Extensions;
 using Sanctuary.Census.ServerData.Internal.Objects;
+using Sanctuary.Common.Objects;
 using Serilog;
 using Serilog.Events;
 using System.Threading.Tasks;
@@ -86,14 +87,16 @@ public static class Program
         configProvider.Register<FacilityInfo>()
             .WithIndex(x => x.FacilityID, true)
             .WithIndex(x => x.ZoneID, false)
-            .WithEqualityKey(x => x.FacilityID);
+            .WithEqualityKey(x => x.FacilityID)
+            .WithRemoveOldEntryTest(r => r.ZoneID is not (ushort)ZoneDefinition.Nexus);
 
         configProvider.Register<FacilityLink>()
             .WithIndex(x => x.ZoneID, false)
             .WithIndex(x => x.FacilityIdA, false)
             .WithIndex(x => x.FacilityIdB, false)
             .WithEqualityKey(x => x.FacilityIdA)
-            .WithEqualityKey(x => x.FacilityIdB);
+            .WithEqualityKey(x => x.FacilityIdB)
+            .WithRemoveOldEntryTest(r => r.ZoneID is not (uint)ZoneDefinition.Nexus);
 
         configProvider.Register<Faction>()
             .WithIndex(x => x.FactionID, true)
@@ -156,12 +159,14 @@ public static class Program
             .WithIndex(x => x.ZoneID, false)
             .WithEqualityKey(x => x.ZoneID)
             .WithEqualityKey(x => x.X)
-            .WithEqualityKey(x => x.Y);
+            .WithEqualityKey(x => x.Y)
+            .WithRemoveOldEntryTest(r => r.ZoneID is not (uint)ZoneDefinition.Nexus);
 
         configProvider.Register<MapRegion>()
             .WithIndex(x => x.MapRegionId, true)
             .WithIndex(x => x.FacilityId, false)
-            .WithEqualityKey(x => x.MapRegionId);
+            .WithEqualityKey(x => x.MapRegionId)
+            .WithRemoveOldEntryTest(r => r.ZoneId is not (uint)ZoneDefinition.Nexus);
 
         configProvider.Register<MarketingBundle>()
             .WithIndex(x => x.MarketingBundleID, true)

@@ -47,10 +47,12 @@ public class CollectionDbConfiguration<TCollection> : ICollectionDbConfiguration
     public IReadOnlyList<(Expression<Func<TCollection, object?>> Selector, bool IsUnique)> IndexPropertySelectors => _indexes;
 
     /// <summary>
-    /// Gets a value indicating whether old entries should be
-    /// removed from the database when upserting.
+    /// Stores a delegate that returns a boolean value indicating
+    /// whether the given <typeparamref name="TCollection"/>
+    /// object should be removed from the database, if it is
+    /// not present in the updated data source.
     /// </summary>
-    public bool RemoveOldEntries { get; private set; }
+    public Func<TCollection, bool> RemoveOldEntryTest { get; private set; }
 
     /// <summary>
     /// Initializes a new instance of the <see cref="CollectionDbConfiguration{TCollection}"/> class.
@@ -59,6 +61,7 @@ public class CollectionDbConfiguration<TCollection> : ICollectionDbConfiguration
     {
         _equalitySelectors = new List<Expression<Func<TCollection, object?>>>();
         _indexes = new List<(Expression<Func<TCollection, object?>>, bool)>();
+        RemoveOldEntryTest = _ => true;
     }
 
     /// <summary>
@@ -93,12 +96,15 @@ public class CollectionDbConfiguration<TCollection> : ICollectionDbConfiguration
     }
 
     /// <summary>
-    /// Indicates whether old entries should be removed from the database.
+    /// Provide a delegate that returns a boolean value indicating
+    /// whether the given <typeparamref name="TCollection"/>
+    /// object should be removed from the database, if it is
+    /// not present in the updated data source.
     /// </summary>
-    /// <param name="value"><c>True</c> to remove old entries, otherwise <c>false</c>.</param>
-    public CollectionDbConfiguration<TCollection> WithRemoveOld(bool value = true)
+    /// <param name="test">The test delegate.</param>
+    public CollectionDbConfiguration<TCollection> WithRemoveOldEntryTest(Func<TCollection, bool> test)
     {
-        RemoveOldEntries = value;
+        RemoveOldEntryTest = test;
         return this;
     }
 

@@ -64,7 +64,7 @@ public class CollectionsContext : ICollectionsContext
         (
             data,
             configuration.EqualitySelectors,
-            configuration.RemoveOldEntries,
+            configuration.RemoveOldEntryTest,
             ct
         ).ConfigureAwait(false);
     }
@@ -73,7 +73,7 @@ public class CollectionsContext : ICollectionsContext
     (
         IEnumerable<T> data,
         IReadOnlyList<Expression<Func<T, object?>>> equalitySelectors,
-        bool removeOld = true,
+        Func<T, bool> oldEntryRemovalTest,
         CancellationToken ct = default
     ) where T : ISanctuaryCollection
     {
@@ -114,9 +114,9 @@ public class CollectionsContext : ICollectionsContext
 
                 if (itemIndex == -1)
                 {
-                    if (removeOld)
+                    // We don't have the document in our upsert data, so it must have been deleted
+                    if (oldEntryRemovalTest(document))
                     {
-                        // We don't have the document in our upsert data, so it must have been deleted
                         FilterDefinition<T> filter = BuildFilter(equalitySelectors, compiledSelectors, document);
                         DeleteOneModel<T> deleteModel = new(filter);
 

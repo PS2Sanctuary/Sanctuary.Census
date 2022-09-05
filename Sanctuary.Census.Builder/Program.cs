@@ -187,26 +187,31 @@ public static class Program
 
         configProvider.Register<OutfitWar>()
             .WithIndex(x => x.OutfitWarID, true)
-            .WithEqualityKey(x => x.OutfitWarID);
+            .WithEqualityKey(x => x.OutfitWarID)
+            .WithRemoveOldEntryTest(_ => false);
 
         configProvider.Register<OutfitWarMatch>()
-            .WithEqualityKey(x => x.MatchID);
+            .WithEqualityKey(x => x.MatchID)
+            .WithRemoveOldEntryTest(_ => false);
 
         configProvider.Register<OutfitWarRanking>()
             .WithIndex(x => x.RoundID, false)
             .WithIndex(x => x.OutfitID, false)
             .WithEqualityKey(x => x.RoundID)
-            .WithEqualityKey(x => x.OutfitID);
+            .WithEqualityKey(x => x.OutfitID)
+            .WithRemoveOldEntryTest(_ => false);
 
         configProvider.Register<OutfitWarRegistration>()
             .WithIndex(x => x.OutfitID, false)
             .WithIndex(x => x.WorldID, false)
-            .WithEqualityKey(x => x.OutfitID);
+            .WithEqualityKey(x => x.OutfitID)
+            .WithRemoveOldEntryTest(_ => false);
 
         configProvider.Register<OutfitWarRounds>()
             .WithIndex(x => x.OutfitWarID, true)
             .WithIndex(x => x.PrimaryRoundID, true)
-            .WithEqualityKey(x => x.OutfitWarID);
+            .WithEqualityKey(x => x.OutfitWarID)
+            .WithRemoveOldEntryTest(_ => false);
 
         configProvider.Register<PlayerStateGroup2>()
             .WithIndex(x => x.PlayerStateGroupId, false)
@@ -279,7 +284,8 @@ public static class Program
 
         configProvider.Register<Common.Objects.Collections.Zone>()
             .WithIndex(x => x.ZoneID, true)
-            .WithEqualityKey(x => x.ZoneID);
+            .WithEqualityKey(x => x.ZoneID)
+            .WithRemoveOldEntryTest(_ => false);
 
         return services;
     }

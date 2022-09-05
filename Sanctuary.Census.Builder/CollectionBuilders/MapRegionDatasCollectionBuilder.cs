@@ -50,42 +50,21 @@ public class MapRegionDatasCollectionBuilder : ICollectionBuilder
         if (_serverDataCache.MapRegionDatas.Count == 0)
             throw new MissingCacheDataException(typeof(MapRegionData));
 
-        foreach ((ZoneDefinition zone, MapRegionData regionData) in _serverDataCache.MapRegionDatas)
-        {
-            await UpsertHexesAsync(dbContext, zone, regionData.Hexes, ct).ConfigureAwait(false);
+        await UpsertHexesAsync(dbContext, ct).ConfigureAwait(false);
 
-            Dictionary<uint, MapRegion>? regions = await UpsertRegionsAsync
-            (
-                dbContext,
-                zone,
-                regionData.Regions,
-                ct
-            ).ConfigureAwait(false);
+        Dictionary<uint, MapRegion>? regions = await UpsertRegionsAsync(dbContext, ct)
+            .ConfigureAwait(false);
 
-            if (regions is not null)
-            {
-                await UpsertLatticeLinksAsync
-                (
-                    dbContext,
-                    zone,
-                    regions,
-                    regionData.LatticeLinks,
-                    ct
-                ).ConfigureAwait(false);
-            }
-            else
-            {
-                _logger.LogError("Cannot build FacilityLinks collection - map region build failed");
-            }
-        }
+        if (regions is not null)
+            await UpsertLatticeLinksAsync(dbContext, regions, ct).ConfigureAwait(false);
+        else
+            _logger.LogError("Cannot build FacilityLinks collection - map region build failed");
 
     }
 
     private async Task<Dictionary<uint, MapRegion>?> UpsertRegionsAsync
     (
         ICollectionsContext dbContext,
-        ZoneDefinition zone,
-        IEnumerable<MapRegionData_Region> regions,
         CancellationToken ct
     )
     {
@@ -100,24 +79,27 @@ public class MapRegionDatasCollectionBuilder : ICollectionBuilder
 
             Dictionary<uint, MapRegion> builtRegions = new();
 
-            foreach (MapRegionData_Region region in regions)
+            foreach ((ZoneDefinition zone, MapRegionData regionData) in _serverDataCache.MapRegionDatas)
             {
-                _localeDataCache.TryGetLocaleString(region.FacilityNameID, out LocaleString? name);
-                facilityInfos.TryGetValue(region.FacilityID, out FacilityInfo? facility);
+                foreach (MapRegionData_Region region in regionData.Regions)
+                {
+                    _localeDataCache.TryGetLocaleString(region.FacilityNameID, out LocaleString? name);
+                    facilityInfos.TryGetValue(region.FacilityID, out FacilityInfo? facility);
 
-                builtRegions.TryAdd(region.MapRegionID_1, new MapRegion
-                (
-                    region.MapRegionID_1,
-                    (uint)zone,
-                    region.FacilityID == 0 ? null : region.FacilityID,
-                    name?.En,
-                    name,
-                    region.FacilityTypeID,
-                    FacilityTypeToName(region.FacilityTypeID),
-                    facility is null ? null : new decimal(facility.LocationX),
-                    facility is null ? null : new decimal(facility.LocationY),
-                    facility is null ? null : new decimal(facility.LocationZ)
-                ));
+                    builtRegions.TryAdd(region.MapRegionID_1, new MapRegion
+                    (
+                        region.MapRegionID_1,
+                        (uint)zone,
+                        region.FacilityID == 0 ? null : region.FacilityID,
+                        name?.En,
+                        name,
+                        region.FacilityTypeID,
+                        FacilityTypeToName(region.FacilityTypeID),
+                        facility is null ? null : new decimal(facility.LocationX),
+                        facility is null ? null : new decimal(facility.LocationY),
+                        facility is null ? null : new decimal(facility.LocationZ)
+                    ));
+                }
             }
 
             await dbContext.UpsertCollectionAsync(builtRegions.Values, ct).ConfigureAwait(false);
@@ -133,9 +115,7 @@ public class MapRegionDatasCollectionBuilder : ICollectionBuilder
     private async Task UpsertLatticeLinksAsync
     (
         ICollectionsContext dbContext,
-        ZoneDefinition zone,
         IReadOnlyDictionary<uint, MapRegion> regions,
-        IEnumerable<MapRegionData_LatticeLink> links,
         CancellationToken ct
     )
     {
@@ -143,21 +123,24 @@ public class MapRegionDatasCollectionBuilder : ICollectionBuilder
         {
             List<FacilityLink> builtLinks = new();
 
-            foreach (MapRegionData_LatticeLink link in links)
+            foreach ((ZoneDefinition zone, MapRegionData regionData) in _serverDataCache.MapRegionDatas)
             {
-                MapRegion regionA = regions[link.MapRegionIDA];
-                MapRegion regionB = regions[link.MapRegionIDB];
+                foreach (MapRegionData_LatticeLink link in regionData.LatticeLinks)
+                {
+                    MapRegion regionA = regions[link.MapRegionIDA];
+                    MapRegion regionB = regions[link.MapRegionIDB];
 
-                if (regionA.FacilityId is null || regionB.FacilityId is null)
-                    continue;
+                    if (regionA.FacilityId is null || regionB.FacilityId is null)
+                        continue;
 
-                builtLinks.Add(new FacilityLink
-                (
-                    (uint)zone,
-                    (int)regionA.FacilityId,
-                    (int)regionB.FacilityId,
-                    $"{zone} - {regionA.FacilityName} to {regionB.FacilityName}"
-                ));
+                    builtLinks.Add(new FacilityLink
+                    (
+                        (uint)zone,
+                        (int)regionA.FacilityId,
+                        (int)regionB.FacilityId,
+                        $"{zone} - {regionA.FacilityName} to {regionB.FacilityName}"
+                    ));
+                }
             }
 
             await dbContext.UpsertCollectionAsync(builtLinks, ct).ConfigureAwait(false);
@@ -171,8 +154,6 @@ public class MapRegionDatasCollectionBuilder : ICollectionBuilder
     private async Task UpsertHexesAsync
     (
         ICollectionsContext dbContext,
-        ZoneDefinition zone,
-        IEnumerable<MapRegionData_Hex> hexes,
         CancellationToken ct
     )
     {
@@ -180,17 +161,20 @@ public class MapRegionDatasCollectionBuilder : ICollectionBuilder
         {
             List<MapHex> builtHexes = new();
 
-            foreach (MapRegionData_Hex hex in hexes)
+            foreach ((ZoneDefinition zone, MapRegionData regionData) in _serverDataCache.MapRegionDatas)
             {
-                builtHexes.Add(new MapHex
-                (
-                    (uint)zone,
-                    hex.MapRegionID,
-                    hex.X,
-                    hex.Y,
-                    hex.HexType,
-                    HexTypeToName(hex.HexType)
-                ));
+                foreach (MapRegionData_Hex hex in regionData.Hexes)
+                {
+                    builtHexes.Add(new MapHex
+                    (
+                        (uint)zone,
+                        hex.MapRegionID,
+                        hex.X,
+                        hex.Y,
+                        hex.HexType,
+                        HexTypeToName(hex.HexType)
+                    ));
+                }
             }
 
             await dbContext.UpsertCollectionAsync(builtHexes, ct).ConfigureAwait(false);

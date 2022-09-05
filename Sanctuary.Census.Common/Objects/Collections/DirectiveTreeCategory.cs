@@ -1,10 +1,7 @@
 ﻿using Sanctuary.Census.Common.Abstractions.Objects.Collections;
 using Sanctuary.Census.Common.Attributes;
 using Sanctuary.Census.Common.Objects.CommonModels;
-using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
 
 namespace Sanctuary.Census.Common.Objects.Collections;
 
@@ -19,30 +16,7 @@ namespace Sanctuary.Census.Common.Objects.Collections;
 public record DirectiveTreeCategory
 (
     [property: Key] uint DirectiveTreeCategoryID,
-    List<uint> FactionIds,
+    ValueEqualityList<uint> FactionIds,
     LocaleString Name,
     byte DisplayOrder
-) : ISanctuaryCollection
-{
-    /// <inheritdoc />
-    public virtual bool Equals(DirectiveTreeCategory? other)
-        => other is not null
-           && other.DirectiveTreeCategoryID == DirectiveTreeCategoryID
-           && other.FactionIds.SequenceEqual(FactionIds)
-           && other.Name == Name
-           && other.DisplayOrder == DisplayOrder;
-
-    /// <inheritdoc />
-    public override int GetHashCode()
-    {
-        HashCode hash = new();
-
-        hash.Add(DirectiveTreeCategoryID);
-        hash.Add(Name);
-        hash.Add(DisplayOrder);
-        foreach (uint faction in FactionIds)
-            hash.Add(faction);
-
-        return hash.ToHashCode();
-    }
-}
+) : ISanctuaryCollection;

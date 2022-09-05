@@ -1,10 +1,7 @@
 ﻿using Sanctuary.Census.Common.Abstractions.Objects.Collections;
 using Sanctuary.Census.Common.Attributes;
 using Sanctuary.Census.Common.Objects.CommonModels;
-using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
 
 namespace Sanctuary.Census.Common.Objects.Collections;
 
@@ -31,7 +28,7 @@ public record OutfitWar
     uint OutfitSignupRequirement,
     ulong StartTime,
     ulong EndTime,
-    IReadOnlyList<OutfitWar.Phase> Phases
+    ValueEqualityList<OutfitWar.Phase> Phases
 ) : ISanctuaryCollection
 {
     /// <summary>
@@ -51,34 +48,4 @@ public record OutfitWar
         ulong StartTime,
         ulong EndTime
     );
-
-    /// <inheritdoc />
-    public virtual bool Equals(OutfitWar? other)
-        => other is not null
-           && OutfitWarID.Equals(other.OutfitWarID)
-           && WorldID.Equals(other.WorldID)
-           && ((Title is not null && other.Title is not null && Title.Equals(other.Title)) || Title == other.Title)
-           && ImageSetID.Equals(other.ImageSetID)
-           && OutfitSizeRequirement.Equals(other.OutfitSizeRequirement)
-           && OutfitSignupRequirement.Equals(other.OutfitSignupRequirement)
-           && StartTime.Equals(other.StartTime)
-           && EndTime.Equals(other.EndTime)
-           && Phases.SequenceEqual(other.Phases);
-
-    /// <inheritdoc />
-    public override int GetHashCode()
-    {
-        HashCode hashCode = new();
-        hashCode.Add(OutfitWarID);
-        hashCode.Add(WorldID);
-        hashCode.Add(Title);
-        hashCode.Add(ImageSetID);
-        hashCode.Add(OutfitSizeRequirement);
-        hashCode.Add(OutfitSignupRequirement);
-        hashCode.Add(StartTime);
-        hashCode.Add(EndTime);
-        foreach (Phase phase in Phases)
-            hashCode.Add(phase);
-        return hashCode.ToHashCode();
-    }
 }

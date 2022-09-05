@@ -4,6 +4,7 @@ using Sanctuary.Census.Builder.Abstractions.Database;
 using Sanctuary.Census.Builder.Exceptions;
 using Sanctuary.Census.ClientData.Abstractions.Services;
 using Sanctuary.Census.ClientData.ClientDataModels;
+using Sanctuary.Census.Common.Objects;
 using Sanctuary.Census.Common.Objects.CommonModels;
 using Sanctuary.Census.ServerData.Internal.Abstractions.Services;
 using Sanctuary.Zone.Packets.Directive;
@@ -93,7 +94,7 @@ public class DirectiveCollectionsBuilder : ICollectionBuilder
                         builtCategories.Add(category.DirectiveCategoryID, new MCategory
                         (
                             category.DirectiveCategoryID,
-                            new List<uint> { (uint)faction },
+                            new ValueEqualityList<uint> { (uint)faction },
                             name!,
                             category.DisplayOrder
                         ));
@@ -142,7 +143,7 @@ public class DirectiveCollectionsBuilder : ICollectionBuilder
                         (
                             tree.DirectiveTreeID_1,
                             tree.DirectiveTreeCategoryID,
-                            new List<uint> { (uint)faction },
+                            new ValueEqualityList<uint> { (uint)faction },
                             name!,
                             description,
                             tree.ImageSetID,

@@ -1,9 +1,6 @@
 ﻿using Sanctuary.Census.Common.Abstractions.Objects.Collections;
 using Sanctuary.Census.Common.Attributes;
-using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
 
 namespace Sanctuary.Census.Common.Objects.Collections;
 
@@ -18,7 +15,7 @@ public record OutfitWarRounds
 (
     [property: Key] uint OutfitWarID,
     [property: Key] ulong PrimaryRoundID,
-    IReadOnlyList<OutfitWarRounds.Round> Rounds
+    ValueEqualityList<OutfitWarRounds.Round> Rounds
 ) : ISanctuaryCollection
 {
     /// <summary>
@@ -62,22 +59,4 @@ public record OutfitWarRounds
         ulong StartTime,
         ulong EndTime
     );
-
-    /// <inheritdoc />
-    public virtual bool Equals(OutfitWarRounds? other)
-        => other is not null
-           && OutfitWarID.Equals(other.OutfitWarID)
-           && PrimaryRoundID.Equals(other.PrimaryRoundID)
-           && Rounds.SequenceEqual(other.Rounds);
-
-    /// <inheritdoc />
-    public override int GetHashCode()
-    {
-        HashCode hashCode = new();
-        hashCode.Add(OutfitWarID);
-        hashCode.Add(PrimaryRoundID);
-        foreach (Round round in Rounds)
-            hashCode.Add(round);
-        return hashCode.ToHashCode();
-    }
 }

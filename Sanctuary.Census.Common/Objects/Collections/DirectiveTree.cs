@@ -1,10 +1,7 @@
 ﻿using Sanctuary.Census.Common.Abstractions.Objects.Collections;
 using Sanctuary.Census.Common.Attributes;
 using Sanctuary.Census.Common.Objects.CommonModels;
-using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
 
 namespace Sanctuary.Census.Common.Objects.Collections;
 
@@ -24,41 +21,10 @@ public record DirectiveTree
 (
     [property: Key] uint DirectiveTreeID,
     [property: Key] uint DirectiveTreeCategoryID,
-    List<uint> FactionIds,
+    ValueEqualityList<uint> FactionIds,
     LocaleString Name,
     LocaleString? Description,
     uint ImageSetID,
     uint? ImageID,
     string? ImagePath
-) : ISanctuaryCollection
-{
-    /// <inheritdoc />
-    public virtual bool Equals(DirectiveTree? other)
-        => other is not null
-           && other.DirectiveTreeID == DirectiveTreeID
-           && other.DirectiveTreeCategoryID == DirectiveTreeCategoryID
-           && other.FactionIds.SequenceEqual(FactionIds)
-           && other.Name == Name
-           && other.Description == Description
-           && other.ImageSetID == ImageSetID
-           && other.ImageID == ImageID
-           && other.ImagePath == ImagePath;
-
-    /// <inheritdoc />
-    public override int GetHashCode()
-    {
-        HashCode hash = new();
-
-        hash.Add(DirectiveTreeID);
-        hash.Add(DirectiveTreeCategoryID);
-        hash.Add(Name);
-        hash.Add(Description);
-        hash.Add(ImageSetID);
-        hash.Add(ImageID);
-        hash.Add(ImagePath);
-        foreach (uint faction in FactionIds)
-            hash.Add(faction);
-
-        return hash.ToHashCode();
-    }
-}
+) : ISanctuaryCollection;

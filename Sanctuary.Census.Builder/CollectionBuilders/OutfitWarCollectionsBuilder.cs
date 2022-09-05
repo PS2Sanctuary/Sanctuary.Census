@@ -3,6 +3,7 @@ using Sanctuary.Census.Builder.Abstractions.CollectionBuilders;
 using Sanctuary.Census.Builder.Abstractions.Database;
 using Sanctuary.Census.Builder.Exceptions;
 using Sanctuary.Census.ClientData.Abstractions.Services;
+using Sanctuary.Census.Common.Objects;
 using Sanctuary.Census.Common.Objects.CommonModels;
 using Sanctuary.Census.ServerData.Internal.Abstractions.Services;
 using Sanctuary.Common.Objects;
@@ -71,7 +72,7 @@ public class OutfitWarCollectionsBuilder : ICollectionBuilder
 
             foreach ((ServerDefinition server, OutfitWarWar war) in _serverDataCache.OutfitWars)
             {
-                List<MWar.Phase> phases = new();
+                ValueEqualityList<MWar.Phase> phases = new();
                 foreach (OutfitWarWar_Phase phase in war.Phases)
                 {
                     _localeDataCache.TryGetLocaleString(phase.NameID, out LocaleString? phaseName);
@@ -125,13 +126,18 @@ public class OutfitWarCollectionsBuilder : ICollectionBuilder
             {
                 foreach (OutfitWarRankings_Outfit rankedOutfit in rankingGroup.Outfits)
                 {
+                    ValueEqualityDictionary<string, int> rankingParams = new
+                    (
+                        rankedOutfit.UIParams.ToDictionary(x => x.Name, x => x.Value)
+                    );
+
                     MRanking ranking = new
                     (
                         rankingGroup.RoundID,
                         rankedOutfit.OutfitID_1,
                         rankedOutfit.FactionID,
                         rankedOutfit.Order,
-                        rankedOutfit.UIParams.ToDictionary(x => x.Name, x => x.Value)
+                        rankingParams
                     );
                     builtRankings.Add(ranking);
                 }
@@ -156,7 +162,7 @@ public class OutfitWarCollectionsBuilder : ICollectionBuilder
 
             foreach (OutfitWarRounds sRounds in _serverDataCache.OutfitWarRounds.Values)
             {
-                List<MRounds.Round> rounds = new();
+                ValueEqualityList<MRounds.Round> rounds = new();
                 foreach (OutfitWarRounds_Round sRound in sRounds.Rounds)
                 {
                     rounds.Add(new MRounds.Round

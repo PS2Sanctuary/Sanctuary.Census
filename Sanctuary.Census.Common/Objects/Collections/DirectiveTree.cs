@@ -35,14 +35,14 @@ public record DirectiveTree
     /// <inheritdoc />
     public virtual bool Equals(DirectiveTree? other)
         => other is not null
-           && other.DirectiveTreeID.Equals(DirectiveTreeID)
-           && other.DirectiveTreeCategoryID.Equals(DirectiveTreeCategoryID)
+           && other.DirectiveTreeID == DirectiveTreeID
+           && other.DirectiveTreeCategoryID == DirectiveTreeCategoryID
            && other.FactionIds.SequenceEqual(FactionIds)
-           && other.Name.Equals(Name)
-           && other.Description?.Equals(Description) == true
-           && other.ImageSetID.Equals(ImageSetID)
-           && other.ImageID.Equals(ImageID)
-           && other.ImagePath?.Equals(ImagePath) == true;
+           && other.Name == Name
+           && other.Description == Description
+           && other.ImageSetID == ImageSetID
+           && other.ImageID == ImageID
+           && other.ImagePath == ImagePath;
 
     /// <inheritdoc />
     public override int GetHashCode()

@@ -27,10 +27,10 @@ public record DirectiveTreeCategory
     /// <inheritdoc />
     public virtual bool Equals(DirectiveTreeCategory? other)
         => other is not null
-           && DirectiveTreeCategoryID.Equals(other.DirectiveTreeCategoryID)
-           && FactionIds.SequenceEqual(other.FactionIds)
-           && Name.Equals(other.Name)
-           && DisplayOrder.Equals(other.DisplayOrder);
+           && other.DirectiveTreeCategoryID == DirectiveTreeCategoryID
+           && other.FactionIds.SequenceEqual(FactionIds)
+           && other.Name == Name
+           && other.DisplayOrder == DisplayOrder;
 
     /// <inheritdoc />
     public override int GetHashCode()

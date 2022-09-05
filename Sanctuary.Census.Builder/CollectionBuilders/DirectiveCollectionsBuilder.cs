@@ -86,6 +86,7 @@ public class DirectiveCollectionsBuilder : ICollectionBuilder
                     if (builtCategories.TryGetValue(category.DirectiveCategoryID, out MCategory? prevBuilt))
                     {
                         prevBuilt.FactionIds.Add((uint)faction);
+                        prevBuilt.FactionIds.Sort();
                     }
                     else
                     {
@@ -122,6 +123,10 @@ public class DirectiveCollectionsBuilder : ICollectionBuilder
             {
                 foreach (DirectiveTree tree in data.Trees)
                 {
+                    // Plenty of null trees. No idea why
+                    if (tree.DirectiveTreeID_2 == 0)
+                        continue;
+
                     _localeDataCache.TryGetLocaleString(tree.NameID, out LocaleString? name);
                     _localeDataCache.TryGetLocaleString(tree.DescriptionID, out LocaleString? description);
                     defaultImages.TryGetValue(tree.ImageSetID, out ImageSetMapping? defaultImage);
@@ -129,6 +134,7 @@ public class DirectiveCollectionsBuilder : ICollectionBuilder
                     if (builtTrees.TryGetValue(tree.DirectiveTreeID_1, out MTree? prevBuilt))
                     {
                         prevBuilt.FactionIds.Add((uint)faction);
+                        prevBuilt.FactionIds.Sort();
                     }
                     else
                     {

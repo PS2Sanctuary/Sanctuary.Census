@@ -3,7 +3,8 @@
 Date format: DD/MM/YYYY
 
 ## vNext
-- Added the `directive_tree` and `directive_tree_category` collections.
+- Added the `directive_tier`, `directive_tree` and `directive_tree_category` collections.
+- Squashed many bugs, introduced some more, and squashed them again.
 
 ## 03/09/2022
 

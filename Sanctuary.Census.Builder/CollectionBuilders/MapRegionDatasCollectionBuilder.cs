@@ -95,6 +95,9 @@ public class MapRegionDatasCollectionBuilder : ICollectionBuilder
 
             foreach ((ZoneDefinition zone, MapRegionData regionData) in _serverDataCache.MapRegionDatas)
             {
+                if (regionData.Regions.Length == 0)
+                    throw new Exception("No region data present for " + zone);
+
                 foreach (MapRegionData_Region region in regionData.Regions)
                 {
                     ct.ThrowIfCancellationRequested();

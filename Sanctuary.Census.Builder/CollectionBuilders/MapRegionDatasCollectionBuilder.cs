@@ -97,6 +97,8 @@ public class MapRegionDatasCollectionBuilder : ICollectionBuilder
             {
                 foreach (MapRegionData_Region region in regionData.Regions)
                 {
+                    ct.ThrowIfCancellationRequested();
+
                     _localeDataCache.TryGetLocaleString(region.FacilityNameID, out LocaleString? name);
                     facilityInfos.TryGetValue(region.FacilityID, out FacilityInfo? facility);
 
@@ -141,6 +143,8 @@ public class MapRegionDatasCollectionBuilder : ICollectionBuilder
             {
                 foreach (MapRegionData_LatticeLink link in regionData.LatticeLinks)
                 {
+                    ct.ThrowIfCancellationRequested();
+
                     MapRegion regionA = regions[link.MapRegionIDA];
                     MapRegion regionB = regions[link.MapRegionIDB];
 
@@ -179,6 +183,8 @@ public class MapRegionDatasCollectionBuilder : ICollectionBuilder
             {
                 foreach (MapRegionData_Hex hex in regionData.Hexes)
                 {
+                    ct.ThrowIfCancellationRequested();
+
                     builtHexes.Add(new MapHex
                     (
                         (uint)zone,

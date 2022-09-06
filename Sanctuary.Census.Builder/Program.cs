@@ -76,6 +76,11 @@ public static class Program
             .WithIndex(x => x.DirectiveTreeCategoryID, false)
             .WithEqualityKey(x => x.DirectiveTreeID);
 
+        configProvider.Register<DirectiveTier>()
+            .WithIndex(x => x.DirectiveTreeID, false)
+            .WithEqualityKey(x => x.DirectiveTreeID)
+            .WithEqualityKey(x => x.DirectiveTierID);
+
         configProvider.Register<DirectiveTreeCategory>()
             .WithIndex(x => x.DirectiveTreeCategoryID, true)
             .WithEqualityKey(x => x.DirectiveTreeCategoryID);

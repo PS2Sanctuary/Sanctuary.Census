@@ -10,16 +10,19 @@ using Sanctuary.Census.ServerData.Internal.Abstractions.Services;
 using Sanctuary.Zone.Packets.Directive;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
+using FactionDefinition = Sanctuary.Common.Objects.FactionDefinition;
 using MCategory = Sanctuary.Census.Common.Objects.Collections.DirectiveTreeCategory;
+using MTier = Sanctuary.Census.Common.Objects.Collections.DirectiveTier;
 using MTree = Sanctuary.Census.Common.Objects.Collections.DirectiveTree;
 
 namespace Sanctuary.Census.Builder.CollectionBuilders;
 
 /// <summary>
-/// Builds the <see cref="MCategory"/> and <see cref="MTree"/> collections.
+/// Builds the <see cref="MCategory"/>, <see cref="MTier"/> and <see cref="MTree"/> collections.
 /// </summary>
 public class DirectiveCollectionsBuilder : ICollectionBuilder
 {
@@ -71,6 +74,7 @@ public class DirectiveCollectionsBuilder : ICollectionBuilder
 
         await BuildCategoriesAsync(dbContext, ct).ConfigureAwait(false);
         await BuildTreesAsync(dbContext, defaultImages, ct).ConfigureAwait(false);
+        await BuildTiersAsync(dbContext, defaultImages, ct).ConfigureAwait(false);
     }
 
     private async Task BuildCategoriesAsync(ICollectionsContext dbContext, CancellationToken ct)
@@ -78,10 +82,12 @@ public class DirectiveCollectionsBuilder : ICollectionBuilder
         try
         {
             Dictionary<uint, MCategory> builtCategories = new();
-            foreach ((Sanctuary.Common.Objects.FactionDefinition faction, DirectiveInitialize data) in _serverDataCache.DirectiveData)
+            foreach ((FactionDefinition faction, DirectiveInitialize data) in _serverDataCache.DirectiveData)
             {
                 foreach (DirectiveTreeCategory category in data.Categories)
                 {
+                    ct.ThrowIfCancellationRequested();
+
                     _localeDataCache.TryGetLocaleString(category.NameID, out LocaleString? name);
 
                     if (builtCategories.TryGetValue(category.DirectiveCategoryID, out MCategory? prevBuilt))
@@ -120,10 +126,12 @@ public class DirectiveCollectionsBuilder : ICollectionBuilder
         try
         {
             Dictionary<uint, MTree> builtTrees = new();
-            foreach ((Sanctuary.Common.Objects.FactionDefinition faction, DirectiveInitialize data) in _serverDataCache.DirectiveData)
+            foreach ((FactionDefinition faction, DirectiveInitialize data) in _serverDataCache.DirectiveData)
             {
                 foreach (DirectiveTree tree in data.Trees)
                 {
+                    ct.ThrowIfCancellationRequested();
+
                     // Plenty of null trees. No idea why
                     if (tree.DirectiveTreeID_2 == 0)
                         continue;
@@ -155,6 +163,61 @@ public class DirectiveCollectionsBuilder : ICollectionBuilder
             }
 
             await dbContext.UpsertCollectionAsync(builtTrees.Values, ct).ConfigureAwait(false);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Failed to build the DirectiveTree collection");
+        }
+    }
+
+    private async Task BuildTiersAsync
+    (
+        ICollectionsContext dbContext,
+        IReadOnlyDictionary<uint, ImageSetMapping> defaultImages,
+        CancellationToken ct
+    )
+    {
+        try
+        {
+            Dictionary<uint, List<MTier>> builtTiers = new();
+            foreach (DirectiveInitialize data in _serverDataCache.DirectiveData.Values)
+            {
+                foreach (DirectiveTree tree in data.Trees)
+                {
+                    ct.ThrowIfCancellationRequested();
+
+                    // Plenty of null trees. No idea why
+                    if (tree.DirectiveTreeID_2 == 0)
+                        continue;
+
+                    if (builtTiers.ContainsKey(tree.DirectiveTreeID_1))
+                        continue;
+
+                    List<MTier> treeTiers = new();
+                    foreach (DirectiveTreeTier tier in tree.Tiers)
+                    {
+                        _localeDataCache.TryGetLocaleString(tier.NameID, out LocaleString? name);
+                        defaultImages.TryGetValue(tier.ImageSetID, out ImageSetMapping? defaultImage);
+
+                        treeTiers.Add(new MTier
+                        (
+                            tree.DirectiveTreeID_1,
+                            tier.TierID,
+                            name!,
+                            tier.Reward.RewardSetID == 0 ? null : tier.Reward.RewardSetID,
+                            tier.DirectivePoints,
+                            tier.RequiredObjectiveCompletionCount,
+                            tier.ImageSetID,
+                            defaultImage?.ImageID,
+                            defaultImage is null ? null : $"/files/ps2/images/static/{defaultImage.ImageID}.png"
+                        ));
+                    }
+
+                    builtTiers.Add(tree.DirectiveTreeID_1, treeTiers);
+                }
+            }
+
+            await dbContext.UpsertCollectionAsync(builtTiers.Values.SelectMany(x => x), ct).ConfigureAwait(false);
         }
         catch (Exception ex)
         {

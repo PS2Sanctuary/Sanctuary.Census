@@ -50,6 +50,20 @@ public class MapRegionDatasCollectionBuilder : ICollectionBuilder
         if (_serverDataCache.MapRegionDatas.Count == 0)
             throw new MissingCacheDataException(typeof(MapRegionData));
 
+        bool hasAllStaticZones = _serverDataCache.MapRegionDatas.ContainsKey(ZoneDefinition.Indar)
+            && _serverDataCache.MapRegionDatas.ContainsKey(ZoneDefinition.Esamir)
+            && _serverDataCache.MapRegionDatas.ContainsKey(ZoneDefinition.Amerish)
+            && _serverDataCache.MapRegionDatas.ContainsKey(ZoneDefinition.Hossin)
+            && (_serverDataCache.MapRegionDatas.ContainsKey(ZoneDefinition.Oshur) || _serverDataCache.MapRegionDatas.ContainsKey(ZoneDefinition.Oshur2));
+        if (!hasAllStaticZones)
+        {
+            throw new Exception
+            (
+                "Missing a static zone. Present: " +
+                string.Join(", ", _serverDataCache.MapRegionDatas.Keys)
+            );
+        }
+
         await UpsertHexesAsync(dbContext, ct).ConfigureAwait(false);
 
         Dictionary<uint, MapRegion>? regions = await UpsertRegionsAsync(dbContext, ct)

@@ -98,7 +98,11 @@ public static class Program
             .WithIndex(x => x.FacilityID, true)
             .WithIndex(x => x.ZoneID, false)
             .WithEqualityKey(x => x.FacilityID)
-            .WithRemoveOldEntryTest(r => r.ZoneID is not (ushort)ZoneDefinition.Nexus);
+            .WithRemoveOldEntryTest
+            (
+                r => r.ZoneID is not (ushort)ZoneDefinition.Nexus
+                    && r.ZoneID is not (ushort)ZoneDefinition.Tutorial2
+            );
 
         configProvider.Register<FacilityLink>()
             .WithIndex(x => x.ZoneID, false)
@@ -106,7 +110,11 @@ public static class Program
             .WithIndex(x => x.FacilityIdB, false)
             .WithEqualityKey(x => x.FacilityIdA)
             .WithEqualityKey(x => x.FacilityIdB)
-            .WithRemoveOldEntryTest(r => r.ZoneID is not (uint)ZoneDefinition.Nexus);
+            .WithRemoveOldEntryTest
+            (
+                r => r.ZoneID is not (uint)ZoneDefinition.Nexus
+                    && r.ZoneID is not (uint)ZoneDefinition.Tutorial2
+            );
 
         configProvider.Register<Faction>()
             .WithIndex(x => x.FactionID, true)
@@ -170,13 +178,21 @@ public static class Program
             .WithEqualityKey(x => x.ZoneID)
             .WithEqualityKey(x => x.X)
             .WithEqualityKey(x => x.Y)
-            .WithRemoveOldEntryTest(r => r.ZoneID is not (uint)ZoneDefinition.Nexus);
+            .WithRemoveOldEntryTest
+            (
+                r => r.ZoneID is not (uint)ZoneDefinition.Nexus
+                    && r.ZoneID is not (uint)ZoneDefinition.Tutorial2
+            );
 
         configProvider.Register<MapRegion>()
             .WithIndex(x => x.MapRegionId, true)
             .WithIndex(x => x.FacilityId, false)
             .WithEqualityKey(x => x.MapRegionId)
-            .WithRemoveOldEntryTest(r => r.ZoneId is not (uint)ZoneDefinition.Nexus);
+            .WithRemoveOldEntryTest
+            (
+                r => r.ZoneId is not (uint)ZoneDefinition.Nexus
+                    && r.ZoneId is not (uint)ZoneDefinition.Tutorial2
+            );
 
         configProvider.Register<MarketingBundle>()
             .WithIndex(x => x.MarketingBundleID, true)

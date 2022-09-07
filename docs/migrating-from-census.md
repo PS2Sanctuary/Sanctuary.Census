@@ -51,7 +51,7 @@ These collections provide the same data as their DBG Census equivalents. The sha
 but is likely to be very similar.
 
 - currency
-- directive_tier
+- directive_tier*
 - directive_tree
 - directive_tree_category
 - experience
@@ -75,6 +75,12 @@ but is likely to be very similar.
 - weapon_to_attachment
 - weapon_to_fire_group
 - zone
+
+#### *directive_tier
+
+The directive reward collections are rather different to DBG Census. Following the `directive_tier.reward_set_id` field
+will require you to query the `directive_tier_reward_set` collection. You can then perform a list join on this to the
+`directive_tier_reward` collection to retrieve the individual items given by the reward set.
 
 ### 🌟 Silver Tier Collections
 

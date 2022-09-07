@@ -17,6 +17,8 @@ using System.Threading.Tasks;
 using FactionDefinition = Sanctuary.Common.Objects.FactionDefinition;
 using MCategory = Sanctuary.Census.Common.Objects.Collections.DirectiveTreeCategory;
 using MDirective = Sanctuary.Census.Common.Objects.Collections.Directive;
+using MReward = Sanctuary.Census.Common.Objects.Collections.DirectiveTierReward;
+using MRewardSet = Sanctuary.Census.Common.Objects.Collections.DirectiveTierRewardSet;
 using MTier = Sanctuary.Census.Common.Objects.Collections.DirectiveTier;
 using MTree = Sanctuary.Census.Common.Objects.Collections.DirectiveTree;
 
@@ -90,6 +92,7 @@ public class DirectiveCollectionsBuilder : ICollectionBuilder
         await BuildTreesAsync(dbContext, defaultImages, ct).ConfigureAwait(false);
         await BuildTiersAsync(dbContext, defaultImages, ct).ConfigureAwait(false);
         await BuildDirectivesAsync(dbContext, defaultImages, ct).ConfigureAwait(false);
+        await BuildRewardsAsync(dbContext, defaultImages, ct).ConfigureAwait(false);
     }
 
     private async Task BuildCategoriesAsync(ICollectionsContext dbContext, CancellationToken ct)
@@ -294,6 +297,74 @@ public class DirectiveCollectionsBuilder : ICollectionBuilder
             }
 
             await dbContext.UpsertCollectionAsync(builtDirectives.Values.SelectMany(x => x), ct).ConfigureAwait(false);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Failed to build the DirectiveTree collection");
+        }
+    }
+
+    private async Task BuildRewardsAsync
+    (
+        ICollectionsContext dbContext,
+        IReadOnlyDictionary<uint, ImageSetMapping> defaultImages,
+        CancellationToken ct
+    )
+    {
+        try
+        {
+            Dictionary<uint, MRewardSet> builtSets = new();
+            List<MReward> builtRewards = new();
+
+            foreach (DirectiveInitialize data in _serverDataCache.DirectiveData.Values)
+            {
+                foreach (DirectiveTree tree in data.Trees)
+                {
+                    // Plenty of null trees. No idea why
+                    if (tree.DirectiveTreeID_2 == 0)
+                        continue;
+
+                    foreach (RewardBundleData reward in tree.Tiers.Select(x => x.Reward))
+                    {
+                        ct.ThrowIfCancellationRequested();
+
+                        if (reward.RewardSetID == 0 || builtSets.ContainsKey(reward.RewardSetID))
+                            continue;
+
+                        _localeDataCache.TryGetLocaleString(reward.NameID, out LocaleString? setName);
+                        defaultImages.TryGetValue(reward.ImageSetID, out ImageSetMapping? setDefaultImage);
+
+                        builtSets.Add(reward.RewardSetID, new MRewardSet
+                        (
+                            reward.RewardSetID,
+                            setName,
+                            reward.ImageSetID,
+                            setDefaultImage?.ImageID,
+                            setDefaultImage is null ? null : $"/files/ps2/images/static/{setDefaultImage.ImageID}.png"
+                        ));
+
+                        foreach (RewardItem item in reward.Items)
+                        {
+                            _localeDataCache.TryGetLocaleString(item.NameID, out LocaleString? rewardName);
+                            defaultImages.TryGetValue(item.ImageSetID, out ImageSetMapping? rewardDefaultImage);
+
+                            builtRewards.Add(new MReward
+                            (
+                                reward.RewardSetID,
+                                item.ItemID,
+                                rewardName,
+                                item.Quantity,
+                                item.ImageSetID,
+                                rewardDefaultImage?.ImageID,
+                                rewardDefaultImage is null ? null : $"/files/ps2/images/static/{rewardDefaultImage.ImageID}.png"
+                            ));
+                        }
+                    }
+                }
+            }
+
+            await dbContext.UpsertCollectionAsync(builtSets.Values, ct).ConfigureAwait(false);
+            await dbContext.UpsertCollectionAsync(builtRewards, ct).ConfigureAwait(false);
         }
         catch (Exception ex)
         {

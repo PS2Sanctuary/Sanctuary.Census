@@ -86,6 +86,16 @@ public static class Program
             .WithEqualityKey(x => x.DirectiveTreeID)
             .WithEqualityKey(x => x.DirectiveTierID);
 
+        configProvider.Register<DirectiveTierReward>()
+            .WithIndex(x => x.RewardSetID, false)
+            .WithIndex(x => x.ItemID, false)
+            .WithEqualityKey(x => x.RewardSetID)
+            .WithEqualityKey(x => x.ItemID);
+
+        configProvider.Register<DirectiveTierRewardSet>()
+            .WithIndex(x => x.RewardSetID, true)
+            .WithEqualityKey(x => x.RewardSetID);
+
         configProvider.Register<DirectiveTreeCategory>()
             .WithIndex(x => x.DirectiveTreeCategoryID, true)
             .WithEqualityKey(x => x.DirectiveTreeCategoryID);

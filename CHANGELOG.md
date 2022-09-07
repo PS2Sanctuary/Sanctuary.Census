@@ -4,8 +4,15 @@ Date format: DD/MM/YYYY
 
 ## vNext
 - Added the `directive`, `directive_tier`, `directive_tree` and `directive_tree_category` collections.
-  Please note that Sanctuary.Census does not know about objectives, and hence the `directive.objective_set_id` field is missing.
+- Added the `directive_tier_reward` and `directive_tier_reward_set` collections.
 - Squashed many bugs, introduced some more, and squashed them again.
+
+**Notes**
+Please note that Sanctuary.Census does not know about objectives, and hence the `directive.objective_set_id` field is missing.
+
+Further, the directive reward collections are rather different to DBG Census. Following the `directive_tier.reward_set_id` field
+will require you to query the `directive_tier_reward_set` collection. You can then perform a list join on this to the
+`directive_tier_reward` collection to retrieve the individual items given by the reward set.
 
 ## 03/09/2022
 

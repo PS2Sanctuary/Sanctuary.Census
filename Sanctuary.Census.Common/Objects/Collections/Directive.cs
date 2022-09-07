@@ -2,6 +2,7 @@
 using Sanctuary.Census.Common.Attributes;
 using Sanctuary.Census.Common.Objects.CommonModels;
 using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 
 namespace Sanctuary.Census.Common.Objects.Collections;
 
@@ -11,6 +12,7 @@ namespace Sanctuary.Census.Common.Objects.Collections;
 /// <param name="DirectiveID">The ID of the directive.</param>
 /// <param name="DirectiveTreeID">The ID of the tree that the directive is nested under.</param>
 /// <param name="DirectiveTierID">The ID of the tier that the directive belongs to.</param>
+/// <param name="Factions">The ID of the factions that the directive is achievable on.</param>
 /// <param name="Name">The name of the directive.</param>
 /// <param name="Description">The description of the directive.</param>
 /// <param name="ImageSetID">The ID of the directive's image set.</param>
@@ -21,9 +23,10 @@ namespace Sanctuary.Census.Common.Objects.Collections;
 [Description("Represents an objective of a directive tier.")]
 public record Directive
 (
-    uint DirectiveID,
-    uint DirectiveTreeID,
-    uint DirectiveTierID,
+    [property: Key] uint DirectiveID,
+    [property: Key] uint DirectiveTreeID,
+    [property: Key] uint DirectiveTierID,
+    ValueEqualityList<byte> Factions,
     LocaleString? Name,
     LocaleString? Description,
     uint ImageSetID,

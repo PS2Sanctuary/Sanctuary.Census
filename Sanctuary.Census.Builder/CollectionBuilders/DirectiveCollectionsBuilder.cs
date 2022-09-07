@@ -252,8 +252,8 @@ public class DirectiveCollectionsBuilder : ICollectionBuilder
     {
         try
         {
-            Dictionary<uint, List<MDirective>> builtDirectives = new();
-            foreach (DirectiveInitialize data in _serverDataCache.DirectiveData.Values)
+            Dictionary<uint, MDirective> builtDirectives = new();
+            foreach ((FactionDefinition faction, DirectiveInitialize data) in _serverDataCache.DirectiveData)
             {
                 foreach (DirectiveTree tree in data.Trees)
                 {
@@ -261,16 +261,11 @@ public class DirectiveCollectionsBuilder : ICollectionBuilder
                     if (tree.DirectiveTreeID_2 == 0)
                         continue;
 
-                    if (builtDirectives.ContainsKey(tree.DirectiveTreeID_1))
-                        continue;
-
-                    List<MDirective> objectives = new();
                     foreach (DirectiveTreeTier tier in tree.Tiers)
                     {
-                        ct.ThrowIfCancellationRequested();
-
                         foreach (DirectiveTreeTierObjective objective in tier.Objectives)
                         {
+                            ct.ThrowIfCancellationRequested();
                             if (objective.ObjectiveID_2 == 0)
                                 continue;
 
@@ -278,25 +273,33 @@ public class DirectiveCollectionsBuilder : ICollectionBuilder
                             _localeDataCache.TryGetLocaleString(objective.DescriptionID, out LocaleString? description);
                             defaultImages.TryGetValue(objective.ImageSetID, out ImageSetMapping? defaultImage);
 
-                            objectives.Add(new MDirective
-                            (
-                                objective.ObjectiveID_1,
-                                tree.DirectiveTreeID_1,
-                                tier.TierID,
-                                name,
-                                description,
-                                objective.ImageSetID,
-                                defaultImage?.ImageID,
-                                defaultImage is null ? null : $"/files/ps2/images/static/{defaultImage.ImageID}.png",
-                                objective.ObjectiveParam1
-                            ));
+                            if (builtDirectives.TryGetValue(objective.ObjectiveID_1, out MDirective? prevBuilt))
+                            {
+                                prevBuilt.Factions.Add((byte)faction);
+                                prevBuilt.Factions.Sort();
+                            }
+                            else
+                            {
+                                builtDirectives.Add(objective.ObjectiveID_1, new MDirective
+                                (
+                                    objective.ObjectiveID_1,
+                                    tree.DirectiveTreeID_1,
+                                    tier.TierID,
+                                    new ValueEqualityList<byte> { (byte)faction },
+                                    name,
+                                    description,
+                                    objective.ImageSetID,
+                                    defaultImage?.ImageID,
+                                    defaultImage is null ? null : $"/files/ps2/images/static/{defaultImage.ImageID}.png",
+                                    objective.ObjectiveParam1
+                                ));
+                            }
                         }
                     }
-                    builtDirectives.Add(tree.DirectiveTreeID_1, objectives);
                 }
             }
 
-            await dbContext.UpsertCollectionAsync(builtDirectives.Values.SelectMany(x => x), ct).ConfigureAwait(false);
+            await dbContext.UpsertCollectionAsync(builtDirectives.Values, ct).ConfigureAwait(false);
         }
         catch (Exception ex)
         {

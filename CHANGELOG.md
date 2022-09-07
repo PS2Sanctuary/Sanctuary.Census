@@ -3,7 +3,8 @@
 Date format: DD/MM/YYYY
 
 ## vNext
-- Added the `directive_tier`, `directive_tree` and `directive_tree_category` collections.
+- Added the `directive`, `directive_tier`, `directive_tree` and `directive_tree_category` collections.
+  Please note that Sanctuary.Census does not know about objectives, and hence the `directive.objective_set_id` field is missing.
 - Squashed many bugs, introduced some more, and squashed them again.
 
 ## 03/09/2022

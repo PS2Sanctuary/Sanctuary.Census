@@ -32,12 +32,12 @@ All number, boolean and `null` values will be represented appropriately, rather 
 
 ### Error Responses
 
-Sanctuary.Census uses a different set of error codes, the definitions of which [can be found here](../Sanctuary.Census/Models/QueryErrorCode.cs).
+Sanctuary.Census uses a different set of error codes, the definitions of which [can be found here](../Sanctuary.Census.Api/Models/QueryErrorCode.cs).
 Please note that the error response format is not consistent, although it should match Census for most query-related errors.
 
 ## Collections
 
-ℹ Please see the [collection model definitions here](../Sanctuary.Census/Models/Collections).
+ℹ Please see the [collection model definitions here](../Sanctuary.Census.Common/Objects/Collections).
 
 This section lists the Collections provided by Sanctuary.Census, and compares them to the DBG Census.
 Many collections add additional data on top of the DBG Census data, and collections which DBG Census does
@@ -51,14 +51,19 @@ These collections provide the same data as their DBG Census equivalents. The sha
 but is likely to be very similar.
 
 - currency
+- directive_tier
+- directive_tree
+- directive_tree_category
 - experience
 - facility_link
 - faction
 - fire_group
 - fire_group_to_fire_mode
 - fire_mode_to_projectile
+- image_set
 - item_category
 - item_to_weapon
+- map_hex
 - marketing_bundle
 - marketing_bundle_item
 - ⚠ player_state_group - please query on `player_state_group_2` instead, which is a direct upgrade
@@ -76,6 +81,7 @@ but is likely to be very similar.
 These collections are missing small amounts of data as compared to their DBG Census equivalents, or are shaped differently
 in such a way that retrieving certain data may not be immediately obvious.
 
+- directive
 - item
 - loadout
 - map_region
@@ -83,6 +89,10 @@ in such a way that retrieving certain data may not be immediately obvious.
 - weapon
 - weapon_ammo_slot
 - world
+
+#### directive
+
+Missing the `objective_set_id` and `qualify_requirement_id` fields.
 
 #### item
 

@@ -16,6 +16,7 @@ using System.Threading.Tasks;
 
 using FactionDefinition = Sanctuary.Common.Objects.FactionDefinition;
 using MCategory = Sanctuary.Census.Common.Objects.Collections.DirectiveTreeCategory;
+using MDirective = Sanctuary.Census.Common.Objects.Collections.Directive;
 using MTier = Sanctuary.Census.Common.Objects.Collections.DirectiveTier;
 using MTree = Sanctuary.Census.Common.Objects.Collections.DirectiveTree;
 
@@ -65,6 +66,19 @@ public class DirectiveCollectionsBuilder : ICollectionBuilder
         if (_clientDataCache.ImageSetMappings is null)
             throw new MissingCacheDataException(typeof(ImageSetMapping));
 
+        bool hasAllFactions = _serverDataCache.DirectiveData.ContainsKey(FactionDefinition.VS)
+            && _serverDataCache.DirectiveData.ContainsKey(FactionDefinition.NC)
+            && _serverDataCache.DirectiveData.ContainsKey(FactionDefinition.TR);
+        // TODO: Add NSO
+        if (!hasAllFactions)
+        {
+            throw new Exception
+            (
+                "Missing a faction. Present: " +
+                string.Join(", ", _serverDataCache.DirectiveData.Keys)
+            );
+        }
+
         Dictionary<uint, ImageSetMapping> defaultImages = new();
         foreach (ImageSetMapping mapping in _clientDataCache.ImageSetMappings)
         {
@@ -75,6 +89,7 @@ public class DirectiveCollectionsBuilder : ICollectionBuilder
         await BuildCategoriesAsync(dbContext, ct).ConfigureAwait(false);
         await BuildTreesAsync(dbContext, defaultImages, ct).ConfigureAwait(false);
         await BuildTiersAsync(dbContext, defaultImages, ct).ConfigureAwait(false);
+        await BuildDirectivesAsync(dbContext, defaultImages, ct).ConfigureAwait(false);
     }
 
     private async Task BuildCategoriesAsync(ICollectionsContext dbContext, CancellationToken ct)
@@ -218,6 +233,67 @@ public class DirectiveCollectionsBuilder : ICollectionBuilder
             }
 
             await dbContext.UpsertCollectionAsync(builtTiers.Values.SelectMany(x => x), ct).ConfigureAwait(false);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Failed to build the DirectiveTree collection");
+        }
+    }
+
+    private async Task BuildDirectivesAsync
+    (
+        ICollectionsContext dbContext,
+        IReadOnlyDictionary<uint, ImageSetMapping> defaultImages,
+        CancellationToken ct
+    )
+    {
+        try
+        {
+            Dictionary<uint, List<MDirective>> builtDirectives = new();
+            foreach (DirectiveInitialize data in _serverDataCache.DirectiveData.Values)
+            {
+                foreach (DirectiveTree tree in data.Trees)
+                {
+                    // Plenty of null trees. No idea why
+                    if (tree.DirectiveTreeID_2 == 0)
+                        continue;
+
+                    if (builtDirectives.ContainsKey(tree.DirectiveTreeID_1))
+                        continue;
+
+                    List<MDirective> objectives = new();
+                    foreach (DirectiveTreeTier tier in tree.Tiers)
+                    {
+                        ct.ThrowIfCancellationRequested();
+
+                        foreach (DirectiveTreeTierObjective objective in tier.Objectives)
+                        {
+                            if (objective.ObjectiveID_2 == 0)
+                                continue;
+
+                            _localeDataCache.TryGetLocaleString(objective.NameID, out LocaleString? name);
+                            _localeDataCache.TryGetLocaleString(objective.DescriptionID, out LocaleString? description);
+                            defaultImages.TryGetValue(objective.ImageSetID, out ImageSetMapping? defaultImage);
+
+                            objectives.Add(new MDirective
+                            (
+                                objective.ObjectiveID_1,
+                                tree.DirectiveTreeID_1,
+                                tier.TierID,
+                                name,
+                                description,
+                                objective.ImageSetID,
+                                defaultImage?.ImageID,
+                                defaultImage is null ? null : $"/files/ps2/images/static/{defaultImage.ImageID}.png",
+                                objective.ObjectiveParam1
+                            ));
+                        }
+                    }
+                    builtDirectives.Add(tree.DirectiveTreeID_1, objectives);
+                }
+            }
+
+            await dbContext.UpsertCollectionAsync(builtDirectives.Values.SelectMany(x => x), ct).ConfigureAwait(false);
         }
         catch (Exception ex)
         {

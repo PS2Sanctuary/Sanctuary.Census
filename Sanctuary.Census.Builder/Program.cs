@@ -71,6 +71,11 @@ public static class Program
             .WithIndex(x => x.CurrencyID, true)
             .WithEqualityKey(x => x.CurrencyID);
 
+        configProvider.Register<Directive>()
+            .WithIndex(x => x.DirectiveID, true)
+            .WithIndex(x => x.DirectiveTreeID, false)
+            .WithEqualityKey(x => x.DirectiveID);
+
         configProvider.Register<DirectiveTree>()
             .WithIndex(x => x.DirectiveTreeID, true)
             .WithIndex(x => x.DirectiveTreeCategoryID, false)

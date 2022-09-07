@@ -18,7 +18,7 @@ csharp_new_line_before_finally = true
 #require members of object intializers to be on separate lines
 csharp_new_line_before_members_in_object_initializers = true
 #require braces to be on a new line for lambdas, types, methods, object_collection_array_initializers, and control_blocks (also known as "Allman" style)
-csharp_new_line_before_open_brace = anonymous_methods,control_blocks,lambdas,local_functions,methods,object_collection_array_initializers,types
+csharp_new_line_before_open_brace = anonymous_methods,control_blocks,lambdas,local_functions,methods,types
 
 #Formatting - organize using options
 
@@ -130,14 +130,55 @@ csharp_style_namespace_declarations = file_scoped:warning
 
 end_of_line = crlf
 
+# Microsoft .NET properties
+dotnet_naming_rule.private_constants_rule.import_to_resharper = as_predefined
+dotnet_naming_rule.private_constants_rule.severity = none
+dotnet_naming_rule.private_constants_rule.style = k_upper_camel_case_style
+dotnet_naming_rule.private_constants_rule.symbols = private_constants_symbols
+dotnet_naming_style.k_upper_camel_case_style.capitalization = pascal_case
+dotnet_naming_style.k_upper_camel_case_style.required_prefix = k
+dotnet_naming_symbols.private_constants_symbols.applicable_accessibilities = private
+dotnet_naming_symbols.private_constants_symbols.applicable_kinds = field
+dotnet_naming_symbols.private_constants_symbols.required_modifiers = const
+dotnet_style_parentheses_in_arithmetic_binary_operators = never_if_unnecessary:none
+dotnet_style_parentheses_in_other_binary_operators = always_for_clarity:none
+dotnet_style_parentheses_in_relational_binary_operators = never_if_unnecessary:none
+
+# ReSharper properties
+resharper_enforce_line_ending_style = true
+resharper_use_indent_from_vs = false
+resharper_xml_attribute_indent = single_indent
+resharper_xml_pi_attributes_indent = single_indent
+
+# ReSharper inspection severities
+resharper_arrange_accessor_owner_body_highlighting = none
+resharper_arrange_redundant_parentheses_highlighting = hint
+resharper_arrange_this_qualifier_highlighting = none
+resharper_class_never_instantiated_global_highlighting = none
+resharper_class_with_virtual_members_never_inherited_global_highlighting = none
+resharper_foreach_can_be_partly_converted_to_query_using_another_get_enumerator_highlighting = none
+resharper_identifier_typo_highlighting = none
+resharper_inconsistent_naming_highlighting = none
+resharper_member_can_be_private_global_highlighting = none
+resharper_member_can_be_protected_global_highlighting = hint
+resharper_method_supports_cancellation_highlighting = warning
+resharper_redundant_base_qualifier_highlighting = none
+resharper_return_type_can_be_enumerable_local_highlighting = none
+resharper_string_literal_typo_highlighting = none
+resharper_unnecessary_whitespace_highlighting = suggestion
+resharper_unused_auto_property_accessor_global_highlighting = none
+resharper_web_config_module_not_resolved_highlighting = warning
+resharper_web_config_type_not_resolved_highlighting = warning
+resharper_web_config_wrong_module_highlighting = warning
+
 [/Sanctuary.Census.Common/7zip/**]
-dotnet_diagnostic.CS1570.severity = none
-dotnet_diagnostic.CS8618.severity = none
-dotnet_diagnostic.CS8625.severity = none
-dotnet_diagnostic.CS1591.severity = none
+dotnet_diagnostic.cs1570.severity = none
+dotnet_diagnostic.cs8618.severity = none
+dotnet_diagnostic.cs8625.severity = none
+dotnet_diagnostic.cs1591.severity = none
 
 [/Sanctuary.Census.SourceGeneration/**]
-dotnet_diagnostic.CS1591.severity = none
+dotnet_diagnostic.cs1591.severity = none
 
 [*.{appxmanifest,asax,ascx,aspx,axaml,build,c,c++,cc,cginc,compute,cp,cpp,cs,cshtml,cu,cuh,cxx,dtd,fx,fxh,h,hh,hlsl,hlsli,hlslinc,hpp,hxx,inc,inl,ino,ipp,master,mpp,mq4,mq5,mqh,nuspec,paml,razor,resw,resx,skin,tpp,usf,ush,vb,xaml,xamlx,xoml,xsd}]
 indent_style = space

@@ -63,6 +63,7 @@ public class CollectionController : ControllerBase
         _allStringOptions = new JsonSerializerOptions(_defaultOptions);
         _allStringOptions.Converters.Remove(_allStringOptions.Converters.First(x => x is BsonDocumentJsonConverter));
         _allStringOptions.Converters.Add(new BsonDocumentJsonConverter(true));
+        _allStringOptions.NumberHandling = JsonNumberHandling.WriteAsString;
 
         _incNullAndAllStringOptions = new JsonSerializerOptions(_allStringOptions)
         {

@@ -1,10 +1,8 @@
 ﻿# Sanctuary.Census
 
-An unofficial supplement to Daybreak Game Company's Census API, which aims to present up-to-date static PlanetSide 2 data.
-The methods through which Sanctuary.Census retrieves data allow it to keep itself up-to-date automatically, until
-such a time as the structure of the data it depends on, or the methods required to retrieve it, change.
-
-This collection updating process is currently performed every three hours.
+An unofficial supplement to [Daybreak Game Company's Census API](https://census.daybreakgames.com), which aims to present up-to-date
+static PlanetSide 2 data. The methods through which Sanctuary.Census retrieves data allow it to keep itself up-to-date automatically,
+until such a time as the structure of the data it depends on, or the methods required to retrieve it, change.
 
 ## Getting Started
 
@@ -31,13 +29,25 @@ do so in the near future.
 
 ### Solution Structure
 
-The main project, `Sanctuary.Census`, contains the API, collection models and collection building logic.
+#### Sanctuary.Census.Common
 
-Each data source has its own project - for example, `Sanctuary.Census.ClientData`. Data source projects contain their
-specific data models, data retrieval logic and an object inheriting from `IDataCacheService` responsible for caching the data, for use in
-the main project's collection builders.
+This project contains the collection models, along with other shared services and types.
 
-Finally, the `Sanctuary.Common` project contains shared data types and services.
+#### Sanctuary.Census.Api
+
+This ASP.NET Core Web API project contains the API components, much as the name suggests.
+This encompasses parsing the Census REST query format, building a corresponding query to
+the underlying MongoDB database, and converting the result into a JSON model compatible
+with expected Census results.
+
+#### Sanctuary.Census.Builder
+
+This service worker project is responsible for transforming data source caches into the
+collections surfaced by the API. Built collections are upserted in the underlying database,
+and the builder also maintains a diffing provider, in order to show changes to the collections.
+
+The builder uses multiple data source projects - for example, `Sanctuary.Census.ClientData`. Data source projects contain their
+specific data models, data retrieval logic and an object inheriting from `IDataCacheService` responsible for caching their data.
 
 ## Contributing
 

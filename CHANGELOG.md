@@ -2,6 +2,10 @@
 
 Date format: DD/MM/YYYY
 
+## 08/09/2022
+
+- Fixed the `count` verb and root datatype endpoint not obeying CensusJSON mode.
+
 ## 07/09/2022 | Update: Still Grinding
 - Added the `directive`, `directive_tier`, `directive_tree` and `directive_tree_category` collections.
 - Added the `directive_tier_reward` and `directive_tier_reward_set` collections.

@@ -89,31 +89,53 @@ public class CollectionController : ControllerBase
     /// Gets the available collections.
     /// </summary>
     /// <param name="environment">The environment to retrieve the collections from.</param>
+    /// <param name="censusJSON">Whether Census JSON mode is enabled.</param>
     /// <param name="ct">A <see cref="CancellationToken"/> that can be used to stop the operation.</param>
     /// <returns>The available collections.</returns>
     /// <response code="200">Returns the list of collections.</response>
     [HttpGet("get/{environment}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
-    public async Task<DataResponse<Datatype>> GetDatatypesAsync(string environment, CancellationToken ct = default)
+    public async Task<JsonResult> GetDatatypesAsync
+    (
+        string environment,
+        bool censusJSON = true,
+        CancellationToken ct = default
+    )
     {
         PS2Environment env = ParseEnvironment(environment);
         IReadOnlyList<Datatype> dataTypes = await GetAndCacheDatatypeListAsync(env, ct);
-        return new DataResponse<Datatype>(dataTypes, "datatype", null);
+
+        return new JsonResult
+        (
+            new DataResponse<Datatype>(dataTypes, "datatype", null),
+            GetJsonOptions(censusJSON, true)
+        );
     }
 
     /// <summary>
     /// Counts the number of available collections.
     /// </summary>
     /// <param name="environment">The environment to retrieve the collections from.</param>
+    /// <param name="censusJSON">Whether Census JSON mode is enabled.</param>
     /// <param name="ct">A <see cref="CancellationToken"/> that can be used to stop the operation.</param>
     /// <returns>The collection count.</returns>
     /// <response code="200">Returns the number of collections.</response>
     [HttpGet("count/{environment}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
-    public async Task<CollectionCount> CountDatatypesAsync(string environment, CancellationToken ct = default)
+    public async Task<JsonResult> CountDatatypesAsync
+    (
+        string environment,
+        bool censusJSON = true,
+        CancellationToken ct = default
+    )
     {
         PS2Environment env = ParseEnvironment(environment);
-        return (await GetAndCacheDatatypeListAsync(env, ct)).Count;
+
+        return new JsonResult
+        (
+            (await GetAndCacheDatatypeListAsync(env, ct).ConfigureAwait(false)).Count,
+            GetJsonOptions(censusJSON, true)
+        );
     }
 
     /// <summary>
@@ -135,6 +157,8 @@ public class CollectionController : ControllerBase
         CancellationToken ct = default
     )
     {
+        JsonSerializerOptions jsonOptions = GetJsonOptions(queryParams.CensusJsonMode, queryParams.IncludeNullFields);
+
         try
         {
             IMongoCollection<BsonDocument> collection = ValidateAndGetCollection
@@ -218,14 +242,6 @@ public class CollectionController : ControllerBase
                 st.Stop();
             }
 
-            JsonSerializerOptions options = _defaultOptions;
-            if (queryParams.IncludeNullFields && !queryParams.CensusJsonMode)
-                options = _incNullOptions;
-            else if (queryParams.IncludeNullFields && queryParams.CensusJsonMode)
-                options = _incNullAndAllStringOptions;
-            else if (queryParams.CensusJsonMode)
-                options = _allStringOptions;
-
             Datatype? datatypeInfo = queryParams.ShowTimings
                 ? (await GetAndCacheDatatypeListAsync(ParseEnvironment(environment), ct).ConfigureAwait(false))
                     .FirstOrDefault(d => d.Name == collectionName)
@@ -246,21 +262,23 @@ public class CollectionController : ControllerBase
                         )
                         : null
                 ),
-                options
+                jsonOptions
             );
         }
         catch (QueryException quex)
         {
             return new JsonResult
             (
-                new ErrorResponse(quex.ErrorCode, quex.Message)
+                new ErrorResponse(quex.ErrorCode, quex.Message),
+                jsonOptions
             ) { StatusCode = StatusCodes.Status400BadRequest };
         }
         catch (MongoCommandException mcex) when (mcex.Message.StartsWith("Command aggregate failed: Invalid $project"))
         {
             return new JsonResult
             (
-                new ErrorResponse(QueryErrorCode.InvalidProjection, "Ensure you don't have conflicting c:show and c:hide commands")
+                new ErrorResponse(QueryErrorCode.InvalidProjection, "Ensure you don't have conflicting c:show and c:hide commands"),
+                jsonOptions
             ) { StatusCode = StatusCodes.Status400BadRequest };
         }
     }
@@ -276,7 +294,7 @@ public class CollectionController : ControllerBase
     /// <response code="200">Returns the result of the query.</response>
     [HttpGet("/count/{environment}/{collectionName}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
-    public async Task<object> CountCollectionAsync
+    public async Task<JsonResult> CountCollectionAsync
     (
         string environment,
         string collectionName,
@@ -284,6 +302,8 @@ public class CollectionController : ControllerBase
         CancellationToken ct = default
     )
     {
+        JsonSerializerOptions jsonOptions = GetJsonOptions(queryParams.CensusJsonMode, queryParams.IncludeNullFields);
+
         try
         {
             IMongoCollection<BsonDocument> collection = ValidateAndGetCollection
@@ -302,19 +322,42 @@ public class CollectionController : ControllerBase
             ).Count();
 
             AggregateCountResult res = await count.FirstAsync(ct);
-            return new CollectionCount((ulong)res.Count);
+
+            return new JsonResult
+            (
+                new CollectionCount((ulong)res.Count),
+                jsonOptions
+            );
         }
         catch (QueryException quex)
         {
-            return new ErrorResponse(quex.ErrorCode, quex.Message);
+            return new JsonResult
+            (
+                new ErrorResponse(quex.ErrorCode, quex.Message),
+                jsonOptions
+            );
         }
         catch (MongoCommandException mcex) when (mcex.Message.StartsWith("Command aggregate failed: Invalid $project"))
         {
             return new JsonResult
             (
-                new ErrorResponse(QueryErrorCode.InvalidProjection, "Ensure you don't have conflicting c:show and c:hide commands")
+                new ErrorResponse(QueryErrorCode.InvalidProjection, "Ensure you don't have conflicting c:show and c:hide commands"),
+                jsonOptions
             ) { StatusCode = StatusCodes.Status400BadRequest };
         }
+    }
+
+    private JsonSerializerOptions GetJsonOptions(bool censusJSON, bool includeNull)
+    {
+        JsonSerializerOptions options = _defaultOptions;
+        if (includeNull && !censusJSON)
+            options = _incNullOptions;
+        else if (includeNull && censusJSON)
+            options = _incNullAndAllStringOptions;
+        else if (censusJSON)
+            options = _allStringOptions;
+
+        return options;
     }
 
     private IMongoCollection<BsonDocument> ValidateAndGetCollection

@@ -2,6 +2,10 @@
 
 Date format: DD/MM/YYYY
 
+## 11/09/2022
+
+- Removed `directive.objective_param_1` due to instability in the value.
+
 ## 08/09/2022
 
 - Fixed the `count` verb and root datatype endpoint not obeying CensusJSON mode.

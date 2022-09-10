@@ -290,8 +290,7 @@ public class DirectiveCollectionsBuilder : ICollectionBuilder
                                     description,
                                     objective.ImageSetID,
                                     defaultImage?.ImageID,
-                                    defaultImage is null ? null : $"/files/ps2/images/static/{defaultImage.ImageID}.png",
-                                    objective.ObjectiveParam1
+                                    defaultImage is null ? null : $"/files/ps2/images/static/{defaultImage.ImageID}.png"
                                 ));
                             }
                         }

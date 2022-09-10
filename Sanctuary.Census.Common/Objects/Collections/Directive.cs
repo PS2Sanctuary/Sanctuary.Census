@@ -18,7 +18,6 @@ namespace Sanctuary.Census.Common.Objects.Collections;
 /// <param name="ImageSetID">The ID of the directive's image set.</param>
 /// <param name="ImageID">The ID of the directive's default image.</param>
 /// <param name="ImagePath">The relative path to the directive's default image.</param>
-/// <param name="ObjectiveParam1">Unknown.</param>
 [Collection]
 [Description("Represents an objective of a directive tier.")]
 public record Directive
@@ -31,6 +30,5 @@ public record Directive
     LocaleString? Description,
     uint ImageSetID,
     uint? ImageID,
-    string? ImagePath,
-    uint ObjectiveParam1
+    string? ImagePath
 ) : ISanctuaryCollection;

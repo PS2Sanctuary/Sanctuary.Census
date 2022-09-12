@@ -95,6 +95,11 @@ public interface IClientDataCacheService : IDataCacheService
     IReadOnlyList<Skill>? Skills { get; }
 
     /// <summary>
+    /// Gets the cached <see cref="SkillCategory"/> objects.
+    /// </summary>
+    IReadOnlyList<SkillCategory>? SkillCategories { get; }
+
+    /// <summary>
     /// Gets the cached <see cref="Vehicle"/> objects.
     /// </summary>
     IReadOnlyList<Vehicle>? Vehicles { get; }

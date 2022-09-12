@@ -313,7 +313,9 @@ public partial record {@class.Name} : IDatasheet<{@class.Name}>
             {{
                 {(byte)'0'} => false, // '0'
                 {(byte)'1'} => true, // '1'
-                _ => Utf8Parser.TryParse({paramValueSpanName}, out bool {paramName}Value, out _) ? {paramName}Value : throw new Exception(""Failed to parse '{originalParam}' parameter"")
+                _ => Utf8Parser.TryParse({paramValueSpanName}, out bool {paramName}Value, out _)
+                    ? {paramName}Value
+                    : throw new Exception($""Failed to parse a '{paramName}' field as a boolean. Value: {{System.Text.Encoding.UTF8.GetString({paramValueSpanName})}}"")
             }};
 
         "

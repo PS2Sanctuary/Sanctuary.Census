@@ -90,6 +90,11 @@ public interface IClientDataCacheService : IDataCacheService
     IReadOnlyList<ResourceType>? ResourceTypes { get; }
 
     /// <summary>
+    /// Gets the cached <see cref="Skill"/> objects.
+    /// </summary>
+    IReadOnlyList<Skill>? Skills { get; }
+
+    /// <summary>
     /// Gets the cached <see cref="Vehicle"/> objects.
     /// </summary>
     IReadOnlyList<Vehicle>? Vehicles { get; }

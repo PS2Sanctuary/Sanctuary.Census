@@ -76,6 +76,9 @@ public class ClientDataCacheService : IClientDataCacheService
     public IReadOnlyList<ResourceType>? ResourceTypes { get; private set; }
 
     /// <inheritdoc />
+    public IReadOnlyList<Skill>? Skills { get; private set; }
+
+    /// <inheritdoc />
     public IReadOnlyList<Vehicle>? Vehicles { get; private set; }
 
     /// <inheritdoc />
@@ -251,6 +254,14 @@ public class ClientDataCacheService : IClientDataCacheService
             ct
         ).ConfigureAwait(false);
 
+        Skills = await ExtractDatasheet<Skill>
+        (
+            "Skills.txt",
+            assetHeaders,
+            reader,
+            ct
+        ).ConfigureAwait(false);
+
         Vehicles = await ExtractDatasheet<Vehicle>
         (
             "Vehicles.txt",
@@ -315,6 +326,7 @@ public class ClientDataCacheService : IClientDataCacheService
         LoadoutAttachmentGroupMaps = null;
         LoadoutSlots = null;
         ResourceTypes = null;
+        Skills = null;
         Vehicles = null;
         VehicleLoadouts = null;
         VehicleLoadoutSlots = null;

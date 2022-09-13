@@ -51,7 +51,7 @@ public record OutfitWarRounds
     /// <param name="Stage">The stage that the round belongs to.</param>
     /// <param name="StartTime">The start time of the round, as a unix seconds timestamp.</param>
     /// <param name="EndTime">The end time of the round, as a unix seconds timestamp.</param>
-    [Collection]
+    [Collection(IsNestedType = true)]
     public record Round
     (
         uint Order,

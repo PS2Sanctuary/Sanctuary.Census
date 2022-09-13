@@ -165,7 +165,7 @@ public class CollectionBuildWorker : BackgroundService
         SnakeCaseJsonNamingPolicy nameConv = SnakeCaseJsonNamingPolicy.Default;
         IEnumerable<Type> collTypes = typeof(CollectionAttribute).Assembly
             .GetTypes()
-            .Where(t => t.IsDefined(typeof(CollectionAttribute)));
+            .Where(t => t.GetCustomAttribute<CollectionAttribute>()?.IsNestedType == false);
 
         IMongoCollection<Datatype> datatypeCollection = database.GetCollection<Datatype>();
         List<ReplaceOneModel<Datatype>> dbWriteModels = new();

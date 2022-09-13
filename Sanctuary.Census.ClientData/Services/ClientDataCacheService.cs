@@ -3,6 +3,7 @@ using Mandible.Abstractions.Pack2;
 using Mandible.Pack2;
 using Mandible.Services;
 using Mandible.Util;
+using Sanctuary.Census.ClientData.Abstractions;
 using Sanctuary.Census.ClientData.Abstractions.ClientDataModels;
 using Sanctuary.Census.ClientData.Abstractions.Services;
 using Sanctuary.Census.ClientData.ClientDataModels;
@@ -11,10 +12,12 @@ using Sanctuary.Census.Common.Objects;
 using Sanctuary.Census.Common.Services;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Xml;
 
 namespace Sanctuary.Census.ClientData.Services;
 
@@ -26,6 +29,9 @@ public class ClientDataCacheService : IClientDataCacheService
 
     /// <inheritdoc />
     public DateTimeOffset LastPopulated { get; private set; }
+
+    /// <inheritdoc />
+    public IReadOnlyDictionary<AssetZone, List<AreaDefinition>>? AreaDefinitions { get; private set; }
 
     /// <inheritdoc />
     public IReadOnlyList<ClientItemDatasheetData>? ClientItemDatasheetDatas { get; private set; }
@@ -115,6 +121,7 @@ public class ClientDataCacheService : IClientDataCacheService
     {
         _manifestService = manifestService;
         _environmentContextProvider = environmentContextProvider;
+
         Clear();
     }
 
@@ -134,6 +141,8 @@ public class ClientDataCacheService : IClientDataCacheService
 
         using Pack2Reader reader = new(sdrs);
         IReadOnlyList<Asset2Header> assetHeaders = await reader.ReadAssetHeadersAsync(ct).ConfigureAwait(false);
+
+        await ExtractAreasAsync(assetHeaders, reader, ct).ConfigureAwait(false);
 
         ClientItemDatasheetDatas = await ExtractDatasheet<ClientItemDatasheetData>
         (
@@ -343,6 +352,7 @@ public class ClientDataCacheService : IClientDataCacheService
     public void Clear()
     {
         LastPopulated = DateTimeOffset.MinValue;
+        AreaDefinitions = null;
         ClientItemDatasheetDatas = null;
         ClientItemDefinitions = null;
         Currencies = null;
@@ -383,5 +393,206 @@ public class ClientDataCacheService : IClientDataCacheService
 
         using MemoryOwner<byte> data = await packReader.ReadAssetDataAsync(header, ct).ConfigureAwait(false);
         return TDataType.Deserialize(data.Span);
+    }
+
+    private async Task ExtractAreasAsync
+    (
+        IReadOnlyList<Asset2Header> assetHeaders,
+        IPack2Reader packReader,
+        CancellationToken ct
+    )
+    {
+        Dictionary<AssetZone, List<AreaDefinition>> areas = new();
+
+        foreach (AssetZone zone in Enum.GetValues<AssetZone>())
+        {
+            ulong nameHash = PackCrc64.Calculate($"{zone}Areas.xml");
+            Asset2Header? header = assetHeaders.FirstOrDefault(ah => ah.NameHash == nameHash);
+            if (header is null)
+                continue;
+
+            List<AreaDefinition> builtDefinitions = new();
+            using MemoryOwner<byte> data = await packReader.ReadAssetDataAsync(header, ct).ConfigureAwait(false);
+            await using MemoryStream ms = new(data.Memory.ToArray());
+
+            XmlReaderSettings xmlSettings = new()
+            {
+                Async = true,
+                CloseInput = false,
+                ConformanceLevel = ConformanceLevel.Fragment // This is required as the area definitions are stored in one file as multiple root-level objects.
+            };
+            using XmlReader reader = XmlReader.Create(ms, xmlSettings);
+
+            AreaDefinition? lastArea = null;
+
+            while (await reader.ReadAsync().ConfigureAwait(false))
+            {
+                ct.ThrowIfCancellationRequested();
+
+                if (reader.NodeType != XmlNodeType.Element)
+                    continue;
+
+                if (reader.Name == "AreaDefinition")
+                {
+                    _ = TryParseAreaDefinition(reader, out lastArea);
+                }
+                else if (reader.Name == "Property")
+                {
+                    if (lastArea is null)
+                        continue;
+
+                    if (reader.GetAttribute("type") != "SundererNoDeploy")
+                        continue;
+
+                    if (!TryParseAreaProperty(reader, out uint requirementId, out uint facilityId))
+                        continue;
+
+                    builtDefinitions.Add(lastArea with
+                    {
+                        RequirementID = requirementId,
+                        FacilityID = facilityId
+                    });
+                }
+            }
+
+            if (builtDefinitions.Count > 0)
+                areas[zone] = builtDefinitions;
+        }
+
+        AreaDefinitions = areas;
+    }
+
+    private static bool TryParseAreaDefinition(XmlReader reader, [NotNullWhen(true)] out AreaDefinition? area)
+    {
+        area = null;
+        string? idVal = reader.GetAttribute("id");
+        string? nameVal = reader.GetAttribute("name");
+        string? shapeVal = reader.GetAttribute("shape");
+        string? x1Val = reader.GetAttribute("x1");
+        string? y1Val = reader.GetAttribute("y1");
+        string? z1Val = reader.GetAttribute("z1");
+        string? x2Val = reader.GetAttribute("x2");
+        string? y2Val = reader.GetAttribute("y2");
+        string? z2Val = reader.GetAttribute("z2");
+        string? rotXVal = reader.GetAttribute("rotX");
+        string? rotYVal = reader.GetAttribute("rotY");
+        string? rotZVal = reader.GetAttribute("rotZ");
+        string? radVal = reader.GetAttribute("radius");
+
+        if (!uint.TryParse(idVal, out uint id))
+            return false;
+
+        if (shapeVal is null)
+            return false;
+
+        if (!decimal.TryParse(x1Val, out decimal x1))
+            return false;
+
+        if (!decimal.TryParse(z1Val, out decimal z1))
+            return false;
+
+        if (!decimal.TryParse(y1Val, out decimal y1))
+            return false;
+
+        decimal? x2 = null;
+        if (x2Val is not null)
+        {
+            if (!decimal.TryParse(x2Val, out decimal x2Temp))
+                return false;
+
+            x2 = x2Temp;
+        }
+
+        decimal? z2 = null;
+        if (z2Val is not null)
+        {
+            if (!decimal.TryParse(z2Val, out decimal z2Temp))
+                return false;
+
+            z2 = z2Temp;
+        }
+
+        decimal? y2 = null;
+        if (y2Val is not null)
+        {
+            if (!decimal.TryParse(y2Val, out decimal y2Temp))
+                return false;
+
+            y2 = y2Temp;
+        }
+
+        decimal? rotX = null;
+        if (rotXVal is not null)
+        {
+            if (!decimal.TryParse(rotXVal, out decimal rotXTemp))
+                return false;
+
+            rotX = rotXTemp;
+        }
+
+        decimal? rotY = null;
+        if (rotYVal is not null)
+        {
+            if (!decimal.TryParse(rotYVal, out decimal rotYTemp))
+                return false;
+
+            rotY = rotYTemp;
+        }
+
+        decimal? rotZ = null;
+        if (rotZVal is not null)
+        {
+            if (!decimal.TryParse(rotZVal, out decimal rotZTemp))
+                return false;
+
+            rotZ = rotZTemp;
+        }
+
+        decimal? radius = null;
+        if (radVal is not null)
+        {
+            if (!decimal.TryParse(radVal, out decimal radiusTemp))
+                return false;
+
+            radius = radiusTemp;
+        }
+
+        area = new AreaDefinition
+        (
+            id,
+            nameVal,
+            shapeVal,
+            x1,
+            y1,
+            z1,
+            x2,
+            y2,
+            z2,
+            rotX,
+            rotY,
+            rotZ,
+            radius,
+            0,
+            0
+        );
+
+        return true;
+    }
+
+    private static bool TryParseAreaProperty(XmlReader reader, out uint requirementID, out uint facilityID)
+    {
+        requirementID = 0;
+        facilityID = 0;
+
+        string? reqVal = reader.GetAttribute("Requirement");
+        string? facVal = reader.GetAttribute("FacilityId");
+
+        if (!uint.TryParse(reqVal, out requirementID))
+            return false;
+
+        if (!uint.TryParse(facVal, out facilityID))
+            return false;
+
+        return true;
     }
 }

@@ -10,6 +10,11 @@ namespace Sanctuary.Census.ClientData.Abstractions.Services;
 public interface IClientDataCacheService : IDataCacheService
 {
     /// <summary>
+    /// Gets the cached <see cref="AreaDefinition"/> objects.
+    /// </summary>
+    IReadOnlyDictionary<AssetZone, List<AreaDefinition>>? AreaDefinitions { get; }
+
+    /// <summary>
     /// Gets the cached <see cref="ClientItemDatasheetData"/> objects.
     /// </summary>
     IReadOnlyList<ClientItemDatasheetData>? ClientItemDatasheetDatas { get; }

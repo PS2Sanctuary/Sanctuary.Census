@@ -2,6 +2,10 @@
 
 Date format: DD/MM/YYYY
 
+## vNext
+
+- Added the `skill` and `skill_category` collections.
+
 ## 11/09/2022
 
 - Removed `directive.objective_param_1` due to instability in the value.

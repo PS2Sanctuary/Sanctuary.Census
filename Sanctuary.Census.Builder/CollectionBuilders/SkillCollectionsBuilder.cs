@@ -10,6 +10,7 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using MSkill = Sanctuary.Census.Common.Objects.Collections.Skill;
+using MSkillCategory = Sanctuary.Census.Common.Objects.Collections.SkillCategory;
 
 namespace Sanctuary.Census.Builder.CollectionBuilders;
 
@@ -59,12 +60,13 @@ public class SkillCollectionsBuilder : ICollectionBuilder
         }
 
         await BuildSkillsAsync(dbContext, defaultImages, ct).ConfigureAwait(false);
+        await BuildSkillCategoriesAsync(dbContext, defaultImages, ct).ConfigureAwait(false);
     }
 
     private async Task BuildSkillsAsync
     (
         ICollectionsContext dbContext,
-        Dictionary<uint, ImageSetMapping> defaultImageMap,
+        IReadOnlyDictionary<uint, ImageSetMapping> defaultImageMap,
         CancellationToken ct
     )
     {
@@ -109,7 +111,48 @@ public class SkillCollectionsBuilder : ICollectionBuilder
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Failed to build the skills collection");
+            _logger.LogError(ex, "Failed to build the Skill collection");
+        }
+    }
+
+    private async Task BuildSkillCategoriesAsync
+    (
+        ICollectionsContext dbContext,
+        IReadOnlyDictionary<uint, ImageSetMapping> defaultImageMap,
+        CancellationToken ct
+    )
+    {
+        try
+        {
+            if (_clientDataCache.SkillCategories is null)
+                throw new MissingCacheDataException(typeof(Skill));
+
+            Dictionary<uint, MSkillCategory> builtCategories = new();
+            foreach (SkillCategory category in _clientDataCache.SkillCategories)
+            {
+                _localeDataCache.TryGetLocaleString(category.NameID, out LocaleString? name);
+                _localeDataCache.TryGetLocaleString(category.DescriptionID, out LocaleString? description);
+                defaultImageMap.TryGetValue(category.IconID, out ImageSetMapping? defaultImage);
+
+                builtCategories.TryAdd(category.ID, new MSkillCategory
+                (
+                    category.ID,
+                    category.SkillSetID,
+                    category.SkillSetIndex,
+                    category.SkillPoints,
+                    name,
+                    description,
+                    category.IconID,
+                    defaultImage?.ImageID ?? null,
+                    defaultImage is null ? null : $"/files/ps2/images/static/{defaultImage.ImageID}.png"
+                ));
+            }
+
+            await dbContext.UpsertCollectionAsync(builtCategories.Values, ct).ConfigureAwait(false);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Failed to build the SkillCategory collection");
         }
     }
 }

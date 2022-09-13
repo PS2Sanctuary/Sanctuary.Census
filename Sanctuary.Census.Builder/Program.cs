@@ -382,7 +382,6 @@ public static class Program
             .RegisterCollectionBuilder<MapRegionDatasCollectionBuilder>()
             .RegisterCollectionBuilder<MarketingBundleCollectionBuilders>()
             .RegisterCollectionBuilder<OutfitWarCollectionsBuilder>()
-            .RegisterCollectionBuilder<OutfitWarRegistrationCollectionBuilder>()
             .RegisterCollectionBuilder<PlayerStateGroup2CollectionBuilder>()
             .RegisterCollectionBuilder<ProfileCollectionBuilder>()
             .RegisterCollectionBuilder<ProjectileCollectionBuilder>()

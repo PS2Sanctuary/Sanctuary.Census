@@ -11,6 +11,7 @@ namespace Sanctuary.Census.Common.Objects.Collections;
 /// <param name="OutfitID">The ID of the outfit.</param>
 /// <param name="FactionID">The ID of the outfit's faction.</param>
 /// <param name="WorldID">The world that the outfit is registered on.</param>
+/// <param name="OutfitWarID">The ID of the outfit war for which the registration was made.</param>
 /// <param name="RegistrationOrder">The order in which the outfit was registered.</param>
 /// <param name="Status">The registration status of the outfit.</param>
 /// <param name="MemberSignupCount">The number of members who have signed up for the war.</param>
@@ -21,7 +22,7 @@ public record OutfitWarRegistration
     [property: Key] ulong OutfitID,
     [property: Key] uint FactionID,
     [property: Key] uint WorldID,
-    // TODO: Add OutfitWarID
+    [property: Key] uint OutfitWarID,
     uint RegistrationOrder,
     OutfitWarRegistration.RegistrationStatus Status,
     uint MemberSignupCount

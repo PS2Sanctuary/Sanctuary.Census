@@ -6,6 +6,8 @@ Date format: DD/MM/YYYY
 
 - Added the `skill`, `skill_category`, `skill_line` and `skill_set` collections.
 - Added the `image` and `image_set_default` collections.
+- The [main Sanctuary.Census deployment](https://census.lithafalcon.cc/get/ps2) now has NSO directive data for the `PS2` environment.
+- Added the `outfit_war_registration.outfit_war_id` and `outfit_war_ranking.outfit_war_id` fields.
 
 ## 11/09/2022
 

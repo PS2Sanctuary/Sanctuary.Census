@@ -11,6 +11,7 @@ namespace Sanctuary.Census.Common.Objects.Collections;
 /// <param name="RoundID">The ID of the round that this ranking is for.</param>
 /// <param name="OutfitID">The ID of the outfit that this ranking is for.</param>
 /// <param name="FactionID">The faction that the outfit is playing for.</param>
+/// <param name="OutfitWarID">The ID of the outfit war for which the ranking applies to.</param>
 /// <param name="Order">The base order of the outfit.</param>
 /// <param name="RankingParameters">The ranking parameters.</param>
 [Collection]
@@ -20,6 +21,7 @@ public record OutfitWarRanking
     [property: Key] ulong RoundID,
     [property: Key] ulong OutfitID,
     [property: Key] byte FactionID,
+    [property: Key] uint OutfitWarID,
     uint Order,
     ValueEqualityDictionary<string, int> RankingParameters
 ) : ISanctuaryCollection;

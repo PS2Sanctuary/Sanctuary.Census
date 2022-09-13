@@ -16,8 +16,9 @@ public class MissingCacheDataException : Exception
     /// Initializes a new instance of the <see cref="MissingCacheDataException"/> class.
     /// </summary>
     /// <param name="missingType">The type that was missing from the cache.</param>
-    public MissingCacheDataException(Type missingType)
-        : base($"The {missingType} type was not present in the cache")
+    /// <param name="message"><inheritdoc /></param>
+    public MissingCacheDataException(Type missingType, string? message = null)
+        : base(message ?? $"The {missingType} type was not present in the cache")
     {
         MissingType = missingType;
     }

@@ -16,13 +16,15 @@ using System.Threading.Tasks;
 
 using MMatch = Sanctuary.Census.Common.Objects.Collections.OutfitWarMatch;
 using MRanking = Sanctuary.Census.Common.Objects.Collections.OutfitWarRanking;
+using MRegistration = Sanctuary.Census.Common.Objects.Collections.OutfitWarRegistration;
 using MRounds = Sanctuary.Census.Common.Objects.Collections.OutfitWarRounds;
 using MWar = Sanctuary.Census.Common.Objects.Collections.OutfitWar;
 
 namespace Sanctuary.Census.Builder.CollectionBuilders;
 
 /// <summary>
-/// Builds the <see cref="MWar"/>, <see cref="MRanking"/>, <see cref="MRounds"/> and <see cref="MMatch"/> collections.
+/// Builds the <see cref="MWar"/>, <see cref="MRanking"/>, <see cref="MRounds"/>,
+/// <see cref="MRegistration"/> and <see cref="MMatch"/> collections.
 /// </summary>
 public class OutfitWarCollectionsBuilder : ICollectionBuilder
 {
@@ -57,6 +59,7 @@ public class OutfitWarCollectionsBuilder : ICollectionBuilder
     {
         await BuildWarsAsync(dbContext, ct).ConfigureAwait(false);
         await BuildRankingsAsync(dbContext, ct).ConfigureAwait(false);
+        await BuildRegistrationsAsync(dbContext, ct).ConfigureAwait(false);
         await BuildRoundsAsync(dbContext, ct).ConfigureAwait(false);
         await BuildMatchesAsync(dbContext, ct).ConfigureAwait(false);
     }
@@ -117,13 +120,19 @@ public class OutfitWarCollectionsBuilder : ICollectionBuilder
     {
         try
         {
+            if (_serverDataCache.OutfitWars.Count == 0)
+                throw new MissingCacheDataException(typeof(OutfitWarWar));
+
             if (_serverDataCache.OutfitWarRankings.Count == 0)
                 throw new MissingCacheDataException(typeof(OutfitWarRankings));
 
             List<MRanking> builtRankings = new();
 
-            foreach (OutfitWarRankings rankingGroup in _serverDataCache.OutfitWarRankings.Values)
+            foreach ((ServerDefinition server, OutfitWarRankings rankingGroup) in _serverDataCache.OutfitWarRankings)
             {
+                if (!_serverDataCache.OutfitWars.TryGetValue(server, out OutfitWarWar? activeWar))
+                    throw new MissingCacheDataException(typeof(OutfitWarWar), $"Missing the {nameof(OutfitWarWar)} data for the {server} server");
+
                 foreach (OutfitWarRankings_Outfit rankedOutfit in rankingGroup.Outfits)
                 {
                     ValueEqualityDictionary<string, int> rankingParams = new
@@ -136,6 +145,7 @@ public class OutfitWarCollectionsBuilder : ICollectionBuilder
                         rankingGroup.RoundID,
                         rankedOutfit.OutfitID_1,
                         rankedOutfit.FactionID,
+                        activeWar.OutfitWarID,
                         rankedOutfit.Order,
                         rankingParams
                     );
@@ -148,6 +158,48 @@ public class OutfitWarCollectionsBuilder : ICollectionBuilder
         catch (Exception ex)
         {
             _logger.LogError(ex, "Failed to build the OutfitWarRanking collection");
+        }
+    }
+
+    private async Task BuildRegistrationsAsync(ICollectionsContext dbContext, CancellationToken ct)
+    {
+        try
+        {
+            if (_serverDataCache.OutfitWars.Count == 0)
+                throw new MissingCacheDataException(typeof(OutfitWarWar));
+
+            if (_serverDataCache.RegisteredOutfits.Count == 0)
+                throw new MissingCacheDataException(typeof(RegisteredOutfit));
+
+            Dictionary<ulong, MRegistration> builtRegistrations = new();
+            foreach ((ServerDefinition server, RegisteredOutfits outfits) in _serverDataCache.RegisteredOutfits)
+            {
+                if (!_serverDataCache.OutfitWars.TryGetValue(server, out OutfitWarWar? activeWar))
+                    throw new MissingCacheDataException(typeof(OutfitWarWar), $"Missing the {nameof(OutfitWarWar)} data for the {server} server");
+
+                foreach (RegisteredOutfit outfit in outfits.Outfits)
+                {
+                    MRegistration built = new
+                    (
+                        outfit.OutfitID,
+                        (uint)outfit.FactionID,
+                        (uint)server,
+                        activeWar.OutfitWarID,
+                        outfit.RegistrationOrder,
+                        (MRegistration.RegistrationStatus)outfit.Status,
+                        outfit.Status is RegistrationStatus.Full or RegistrationStatus.WaitingOnNextFullReg
+                            ? activeWar.MaybePlayerSignupRequirement
+                            : outfit.MemberSignupCount
+                    );
+                    builtRegistrations.Add(built.OutfitID, built);
+                }
+            }
+
+            await dbContext.UpsertCollectionAsync(builtRegistrations.Values, ct).ConfigureAwait(false);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Failed to build the OutfitWar collection");
         }
     }
 

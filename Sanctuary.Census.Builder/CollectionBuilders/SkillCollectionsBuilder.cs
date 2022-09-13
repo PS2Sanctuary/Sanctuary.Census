@@ -12,6 +12,7 @@ using System.Threading.Tasks;
 using MSkill = Sanctuary.Census.Common.Objects.Collections.Skill;
 using MSkillCategory = Sanctuary.Census.Common.Objects.Collections.SkillCategory;
 using MSkillLine = Sanctuary.Census.Common.Objects.Collections.SkillLine;
+using MSkillSet = Sanctuary.Census.Common.Objects.Collections.SkillSet;
 
 namespace Sanctuary.Census.Builder.CollectionBuilders;
 
@@ -63,6 +64,7 @@ public class SkillCollectionsBuilder : ICollectionBuilder
         await BuildSkillsAsync(dbContext, defaultImages, ct).ConfigureAwait(false);
         await BuildSkillCategoriesAsync(dbContext, defaultImages, ct).ConfigureAwait(false);
         await BuildSkillLinesAsync(dbContext, defaultImages, ct).ConfigureAwait(false);
+        await BuildSkillSetsAsync(dbContext, defaultImages, ct).ConfigureAwait(false);
     }
 
     private async Task BuildSkillsAsync
@@ -197,7 +199,47 @@ public class SkillCollectionsBuilder : ICollectionBuilder
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Failed to build the Skill collection");
+            _logger.LogError(ex, "Failed to build the SkillLine collection");
+        }
+    }
+
+    private async Task BuildSkillSetsAsync
+    (
+        ICollectionsContext dbContext,
+        IReadOnlyDictionary<uint, ImageSetMapping> defaultImageMap,
+        CancellationToken ct
+    )
+    {
+        try
+        {
+            if (_clientDataCache.SkillSets is null)
+                throw new MissingCacheDataException(typeof(SkillSet));
+
+            Dictionary<uint, MSkillSet> builtSets = new();
+            foreach (SkillSet set in _clientDataCache.SkillSets)
+            {
+                _localeDataCache.TryGetLocaleString(set.NameID, out LocaleString? name);
+                _localeDataCache.TryGetLocaleString(set.DescriptionID, out LocaleString? description);
+                defaultImageMap.TryGetValue(set.IconID, out ImageSetMapping? defaultImage);
+
+                builtSets.TryAdd(set.ID, new MSkillSet
+                (
+                    set.ID,
+                    set.SkillPoints,
+                    set.RequiredItemID == 0 ? null : set.RequiredItemID,
+                    name,
+                    description,
+                    set.IconID,
+                    defaultImage?.ImageID ?? null,
+                    defaultImage is null ? null : $"/files/ps2/images/static/{defaultImage.ImageID}.png"
+                ));
+            }
+
+            await dbContext.UpsertCollectionAsync(builtSets.Values, ct).ConfigureAwait(false);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Failed to build the SkillSet collection");
         }
     }
 }

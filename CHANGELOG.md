@@ -4,7 +4,8 @@ Date format: DD/MM/YYYY
 
 ## vNext
 
-- Added the `skill` and `skill_category` collections.
+- Added the `skill`, `skill_category`, `skill_line` and `skill_set` collections.
+- Added the `image` and `image_set_default` collections.
 
 ## 11/09/2022
 

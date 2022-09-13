@@ -151,11 +151,20 @@ public static class Program
             .WithEqualityKey(x => x.FireModeID)
             .WithEqualityKey(x => x.ProjectileID);
 
+        configProvider.Register<Image>()
+            .WithIndex(x => x.ImageID, true)
+            .WithEqualityKey(x => x.ImageID);
+
         configProvider.Register<ImageSet>()
             .WithIndex(x => x.ImageSetID, false)
             .WithIndex(x => x.ImageID, false)
             .WithEqualityKey(x => x.ImageSetID)
             .WithEqualityKey(x => x.ImageID);
+
+        configProvider.Register<ImageSetDefault>()
+            .WithIndex(x => x.ImageSetID, true)
+            .WithIndex(x => x.ImageID, false)
+            .WithEqualityKey(x => x.ImageSetID);
 
         configProvider.Register<Item>()
             .WithIndex(x => x.ItemID, true)
@@ -364,7 +373,7 @@ public static class Program
             .RegisterCollectionBuilder<FireGroupToFireModeCollectionBuilder>()
             .RegisterCollectionBuilder<FireModeCollectionBuilder>()
             .RegisterCollectionBuilder<FireModeToProjectileCollectionBuilder>()
-            .RegisterCollectionBuilder<ImageSetCollectionBuilder>()
+            .RegisterCollectionBuilder<ImageCollectionsBuilder>()
             .RegisterCollectionBuilder<ItemCollectionBuilder>()
             .RegisterCollectionBuilder<ItemCategoryCollectionBuilder>()
             .RegisterCollectionBuilder<ItemToWeaponCollectionBuilder>()

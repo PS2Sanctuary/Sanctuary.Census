@@ -263,6 +263,13 @@ public static class Program
             .WithIndex(x => x.ProjectileId, true)
             .WithEqualityKey(x => x.ProjectileId);
 
+        configProvider.Register<Skill>()
+            .WithIndex(x => x.SkillID, true)
+            .WithIndex(x => x.SkillSetID, false)
+            .WithIndex(x => x.SkillCategoryID, false)
+            .WithIndex(x => x.SkillLineID, false)
+            .WithEqualityKey(x => x.SkillID);
+
         configProvider.Register<Vehicle>()
             .WithIndex(x => x.VehicleId, true)
             .WithEqualityKey(x => x.VehicleId);
@@ -355,6 +362,7 @@ public static class Program
             .RegisterCollectionBuilder<PlayerStateGroup2CollectionBuilder>()
             .RegisterCollectionBuilder<ProfileCollectionBuilder>()
             .RegisterCollectionBuilder<ProjectileCollectionBuilder>()
+            .RegisterCollectionBuilder<SkillCollectionsBuilder>()
             .RegisterCollectionBuilder<VehicleCollectionBuilder>()
             .RegisterCollectionBuilder<VehicleAttachmentCollectionBuilder>()
             .RegisterCollectionBuilder<VehicleLoadoutCollectionBuilder>()

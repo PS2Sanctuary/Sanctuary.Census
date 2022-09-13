@@ -18,7 +18,7 @@ namespace Sanctuary.Census.Common.Objects.Collections;
 /// <param name="OutfitAFactionId">The faction ID of the first participating outfit.</param>
 /// <param name="OutfitBFactionId">The faction ID of the second participating outfit.</param>
 [Collection]
-[Description("Information about outfit war matches for the currently active round.")]
+[Description("Contains information about outfit war matches, including start times and matched outfits")]
 public record OutfitWarMatch
 (
     [property: Key] uint OutfitWarID,

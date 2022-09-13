@@ -1,6 +1,7 @@
 ﻿using Sanctuary.Census.Common.Abstractions.Objects.Collections;
 using Sanctuary.Census.Common.Attributes;
 using Sanctuary.Census.Common.Objects.CommonModels;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 
 namespace Sanctuary.Census.Common.Objects.Collections;
@@ -18,6 +19,7 @@ namespace Sanctuary.Census.Common.Objects.Collections;
 /// <param name="EndTime">The end time of the war, as a unix seconds timestamp.</param>
 /// <param name="Phases">The phases of the war.</param>
 [Collection]
+[Description("Contains basic descriptive information about an outfit war")]
 public record OutfitWar
 (
     [property: Key] uint OutfitWarID,

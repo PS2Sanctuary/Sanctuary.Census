@@ -1,6 +1,7 @@
 ﻿using Sanctuary.Census.Common.Abstractions.Objects.Collections;
 using Sanctuary.Census.Common.Attributes;
 using Sanctuary.Census.Common.Objects.CommonModels;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 
 namespace Sanctuary.Census.Common.Objects.Collections;
@@ -18,6 +19,7 @@ namespace Sanctuary.Census.Common.Objects.Collections;
 /// <param name="ImageID">The ID of the tier's default image.</param>
 /// <param name="ImagePath">The relative path to the tier's default image.</param>
 [Collection]
+[Description("Represents a stage of a directive; e.g. the 'Novice' (bronze) tier.")]
 public record DirectiveTier
 (
     [property: Key] uint DirectiveTreeID,

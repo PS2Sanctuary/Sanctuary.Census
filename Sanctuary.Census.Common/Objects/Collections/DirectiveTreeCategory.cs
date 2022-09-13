@@ -1,6 +1,7 @@
 ﻿using Sanctuary.Census.Common.Abstractions.Objects.Collections;
 using Sanctuary.Census.Common.Attributes;
 using Sanctuary.Census.Common.Objects.CommonModels;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 
 namespace Sanctuary.Census.Common.Objects.Collections;
@@ -13,6 +14,7 @@ namespace Sanctuary.Census.Common.Objects.Collections;
 /// <param name="Name">The name of the category.</param>
 /// <param name="DisplayOrder">The order in which the category is displayed in the UI.</param>
 [Collection]
+[Description("Represents a category of directive_tree entries. E.g. 'Weapons'")]
 public record DirectiveTreeCategory
 (
     [property: Key] uint DirectiveTreeCategoryID,

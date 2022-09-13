@@ -19,7 +19,7 @@ namespace Sanctuary.Census.Common.Objects.Collections;
 /// <param name="ImageID">The ID of the directive's default image.</param>
 /// <param name="ImagePath">The relative path to the directive's default image.</param>
 [Collection]
-[Description("Represents an objective of a directive tier.")]
+[Description("Represents an objective of a directive_tier. E.g. 'Kill 10 enemy players'")]
 public record Directive
 (
     [property: Key] uint DirectiveID,

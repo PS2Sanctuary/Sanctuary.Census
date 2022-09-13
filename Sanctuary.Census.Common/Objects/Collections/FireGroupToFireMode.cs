@@ -1,5 +1,6 @@
 ﻿using Sanctuary.Census.Common.Abstractions.Objects.Collections;
 using Sanctuary.Census.Common.Attributes;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 
 namespace Sanctuary.Census.Common.Objects.Collections;
@@ -11,6 +12,7 @@ namespace Sanctuary.Census.Common.Objects.Collections;
 /// <param name="FireModeId">The ID of the fire mode.</param>
 /// <param name="FireModeIndex">The index of the fire mode within the mapping list.</param>
 [Collection]
+[Description("Links a fire_group to the fire_mode_2 entries it uses.")]
 public record FireGroupToFireMode
 (
     [property:Key] uint FireGroupId,

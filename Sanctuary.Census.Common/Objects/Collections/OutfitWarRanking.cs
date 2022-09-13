@@ -14,8 +14,7 @@ namespace Sanctuary.Census.Common.Objects.Collections;
 /// <param name="Order">The base order of the outfit.</param>
 /// <param name="RankingParameters">The ranking parameters.</param>
 [Collection]
-[Description(
-    "Contains rankings of an outfit within an outfit war. This collection is keyed by the primary_round_id of an outfit_war_rounds record.")]
+[Description("Contains rankings of an outfit within an outfit war. This collection is keyed by the primary_round_id of an outfit_war_rounds record.")]
 public record OutfitWarRanking
 (
     [property: Key] ulong RoundID,

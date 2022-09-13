@@ -14,7 +14,7 @@ namespace Sanctuary.Census.Common.Objects.Collections;
 /// <param name="ImageSetID">The ID of the category's image set.</param>
 /// <param name="DisplayIndex">The index that the category is displayed at in the in-game depot.</param>
 [Collection]
-[Description("Represents a depot category")]
+[Description("Represents a category from the in-game depot")]
 public record MarketingBundleCategory
 (
     [property: Key] uint MarketingBundleCategoryID,

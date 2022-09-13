@@ -1,6 +1,7 @@
 ﻿using Sanctuary.Census.Common.Abstractions.Objects.Collections;
 using Sanctuary.Census.Common.Attributes;
 using Sanctuary.Census.Common.Objects.CommonModels;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 
 namespace Sanctuary.Census.Common.Objects.Collections;
@@ -17,6 +18,7 @@ namespace Sanctuary.Census.Common.Objects.Collections;
 /// <param name="ImageID">The ID of the tree's default image.</param>
 /// <param name="ImagePath">The relative path to the tree's default image.</param>
 [Collection]
+[Description("Represents a single directive as a whole, e.g. Exceptional III. Generally linked to four children directive_tier entries")]
 public record DirectiveTree
 (
     [property: Key] uint DirectiveTreeID,

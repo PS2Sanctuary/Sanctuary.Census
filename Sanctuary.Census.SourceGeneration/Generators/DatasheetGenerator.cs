@@ -442,6 +442,18 @@ public partial record {@class.Name} : IDatasheet<{@class.Name}>
                 );
                 break;
             }
+            case SpecialType.System_Decimal:
+            {
+                sb.Append
+                (
+                    $@"{paramName} = Utf8Parser.TryParse({paramValueSpanName}, out decimal {paramName}Value, out _)
+            ? {paramName}Value
+            : throw new Exception(""Failed to parse a '{paramName}' field as a decimal"");
+
+        "
+                );
+                break;
+            }
             case SpecialType.System_String:
             {
                 sb.Append

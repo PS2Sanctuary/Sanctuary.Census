@@ -2,7 +2,7 @@
 
 Date format: DD/MM/YYYY
 
-## vNext | Update: Deploy the Flail
+## 13/09/2022 | Update: Deploy the Flail
 
 - Added the `skill`, `skill_category`, `skill_line` and `skill_set` collections.
 - Added the `no_deploy_area` collection.

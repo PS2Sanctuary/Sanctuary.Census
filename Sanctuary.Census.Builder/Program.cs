@@ -230,6 +230,11 @@ public static class Program
             .WithEqualityKey(x => x.MarketingBundleID)
             .WithEqualityKey(x => x.ItemID);
 
+        configProvider.Register<NoDeployArea>()
+            .WithIndex(x => x.AreaID, true)
+            .WithIndex(x => x.FacilityID, false)
+            .WithEqualityKey(x => x.AreaID);
+
         configProvider.Register<OutfitWar>()
             .WithIndex(x => x.OutfitWarID, true)
             .WithEqualityKey(x => x.OutfitWarID)
@@ -364,7 +369,8 @@ public static class Program
             s => s.GetRequiredService<IOptions<CollectionBuilderRepository>>().Value
         );
 
-        return services.RegisterCollectionBuilder<CurrencyCollectionBuilder>()
+        return services.RegisterCollectionBuilder<AreaCollectionsBuilder>()
+            .RegisterCollectionBuilder<CurrencyCollectionBuilder>()
             .RegisterCollectionBuilder<DirectiveCollectionsBuilder>()
             .RegisterCollectionBuilder<ExperienceCollectionBuilder>()
             .RegisterCollectionBuilder<FacilityInfoCollectionBuilder>()

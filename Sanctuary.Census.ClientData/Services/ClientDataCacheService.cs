@@ -31,7 +31,7 @@ public class ClientDataCacheService : IClientDataCacheService
     public DateTimeOffset LastPopulated { get; private set; }
 
     /// <inheritdoc />
-    public IReadOnlyDictionary<AssetZone, List<AreaDefinition>>? AreaDefinitions { get; private set; }
+    public IReadOnlyDictionary<AssetZone, IReadOnlyList<AreaDefinition>>? AreaDefinitions { get; private set; }
 
     /// <inheritdoc />
     public IReadOnlyList<ClientItemDatasheetData>? ClientItemDatasheetDatas { get; private set; }
@@ -402,7 +402,7 @@ public class ClientDataCacheService : IClientDataCacheService
         CancellationToken ct
     )
     {
-        Dictionary<AssetZone, List<AreaDefinition>> areas = new();
+        Dictionary<AssetZone, IReadOnlyList<AreaDefinition>> areas = new();
 
         foreach (AssetZone zone in Enum.GetValues<AssetZone>())
         {

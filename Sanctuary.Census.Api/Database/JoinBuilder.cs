@@ -4,7 +4,7 @@ using MongoDB.Driver;
 using Sanctuary.Census.Common.Util;
 using Sanctuary.Census.Api.Exceptions;
 using Sanctuary.Census.Api.Models;
-using Sanctuary.Census.Util;
+using Sanctuary.Census.Api.Util;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;

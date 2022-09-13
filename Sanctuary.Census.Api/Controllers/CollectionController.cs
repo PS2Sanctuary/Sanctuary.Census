@@ -11,7 +11,7 @@ using Sanctuary.Census.Api.Database;
 using Sanctuary.Census.Api.Exceptions;
 using Sanctuary.Census.Api.Json;
 using Sanctuary.Census.Api.Models;
-using Sanctuary.Census.Util;
+using Sanctuary.Census.Api.Util;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;

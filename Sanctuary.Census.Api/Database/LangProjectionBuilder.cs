@@ -1,6 +1,6 @@
-﻿using Sanctuary.Census.Common;
+﻿using Sanctuary.Census.Api.Util;
+using Sanctuary.Census.Common;
 using Sanctuary.Census.Common.Objects.CommonModels;
-using Sanctuary.Census.Util;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
@@ -40,7 +40,7 @@ public class LangProjectionBuilder
     /// <param name="collectionName">The collection to exclude relevant locale languages from.</param>
     public void AppendToProjection(ProjectionBuilder builder, string collectionName)
     {
-        List<string> localeFields = CollectionUtils.GetLocaleFields(collectionName);
+        IReadOnlyList<string> localeFields = CollectionUtils.GetLocaleFields(collectionName);
         foreach (string localeField in localeFields)
         {
             if (builder.IsExclusionProjection)

@@ -7,7 +7,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Reflection;
 
-namespace Sanctuary.Census.Util;
+namespace Sanctuary.Census.Api.Util;
 
 /// <summary>
 /// Utilities for working with collections.
@@ -15,13 +15,13 @@ namespace Sanctuary.Census.Util;
 public static class CollectionUtils
 {
     private static readonly Dictionary<string, HashSet<string>> _collectionNamesAndFields;
-    private static readonly Dictionary<string, List<string>> _keyFields;
+    private static readonly Dictionary<string, HashSet<string>> _keyFields;
     private static readonly Dictionary<string, List<string>> _langFields;
 
     static CollectionUtils()
     {
         _collectionNamesAndFields = new Dictionary<string, HashSet<string>>();
-        _keyFields = new Dictionary<string, List<string>>();
+        _keyFields = new Dictionary<string, HashSet<string>>();
         _langFields = new Dictionary<string, List<string>>();
 
         IEnumerable<Type> collTypes = typeof(CollectionAttribute).Assembly
@@ -34,7 +34,7 @@ public static class CollectionUtils
             string collName = SnakeCaseJsonNamingPolicy.Default.ConvertName(collType.Name);
 
             _collectionNamesAndFields.Add(collName, propNames);
-            _keyFields.Add(collName, new List<string>());
+            _keyFields.Add(collName, new HashSet<string>());
             _langFields.Add(collName, new List<string>());
 
             foreach (PropertyInfo prop in collType.GetProperties())
@@ -85,9 +85,9 @@ public static class CollectionUtils
     {
         matchingKeyFieldName = null;
 
-        if (!_keyFields.TryGetValue(collectionNameA, out List<string>? keyFieldsA))
+        if (!_keyFields.TryGetValue(collectionNameA, out HashSet<string>? keyFieldsA))
             return false;
-        if (!_keyFields.TryGetValue(collectionNameB, out List<string>? keyFieldsB))
+        if (!_keyFields.TryGetValue(collectionNameB, out HashSet<string>? keyFieldsB))
             return false;
 
         matchingKeyFieldName = keyFieldsA.FirstOrDefault(k => keyFieldsB.Contains(k));
@@ -99,6 +99,6 @@ public static class CollectionUtils
     /// </summary>
     /// <param name="collectionName">The name of the collection.</param>
     /// <returns></returns>
-    public static List<string> GetLocaleFields(string collectionName)
+    public static IReadOnlyList<string> GetLocaleFields(string collectionName)
         => _langFields[collectionName];
 }

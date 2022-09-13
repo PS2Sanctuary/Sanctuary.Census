@@ -19,8 +19,9 @@ namespace Sanctuary.Census.Common.Objects.Collections;
 public record OutfitWarRegistration
 (
     [property: Key] ulong OutfitID,
-    uint FactionID,
-    uint WorldID,
+    [property: Key] uint FactionID,
+    [property: Key] uint WorldID,
+    // TODO: Add OutfitWarID
     uint RegistrationOrder,
     OutfitWarRegistration.RegistrationStatus Status,
     uint MemberSignupCount

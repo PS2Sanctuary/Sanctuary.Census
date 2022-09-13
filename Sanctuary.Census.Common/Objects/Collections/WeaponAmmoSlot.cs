@@ -16,7 +16,7 @@ namespace Sanctuary.Census.Common.Objects.Collections;
 public record WeaponAmmoSlot
 (
     [property:Key] uint WeaponId,
-    [property:Key] uint WeaponSlotIndex,
+    uint WeaponSlotIndex,
     ushort ClipSize,
     ushort Capacity,
     string? ClipModelName

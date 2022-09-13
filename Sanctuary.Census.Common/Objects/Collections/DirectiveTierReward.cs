@@ -24,7 +24,7 @@ public record DirectiveTierReward
     [property: Key] uint ItemID,
     LocaleString? Name,
     uint Quantity,
-    uint ImageSetID,
-    uint? ImageID,
+    [property: Key] uint ImageSetID,
+    [property: Key] uint? ImageID,
     string? ImagePath
 ) : ISanctuaryCollection;

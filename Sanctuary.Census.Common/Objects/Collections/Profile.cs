@@ -19,12 +19,12 @@ namespace Sanctuary.Census.Common.Objects.Collections;
 [Collection]
 public record Profile
 (
-    [property:Key] uint ProfileId,
+    [property: Key] uint ProfileId,
     uint ProfileTypeId,
-    uint? FactionId,
+    [property: Key] uint? FactionId,
     LocaleString? Name,
     LocaleString? Description,
-    uint? ImageSetId,
-    uint? ImageId,
+    [property: Key] uint? ImageSetId,
+    [property: Key] uint? ImageId,
     string? ImagePath
 ) : ISanctuaryCollection;

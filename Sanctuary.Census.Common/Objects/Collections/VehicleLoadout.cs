@@ -16,8 +16,8 @@ namespace Sanctuary.Census.Common.Objects.Collections;
 public record VehicleLoadout
 (
     [property: Key] uint LoadoutID,
-    uint VehicleID,
-    uint FactionID,
+    [property: Key] uint VehicleID,
+    [property: Key] uint FactionID,
     bool IsCustomizable,
     bool IsHiddenFromLoadoutScreen
 ) : ISanctuaryCollection;

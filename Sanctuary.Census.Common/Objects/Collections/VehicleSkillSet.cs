@@ -14,8 +14,8 @@ namespace Sanctuary.Census.Common.Objects.Collections;
 [Collection]
 public record VehicleSkillSet
 (
-    [property:Key] uint VehicleID,
-    [property:Key] uint SkillSetID,
-    uint FactionID,
+    [property: Key] uint VehicleID,
+    [property: Key] uint SkillSetID,
+    [property: Key] uint FactionID,
     byte DisplayIndex
 ) : ISanctuaryCollection;

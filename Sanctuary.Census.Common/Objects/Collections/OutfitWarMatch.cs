@@ -27,7 +27,7 @@ public record OutfitWarMatch
     ulong OutfitBId,
     ulong StartTime,
     uint Order,
-    uint WorldID,
+    [property: Key] uint WorldID,
     uint OutfitAFactionId,
     uint OutfitBFactionId
 ) : ISanctuaryCollection;

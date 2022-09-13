@@ -24,7 +24,7 @@ public record DirectiveTree
     ValueEqualityList<uint> FactionIds,
     LocaleString Name,
     LocaleString? Description,
-    uint ImageSetID,
-    uint? ImageID,
+    [property: Key] uint ImageSetID,
+    [property: Key] uint? ImageID,
     string? ImagePath
 ) : ISanctuaryCollection;

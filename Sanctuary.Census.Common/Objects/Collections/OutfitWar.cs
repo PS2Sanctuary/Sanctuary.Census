@@ -21,9 +21,9 @@ namespace Sanctuary.Census.Common.Objects.Collections;
 public record OutfitWar
 (
     [property: Key] uint OutfitWarID,
-    uint WorldID,
+    [property: Key] uint WorldID,
     LocaleString? Title,
-    uint ImageSetID,
+    [property: Key] uint ImageSetID,
     uint OutfitSizeRequirement,
     uint OutfitSignupRequirement,
     ulong StartTime,

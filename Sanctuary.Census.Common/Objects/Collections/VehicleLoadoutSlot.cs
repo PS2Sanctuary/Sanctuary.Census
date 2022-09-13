@@ -26,7 +26,7 @@ public record VehicleLoadoutSlot
     [property: Key] uint SlotID,
     LocaleString? Name,
     LocaleString? Description,
-    uint? ImageSetID,
+    [property: Key] uint? ImageSetID,
     bool IsAutoEquipped,
     bool IsRequired,
     bool IsVisible,

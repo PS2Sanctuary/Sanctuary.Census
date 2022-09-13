@@ -26,7 +26,7 @@ public record DirectiveTier
     [property: Key] uint? RewardSetID,
     uint DirectivePoints,
     uint CompletionCount,
-    uint ImageSetID,
-    uint? ImageID,
+    [property: Key] uint ImageSetID,
+    [property: Key] uint? ImageID,
     string? ImagePath
 ) : ISanctuaryCollection;

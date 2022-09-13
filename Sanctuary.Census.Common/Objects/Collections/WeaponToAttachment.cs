@@ -13,7 +13,7 @@ namespace Sanctuary.Census.Common.Objects.Collections;
 [Collection]
 public record WeaponToAttachment
 (
-    uint WeaponGroupID,
+    [property: Key] uint WeaponGroupID,
     [property: Key] uint AttachmentID,
     [property: Key] uint ItemID
 ) : ISanctuaryCollection;

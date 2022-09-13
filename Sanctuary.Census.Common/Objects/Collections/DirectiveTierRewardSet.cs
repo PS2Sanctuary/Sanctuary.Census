@@ -20,7 +20,7 @@ public record DirectiveTierRewardSet
 (
     [property: Key] uint RewardSetID,
     LocaleString? Name,
-    uint ImageSetID,
-    uint? ImageID,
+    [property: Key] uint ImageSetID,
+    [property: Key] uint? ImageID,
     string? ImagePath
 ) : ISanctuaryCollection;

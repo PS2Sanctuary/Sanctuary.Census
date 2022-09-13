@@ -32,7 +32,7 @@ namespace Sanctuary.Census.Common.Objects.Collections;
 public record Weapon
 (
     [property:Key] uint WeaponId,
-    uint? WeaponGroupId,
+    [property: Key] uint? WeaponGroupId,
     ushort EquipMs,
     ushort UnequipMs,
     ushort ToIronSightsMs,

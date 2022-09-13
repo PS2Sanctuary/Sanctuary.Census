@@ -19,6 +19,6 @@ public record MarketingBundleCategory
 (
     [property: Key] uint MarketingBundleCategoryID,
     LocaleString Name,
-    uint ImageSetID,
+    [property: Key] uint ImageSetID,
     uint DisplayIndex
 ) : ISanctuaryCollection;

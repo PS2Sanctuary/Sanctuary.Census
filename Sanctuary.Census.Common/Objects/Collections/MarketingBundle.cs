@@ -31,7 +31,7 @@ public record MarketingBundle
     [property: Key] uint MarketingBundleCategoryID,
     LocaleString Name,
     LocaleString? Description,
-    uint ImageSetID,
+    [property: Key] uint ImageSetID,
     uint StationCashPrice,
     uint? SalePrice,
     uint? MemberSalePrice,

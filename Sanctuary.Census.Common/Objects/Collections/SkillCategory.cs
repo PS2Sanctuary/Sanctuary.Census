@@ -1,6 +1,7 @@
 ﻿using Sanctuary.Census.Common.Abstractions.Objects.Collections;
 using Sanctuary.Census.Common.Attributes;
 using Sanctuary.Census.Common.Objects.CommonModels;
+using System.ComponentModel.DataAnnotations;
 
 namespace Sanctuary.Census.Common.Objects.Collections;
 
@@ -19,8 +20,8 @@ namespace Sanctuary.Census.Common.Objects.Collections;
 [Collection]
 public record SkillCategory
 (
-    uint SkillCategoryID,
-    uint SkillSetID,
+    [property: Key] uint SkillCategoryID,
+    [property: Key] uint SkillSetID,
     ushort SkillSetIndex,
     uint SkillPoints,
     LocaleString? Name,

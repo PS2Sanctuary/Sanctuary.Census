@@ -18,9 +18,9 @@ namespace Sanctuary.Census.Common.Objects.Collections;
 public record VehicleAttachment
 (
     [property: Key] uint ItemID,
-    [property: Key] uint VehicleLoadoutID,
+    uint VehicleLoadoutID,
     [property: Key] uint VehicleID,
-    uint FactionID,
+    [property: Key] uint FactionID,
     uint? VehicleLoadoutSlotID,
     LocaleString? Description
 ) : ISanctuaryCollection;

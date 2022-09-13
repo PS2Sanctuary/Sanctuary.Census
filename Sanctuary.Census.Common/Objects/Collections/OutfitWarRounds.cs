@@ -14,7 +14,7 @@ namespace Sanctuary.Census.Common.Objects.Collections;
 public record OutfitWarRounds
 (
     [property: Key] uint OutfitWarID,
-    [property: Key] ulong PrimaryRoundID,
+    ulong PrimaryRoundID,
     ValueEqualityList<OutfitWarRounds.Round> Rounds
 ) : ISanctuaryCollection
 {

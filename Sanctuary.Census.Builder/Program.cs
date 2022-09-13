@@ -275,6 +275,12 @@ public static class Program
             .WithIndex(x => x.SkillSetID, false)
             .WithEqualityKey(x => x.SkillCategoryID);
 
+        configProvider.Register<SkillLine>()
+            .WithIndex(x => x.SkillLineID, true)
+            .WithIndex(x => x.SkillSetID, false)
+            .WithIndex(x => x.SkillCategoryID, false)
+            .WithEqualityKey(x => x.SkillLineID);
+
         configProvider.Register<Vehicle>()
             .WithIndex(x => x.VehicleId, true)
             .WithEqualityKey(x => x.VehicleId);

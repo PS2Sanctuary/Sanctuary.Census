@@ -11,12 +11,13 @@ using System.Threading;
 using System.Threading.Tasks;
 using MSkill = Sanctuary.Census.Common.Objects.Collections.Skill;
 using MSkillCategory = Sanctuary.Census.Common.Objects.Collections.SkillCategory;
+using MSkillLine = Sanctuary.Census.Common.Objects.Collections.SkillLine;
 
 namespace Sanctuary.Census.Builder.CollectionBuilders;
 
 /// <summary>
-/// Builds the <see cref="Skill"/>, <see cref="SkillCategory"/>,
-/// <see cref="SkillLine"/> and <see cref="SkillSet"/> collections.
+/// Builds the <see cref="MSkill"/>, <see cref="MSkillCategory"/>,
+/// <see cref="MSkillLine"/> and <see cref="MSkillSet"/> collections.
 /// </summary>
 public class SkillCollectionsBuilder : ICollectionBuilder
 {
@@ -61,6 +62,7 @@ public class SkillCollectionsBuilder : ICollectionBuilder
 
         await BuildSkillsAsync(dbContext, defaultImages, ct).ConfigureAwait(false);
         await BuildSkillCategoriesAsync(dbContext, defaultImages, ct).ConfigureAwait(false);
+        await BuildSkillLinesAsync(dbContext, defaultImages, ct).ConfigureAwait(false);
     }
 
     private async Task BuildSkillsAsync
@@ -125,7 +127,7 @@ public class SkillCollectionsBuilder : ICollectionBuilder
         try
         {
             if (_clientDataCache.SkillCategories is null)
-                throw new MissingCacheDataException(typeof(Skill));
+                throw new MissingCacheDataException(typeof(SkillCategory));
 
             Dictionary<uint, MSkillCategory> builtCategories = new();
             foreach (SkillCategory category in _clientDataCache.SkillCategories)
@@ -153,6 +155,49 @@ public class SkillCollectionsBuilder : ICollectionBuilder
         catch (Exception ex)
         {
             _logger.LogError(ex, "Failed to build the SkillCategory collection");
+        }
+    }
+
+    private async Task BuildSkillLinesAsync
+    (
+        ICollectionsContext dbContext,
+        IReadOnlyDictionary<uint, ImageSetMapping> defaultImageMap,
+        CancellationToken ct
+    )
+    {
+        try
+        {
+            if (_clientDataCache.SkillLines is null)
+                throw new MissingCacheDataException(typeof(SkillLine));
+
+            Dictionary<uint, MSkillLine> builtLines = new();
+            foreach (SkillLine line in _clientDataCache.SkillLines)
+            {
+                _localeDataCache.TryGetLocaleString(line.NameID, out LocaleString? name);
+                _localeDataCache.TryGetLocaleString(line.DescriptionID, out LocaleString? description);
+                defaultImageMap.TryGetValue(line.IconID, out ImageSetMapping? defaultImage);
+
+                builtLines.Add(line.ID, new MSkillLine
+                (
+                    line.ID,
+                    line.SkillSetID == 0 ? null : line.SkillSetID,
+                    line.SkillSetID == 0 ? null : line.SkillSetIndex,
+                    line.SkillCategoryIdEx == 0 ? null : line.SkillCategoryIdEx,
+                    line.SkillCategoryIdEx == 0 ? null : line.SkillCategoryIndexEx,
+                    line.SkillPoints,
+                    name,
+                    description,
+                    line.IconID,
+                    defaultImage?.ImageID ?? null,
+                    defaultImage is null ? null : $"/files/ps2/images/static/{defaultImage.ImageID}.png"
+                ));
+            }
+
+            await dbContext.UpsertCollectionAsync(builtLines.Values, ct).ConfigureAwait(false);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Failed to build the Skill collection");
         }
     }
 }

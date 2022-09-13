@@ -90,6 +90,11 @@ public interface IClientDataCacheService : IDataCacheService
     IReadOnlyList<LoadoutSlot>? LoadoutSlots { get; }
 
     /// <summary>
+    /// Gets the cached <see cref="ResistInfo"/> objects.
+    /// </summary>
+    IReadOnlyList<ResistInfo>? ResistInfos { get; }
+
+    /// <summary>
     /// Gets the cached <see cref="ResourceType"/> objects.
     /// </summary>
     IReadOnlyList<ResourceType>? ResourceTypes { get; }

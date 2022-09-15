@@ -102,8 +102,7 @@ Missing the `objective_set_id` and `qualify_requirement_id` fields.
 
 #### item
 
-Missing the `is_vehicle_weapon` and `is_default_attachment` fields. The former can be replaced by checking
-if the `item_category_id` matches or inherits from **item_category** `104 - Vehicle Weapons`.
+Missing the `is_default_attachment` field.
 
 #### loadout
 

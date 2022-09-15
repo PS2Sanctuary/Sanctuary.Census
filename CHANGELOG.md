@@ -2,6 +2,11 @@
 
 Date format: DD/MM/YYYY
 
+## vNext
+
+- Removed the `item.is_account_scoped` field. It did not provide any useful information, given that some items can be
+  both character and account scoped depending on how they were purchased.
+
 ## 15/09/2022
 
 Added the `item.is_vehicle_weapon` field. This will be true for any items of which their category derives from `104 - Vehicle Weapons`.

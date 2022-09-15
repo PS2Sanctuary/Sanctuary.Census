@@ -2,7 +2,7 @@
 
 Date format: DD/MM/YYYY
 
-## vNext
+## 15/09/2022
 
 Added the `item.is_vehicle_weapon` field. This will be true for any items of which their category derives from `104 - Vehicle Weapons`.
 And some manually added vehicle weapon categories, namely from NSO vehicles -_-.

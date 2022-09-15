@@ -2,6 +2,13 @@
 
 Date format: DD/MM/YYYY
 
+## vNext
+
+- Renamed `currency.icon_image_set_id` to `image_set_id`.
+- Added `currency.icon_id` to maintain compatibility with Census.
+- Fixed incorrect values for `image_id` and `image_path` on `skill`, `skill_category` and `skill_set`, in cases where the entries did not have an image set.
+- The `image_set_id` field on `skill`, `skill_category` and `skill_set` is now nullable.
+
 ## 13/09/2022 | Update: Deploy the Flail
 
 - Added the `skill`, `skill_category`, `skill_line` and `skill_set` collections.

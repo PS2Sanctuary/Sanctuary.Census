@@ -1,5 +1,6 @@
 ﻿using Sanctuary.Census.Builder.Abstractions.CollectionBuilders;
 using Sanctuary.Census.Builder.Abstractions.Database;
+using Sanctuary.Census.Builder.Abstractions.Services;
 using Sanctuary.Census.Builder.Exceptions;
 using Sanctuary.Census.ClientData.Abstractions.Services;
 using Sanctuary.Census.Common.Objects.CommonModels;
@@ -18,20 +19,24 @@ public class CurrencyCollectionBuilder : ICollectionBuilder
 {
     private readonly IClientDataCacheService _clientDataCache;
     private readonly ILocaleDataCacheService _localeDataCache;
+    private readonly IImageSetHelperService _imageSetHelper;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="CurrencyCollectionBuilder"/> class.
     /// </summary>
     /// <param name="clientDataCache">The client data cache.</param>
     /// <param name="localeDataCache">The locale data cache.</param>
+    /// <param name="imageSetHelper">The image set helper service.</param>
     public CurrencyCollectionBuilder
     (
         IClientDataCacheService clientDataCache,
-        ILocaleDataCacheService localeDataCache
+        ILocaleDataCacheService localeDataCache,
+        IImageSetHelperService imageSetHelper
     )
     {
         _clientDataCache = clientDataCache;
         _localeDataCache = localeDataCache;
+        _imageSetHelper = imageSetHelper;
     }
 
     /// <inheritdoc />
@@ -49,15 +54,19 @@ public class CurrencyCollectionBuilder : ICollectionBuilder
         {
             _localeDataCache.TryGetLocaleString(currency.NameID, out LocaleString? name);
             _localeDataCache.TryGetLocaleString(currency.DescriptionID, out LocaleString? description);
+            bool hasDefaultImage = _imageSetHelper.TryGetDefaultImage(currency.IconID, out uint defaultImage);
 
             MCurrency built = new
             (
                 currency.ID,
                 name!,
                 description,
+                currency.ValueMax > 0 ? currency.ValueMax : null,
                 currency.IconID,
-                currency.MapIconID,
-                currency.ValueMax > 0 ? currency.ValueMax : null
+                currency.IconID,
+                hasDefaultImage ? defaultImage : null,
+                hasDefaultImage ? _imageSetHelper.GetRelativeImagePath(defaultImage) : null,
+                currency.MapIconID
             );
             builtCurrencies.TryAdd(built.CurrencyID, built);
         }

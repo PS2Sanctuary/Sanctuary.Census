@@ -4,6 +4,9 @@ Date format: DD/MM/YYYY
 
 ## vNext
 
+Added the `item.is_vehicle_weapon` field. This will be true for any items of which their category derives from `104 - Vehicle Weapons`.
+And some manually added vehicle weapon categories, namely from NSO vehicles -_-.
+
 On the `currency` collection:
 - Renamed the `icon_image_set_id` field to `image_set_id`.
 - Added the `icon_id` field to maintain compatibility with Census.

@@ -6,6 +6,8 @@ using Sanctuary.Census.ClientData.Abstractions.Services;
 using Sanctuary.Census.ClientData.ClientDataModels;
 using Sanctuary.Census.Common.Objects.Collections;
 using Sanctuary.Census.Common.Objects.CommonModels;
+using Sanctuary.Census.ServerData.Internal.Abstractions.Services;
+using Sanctuary.Zone.Packets.ReferenceData;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
@@ -17,8 +19,11 @@ namespace Sanctuary.Census.Builder.CollectionBuilders;
 /// </summary>
 public class ItemCollectionBuilder : ICollectionBuilder
 {
+    private const int VEHICLE_WEAPONS_CATEGORY_ID = 104;
+
     private readonly IClientDataCacheService _clientDataCache;
     private readonly ILocaleDataCacheService _localeDataCache;
+    private readonly IServerDataCacheService _serverDataCache;
     private readonly IImageSetHelperService _imageSetHelper;
 
     /// <summary>
@@ -26,16 +31,19 @@ public class ItemCollectionBuilder : ICollectionBuilder
     /// </summary>
     /// <param name="clientDataCache">The client data cache.</param>
     /// <param name="localeDataCache">The locale data cache.</param>
+    /// <param name="serverDataCache">The server data cache.</param>
     /// <param name="imageSetHelper">The image set helper service.</param>
     public ItemCollectionBuilder
     (
         IClientDataCacheService clientDataCache,
         ILocaleDataCacheService localeDataCache,
+        IServerDataCacheService serverDataCache,
         IImageSetHelperService imageSetHelper
     )
     {
         _clientDataCache = clientDataCache;
         _localeDataCache = localeDataCache;
+        _serverDataCache = serverDataCache;
         _imageSetHelper = imageSetHelper;
     }
 
@@ -54,6 +62,30 @@ public class ItemCollectionBuilder : ICollectionBuilder
 
         if (_clientDataCache.ItemVehicles is null)
             throw new MissingCacheDataException(typeof(ItemVehicle));
+
+        if (_serverDataCache.ItemCategories is null)
+            throw new MissingCacheDataException(typeof(ItemCategories));
+
+        HashSet<uint> vehicleWeaponCategories = new();
+        foreach (CategoryHierarchy heirarchy in _serverDataCache.ItemCategories.Hierarchies)
+        {
+            if (heirarchy.ParentCategoryID == VEHICLE_WEAPONS_CATEGORY_ID)
+                vehicleWeaponCategories.Add(heirarchy.ChildCategoryID);
+        }
+
+        // Add some categories manually because they don't have inheritance setup
+        vehicleWeaponCategories.Add(209); // Bastion Bombard
+        vehicleWeaponCategories.Add(210); // Bastion Weapon System
+        vehicleWeaponCategories.Add(211); // Colossus Primary Weapon
+        vehicleWeaponCategories.Add(212); // Colossus Front Right Weapon
+        vehicleWeaponCategories.Add(213); // Colossus Front Left Weapon
+        vehicleWeaponCategories.Add(214); // Colossus Rear Right Weapon
+        vehicleWeaponCategories.Add(215); // Colossus Rear Left Weapon
+        vehicleWeaponCategories.Add(216); // Javelin Primary Weapon
+        vehicleWeaponCategories.Add(217); // Chimera Primary Weapons
+        vehicleWeaponCategories.Add(218); // Chimera Secondary Weapons
+        vehicleWeaponCategories.Add(221); // Corsair Front Turret
+        vehicleWeaponCategories.Add(222); // Corsair Rear Turret
 
         Dictionary<uint, FactionDefinition> itemFactionMap = new();
         foreach (ItemProfile profile in _clientDataCache.ItemProfiles)
@@ -100,7 +132,8 @@ public class ItemCollectionBuilder : ICollectionBuilder
                 hasDefaultImage ? _imageSetHelper.GetRelativeImagePath(defaultImage) : null,
                 definition.HudImageSetID == 0 ? null : definition.HudImageSetID,
                 definition.MaxStackSize,
-                definition.FlagAccountScope
+                definition.FlagAccountScope,
+                vehicleWeaponCategories.Contains(definition.CategoryID)
             );
             builtItems.TryAdd(built.ItemID, built);
         }

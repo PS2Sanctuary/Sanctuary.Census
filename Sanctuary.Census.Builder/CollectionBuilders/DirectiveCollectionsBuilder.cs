@@ -70,8 +70,9 @@ public class DirectiveCollectionsBuilder : ICollectionBuilder
 
         bool hasAllFactions = _serverDataCache.DirectiveData.ContainsKey(FactionDefinition.VS)
             && _serverDataCache.DirectiveData.ContainsKey(FactionDefinition.NC)
-            && _serverDataCache.DirectiveData.ContainsKey(FactionDefinition.TR);
-        // TODO: Add NSO
+            && _serverDataCache.DirectiveData.ContainsKey(FactionDefinition.TR)
+            && _serverDataCache.DirectiveData.ContainsKey(FactionDefinition.NSO);
+
         if (!hasAllFactions)
         {
             throw new Exception

@@ -12,6 +12,7 @@ namespace Sanctuary.Census.Common.Objects.Collections;
 /// <param name="Name">The currency's name.</param>
 /// <param name="Description">The currency's description.</param>
 /// <param name="InventoryCap">The maximum amount of this currency a character may have.</param>
+/// <param name="IconID">The image set ID of the currency's icon.</param>
 /// <param name="ImageSetID">The image set ID of the currency's icon.</param>
 /// <param name="ImageID">The ID of the currency's default image.</param>
 /// <param name="ImagePath">The relative path to the currency's default image.</param>

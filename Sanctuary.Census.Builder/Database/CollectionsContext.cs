@@ -137,6 +137,7 @@ public class CollectionsContext : ICollectionsContext
                 }
 
                 // No need to worry about the document any more
+                // Remove it to improve list search performance
                 if (itemIndex > -1)
                     dataList.RemoveAt(itemIndex);
             }

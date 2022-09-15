@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.Logging;
 using Sanctuary.Census.Builder.Abstractions.CollectionBuilders;
 using Sanctuary.Census.Builder.Abstractions.Database;
+using Sanctuary.Census.Builder.Abstractions.Services;
 using Sanctuary.Census.Builder.Exceptions;
 using Sanctuary.Census.ClientData.Abstractions.Services;
 using Sanctuary.Census.ClientData.ClientDataModels;
@@ -25,6 +26,7 @@ public class SkillCollectionsBuilder : ICollectionBuilder
     private readonly ILogger<SkillCollectionsBuilder> _logger;
     private readonly IClientDataCacheService _clientDataCache;
     private readonly ILocaleDataCacheService _localeDataCache;
+    private readonly IImageSetHelperService _imageSetHelper;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="ProfileCollectionBuilder"/> class.
@@ -32,16 +34,19 @@ public class SkillCollectionsBuilder : ICollectionBuilder
     /// <param name="logger">The logging interface to use.</param>
     /// <param name="clientDataCache">The client data cache.</param>
     /// <param name="localeDataCache">The locale data cache.</param>
+    /// <param name="imageSetHelper">The image set helper service.</param>
     public SkillCollectionsBuilder
     (
         ILogger<SkillCollectionsBuilder> logger,
         IClientDataCacheService clientDataCache,
-        ILocaleDataCacheService localeDataCache
+        ILocaleDataCacheService localeDataCache,
+        IImageSetHelperService imageSetHelper
     )
     {
         _logger = logger;
         _clientDataCache = clientDataCache;
         _localeDataCache = localeDataCache;
+        _imageSetHelper = imageSetHelper;
     }
 
     /// <inheritdoc />
@@ -51,28 +56,13 @@ public class SkillCollectionsBuilder : ICollectionBuilder
         CancellationToken ct
     )
     {
-        if (_clientDataCache.ImageSetMappings is null)
-            throw new MissingCacheDataException(typeof(ImageSetMapping));
-
-        Dictionary<uint, ImageSetMapping> defaultImages = new();
-        foreach (ImageSetMapping mapping in _clientDataCache.ImageSetMappings)
-        {
-            if (!defaultImages.TryAdd(mapping.ImageSetID, mapping) && mapping.ImageType is ImageSetType.Type.Large)
-                defaultImages[mapping.ImageSetID] = mapping;
-        }
-
-        await BuildSkillsAsync(dbContext, defaultImages, ct).ConfigureAwait(false);
-        await BuildSkillCategoriesAsync(dbContext, defaultImages, ct).ConfigureAwait(false);
-        await BuildSkillLinesAsync(dbContext, defaultImages, ct).ConfigureAwait(false);
-        await BuildSkillSetsAsync(dbContext, defaultImages, ct).ConfigureAwait(false);
+        await BuildSkillsAsync(dbContext, ct).ConfigureAwait(false);
+        await BuildSkillCategoriesAsync(dbContext, ct).ConfigureAwait(false);
+        await BuildSkillLinesAsync(dbContext, ct).ConfigureAwait(false);
+        await BuildSkillSetsAsync(dbContext, ct).ConfigureAwait(false);
     }
 
-    private async Task BuildSkillsAsync
-    (
-        ICollectionsContext dbContext,
-        IReadOnlyDictionary<uint, ImageSetMapping> defaultImageMap,
-        CancellationToken ct
-    )
+    private async Task BuildSkillsAsync(ICollectionsContext dbContext, CancellationToken ct)
     {
         try
         {
@@ -84,7 +74,7 @@ public class SkillCollectionsBuilder : ICollectionBuilder
             {
                 _localeDataCache.TryGetLocaleString(skill.NameID, out LocaleString? name);
                 _localeDataCache.TryGetLocaleString(skill.DescriptionID, out LocaleString? description);
-                defaultImageMap.TryGetValue(skill.IconID, out ImageSetMapping? defaultImage);
+                bool hasDefaultImage = _imageSetHelper.TryGetDefaultImage(skill.IconID, out uint defaultImage);
 
                 builtSkills.Add(skill.ID, new MSkill
                 (
@@ -106,8 +96,8 @@ public class SkillCollectionsBuilder : ICollectionBuilder
                     skill.FlagIsVisible,
                     skill.CurrencyID,
                     skill.IconID,
-                    defaultImage?.ImageID ?? null,
-                    defaultImage is null ? null : $"/files/ps2/images/static/{defaultImage.ImageID}.png"
+                    hasDefaultImage ? defaultImage : null,
+                    hasDefaultImage ? _imageSetHelper.GetRelativeImagePath(defaultImage) : null
                 ));
             }
 
@@ -119,12 +109,7 @@ public class SkillCollectionsBuilder : ICollectionBuilder
         }
     }
 
-    private async Task BuildSkillCategoriesAsync
-    (
-        ICollectionsContext dbContext,
-        IReadOnlyDictionary<uint, ImageSetMapping> defaultImageMap,
-        CancellationToken ct
-    )
+    private async Task BuildSkillCategoriesAsync(ICollectionsContext dbContext, CancellationToken ct)
     {
         try
         {
@@ -136,7 +121,7 @@ public class SkillCollectionsBuilder : ICollectionBuilder
             {
                 _localeDataCache.TryGetLocaleString(category.NameID, out LocaleString? name);
                 _localeDataCache.TryGetLocaleString(category.DescriptionID, out LocaleString? description);
-                defaultImageMap.TryGetValue(category.IconID, out ImageSetMapping? defaultImage);
+                bool hasDefaultImage = _imageSetHelper.TryGetDefaultImage(category.IconID, out uint defaultImage);
 
                 builtCategories.TryAdd(category.ID, new MSkillCategory
                 (
@@ -147,8 +132,8 @@ public class SkillCollectionsBuilder : ICollectionBuilder
                     name,
                     description,
                     category.IconID,
-                    defaultImage?.ImageID ?? null,
-                    defaultImage is null ? null : $"/files/ps2/images/static/{defaultImage.ImageID}.png"
+                    hasDefaultImage ? defaultImage : null,
+                    hasDefaultImage ? _imageSetHelper.GetRelativeImagePath(defaultImage) : null
                 ));
             }
 
@@ -160,12 +145,7 @@ public class SkillCollectionsBuilder : ICollectionBuilder
         }
     }
 
-    private async Task BuildSkillLinesAsync
-    (
-        ICollectionsContext dbContext,
-        IReadOnlyDictionary<uint, ImageSetMapping> defaultImageMap,
-        CancellationToken ct
-    )
+    private async Task BuildSkillLinesAsync(ICollectionsContext dbContext, CancellationToken ct)
     {
         try
         {
@@ -177,7 +157,7 @@ public class SkillCollectionsBuilder : ICollectionBuilder
             {
                 _localeDataCache.TryGetLocaleString(line.NameID, out LocaleString? name);
                 _localeDataCache.TryGetLocaleString(line.DescriptionID, out LocaleString? description);
-                defaultImageMap.TryGetValue(line.IconID, out ImageSetMapping? defaultImage);
+                bool hasDefaultImage = _imageSetHelper.TryGetDefaultImage(line.IconID, out uint defaultImage);
 
                 builtLines.Add(line.ID, new MSkillLine
                 (
@@ -190,8 +170,8 @@ public class SkillCollectionsBuilder : ICollectionBuilder
                     name,
                     description,
                     line.IconID,
-                    defaultImage?.ImageID ?? null,
-                    defaultImage is null ? null : $"/files/ps2/images/static/{defaultImage.ImageID}.png"
+                    hasDefaultImage ? defaultImage : null,
+                    hasDefaultImage ? _imageSetHelper.GetRelativeImagePath(defaultImage) : null
                 ));
             }
 
@@ -203,12 +183,7 @@ public class SkillCollectionsBuilder : ICollectionBuilder
         }
     }
 
-    private async Task BuildSkillSetsAsync
-    (
-        ICollectionsContext dbContext,
-        IReadOnlyDictionary<uint, ImageSetMapping> defaultImageMap,
-        CancellationToken ct
-    )
+    private async Task BuildSkillSetsAsync(ICollectionsContext dbContext, CancellationToken ct)
     {
         try
         {
@@ -220,7 +195,7 @@ public class SkillCollectionsBuilder : ICollectionBuilder
             {
                 _localeDataCache.TryGetLocaleString(set.NameID, out LocaleString? name);
                 _localeDataCache.TryGetLocaleString(set.DescriptionID, out LocaleString? description);
-                defaultImageMap.TryGetValue(set.IconID, out ImageSetMapping? defaultImage);
+                bool hasDefaultImage = _imageSetHelper.TryGetDefaultImage(set.IconID, out uint defaultImage);
 
                 builtSets.TryAdd(set.ID, new MSkillSet
                 (
@@ -230,8 +205,8 @@ public class SkillCollectionsBuilder : ICollectionBuilder
                     name,
                     description,
                     set.IconID,
-                    defaultImage?.ImageID ?? null,
-                    defaultImage is null ? null : $"/files/ps2/images/static/{defaultImage.ImageID}.png"
+                    hasDefaultImage ? defaultImage : null,
+                    hasDefaultImage ? _imageSetHelper.GetRelativeImagePath(defaultImage) : null
                 ));
             }
 

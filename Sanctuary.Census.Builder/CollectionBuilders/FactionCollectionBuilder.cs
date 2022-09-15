@@ -1,5 +1,6 @@
 ﻿using Sanctuary.Census.Builder.Abstractions.CollectionBuilders;
 using Sanctuary.Census.Builder.Abstractions.Database;
+using Sanctuary.Census.Builder.Abstractions.Services;
 using Sanctuary.Census.Builder.Exceptions;
 using Sanctuary.Census.ClientData.Abstractions.Services;
 using Sanctuary.Census.ClientData.ClientDataModels;
@@ -18,20 +19,24 @@ public class FactionCollectionBuilder : ICollectionBuilder
 {
     private readonly IClientDataCacheService _clientDataCache;
     private readonly ILocaleDataCacheService _localeDataCache;
+    private readonly IImageSetHelperService _imageSetHelper;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="FactionCollectionBuilder"/> class.
     /// </summary>
     /// <param name="clientDataCache">The client data cache.</param>
     /// <param name="localeDataCache">The locale data cache.</param>
+    /// <param name="imageSetHelper">The image set helper service.</param>
     public FactionCollectionBuilder
     (
         IClientDataCacheService clientDataCache,
-        ILocaleDataCacheService localeDataCache
+        ILocaleDataCacheService localeDataCache,
+        IImageSetHelperService imageSetHelper
     )
     {
         _clientDataCache = clientDataCache;
         _localeDataCache = localeDataCache;
+        _imageSetHelper = imageSetHelper;
     }
 
     /// <inheritdoc />
@@ -44,18 +49,6 @@ public class FactionCollectionBuilder : ICollectionBuilder
         if (_clientDataCache.Factions is null)
             throw new MissingCacheDataException(typeof(Faction));
 
-        if (_clientDataCache.ImageSetMappings is null)
-            throw new MissingCacheDataException(typeof(ImageSetMapping));
-
-        Dictionary<uint, uint> imageSetToPrimaryImageMap = new();
-        foreach (ImageSetMapping mapping in _clientDataCache.ImageSetMappings)
-        {
-            if (mapping.ImageType is not ImageSetType.Type.Massive)
-                continue;
-
-            imageSetToPrimaryImageMap[mapping.ImageSetID] = mapping.ImageID;
-        }
-
         Dictionary<uint, MFaction> builtItems = new();
         foreach (Faction faction in _clientDataCache.Factions)
         {
@@ -63,17 +56,7 @@ public class FactionCollectionBuilder : ICollectionBuilder
             _localeDataCache.TryGetLocaleString(faction.DescriptionTextID, out LocaleString? description);
             _localeDataCache.TryGetLocaleString(faction.ShortNameID, out LocaleString? shortName);
 
-            uint? imageID = null;
-            string? imagePath = null;
-            if (faction.IconID > 0)
-            {
-                if (imageSetToPrimaryImageMap.ContainsKey(faction.IconID))
-                {
-                    imageID = imageSetToPrimaryImageMap[faction.IconID];
-                    imagePath = $"/files/ps2/images/static/{imageID}.png";
-                }
-            }
-
+            bool hasDefaultImage = _imageSetHelper.TryGetDefaultImage(faction.IconID, out uint defaultImage);
             MFaction built = new
             (
                 faction.ID,
@@ -81,8 +64,8 @@ public class FactionCollectionBuilder : ICollectionBuilder
                 shortName,
                 description,
                 faction.IconID > 0 ? faction.IconID : null,
-                imageID,
-                imagePath,
+                hasDefaultImage ? defaultImage : null,
+                hasDefaultImage ? _imageSetHelper.GetRelativeImagePath(defaultImage) : null,
                 faction.HUDTintRGB,
                 faction.CodeTag,
                 faction.UserSelectable

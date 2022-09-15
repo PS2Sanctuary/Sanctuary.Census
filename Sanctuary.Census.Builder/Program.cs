@@ -54,6 +54,7 @@ public static class Program
                     .AddInternalServerDataServices()
                     .AddScoped<ICollectionsContext, CollectionsContext>()
                     .AddScoped<ICollectionDiffService, CollectionDiffService>()
+                    .AddScoped<IImageSetHelperService, ImageSetHelperService>()
                     .RegisterCollectionConfigurations()
                     .RegisterCollectionBuilders()
                     .AddHostedService<CollectionBuildWorker>();

@@ -1,5 +1,6 @@
 ﻿using Sanctuary.Census.Builder.Abstractions.CollectionBuilders;
 using Sanctuary.Census.Builder.Abstractions.Database;
+using Sanctuary.Census.Builder.Abstractions.Services;
 using Sanctuary.Census.Builder.Exceptions;
 using Sanctuary.Census.ClientData.Abstractions.Services;
 using Sanctuary.Census.ClientData.ClientDataModels;
@@ -18,20 +19,24 @@ public class ItemCollectionBuilder : ICollectionBuilder
 {
     private readonly IClientDataCacheService _clientDataCache;
     private readonly ILocaleDataCacheService _localeDataCache;
+    private readonly IImageSetHelperService _imageSetHelper;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="ItemCollectionBuilder"/> class.
     /// </summary>
     /// <param name="clientDataCache">The client data cache.</param>
     /// <param name="localeDataCache">The locale data cache.</param>
+    /// <param name="imageSetHelper">The image set helper service.</param>
     public ItemCollectionBuilder
     (
         IClientDataCacheService clientDataCache,
-        ILocaleDataCacheService localeDataCache
+        ILocaleDataCacheService localeDataCache,
+        IImageSetHelperService imageSetHelper
     )
     {
         _clientDataCache = clientDataCache;
         _localeDataCache = localeDataCache;
+        _imageSetHelper = imageSetHelper;
     }
 
     /// <inheritdoc />
@@ -46,9 +51,6 @@ public class ItemCollectionBuilder : ICollectionBuilder
 
         if (_clientDataCache.ItemProfiles is null)
             throw new MissingCacheDataException(typeof(ItemProfile));
-
-        if (_clientDataCache.ImageSetMappings is null)
-            throw new MissingCacheDataException(typeof(ImageSetMapping));
 
         if (_clientDataCache.ItemVehicles is null)
             throw new MissingCacheDataException(typeof(ItemVehicle));
@@ -67,34 +69,19 @@ public class ItemCollectionBuilder : ICollectionBuilder
                 itemFactionMap[vItem.ItemID] = FactionDefinition.All;
         }
 
-        Dictionary<uint, uint> imageSetToPrimaryImageMap = new();
-        foreach (ImageSetMapping mapping in _clientDataCache.ImageSetMappings)
-        {
-            if (mapping.ImageType is not ImageSetType.Type.Large)
-                continue;
-
-            imageSetToPrimaryImageMap[mapping.ImageSetID] = mapping.ImageID;
-        }
-
         Dictionary<uint, Item> builtItems = new();
         foreach (ClientItemDefinition definition in _clientDataCache.ClientItemDefinitions)
         {
             _localeDataCache.TryGetLocaleString(definition.NameID, out LocaleString? name);
             _localeDataCache.TryGetLocaleString(definition.DescriptionID, out LocaleString? description);
 
+            bool hasDefaultImage = false;
+            uint defaultImage = 0;
+            if (definition.ImageSetID > 0)
+                hasDefaultImage = _imageSetHelper.TryGetDefaultImage((uint)definition.ImageSetID, out defaultImage);
+
             if (!itemFactionMap.TryGetValue(definition.ID, out FactionDefinition faction))
                 faction = FactionDefinition.All;
-
-            uint? imageID = null;
-            string? imagePath = null;
-            if (definition.ImageSetID > 0)
-            {
-                if (imageSetToPrimaryImageMap.ContainsKey((uint)definition.ImageSetID))
-                {
-                    imageID = imageSetToPrimaryImageMap[(uint)definition.ImageSetID];
-                    imagePath = $"/files/ps2/images/static/{imageID}.png";
-                }
-            }
 
             Item built = new
             (
@@ -109,8 +96,8 @@ public class ItemCollectionBuilder : ICollectionBuilder
                 definition.PassiveAbilitySetID == 0 ? null: definition.PassiveAbilitySetID,
                 definition.SkillSetID == 0 ? null : definition.SkillSetID,
                 definition.ImageSetID <= 0 ? null : (uint)definition.ImageSetID,
-                imageID,
-                imagePath,
+                hasDefaultImage ? defaultImage : null,
+                hasDefaultImage ? _imageSetHelper.GetRelativeImagePath(defaultImage) : null,
                 definition.HudImageSetID == 0 ? null : definition.HudImageSetID,
                 definition.MaxStackSize,
                 definition.FlagAccountScope

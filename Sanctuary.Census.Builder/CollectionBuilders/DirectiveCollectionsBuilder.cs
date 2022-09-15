@@ -1,9 +1,9 @@
 ﻿using Microsoft.Extensions.Logging;
 using Sanctuary.Census.Builder.Abstractions.CollectionBuilders;
 using Sanctuary.Census.Builder.Abstractions.Database;
+using Sanctuary.Census.Builder.Abstractions.Services;
 using Sanctuary.Census.Builder.Exceptions;
 using Sanctuary.Census.ClientData.Abstractions.Services;
-using Sanctuary.Census.ClientData.ClientDataModels;
 using Sanctuary.Census.Common.Objects;
 using Sanctuary.Census.Common.Objects.CommonModels;
 using Sanctuary.Census.ServerData.Internal.Abstractions.Services;
@@ -30,29 +30,29 @@ namespace Sanctuary.Census.Builder.CollectionBuilders;
 public class DirectiveCollectionsBuilder : ICollectionBuilder
 {
     private readonly ILogger<DirectiveCollectionsBuilder> _logger;
-    private readonly IClientDataCacheService _clientDataCache;
     private readonly ILocaleDataCacheService _localeDataCache;
     private readonly IServerDataCacheService _serverDataCache;
+    private readonly IImageSetHelperService _imageSetHelper;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="DirectiveCollectionsBuilder"/> class.
     /// </summary>
     /// <param name="logger">The logging interface to use.</param>
-    /// <param name="clientDataCache">The client data cache.</param>
     /// <param name="localeDataCache">The locale data cache.</param>
     /// <param name="serverDataCache">The server data cache.</param>
+    /// <param name="imageSetHelper">The image set helper service.</param>
     public DirectiveCollectionsBuilder
     (
         ILogger<DirectiveCollectionsBuilder> logger,
-        IClientDataCacheService clientDataCache,
         ILocaleDataCacheService localeDataCache,
-        IServerDataCacheService serverDataCache
+        IServerDataCacheService serverDataCache,
+        IImageSetHelperService imageSetHelper
     )
     {
         _logger = logger;
-        _clientDataCache = clientDataCache;
         _localeDataCache = localeDataCache;
         _serverDataCache = serverDataCache;
+        _imageSetHelper = imageSetHelper;
     }
 
     /// <inheritdoc />
@@ -64,9 +64,6 @@ public class DirectiveCollectionsBuilder : ICollectionBuilder
     {
         if (_serverDataCache.DirectiveData.Count == 0)
             throw new MissingCacheDataException(typeof(DirectiveInitialize));
-
-        if (_clientDataCache.ImageSetMappings is null)
-            throw new MissingCacheDataException(typeof(ImageSetMapping));
 
         bool hasAllFactions = _serverDataCache.DirectiveData.ContainsKey(FactionDefinition.VS)
             && _serverDataCache.DirectiveData.ContainsKey(FactionDefinition.NC)
@@ -82,18 +79,11 @@ public class DirectiveCollectionsBuilder : ICollectionBuilder
             );
         }
 
-        Dictionary<uint, ImageSetMapping> defaultImages = new();
-        foreach (ImageSetMapping mapping in _clientDataCache.ImageSetMappings)
-        {
-            if (!defaultImages.TryAdd(mapping.ImageSetID, mapping) && mapping.ImageType is ImageSetType.Type.Large)
-                defaultImages[mapping.ImageSetID] = mapping;
-        }
-
         await BuildCategoriesAsync(dbContext, ct).ConfigureAwait(false);
-        await BuildTreesAsync(dbContext, defaultImages, ct).ConfigureAwait(false);
-        await BuildTiersAsync(dbContext, defaultImages, ct).ConfigureAwait(false);
-        await BuildDirectivesAsync(dbContext, defaultImages, ct).ConfigureAwait(false);
-        await BuildRewardsAsync(dbContext, defaultImages, ct).ConfigureAwait(false);
+        await BuildTreesAsync(dbContext, ct).ConfigureAwait(false);
+        await BuildTiersAsync(dbContext, ct).ConfigureAwait(false);
+        await BuildDirectivesAsync(dbContext, ct).ConfigureAwait(false);
+        await BuildRewardsAsync(dbContext, ct).ConfigureAwait(false);
     }
 
     private async Task BuildCategoriesAsync(ICollectionsContext dbContext, CancellationToken ct)
@@ -135,12 +125,7 @@ public class DirectiveCollectionsBuilder : ICollectionBuilder
         }
     }
 
-    private async Task BuildTreesAsync
-    (
-        ICollectionsContext dbContext,
-        IReadOnlyDictionary<uint, ImageSetMapping> defaultImages,
-        CancellationToken ct
-    )
+    private async Task BuildTreesAsync(ICollectionsContext dbContext, CancellationToken ct)
     {
         try
         {
@@ -157,7 +142,7 @@ public class DirectiveCollectionsBuilder : ICollectionBuilder
 
                     _localeDataCache.TryGetLocaleString(tree.NameID, out LocaleString? name);
                     _localeDataCache.TryGetLocaleString(tree.DescriptionID, out LocaleString? description);
-                    defaultImages.TryGetValue(tree.ImageSetID, out ImageSetMapping? defaultImage);
+                    bool hasDefaultImage = _imageSetHelper.TryGetDefaultImage(tree.ImageSetID, out uint defaultImage);
 
                     if (builtTrees.TryGetValue(tree.DirectiveTreeID_1, out MTree? prevBuilt))
                     {
@@ -174,8 +159,8 @@ public class DirectiveCollectionsBuilder : ICollectionBuilder
                             name!,
                             description,
                             tree.ImageSetID,
-                            defaultImage?.ImageID ?? null,
-                            defaultImage is null ? null : $"/files/ps2/images/static/{defaultImage.ImageID}.png"
+                            hasDefaultImage ? defaultImage : null,
+                            hasDefaultImage ? _imageSetHelper.GetRelativeImagePath(defaultImage) : null
                         ));
                     }
                 }
@@ -189,12 +174,7 @@ public class DirectiveCollectionsBuilder : ICollectionBuilder
         }
     }
 
-    private async Task BuildTiersAsync
-    (
-        ICollectionsContext dbContext,
-        IReadOnlyDictionary<uint, ImageSetMapping> defaultImages,
-        CancellationToken ct
-    )
+    private async Task BuildTiersAsync(ICollectionsContext dbContext, CancellationToken ct)
     {
         try
         {
@@ -216,7 +196,7 @@ public class DirectiveCollectionsBuilder : ICollectionBuilder
                     foreach (DirectiveTreeTier tier in tree.Tiers)
                     {
                         _localeDataCache.TryGetLocaleString(tier.NameID, out LocaleString? name);
-                        defaultImages.TryGetValue(tier.ImageSetID, out ImageSetMapping? defaultImage);
+                        bool hasDefaultImage = _imageSetHelper.TryGetDefaultImage(tree.ImageSetID, out uint defaultImage);
 
                         treeTiers.Add(new MTier
                         (
@@ -227,8 +207,8 @@ public class DirectiveCollectionsBuilder : ICollectionBuilder
                             tier.DirectivePoints,
                             tier.RequiredObjectiveCompletionCount,
                             tier.ImageSetID,
-                            defaultImage?.ImageID,
-                            defaultImage is null ? null : $"/files/ps2/images/static/{defaultImage.ImageID}.png"
+                            hasDefaultImage ? defaultImage : null,
+                            hasDefaultImage ? _imageSetHelper.GetRelativeImagePath(defaultImage) : null
                         ));
                     }
 
@@ -244,12 +224,7 @@ public class DirectiveCollectionsBuilder : ICollectionBuilder
         }
     }
 
-    private async Task BuildDirectivesAsync
-    (
-        ICollectionsContext dbContext,
-        IReadOnlyDictionary<uint, ImageSetMapping> defaultImages,
-        CancellationToken ct
-    )
+    private async Task BuildDirectivesAsync(ICollectionsContext dbContext, CancellationToken ct)
     {
         try
         {
@@ -272,7 +247,7 @@ public class DirectiveCollectionsBuilder : ICollectionBuilder
 
                             _localeDataCache.TryGetLocaleString(objective.NameID, out LocaleString? name);
                             _localeDataCache.TryGetLocaleString(objective.DescriptionID, out LocaleString? description);
-                            defaultImages.TryGetValue(objective.ImageSetID, out ImageSetMapping? defaultImage);
+                            bool hasDefaultImage = _imageSetHelper.TryGetDefaultImage(tree.ImageSetID, out uint defaultImage);
 
                             if (builtDirectives.TryGetValue(objective.ObjectiveID_1, out MDirective? prevBuilt))
                             {
@@ -290,8 +265,8 @@ public class DirectiveCollectionsBuilder : ICollectionBuilder
                                     name,
                                     description,
                                     objective.ImageSetID,
-                                    defaultImage?.ImageID,
-                                    defaultImage is null ? null : $"/files/ps2/images/static/{defaultImage.ImageID}.png"
+                                    hasDefaultImage ? defaultImage : null,
+                                    hasDefaultImage ? _imageSetHelper.GetRelativeImagePath(defaultImage) : null
                                 ));
                             }
                         }
@@ -307,12 +282,7 @@ public class DirectiveCollectionsBuilder : ICollectionBuilder
         }
     }
 
-    private async Task BuildRewardsAsync
-    (
-        ICollectionsContext dbContext,
-        IReadOnlyDictionary<uint, ImageSetMapping> defaultImages,
-        CancellationToken ct
-    )
+    private async Task BuildRewardsAsync(ICollectionsContext dbContext, CancellationToken ct)
     {
         try
         {
@@ -335,21 +305,21 @@ public class DirectiveCollectionsBuilder : ICollectionBuilder
                             continue;
 
                         _localeDataCache.TryGetLocaleString(reward.NameID, out LocaleString? setName);
-                        defaultImages.TryGetValue(reward.ImageSetID, out ImageSetMapping? setDefaultImage);
+                        bool setHasDefaultImage = _imageSetHelper.TryGetDefaultImage(tree.ImageSetID, out uint setDefaultImage);
 
                         builtSets.Add(reward.RewardSetID, new MRewardSet
                         (
                             reward.RewardSetID,
                             setName,
                             reward.ImageSetID,
-                            setDefaultImage?.ImageID,
-                            setDefaultImage is null ? null : $"/files/ps2/images/static/{setDefaultImage.ImageID}.png"
+                            setHasDefaultImage ? setDefaultImage : null,
+                            setHasDefaultImage ? _imageSetHelper.GetRelativeImagePath(setDefaultImage) : null
                         ));
 
                         foreach (RewardItem item in reward.Items)
                         {
                             _localeDataCache.TryGetLocaleString(item.NameID, out LocaleString? rewardName);
-                            defaultImages.TryGetValue(item.ImageSetID, out ImageSetMapping? rewardDefaultImage);
+                            bool hasDefaultImage = _imageSetHelper.TryGetDefaultImage(tree.ImageSetID, out uint defaultImage);
 
                             builtRewards.Add(new MReward
                             (
@@ -358,8 +328,8 @@ public class DirectiveCollectionsBuilder : ICollectionBuilder
                                 rewardName,
                                 item.Quantity,
                                 item.ImageSetID,
-                                rewardDefaultImage?.ImageID,
-                                rewardDefaultImage is null ? null : $"/files/ps2/images/static/{rewardDefaultImage.ImageID}.png"
+                                hasDefaultImage ? defaultImage : null,
+                                hasDefaultImage ? _imageSetHelper.GetRelativeImagePath(defaultImage) : null
                             ));
                         }
                     }

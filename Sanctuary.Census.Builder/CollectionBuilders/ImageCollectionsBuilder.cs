@@ -1,5 +1,6 @@
 ﻿using Sanctuary.Census.Builder.Abstractions.CollectionBuilders;
 using Sanctuary.Census.Builder.Abstractions.Database;
+using Sanctuary.Census.Builder.Abstractions.Services;
 using Sanctuary.Census.Builder.Exceptions;
 using Sanctuary.Census.ClientData.Abstractions.Services;
 using Sanctuary.Census.ClientData.ClientDataModels;
@@ -19,17 +20,21 @@ namespace Sanctuary.Census.Builder.CollectionBuilders;
 public class ImageCollectionsBuilder : ICollectionBuilder
 {
     private readonly IClientDataCacheService _clientDataCache;
+    private readonly IImageSetHelperService _imageSetHelper;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="ImageCollectionsBuilder"/> class.
     /// </summary>
     /// <param name="clientDataCache">The client data cache.</param>
+    /// <param name="imageSetHelper">The image set helper service.</param>
     public ImageCollectionsBuilder
     (
-        IClientDataCacheService clientDataCache
+        IClientDataCacheService clientDataCache,
+        IImageSetHelperService imageSetHelper
     )
     {
         _clientDataCache = clientDataCache;
+        _imageSetHelper = imageSetHelper;
     }
 
     /// <inheritdoc />
@@ -86,7 +91,7 @@ public class ImageCollectionsBuilder : ICollectionBuilder
                     set.Description,
                     (uint)map.ImageType,
                     types.TryGetValue(map.ImageType, out ImageSetType? st) ? st.Description : null,
-                    $"/files/ps2/images/static/{map.ImageID}.png"
+                    _imageSetHelper.GetRelativeImagePath(map.ImageID)
                 ));
             }
         }
@@ -98,7 +103,7 @@ public class ImageCollectionsBuilder : ICollectionBuilder
             (
                 image.ID,
                 System.IO.Path.GetFileNameWithoutExtension(image.FileName),
-                $"/files/ps2/images/static/{image.ID}.png"
+                _imageSetHelper.GetRelativeImagePath(image.ID)
             ));
         }
         await dbContext.UpsertCollectionAsync(builtImages.Values, ct).ConfigureAwait(false);
@@ -112,10 +117,7 @@ public class ImageCollectionsBuilder : ICollectionBuilder
                 continue;
             }
 
-            if (existing.TypeID == (uint)ImageSetType.Type.Large)
-                continue;
-
-            if (existing.TypeID > set.TypeID)
+            if (existing.TypeID == (uint)ImageSetType.Type.Large || existing.TypeID > set.TypeID)
                 continue;
 
             builtDefaultSets[set.ImageSetID] = SetToDefault(set);

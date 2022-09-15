@@ -1,5 +1,6 @@
 ﻿using Sanctuary.Census.Builder.Abstractions.CollectionBuilders;
 using Sanctuary.Census.Builder.Abstractions.Database;
+using Sanctuary.Census.Builder.Abstractions.Services;
 using Sanctuary.Census.Builder.Exceptions;
 using Sanctuary.Census.ClientData.Abstractions.Services;
 using Sanctuary.Census.ClientData.ClientDataModels;
@@ -21,6 +22,7 @@ public class ProfileCollectionBuilder : ICollectionBuilder
     private readonly IClientDataCacheService _clientDataCache;
     private readonly ILocaleDataCacheService _localeDataCache;
     private readonly IServerDataCacheService _serverDataCache;
+    private readonly IImageSetHelperService _imageSetHelper;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="ProfileCollectionBuilder"/> class.
@@ -28,16 +30,19 @@ public class ProfileCollectionBuilder : ICollectionBuilder
     /// <param name="clientDataCache">The client data cache.</param>
     /// <param name="localeDataCache">The locale data cache.</param>
     /// <param name="serverDataCache">The server data cache.</param>
+    /// <param name="imageSetHelper">The image set helper service.</param>
     public ProfileCollectionBuilder
     (
         IClientDataCacheService clientDataCache,
         ILocaleDataCacheService localeDataCache,
-        IServerDataCacheService serverDataCache
+        IServerDataCacheService serverDataCache,
+        IImageSetHelperService imageSetHelper
     )
     {
         _clientDataCache = clientDataCache;
         _localeDataCache = localeDataCache;
         _serverDataCache = serverDataCache;
+        _imageSetHelper = imageSetHelper;
     }
 
     /// <inheritdoc />
@@ -53,24 +58,12 @@ public class ProfileCollectionBuilder : ICollectionBuilder
         if (_clientDataCache.ItemProfiles is null)
             throw new MissingCacheDataException(typeof(ItemProfile));
 
-        if (_clientDataCache.ImageSetMappings is null)
-            throw new MissingCacheDataException(typeof(ImageSetMapping));
-
         Dictionary<uint, FactionDefinition> profileFactionMap = new();
         foreach (ItemProfile profile in _clientDataCache.ItemProfiles)
         {
             profileFactionMap.TryAdd(profile.ProfileID, profile.FactionID);
             if (profileFactionMap[profile.ProfileID] != profile.FactionID)
                 profileFactionMap[profile.ProfileID] = FactionDefinition.All;
-        }
-
-        Dictionary<uint, uint> imageSetToPrimaryImageMap = new();
-        foreach (ImageSetMapping mapping in _clientDataCache.ImageSetMappings)
-        {
-            if (mapping.ImageType is not ImageSetType.Type.Large)
-                continue;
-
-            imageSetToPrimaryImageMap[mapping.ImageSetID] = mapping.ImageID;
         }
 
         Dictionary<uint, MProfile> builtProfiles = new();
@@ -80,8 +73,7 @@ public class ProfileCollectionBuilder : ICollectionBuilder
             _localeDataCache.TryGetLocaleString(profile.DescriptionID, out LocaleString? description);
 
             bool hasFaction = profileFactionMap.TryGetValue(profile.ProfileID, out FactionDefinition factionId);
-            bool hasImage = imageSetToPrimaryImageMap.TryGetValue(profile.ImageSetID, out uint imageId);
-            hasImage &= profile.ImageSetID != 0;
+            bool hasDefaultImage = _imageSetHelper.TryGetDefaultImage(profile.ImageSetID, out uint defaultImage);
 
             MProfile built = new
             (
@@ -91,8 +83,8 @@ public class ProfileCollectionBuilder : ICollectionBuilder
                 name,
                 description,
                 profile.ImageSetID == 0 ? null : profile.ImageSetID,
-                hasImage ? imageId : null,
-                hasImage ? $"/files/ps2/images/static/{imageId}.png" : null
+                hasDefaultImage ? defaultImage : null,
+                hasDefaultImage ? _imageSetHelper.GetRelativeImagePath(defaultImage) : null
             );
             builtProfiles.Add(built.ProfileId, built);
         }

@@ -1,5 +1,6 @@
 ﻿using Sanctuary.Census.Builder.Abstractions.CollectionBuilders;
 using Sanctuary.Census.Builder.Abstractions.Database;
+using Sanctuary.Census.Builder.Abstractions.Services;
 using Sanctuary.Census.Builder.Exceptions;
 using Sanctuary.Census.ClientData.Abstractions.Services;
 using Sanctuary.Census.ClientData.ClientDataModels;
@@ -18,20 +19,24 @@ public class VehicleCollectionBuilder : ICollectionBuilder
 {
     private readonly IClientDataCacheService _clientDataCache;
     private readonly ILocaleDataCacheService _localeDataCache;
+    private readonly IImageSetHelperService _imageSetHelper;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="VehicleCollectionBuilder"/> class.
     /// </summary>
     /// <param name="clientDataCache">The client data cache.</param>
     /// <param name="localeDataCache">The locale data cache.</param>
+    /// <param name="imageSetHelper">The image set helper service.</param>
     public VehicleCollectionBuilder
     (
         IClientDataCacheService clientDataCache,
-        ILocaleDataCacheService localeDataCache
+        ILocaleDataCacheService localeDataCache,
+        IImageSetHelperService imageSetHelper
     )
     {
         _clientDataCache = clientDataCache;
         _localeDataCache = localeDataCache;
+        _imageSetHelper = imageSetHelper;
     }
 
     /// <inheritdoc />
@@ -41,20 +46,8 @@ public class VehicleCollectionBuilder : ICollectionBuilder
         CancellationToken ct
     )
     {
-        if (_clientDataCache.ImageSetMappings is null)
-            throw new MissingCacheDataException(typeof(ImageSetMapping));
-
         if (_clientDataCache.Vehicles is null)
             throw new MissingCacheDataException(typeof(Vehicle));
-
-        Dictionary<uint, uint> imageSetToPrimaryImageMap = new();
-        foreach (ImageSetMapping mapping in _clientDataCache.ImageSetMappings)
-        {
-            if (mapping.ImageType is not ImageSetType.Type.Large)
-                continue;
-
-            imageSetToPrimaryImageMap[mapping.ImageSetID] = mapping.ImageID;
-        }
 
         Dictionary<int, MVehicle> builtVehicles = new();
         foreach (Vehicle vehicle in _clientDataCache.Vehicles)
@@ -62,7 +55,7 @@ public class VehicleCollectionBuilder : ICollectionBuilder
             _localeDataCache.TryGetLocaleString(vehicle.NameId, out LocaleString? name);
             _localeDataCache.TryGetLocaleString(vehicle.DescriptionId, out LocaleString? description);
 
-            bool foundImage = imageSetToPrimaryImageMap.TryGetValue(vehicle.Icon, out uint imageId);
+            bool hasDefaultImage = _imageSetHelper.TryGetDefaultImage(vehicle.Icon, out uint defaultImage);
 
             MVehicle built = new
             (
@@ -73,8 +66,8 @@ public class VehicleCollectionBuilder : ICollectionBuilder
                 vehicle.Decay,
                 vehicle.AcquireSec,
                 vehicle.Icon == 0 ? null : vehicle.Icon,
-                foundImage ? imageId : null,
-                foundImage ? $"/files/ps2/images/static/{imageId}.png" : null,
+                hasDefaultImage ? defaultImage : null,
+                hasDefaultImage ? _imageSetHelper.GetRelativeImagePath(defaultImage) : null,
                 vehicle.Cost,
                 vehicle.CurrencyType,
                 vehicle.LandingHeight == 0 ? null : vehicle.LandingHeight,

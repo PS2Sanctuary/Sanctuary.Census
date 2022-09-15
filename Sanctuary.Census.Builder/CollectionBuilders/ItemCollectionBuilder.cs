@@ -94,6 +94,7 @@ public class ItemCollectionBuilder : ICollectionBuilder
             if (itemFactionMap[profile.ItemID] != profile.FactionID)
                 itemFactionMap[profile.ItemID] = FactionDefinition.All;
         }
+
         foreach (ItemVehicle vItem in _clientDataCache.ItemVehicles)
         {
             itemFactionMap.TryAdd(vItem.ItemID, (FactionDefinition)vItem.FactionID);

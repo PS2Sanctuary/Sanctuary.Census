@@ -95,7 +95,7 @@ public class SkillCollectionsBuilder : ICollectionBuilder
                     skill.FlagAutoGrant,
                     skill.FlagIsVisible,
                     skill.CurrencyID,
-                    skill.IconID,
+                    skill.IconID == 0 ? null : skill.IconID,
                     hasDefaultImage ? defaultImage : null,
                     hasDefaultImage ? _imageSetHelper.GetRelativeImagePath(defaultImage) : null
                 ));
@@ -131,7 +131,7 @@ public class SkillCollectionsBuilder : ICollectionBuilder
                     category.SkillPoints,
                     name,
                     description,
-                    category.IconID,
+                    category.IconID == 0 ? null : category.IconID,
                     hasDefaultImage ? defaultImage : null,
                     hasDefaultImage ? _imageSetHelper.GetRelativeImagePath(defaultImage) : null
                 ));
@@ -204,7 +204,7 @@ public class SkillCollectionsBuilder : ICollectionBuilder
                     set.RequiredItemID == 0 ? null : set.RequiredItemID,
                     name,
                     description,
-                    set.IconID,
+                    set.IconID == 0 ? null : set.IconID,
                     hasDefaultImage ? defaultImage : null,
                     hasDefaultImage ? _imageSetHelper.GetRelativeImagePath(defaultImage) : null
                 ));

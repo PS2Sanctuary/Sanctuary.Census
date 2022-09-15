@@ -24,7 +24,7 @@ public record SkillSet
     uint? RequiredItemID,
     LocaleString? Name,
     LocaleString? Description,
-    [property: Key] uint ImageSetID,
+    [property: Key] uint? ImageSetID,
     [property: Key] uint? ImageID,
     string? ImagePath
 ) : ISanctuaryCollection;

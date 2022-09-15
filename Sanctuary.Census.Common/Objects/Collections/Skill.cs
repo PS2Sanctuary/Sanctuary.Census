@@ -48,7 +48,7 @@ public record Skill
     bool IsAutoGranted,
     bool IsVisible,
     uint CurrencyID,
-    uint ImageSetID,
-    uint? ImageID,
+    [property: Key] uint? ImageSetID,
+    [property: Key] uint? ImageID,
     string? ImagePath
 ) : ISanctuaryCollection;

@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.Logging;
 using Sanctuary.Census.Builder.Abstractions.CollectionBuilders;
 using Sanctuary.Census.Builder.Abstractions.Database;
+using Sanctuary.Census.Builder.Abstractions.Services;
 using Sanctuary.Census.Builder.Exceptions;
 using Sanctuary.Census.ClientData.Abstractions.Services;
 using Sanctuary.Census.Common.Objects;
@@ -31,6 +32,7 @@ public class OutfitWarCollectionsBuilder : ICollectionBuilder
     private readonly ILogger<OutfitWarCollectionsBuilder> _logger;
     private readonly ILocaleDataCacheService _localeDataCache;
     private readonly IServerDataCacheService _serverDataCache;
+    private readonly IImageSetHelperService _imageSetHelper;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="OutfitWarCollectionsBuilder"/> class.
@@ -38,16 +40,19 @@ public class OutfitWarCollectionsBuilder : ICollectionBuilder
     /// <param name="logger">The logging interface to use.</param>
     /// <param name="localeDataCache">The locale data cache.</param>
     /// <param name="serverDataCache">The server data cache.</param>
+    /// <param name="imageSetHelper">The image set helper service.</param>
     public OutfitWarCollectionsBuilder
     (
         ILogger<OutfitWarCollectionsBuilder> logger,
         ILocaleDataCacheService localeDataCache,
-        IServerDataCacheService serverDataCache
+        IServerDataCacheService serverDataCache,
+        IImageSetHelperService imageSetHelper
     )
     {
         _logger = logger;
         _localeDataCache = localeDataCache;
         _serverDataCache = serverDataCache;
+        _imageSetHelper = imageSetHelper;
     }
 
     /// <inheritdoc />
@@ -92,17 +97,20 @@ public class OutfitWarCollectionsBuilder : ICollectionBuilder
                 }
 
                 _localeDataCache.TryGetLocaleString(war.NameID, out LocaleString? name);
+                bool hasDefaultImage = _imageSetHelper.TryGetDefaultImage(war.ImageSetID, out uint defaultImage);
 
                 MWar builtWar = new
                 (
                     war.OutfitWarID,
                     (uint)server,
                     name,
-                    war.ImageSetID,
                     war.MaybeOutfitSizeRequirement,
                     war.MaybePlayerSignupRequirement,
                     war.StartTime,
                     war.EndTime,
+                    war.ImageSetID,
+                    hasDefaultImage ? defaultImage : null,
+                    hasDefaultImage ? _imageSetHelper.GetRelativeImagePath(defaultImage) : null,
                     phases
                 );
                 builtWars.TryAdd(builtWar.OutfitWarID, builtWar);

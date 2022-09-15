@@ -1,5 +1,6 @@
 ﻿using Sanctuary.Census.Builder.Abstractions.CollectionBuilders;
 using Sanctuary.Census.Builder.Abstractions.Database;
+using Sanctuary.Census.Builder.Abstractions.Services;
 using Sanctuary.Census.Builder.Exceptions;
 using Sanctuary.Census.ClientData.Abstractions.Services;
 using Sanctuary.Census.Common.Objects.Collections;
@@ -20,20 +21,24 @@ public class MarketingBundleCollectionBuilders : ICollectionBuilder
 {
     private readonly ILocaleDataCacheService _localeDataCache;
     private readonly IServerDataCacheService _serverDataCache;
+    private readonly IImageSetHelperService _imageSetHelper;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="MarketingBundleCollectionBuilders"/> class.
     /// </summary>
     /// <param name="localeDataCache">The locale data cache.</param>
     /// <param name="serverDataCache">The server data cache.</param>
+    /// <param name="imageSetHelper">The image set helper service.</param>
     public MarketingBundleCollectionBuilders
     (
         ILocaleDataCacheService localeDataCache,
-        IServerDataCacheService serverDataCache
+        IServerDataCacheService serverDataCache,
+        IImageSetHelperService imageSetHelper
     )
     {
         _localeDataCache = localeDataCache;
         _serverDataCache = serverDataCache;
+        _imageSetHelper = imageSetHelper;
     }
 
     /// <inheritdoc />
@@ -51,6 +56,8 @@ public class MarketingBundleCollectionBuilders : ICollectionBuilder
         {
             _localeDataCache.TryGetLocaleString(bundle.NameID, out LocaleString? name);
             _localeDataCache.TryGetLocaleString(bundle.DescriptionID, out LocaleString? description);
+            uint imageSetID = uint.Parse(bundle.BundleImage.ImageSetID);
+            bool hasDefaultImage = _imageSetHelper.TryGetDefaultImage(imageSetID, out uint defaultImage);
 
             MarketingBundle builtBundle = new
             (
@@ -58,7 +65,6 @@ public class MarketingBundleCollectionBuilders : ICollectionBuilder
                 bundle.CategoryID,
                 name!,
                 description,
-                uint.Parse(bundle.BundleImage.ImageSetID),
                 bundle.StationCashPrice,
                 bundle.SalePrice1 == 0 ? null : bundle.SalePrice1,
                 bundle.MemberSalePrice == 0 ? null : bundle.MemberSalePrice,
@@ -67,7 +73,10 @@ public class MarketingBundleCollectionBuilders : ICollectionBuilder
                 bundle.IsOnSale,
                 bundle.IsUnavailable,
                 bundle.IsGiftable,
-                bundle.CreatorName.Length == 0 ? null : bundle.CreatorName
+                bundle.CreatorName.Length == 0 ? null : bundle.CreatorName,
+                imageSetID,
+                hasDefaultImage ? defaultImage : null,
+                hasDefaultImage ? _imageSetHelper.GetRelativeImagePath(defaultImage) : null
             );
             builtBundles.TryAdd(builtBundle.MarketingBundleID, builtBundle);
 
@@ -90,13 +99,17 @@ public class MarketingBundleCollectionBuilders : ICollectionBuilder
         foreach (StoreBundleCategories_Category category in _serverDataCache.StoreBundleCategories.Categories)
         {
             _localeDataCache.TryGetLocaleString(category.NameID, out LocaleString? name);
+            uint imageSetID = uint.Parse(category.ImageSetID);
+            bool hasDefaultImage = _imageSetHelper.TryGetDefaultImage(imageSetID, out uint defaultImage);
 
             MarketingBundleCategory builtCategory = new
             (
                 category.CategoryID_1,
                 name!,
-                uint.Parse(category.ImageSetID),
-                category.DisplayIndex
+                category.DisplayIndex,
+                imageSetID,
+                hasDefaultImage ? defaultImage : null,
+                hasDefaultImage ? _imageSetHelper.GetRelativeImagePath(defaultImage) : null
             );
             builtCategories.TryAdd(builtCategory.MarketingBundleCategoryID, builtCategory);
         }

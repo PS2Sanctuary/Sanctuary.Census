@@ -12,11 +12,13 @@ namespace Sanctuary.Census.Common.Objects.Collections;
 /// <param name="OutfitWarID">The ID of the outfit war.</param>
 /// <param name="WorldID">The world that the war is occuring on.</param>
 /// <param name="Title">The title of the outfit war.</param>
-/// <param name="ImageSetID">The ID of the war's image set.</param>
 /// <param name="OutfitSizeRequirement">The maximum number of players that can play in a match.</param>
 /// <param name="OutfitSignupRequirement">The number of outfit members that must signup before an outfit can participate.</param>
 /// <param name="StartTime">The start time of the war, as a unix seconds timestamp.</param>
 /// <param name="EndTime">The end time of the war, as a unix seconds timestamp.</param>
+/// <param name="ImageSetID">The ID of the war's image set.</param>
+/// <param name="ImageID">The ID of the directive's default image.</param>
+/// <param name="ImagePath">The relative path to the directive's default image.</param>
 /// <param name="Phases">The phases of the war.</param>
 [Collection]
 [Description("Contains basic descriptive information about an outfit war")]
@@ -25,11 +27,13 @@ public record OutfitWar
     [property: Key] uint OutfitWarID,
     [property: Key] uint WorldID,
     LocaleString? Title,
-    [property: Key] uint ImageSetID,
     uint OutfitSizeRequirement,
     uint OutfitSignupRequirement,
     ulong StartTime,
     ulong EndTime,
+    [property: Key] uint ImageSetID,
+    [property: Key] uint? ImageID,
+    string? ImagePath,
     ValueEqualityList<OutfitWar.Phase> Phases
 ) : ISanctuaryCollection
 {

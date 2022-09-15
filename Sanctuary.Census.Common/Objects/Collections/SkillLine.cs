@@ -30,7 +30,7 @@ public record SkillLine
     uint SkillPoints,
     LocaleString? Name,
     LocaleString? Description,
-    [property: Key] uint ImageSetID,
+    [property: Key] uint? ImageSetID,
     [property: Key] uint? ImageID,
     string? ImagePath
 ) : ISanctuaryCollection;

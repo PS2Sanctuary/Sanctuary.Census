@@ -169,7 +169,7 @@ public class SkillCollectionsBuilder : ICollectionBuilder
                     line.SkillPoints,
                     name,
                     description,
-                    line.IconID,
+                    line.IconID == 0 ? null : line.IconID,
                     hasDefaultImage ? defaultImage : null,
                     hasDefaultImage ? _imageSetHelper.GetRelativeImagePath(defaultImage) : null
                 ));

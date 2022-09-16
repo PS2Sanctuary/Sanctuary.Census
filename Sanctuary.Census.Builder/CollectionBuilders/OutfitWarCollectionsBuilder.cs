@@ -69,42 +69,6 @@ public class OutfitWarCollectionsBuilder : ICollectionBuilder
         await BuildSingleRoundsAsync(dbContext, ct).ConfigureAwait(false);
         await BuildRoundsAsync(dbContext, ct).ConfigureAwait(false);
         await BuildMatchesAsync(dbContext, ct).ConfigureAwait(false);
-
-        // TODO: Remove after deployment
-        await RetrospectivelyApplyMatchRounds(dbContext, ct).ConfigureAwait(false);
-    }
-
-    private async Task RetrospectivelyApplyMatchRounds(ICollectionsContext dbContext, CancellationToken ct)
-    {
-        List<MMatch> fixedMatches = new();
-
-        await foreach (MMatch match in dbContext.GetCollectionDocumentsAsync<MMatch>(ct).ConfigureAwait(false))
-        {
-            bool hasRounds = _serverDataCache.OutfitWarRounds.TryGetValue((ServerDefinition)match.WorldID, out OutfitWarRounds? rounds);
-            MMatch toAppend = match;
-
-            if (hasRounds)
-            {
-                IEnumerable<OutfitWarRounds_Round> round = rounds!.Rounds.Where
-                (
-                    r => r.StartTime < match.StartTime && r.EndTime > match.StartTime
-                );
-                try
-                {
-                    ulong roundID = round.Single().RoundID;
-                    toAppend = match with { RoundID = roundID };
-                }
-                catch
-                {
-                    // This is fine, we must be able to conclusively assign
-                    // a round ID to the match so we will just skip it
-                }
-            }
-
-            fixedMatches.Add(toAppend);
-        }
-
-        await dbContext.UpsertCollectionAsync(fixedMatches, ct).ConfigureAwait(false);
     }
 
     private async Task BuildWarsAsync(ICollectionsContext dbContext, CancellationToken ct)

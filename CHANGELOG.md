@@ -11,7 +11,7 @@ Date format: DD/MM/YYYY
 
 - Added the `outfit_war_round` collection. This provides the same data as the `outfit_war_rounds` collection,
   but in a more easily queryable and joinable manner. For example, you can now join rounds directly to `outfit_war_match`.
-- :warning: The `outfit_war_rounds` collection is now deprecated and will be removed after the end of Nexus Season 1.
+- ⚠ The `outfit_war_rounds` collection is now deprecated and will be removed after the end of Nexus Season 1.
 
 **Other**
 - Removed the `item.is_account_scoped` field. It did not provide any useful information, given that some items can be

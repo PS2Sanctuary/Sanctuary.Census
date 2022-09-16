@@ -82,6 +82,9 @@ public class OutfitWarCollectionsBuilder : ICollectionBuilder
 
             foreach ((ServerDefinition server, OutfitWarWar war) in _serverDataCache.OutfitWars)
             {
+                if (!_serverDataCache.OutfitWarRounds.ContainsKey(server))
+                    throw new MissingCacheDataException(typeof(OutfitWarRounds), $"Missing the OutfitWarRounds value for {server}");
+
                 ValueEqualityList<MWar.Phase> phases = new();
                 foreach (OutfitWarWar_Phase phase in war.Phases)
                 {
@@ -105,6 +108,7 @@ public class OutfitWarCollectionsBuilder : ICollectionBuilder
                 (
                     war.OutfitWarID,
                     (uint)server,
+                    _serverDataCache.OutfitWarRounds[server].ActiveWarInfo.RoundID,
                     name,
                     war.MaybeOutfitSizeRequirement,
                     war.MaybePlayerSignupRequirement,

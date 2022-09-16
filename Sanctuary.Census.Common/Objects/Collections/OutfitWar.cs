@@ -11,6 +11,7 @@ namespace Sanctuary.Census.Common.Objects.Collections;
 /// </summary>
 /// <param name="OutfitWarID">The ID of the outfit war.</param>
 /// <param name="WorldID">The world that the war is occuring on.</param>
+/// <param name="PrimaryRoundID">The primary round ID of the war.</param>
 /// <param name="Title">The title of the outfit war.</param>
 /// <param name="OutfitSizeRequirement">The maximum number of players that can play in a match.</param>
 /// <param name="OutfitSignupRequirement">The number of outfit members that must signup before an outfit can participate.</param>
@@ -26,6 +27,7 @@ public record OutfitWar
 (
     [property: Key] uint OutfitWarID,
     [property: Key] uint WorldID,
+    ulong PrimaryRoundID,
     LocaleString? Title,
     uint OutfitSizeRequirement,
     uint OutfitSignupRequirement,

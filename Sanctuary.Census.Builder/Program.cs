@@ -258,6 +258,12 @@ public static class Program
             .WithEqualityKey(x => x.OutfitID)
             .WithRemoveOldEntryTest(_ => false);
 
+        configProvider.Register<OutfitWarRound>()
+            .WithIndex(x => x.RoundID, true)
+            .WithIndex(x => x.OutfitWarID, false)
+            .WithEqualityKey(x => x.RoundID)
+            .WithRemoveOldEntryTest(_ => false);
+
         configProvider.Register<OutfitWarRounds>()
             .WithIndex(x => x.OutfitWarID, true)
             .WithIndex(x => x.PrimaryRoundID, true)

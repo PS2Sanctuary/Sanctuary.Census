@@ -18,13 +18,14 @@ using System.Threading.Tasks;
 using MMatch = Sanctuary.Census.Common.Objects.Collections.OutfitWarMatch;
 using MRanking = Sanctuary.Census.Common.Objects.Collections.OutfitWarRanking;
 using MRegistration = Sanctuary.Census.Common.Objects.Collections.OutfitWarRegistration;
+using MRound = Sanctuary.Census.Common.Objects.Collections.OutfitWarRound;
 using MRounds = Sanctuary.Census.Common.Objects.Collections.OutfitWarRounds;
 using MWar = Sanctuary.Census.Common.Objects.Collections.OutfitWar;
 
 namespace Sanctuary.Census.Builder.CollectionBuilders;
 
 /// <summary>
-/// Builds the <see cref="MWar"/>, <see cref="MRanking"/>, <see cref="MRounds"/>,
+/// Builds the <see cref="MWar"/>, <see cref="MRanking"/>, <see cref="MRound"/>, <see cref="MRounds"/>,
 /// <see cref="MRegistration"/> and <see cref="MMatch"/> collections.
 /// </summary>
 public class OutfitWarCollectionsBuilder : ICollectionBuilder
@@ -65,6 +66,7 @@ public class OutfitWarCollectionsBuilder : ICollectionBuilder
         await BuildWarsAsync(dbContext, ct).ConfigureAwait(false);
         await BuildRankingsAsync(dbContext, ct).ConfigureAwait(false);
         await BuildRegistrationsAsync(dbContext, ct).ConfigureAwait(false);
+        await BuildSingleRoundsAsync(dbContext, ct).ConfigureAwait(false);
         await BuildRoundsAsync(dbContext, ct).ConfigureAwait(false);
         await BuildMatchesAsync(dbContext, ct).ConfigureAwait(false);
     }
@@ -208,6 +210,40 @@ public class OutfitWarCollectionsBuilder : ICollectionBuilder
         catch (Exception ex)
         {
             _logger.LogError(ex, "Failed to build the OutfitWar collection");
+        }
+    }
+
+    private async Task BuildSingleRoundsAsync(ICollectionsContext dbContext, CancellationToken ct)
+    {
+        try
+        {
+            if (_serverDataCache.OutfitWarRounds.Count == 0)
+                throw new MissingCacheDataException(typeof(OutfitWarRounds));
+
+            Dictionary<ulong, MRound> builtRounds = new();
+
+            foreach (OutfitWarRounds sRounds in _serverDataCache.OutfitWarRounds.Values)
+            {
+                foreach (OutfitWarRounds_Round sRound in sRounds.Rounds)
+                {
+                    builtRounds.Add(sRound.RoundID, new MRound
+                    (
+                        sRounds.OutfitWarID,
+                        sRounds.ActiveWarInfo.RoundID,
+                        sRound.RoundID,
+                        sRound.Order,
+                        (MRound.RoundStage)sRound.Stage,
+                        sRound.StartTime,
+                        sRound.EndTime
+                    ));
+                }
+            }
+
+            await dbContext.UpsertCollectionAsync(builtRounds.Values, ct).ConfigureAwait(false);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Failed to build the OutfitWarRounds collection");
         }
     }
 

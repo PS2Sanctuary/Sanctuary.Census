@@ -8,9 +8,9 @@ namespace Sanctuary.Census.Common.Objects.Collections;
 /// <summary>
 /// Represents an outfit war match.
 /// </summary>
-/// <param name="OutfitWarID">The ID of the war that the match belongs to.</param>
-/// <param name="RoundID">The ID of the round that the match belongs to.</param>
 /// <param name="MatchID">The ID of the match.</param>
+/// <param name="RoundID">The ID of the round that the match belongs to.</param>
+/// <param name="OutfitWarID">The ID of the war that the match belongs to.</param>
 /// <param name="OutfitAId">The ID of the first participating outfit.</param>
 /// <param name="OutfitBId">The ID of the second participating outfit.</param>
 /// <param name="StartTime">The start time of the match.</param>
@@ -22,9 +22,9 @@ namespace Sanctuary.Census.Common.Objects.Collections;
 [Description("Contains information about outfit war matches, including start times and matched outfits")]
 public record OutfitWarMatch
 (
-    [property: Key] uint OutfitWarID,
-    [property: Key] ulong? RoundID,
     ulong MatchID,
+    [property: Key] ulong? RoundID,
+    [property: Key] uint OutfitWarID,
     ulong OutfitAId,
     ulong OutfitBId,
     ulong StartTime,

@@ -232,9 +232,9 @@ public class OutfitWarCollectionsBuilder : ICollectionBuilder
                 {
                     builtRounds.Add(sRound.RoundID, new MRound
                     (
+                        sRound.RoundID,
                         sRounds.OutfitWarID,
                         sRounds.ActiveWarInfo.RoundID,
-                        sRound.RoundID,
                         sRound.Order,
                         (MRound.RoundStage)sRound.Stage,
                         sRound.StartTime,
@@ -329,9 +329,9 @@ public class OutfitWarCollectionsBuilder : ICollectionBuilder
 
                     builtMatches.TryAdd(time.MatchID, new MMatch
                     (
-                        time.OutfitWarID,
-                        roundID,
                         time.MatchID,
+                        roundID,
+                        time.OutfitWarID,
                         0,
                         0,
                         time.StartTime,

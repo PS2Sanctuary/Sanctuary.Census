@@ -301,11 +301,32 @@ public class OutfitWarCollectionsBuilder : ICollectionBuilder
 
             foreach ((ServerDefinition world, List<OutfitWarMatchTime> times) in _serverDataCache .OutfitWarMatchTimes)
             {
+                bool hasRounds = _serverDataCache.OutfitWarRounds.TryGetValue(world, out OutfitWarRounds? rounds);
+
                 foreach (OutfitWarMatchTime time in times)
                 {
+                    ulong? roundID = null;
+                    if (hasRounds)
+                    {
+                        IEnumerable<OutfitWarRounds_Round> round = rounds!.Rounds.Where
+                        (
+                            r => r.StartTime < time.StartTime && r.EndTime > time.StartTime
+                        );
+                        try
+                        {
+                            roundID = round.Single().RoundID;
+                        }
+                        catch
+                        {
+                            // This is fine, we must be able to conclusively assign
+                            // a round ID to the match so we will just skip it
+                        }
+                    }
+
                     builtMatches.TryAdd(time.MatchID, new MMatch
                     (
                         time.OutfitWarID,
+                        roundID,
                         time.MatchID,
                         0,
                         0,

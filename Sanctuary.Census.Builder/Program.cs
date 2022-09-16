@@ -242,6 +242,8 @@ public static class Program
             .WithRemoveOldEntryTest(_ => false);
 
         configProvider.Register<OutfitWarMatch>()
+            .WithIndex(x => x.OutfitWarID, false)
+            .WithIndex(x => x.RoundID, false)
             .WithEqualityKey(x => x.MatchID)
             .WithRemoveOldEntryTest(_ => false);
 

@@ -11,6 +11,15 @@ namespace Sanctuary.Census.Builder.Abstractions.Database;
 public interface ICollectionsContext
 {
     /// <summary>
+    /// Retrieves all the documents of a collection.
+    /// </summary>
+    /// <typeparam name="TCollection">The type of the collection to retrieve.</typeparam>
+    /// <param name="ct">A <see cref="CancellationToken"/> that can be used to stop the operation.</param>
+    /// <returns>The collection's documents.</returns>
+    IAsyncEnumerable<TCollection> GetCollectionDocumentsAsync<TCollection>(CancellationToken ct = default)
+        where TCollection : ISanctuaryCollection;
+
+    /// <summary>
     /// Ensures that the database structure is prepared.
     /// </summary>
     /// <param name="ct">A <see cref="CancellationToken"/> that can be used to stop the operation.</param>

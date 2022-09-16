@@ -11,6 +11,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Runtime.CompilerServices;
 using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
@@ -46,6 +47,21 @@ public class CollectionsContext : ICollectionsContext
         _diffService = diffService;
         _collectionConfigProvider = collectionConfigProvider;
         _environmentContextProvider = environmentContextProvider;
+    }
+
+    /// <inheritdoc />
+    public async IAsyncEnumerable<TCollection> GetCollectionDocumentsAsync<TCollection>([EnumeratorCancellation] CancellationToken ct = default)
+        where TCollection : ISanctuaryCollection
+    {
+        IAsyncCursor<TCollection> cursor = await _database.GetCollection<TCollection>()
+            .FindAsync(FilterDefinition<TCollection>.Empty, cancellationToken: ct)
+            .ConfigureAwait(false);
+
+        while (await cursor.MoveNextAsync(ct).ConfigureAwait(false))
+        {
+            foreach (TCollection value in cursor.Current)
+                yield return value;
+        }
     }
 
     /// <inheritdoc />

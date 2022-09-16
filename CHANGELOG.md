@@ -2,7 +2,7 @@
 
 Date format: DD/MM/YYYY
 
-## vNext
+## 16/09/2022
 
 - Added the `outfit_war_round` collection. This provides the same data as the `outfit_war_rounds` collection,
   but in a more easily queryable and joinable manner.
@@ -18,7 +18,7 @@ And some manually added vehicle weapon categories, namely from NSO vehicles -_-.
 On the `currency` collection:
 - Renamed the `icon_image_set_id` field to `image_set_id`.
 - Added the `icon_id` field to maintain compatibility with Census.
-
+win
 On the `skill`, `skill_category`, `skill_line` and `skill_set` collections:
 - Fixed incorrect values for the `image_id` and `image_path` fields, in cases where entries did not have an associated image set.
 - The `image_set_id` field is now nullable.

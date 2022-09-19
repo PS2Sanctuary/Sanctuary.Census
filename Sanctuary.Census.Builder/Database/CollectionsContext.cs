@@ -72,15 +72,23 @@ public class CollectionsContext : ICollectionsContext
     }
 
     /// <inheritdoc />
-    public async Task UpsertCollectionAsync<T>(IEnumerable<T> data, CancellationToken ct = default)
-        where T : ISanctuaryCollection
+    public async Task UpsertCollectionAsync<T>
+    (
+        IEnumerable<T> data,
+        CancellationToken ct = default,
+        Func<T, bool>? additionalRemoveOldEntryTest = null
+    ) where T : ISanctuaryCollection
     {
         CollectionDbConfiguration<T> configuration = _collectionConfigProvider.GetConfiguration<T>();
+        Func<T, bool> removeOldEntryTest = additionalRemoveOldEntryTest is null
+            ? configuration.RemoveOldEntryTest
+            : v => configuration.RemoveOldEntryTest(v) && additionalRemoveOldEntryTest(v);
+
         await UpsertCollectionAsync
         (
             data,
             configuration.EqualitySelectors,
-            configuration.RemoveOldEntryTest,
+            removeOldEntryTest,
             ct
         ).ConfigureAwait(false);
     }

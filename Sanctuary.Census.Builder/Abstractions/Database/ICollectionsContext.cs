@@ -1,4 +1,5 @@
 ﻿using Sanctuary.Census.Common.Abstractions.Objects.Collections;
+using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
@@ -32,7 +33,15 @@ public interface ICollectionsContext
     /// <typeparam name="T">The type of the collection.</typeparam>
     /// <param name="data">The collection data.</param>
     /// <param name="ct">A <see cref="CancellationToken"/> that can be used to stop the operation.</param>
+    /// <param name="additionalRemoveOldEntryTest">
+    /// A delegate that returns a boolean value indicating whether the given <typeparamref name="T"/>
+    /// object should be removed from the database, if it is not present in the updated data source.
+    /// </param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-    Task UpsertCollectionAsync<T>(IEnumerable<T> data, CancellationToken ct = default)
-        where T : ISanctuaryCollection;
+    Task UpsertCollectionAsync<T>
+    (
+        IEnumerable<T> data,
+        CancellationToken ct = default,
+        Func<T, bool>? additionalRemoveOldEntryTest = null
+    ) where T : ISanctuaryCollection;
 }

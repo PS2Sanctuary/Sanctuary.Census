@@ -1,7 +1,6 @@
 <Project Sdk="Microsoft.NET.Sdk.Web">
 
     <PropertyGroup>
-        <EnablePreviewFeatures>True</EnablePreviewFeatures>
         <UserSecretsId>2050798e-fa3f-481d-a063-94f938d68b1f</UserSecretsId>
     </PropertyGroup>
 

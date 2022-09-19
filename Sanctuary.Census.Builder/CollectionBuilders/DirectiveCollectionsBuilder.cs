@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using Sanctuary.Census.Builder.Abstractions.CollectionBuilders;
 using Sanctuary.Census.Builder.Abstractions.Database;
 using Sanctuary.Census.Builder.Abstractions.Services;
@@ -6,7 +7,9 @@ using Sanctuary.Census.Builder.Exceptions;
 using Sanctuary.Census.ClientData.Abstractions.Services;
 using Sanctuary.Census.Common.Objects;
 using Sanctuary.Census.Common.Objects.CommonModels;
+using Sanctuary.Census.Common.Services;
 using Sanctuary.Census.ServerData.Internal.Abstractions.Services;
+using Sanctuary.Census.ServerData.Internal.Objects;
 using Sanctuary.Zone.Packets.Directive;
 using System;
 using System.Collections.Generic;
@@ -33,6 +36,8 @@ public class DirectiveCollectionsBuilder : ICollectionBuilder
     private readonly ILocaleDataCacheService _localeDataCache;
     private readonly IServerDataCacheService _serverDataCache;
     private readonly IImageSetHelperService _imageSetHelper;
+    private readonly EnvironmentContextProvider _environmentContextProvider;
+    private readonly LoginClientOptions _loginOptions;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="DirectiveCollectionsBuilder"/> class.
@@ -41,18 +46,24 @@ public class DirectiveCollectionsBuilder : ICollectionBuilder
     /// <param name="localeDataCache">The locale data cache.</param>
     /// <param name="serverDataCache">The server data cache.</param>
     /// <param name="imageSetHelper">The image set helper service.</param>
+    /// <param name="environmentContextProvider">The environment context provider.</param>
+    /// <param name="loginOptions">The server login options.</param>
     public DirectiveCollectionsBuilder
     (
         ILogger<DirectiveCollectionsBuilder> logger,
         ILocaleDataCacheService localeDataCache,
         IServerDataCacheService serverDataCache,
-        IImageSetHelperService imageSetHelper
+        IImageSetHelperService imageSetHelper,
+        EnvironmentContextProvider environmentContextProvider,
+        IOptions<LoginClientOptions> loginOptions
     )
     {
         _logger = logger;
         _localeDataCache = localeDataCache;
         _serverDataCache = serverDataCache;
         _imageSetHelper = imageSetHelper;
+        _environmentContextProvider = environmentContextProvider;
+        _loginOptions = loginOptions.Value;
     }
 
     /// <inheritdoc />
@@ -65,18 +76,21 @@ public class DirectiveCollectionsBuilder : ICollectionBuilder
         if (_serverDataCache.DirectiveData.Count == 0)
             throw new MissingCacheDataException(typeof(DirectiveInitialize));
 
-        bool hasAllFactions = _serverDataCache.DirectiveData.ContainsKey(FactionDefinition.VS)
-            && _serverDataCache.DirectiveData.ContainsKey(FactionDefinition.NC)
-            && _serverDataCache.DirectiveData.ContainsKey(FactionDefinition.TR)
-            && _serverDataCache.DirectiveData.ContainsKey(FactionDefinition.NSO);
+        IEnumerable<FactionDefinition> expectedFactions = _loginOptions
+            .Accounts[_environmentContextProvider.Environment]
+            .SelectMany(x => x.Factions);
 
-        if (!hasAllFactions)
+        foreach (FactionDefinition faction in expectedFactions)
         {
-            throw new Exception
-            (
-                "Missing a faction. Present: " +
-                string.Join(", ", _serverDataCache.DirectiveData.Keys)
-            );
+            if (!_serverDataCache.DirectiveData.ContainsKey(faction))
+            {
+                throw new MissingCacheDataException
+                (
+                    typeof(DirectiveInitialize),
+                    $"Missing at least one faction ({faction}). Present: " +
+                    string.Join(", ", _serverDataCache.DirectiveData.Keys)
+                );
+            }
         }
 
         await BuildCategoriesAsync(dbContext, ct).ConfigureAwait(false);

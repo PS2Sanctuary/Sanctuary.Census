@@ -19,7 +19,8 @@ namespace Sanctuary.Census.Common.Objects.Collections;
 /// <param name="ImageID">The ID of the tier's default image.</param>
 /// <param name="ImagePath">The relative path to the tier's default image.</param>
 [Collection]
-[Description("Represents a stage of a directive; e.g. the 'Novice' (bronze) tier.")]
+[Description("Represents a stage of a directive; e.g. the 'Novice' (bronze) tier. Join to " +
+    "directive_tier_reward_set (and subsequently directive_tier_reward) for reward information")]
 public record DirectiveTier
 (
     [property: Key] uint DirectiveTreeID,

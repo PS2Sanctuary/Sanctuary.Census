@@ -24,6 +24,7 @@ namespace Sanctuary.Census.Common.Objects.Collections;
 /// <param name="ImagePath">The relative path to the item's default image.</param>
 /// <param name="HudImageSetID">The ID of the item's HUD display image.</param>
 /// <param name="IsVehicleWeapon">Indicates whether this item is a vehicle weapon.</param>
+/// <param name="CodeFactoryName">An alternative category indicator for the item.</param>
 [Collection]
 public record Item
 (
@@ -42,5 +43,6 @@ public record Item
     string? ImagePath,
     uint? HudImageSetID,
     int MaxStackSize,
-    bool IsVehicleWeapon
+    bool IsVehicleWeapon,
+    string CodeFactoryName
 ) : ISanctuaryCollection;

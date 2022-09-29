@@ -133,7 +133,8 @@ public class ItemCollectionBuilder : ICollectionBuilder
                 hasDefaultImage ? _imageSetHelper.GetRelativeImagePath(defaultImage) : null,
                 definition.HudImageSetID == 0 ? null : definition.HudImageSetID,
                 definition.MaxStackSize,
-                vehicleWeaponCategories.Contains(definition.CategoryID)
+                vehicleWeaponCategories.Contains(definition.CategoryID),
+                definition.CodeFactoryName
             );
             builtItems.TryAdd(built.ItemID, built);
         }

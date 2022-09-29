@@ -2,6 +2,12 @@
 
 Date format: DD/MM/YYYY
 
+## vNext
+
+- Added the `item.code_factory_name` field.
+- Added the `loadout.code_name` field. This brings the `loadout` collection to full parity with DBG Census.
+- Improved some collection descriptions.
+
 ## 16/09/2022
 
 **Outfit Wars**

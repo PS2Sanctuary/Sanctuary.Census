@@ -11,24 +11,26 @@ Both the `get` and `count` verbs are supported.
 Filtering (searching, querying) is fully supported.
 
 Unsupported commands:
-- `c:resolve`.
 - `c:exactMatchFirst`.
+- `c:resolve`.
 - `c:retry`.
 
 Command behaviour differences:
 - `c:limit` is set to `100` by default, and has a maximum value of `10 000`.
 - `c:limitPerDB` simply overrides `c:limit`.
 - `c:join` allows all siblings to use child joins, however, a single query is limited to 25 joins in total.
-- `c:lang` allows a comma-separated list of language codes.
+- `c:lang` allows a comma-separated list of language codes, rather than just a single one.
 - `c:tree` does not support the `start` key.
 - `c:timing` inserts a slightly different model.
+
+Any other commands not listed here are fully supported and should behave exactly as they do on the DBG Census.
 
 ## Response Shape
 
 The shape of the response document should be exactly the same as DBG Census.
 
 If you would prefer that responses are serialized according to JSON spec, you can add the `c:censusJSON=false` command.
-All number, boolean and `null` values will be represented appropriately, rather than as strings.
+All number, boolean and `null` values will then be represented appropriately, rather than as strings.
 
 ### Error Responses
 
@@ -41,7 +43,9 @@ Please note that the error response format is not consistent, although it should
 
 This section lists the Collections provided by Sanctuary.Census, and compares them to the DBG Census.
 Many collections add additional data on top of the DBG Census data, and collections which DBG Census does
-not provide also exist, but this is not documented here.
+not provide also exist, but this is not documented here. The source of truth for Sanctuary.Census'
+current set of collections can be found at the root endpoint of an environment
+(e.g. [https://census.lithafalcon.cc/get/ps2](https://census.lithafalcon.cc/get/ps2)).
 
 ⚠ If a DBG Census collection is not listed here, it not supported.
 
@@ -104,10 +108,6 @@ Missing the `objective_set_id` and `qualify_requirement_id` fields.
 
 Missing the `is_default_attachment` field.
 
-#### loadout
-
-Missing the `code_name` field. This is replaced by querying for the name of the loadout's associated profile.
-
 #### map_region
 
 Missing the `reward_amount` and `reward_currency_id` fields.
@@ -152,9 +152,9 @@ Missing the follow fields:
 - `lockon_range_far`
 - `lockon_required`
 
-Of note is that lock-on parameters seem to be calculated dynamically by the game nowadays, using an unknown
-algorithm. Hence, it's not surprising that these fields have been un-obtainable and you should consider
-the DBG Census equivalents invalid.
+Of note is that lock-on parameters are theorised to be calculated dynamically by the game nowadays, using an unknown
+algorithm. Hence, it's not surprising that these fields have been un-obtainable and you should consider the DBG Census
+equivalents invalid.
 
 #### profile
 

@@ -127,6 +127,7 @@ public static class Program
         });
 
         app.UseHttpsRedirection();
+        app.UseStaticFiles();
         app.UseMiddleware<ServiceIDMiddleware>();
 
         app.MapGet("/", [ApiExplorerSettings(IgnoreApi = true)](c) =>

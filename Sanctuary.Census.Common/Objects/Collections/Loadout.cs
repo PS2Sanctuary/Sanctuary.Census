@@ -10,10 +10,12 @@ namespace Sanctuary.Census.Common.Objects.Collections;
 /// <param name="LoadoutID">The ID of the loadout.</param>
 /// <param name="ProfileID">The profile used by this loadout.</param>
 /// <param name="FactionID">The faction that this loadout can be used by.</param>
+/// <param name="CodeName">A descriptor for the faction and profile that this loadout targets.</param>
 [Collection]
 public record Loadout
 (
     [property: Key] uint LoadoutID,
     [property: Key] uint ProfileID,
-    [property: Key] uint FactionID
+    [property: Key] uint FactionID,
+    string? CodeName
 ) : ISanctuaryCollection;

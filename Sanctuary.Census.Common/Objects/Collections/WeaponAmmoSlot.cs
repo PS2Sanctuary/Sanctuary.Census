@@ -17,7 +17,7 @@ public record WeaponAmmoSlot
 (
     [property:Key] uint WeaponId,
     uint WeaponSlotIndex,
-    ushort ClipSize,
+    short ClipSize,
     ushort Capacity,
     string? ClipModelName
 ) : ISanctuaryCollection;

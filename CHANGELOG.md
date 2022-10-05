@@ -6,11 +6,11 @@ Date format: DD/MM/YYYY
 
 **fire_mode_2**
 - Added the `bullet_arc_kick_angle` field (`decimal`), which is the relative pitch angle in degrees at which a bullet exits the barrel.
-- Added the `cloak_after_fire_delay_ms` field (`uint?`), which is the delay in milliseconds before the infiltrator's cloak ability is usable, after firing.
+- Added the `cloak_after_fire_delay_ms` field (`int?`), which is the delay in milliseconds before the infiltrator's cloak ability is usable, after firing.
   Worth noting that this field likely affects more than just cloaking, but we can't determine what, if so, at this stage.
 - Added the `fan_angle` field (`decimal?`), which is the angle in degrees at which pellets such as those on the Horizon, are separated by.
-- Added the `fire_needs_lock` field (bool), which indicates whether a lock on a target is required before the fire mode can be used.
-- Added the `sprint_after_fire_delay_ms` field (`uint?`), which is the delay in milliseconds before sprinting can occur, after firing.
+- Added the `fire_needs_lock` field (`bool`), which indicates whether a lock on a target is required before the fire mode can be used.
+- Added the `sprint_after_fire_delay_ms` field (`int?`), which is the delay in milliseconds before sprinting can occur, after firing.
 
 **Other**
 - Added the `item.code_factory_name` field.

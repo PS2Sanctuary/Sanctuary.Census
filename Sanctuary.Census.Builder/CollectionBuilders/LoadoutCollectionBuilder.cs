@@ -5,6 +5,7 @@ using Sanctuary.Census.ClientData.Abstractions.Services;
 using Sanctuary.Census.ClientData.ClientDataModels;
 using Sanctuary.Census.Common.Objects.CommonModels;
 using Sanctuary.Census.ServerData.Internal.Abstractions.Services;
+using Sanctuary.Zone.Packets.ReferenceData;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
@@ -49,6 +50,9 @@ public class LoadoutCollectionBuilder : ICollectionBuilder
     {
         if (_clientDataCache.Loadouts is null)
             throw new MissingCacheDataException(typeof(LoadoutSlot));
+
+        if (_serverDataCache.ProfileDefinitions is null)
+            throw new MissingCacheDataException(typeof(ProfileDefinitions));
 
         Dictionary<uint, string> profileNames = new();
         if (_serverDataCache.ProfileDefinitions is not null)

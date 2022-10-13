@@ -2,7 +2,7 @@
 
 Date format: DD/MM/YYYY
 
-## vNext
+## 13/10/2022
 
 Added the `resist_info` collection. Do note that it's missing the `description` field.
 

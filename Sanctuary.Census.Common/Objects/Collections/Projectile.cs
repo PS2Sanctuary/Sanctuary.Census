@@ -42,7 +42,7 @@ public record Projectile
     [property:Key] uint ProjectileId,
     decimal? Acceleration,
     string ActorDefinition,
-    string ActorDefinitionFirstPerson,
+    string? ActorDefinitionFirstPerson,
     ushort? ArmDistance,
     ushort? DetonateDistance,
     bool DetonateOnContact,

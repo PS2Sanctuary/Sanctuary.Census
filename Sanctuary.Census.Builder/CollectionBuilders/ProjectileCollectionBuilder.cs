@@ -48,7 +48,7 @@ public class ProjectileCollectionBuilder : ICollectionBuilder
                 projectile.ProjectileID,
                 projectile.Acceleration.ToNullableDecimal(),
                 projectile.ActorDefinition,
-                projectile.FpActorDefinition,
+                projectile.FpActorDefinition.Length == 0 ? null : projectile.FpActorDefinition,
                 projectile.ArmDistance.ToNullableUShort(),
                 projectile.DetonateDistance.ToNullableUShort(),
                 (projectile.Flags & ProjectileFlags.DetonateOnContact) != 0,

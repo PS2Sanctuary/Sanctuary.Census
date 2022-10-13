@@ -20,10 +20,13 @@ Date format: DD/MM/YYYY
 ⚠ Further, the `recoil_recovery_delay_ms` field has been re-typed from a `ushort` to a `short` value.
 
 **projectile** - added the following fields:
-- `actor_definition_first_person` (`string`): the model used to represent the projectile.
+- `actor_definition_first_person` (`string?`): the model used to represent the projectile.
 - `lifespan_detonate` (`bool`): indicates whether the projectile will detonate at the end of its lifespan.
 - `TracerFrequency` and `TracerFrequencyFirstPerson` (`byte?`): the number of projectiles that must be fired before a tracer is spawned.
 - `VelocityInheritScalar` (`decimal`): the magnitude of velocity that the projectile inherits from the player entity.
+
+**Miscellaneous**
+- Fixed the `loadout.code_name` field being reset to `null` when data could not be retrieved from the server.
 
 ## 16/09/2022
 

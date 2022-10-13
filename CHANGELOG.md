@@ -2,6 +2,17 @@
 
 Date format: DD/MM/YYYY
 
+## vNext
+
+**fire_mode_2** - added the following fields:
+- `AnimKickMagnitude`.
+- `AnimRecoilMagnitude`.
+- `FireChargeMinimumMs`: the minimum amount of time that a weapon such as the Scorpion or Corsair catapult must be charged for.
+- `FanAngleRotateDegrees`: the degree of rotation in the XY plane (that is, the viewing plane of the user) at which fan-based pellets are rotated.
+- `FanConicalSpread`: the maximum distance at which fan-based pellets are spread from each other, by means of a dedicated 'cone of fire' for each pellet.
+
+⚠ Further, the `RecoilRecoveryDelayMs` field has been re-typed from an unsigned to a signed 16-bit integer.
+
 ## 16/09/2022
 
 **fire_mode_2**

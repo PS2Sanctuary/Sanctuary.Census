@@ -15,6 +15,8 @@ namespace Sanctuary.Census.Common.Objects.Collections;
 /// <param name="AbilityID">The ID of the ability that the fire mode applies.</param>
 /// <param name="AmmoItemID"></param>
 /// <param name="AmmoSlot"></param>
+/// <param name="AnimKickMagnitude"></param>
+/// <param name="AnimRecoilMagnitude"></param>
 /// <param name="ArmorPenetration"></param>
 /// <param name="Automatic"></param>
 /// <param name="BulletArcKickAngle">The relative pitch angle in degrees at which a bullet exits the barrel.</param>
@@ -34,10 +36,19 @@ namespace Sanctuary.Census.Common.Objects.Collections;
 /// <param name="DamageHeadMultiplier"></param>
 /// <param name="DamageLegsMultiplier"></param>
 /// <param name="DamageIndirectEffectID"></param>
-/// <param name="FanAngle">The angle in degrees at which pellets such as those on the Horizon, are separated by.</param>
+/// <param name="FanAngle">
+/// The angle in degrees at which fan-based pellets, such as those on the VE-C Horizon, diverge from their rotational axis at.
+/// </param>
+/// <param name="FanAngleRotateDegrees">
+/// The degree of rotation in the XY plane (that is, the viewing plane of the user) at which fan-based pellets are rotated.
+/// </param>
+/// <param name="FanConicalSpread">
+/// The maximum distance at which fan-based pellets are spread from each other, by means of a dedicated 'cone of fire' for each pellet.
+/// </param>
 /// <param name="FireAmmoPerShot"></param>
 /// <param name="FireAutoFireMs"></param>
 /// <param name="FireBurstCount"></param>
+/// <param name="FireChargeMinimumMs">The minimum amount of time that a weapon such as the Scorpion or Corsair catapult must be charged for.</param>
 /// <param name="FireChargeUpMs"></param>
 /// <param name="FireCooldownDurationMs"></param>
 /// <param name="FireDelayMs"></param>
@@ -102,6 +113,8 @@ public record FireMode2
     [property: Key] uint? AbilityID,
     uint? AmmoItemID,
     byte AmmoSlot,
+    decimal? AnimKickMagnitude,
+    decimal? AnimRecoilMagnitude,
     bool ArmorPenetration,
     bool Automatic,
     decimal BulletArcKickAngle,
@@ -122,9 +135,12 @@ public record FireMode2
     decimal? DamageLegsMultiplier,
     uint? DamageIndirectEffectID,
     decimal? FanAngle,
+    decimal? FanAngleRotateDegrees,
+    decimal? FanConicalSpread,
     byte FireAmmoPerShot,
     ushort FireAutoFireMs,
     byte FireBurstCount,
+    ushort FireChargeMinimumMs,
     ushort FireChargeUpMs,
     ushort FireCooldownDurationMs,
     ushort FireDelayMs,
@@ -162,7 +178,7 @@ public record FireMode2
     decimal? RecoilMagnitudeMin,
     decimal? RecoilMaxTotalMagnitude,
     decimal? RecoilRecoveryAcceleration,
-    ushort? RecoilRecoveryDelayMs,
+    short? RecoilRecoveryDelayMs,
     decimal? RecoilRecoveryRate,
     byte? RecoilShotsAtMinMagnitude,
     ushort? ReloadAmmoFillMs,

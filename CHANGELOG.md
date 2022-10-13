@@ -4,20 +4,26 @@ Date format: DD/MM/YYYY
 
 ## vNext
 
-**fire_mode_2** - added the following fields:
-- `AnimKickMagnitude`.
-- `AnimRecoilMagnitude`.
-- `FireChargeMinimumMs`: the minimum amount of time that a weapon such as the Scorpion or Corsair catapult must be charged for.
-- `FanAngleRotateDegrees`: the degree of rotation in the XY plane (that is, the viewing plane of the user) at which fan-based pellets are rotated.
-- `FanConicalSpread`: the maximum distance at which fan-based pellets are spread from each other, by means of a dedicated 'cone of fire' for each pellet.
+**fire_group** - added the following fields:
+- `image_set_override_id` (`uint`).
+- `spin_up_time_ms` (`ushort`).
 
-⚠ Further, the `RecoilRecoveryDelayMs` field has been re-typed from an unsigned to a signed 16-bit integer.
+⚠ Further, the `chamber_duration_ms` field has been re-typed from a `uint` to a `ushort` value.
+
+**fire_mode_2** - added the following fields:
+- `anim_kick_magnitude` (`decimal?`).
+- `anim_recoil_magnitude` (`decimal?`).
+- `fire_charge_minimum_ms` (`ushort?`): the minimum amount of time that a weapon such as the Scorpion or Corsair catapult must be charged for.
+- `fan_angle_rotate_degrees` (`decimal?`): the degree of rotation in the XY plane (that is, the viewing plane of the user) at which fan-based pellets are rotated.
+- `fan_conical_spread` (`decimal?`): the maximum distance at which fan-based pellets are spread from each other, by means of a dedicated 'cone of fire' for each pellet.
+
+⚠ Further, the `recoil_recovery_delay_ms` field has been re-typed from a `ushort` to a `short` value.
 
 **projectile** - added the following fields:
-- `ActorDefinitionFirstPerson`: the model used to represent the projectile.
-- `LifespanDetonate`: indicates whether the projectile will detonate at the end of its lifespan.
-- `TracerFrequency` and `TracerFrequencyFirstPerson`: the number of projectiles that must be fired before a tracer is spawned.
-- `VelocityInheritScalar`: the magnitude of velocity that the projectile inherits from the player entity.
+- `actor_definition_first_person` (`string`): the model used to represent the projectile.
+- `lifespan_detonate` (`bool`): indicates whether the projectile will detonate at the end of its lifespan.
+- `TracerFrequency` and `TracerFrequencyFirstPerson` (`byte?`): the number of projectiles that must be fired before a tracer is spawned.
+- `VelocityInheritScalar` (`decimal`): the magnitude of velocity that the projectile inherits from the player entity.
 
 ## 16/09/2022
 

@@ -3,6 +3,7 @@ using Sanctuary.Census.Builder.Abstractions.Database;
 using Sanctuary.Census.Builder.Exceptions;
 using Sanctuary.Census.ServerData.Internal.Abstractions.Services;
 using Sanctuary.Zone.Packets.ReferenceData;
+using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
@@ -46,10 +47,12 @@ public class FireGroupCollectionBuilder : ICollectionBuilder
             MFireGroup built = new
             (
                 fireGroup.FireGroupID,
-                fireGroup.ChamberDurationMs == 0 ? null : fireGroup.ChamberDurationMs,
-                fireGroup.TransitionDurationMs == 0 ? null : fireGroup.TransitionDurationMs,
-                fireGroup.SpoolUpTimeMs == 0 ? null : fireGroup.SpoolUpTimeMs,
-                fireGroup.SpoolUpInitialRefireMs == 0 ? null : fireGroup.SpoolUpInitialRefireMs,
+                fireGroup.ChamberDurationMs.ToNullableUShort(),
+                fireGroup.TransitionDurationMs.ToNullableUShort(),
+                fireGroup.SpinUpTimeMs.ToNullableUShort(),
+                fireGroup.SpoolUpTimeMs.ToNullableUShort(),
+                fireGroup.SpoolUpInitialRefireMs.ToNullableUShort(),
+                fireGroup.ImageSetOverride.ToNullableUInt(),
                 (fireGroup.Flags & FireGroupFlags.CanChamberIronSights) != 0
             );
             builtFireGroups.TryAdd(built.FireGroupID, built);

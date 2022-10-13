@@ -286,6 +286,11 @@ public static class Program
             .WithIndex(x => x.ProjectileId, true)
             .WithEqualityKey(x => x.ProjectileId);
 
+        configProvider.Register<ResistInfo>()
+            .WithIndex(x => x.ResistInfoId, true)
+            .WithIndex(x => x.ResistTypeId, false)
+            .WithEqualityKey(x => x.ResistInfoId);
+
         configProvider.Register<Skill>()
             .WithIndex(x => x.SkillID, true)
             .WithIndex(x => x.SkillSetID, false)
@@ -400,6 +405,7 @@ public static class Program
             .RegisterCollectionBuilder<PlayerStateGroup2CollectionBuilder>()
             .RegisterCollectionBuilder<ProfileCollectionBuilder>()
             .RegisterCollectionBuilder<ProjectileCollectionBuilder>()
+            .RegisterCollectionBuilder<ResistInfoCollectionBuilder>()
             .RegisterCollectionBuilder<SkillCollectionsBuilder>()
             .RegisterCollectionBuilder<VehicleCollectionBuilder>()
             .RegisterCollectionBuilder<VehicleAttachmentCollectionBuilder>()

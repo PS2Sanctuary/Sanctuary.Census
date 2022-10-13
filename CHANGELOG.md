@@ -4,6 +4,8 @@ Date format: DD/MM/YYYY
 
 ## vNext
 
+Added the `resist_info` collection. Do note that it's missing the `description` field.
+
 **fire_group** - added the following fields:
 - `image_set_override_id` (`uint`).
 - `spin_up_time_ms` (`ushort`).

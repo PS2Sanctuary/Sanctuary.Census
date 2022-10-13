@@ -95,6 +95,7 @@ in such a way that retrieving certain data may not be immediately obvious.
 - item
 - loadout
 - map_region
+- resist_info
 - vehicle
 - weapon
 - weapon_ammo_slot
@@ -111,6 +112,10 @@ Missing the `is_default_attachment` field.
 #### map_region
 
 Missing the `reward_amount` and `reward_currency_id` fields.
+
+#### resist_info
+
+Missing the `description` field.
 
 #### vehicle
 

@@ -140,7 +140,7 @@ public record FireMode2
     byte FireAmmoPerShot,
     ushort FireAutoFireMs,
     byte FireBurstCount,
-    ushort FireChargeMinimumMs,
+    ushort? FireChargeMinimumMs,
     ushort FireChargeUpMs,
     ushort FireCooldownDurationMs,
     ushort FireDelayMs,

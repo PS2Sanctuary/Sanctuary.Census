@@ -99,7 +99,7 @@ public class FireModeCollectionBuilder : ICollectionBuilder
                 fireMode.FireAmmoPerShot,
                 fireMode.FireAutoFireMs,
                 fireMode.FireBurstCount,
-                fireMode.FireChargeMinimumMs,
+                fireMode.FireChargeMinimumMs.ToNullableUShort(),
                 fireMode.FireChargeUpMs,
                 fireMode.FireCooldownDurationMs,
                 fireMode.FireDelayMs,

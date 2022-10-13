@@ -4,6 +4,7 @@ using Sanctuary.Census.Builder.Exceptions;
 using Sanctuary.Census.Common.Objects.Collections;
 using Sanctuary.Census.ServerData.Internal.Abstractions.Services;
 using Sanctuary.Zone.Packets.ReferenceData;
+using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
@@ -45,27 +46,32 @@ public class ProjectileCollectionBuilder : ICollectionBuilder
             Projectile built = new
             (
                 projectile.ProjectileID,
-                projectile.ProjectileFlightTypeID,
-                new decimal(projectile.Speed),
-                projectile.SpeedMax == 0 ? null : new decimal(projectile.SpeedMax),
-                projectile.Acceleration == 0 ? null : new decimal(projectile.Acceleration),
-                new decimal(projectile.TurnRate),
-                new decimal(projectile.Lifespan),
+                projectile.Acceleration.ToNullableDecimal(),
+                projectile.ActorDefinition,
+                projectile.FpActorDefinition,
+                projectile.ArmDistance.ToNullableUShort(),
+                projectile.DetonateDistance.ToNullableUShort(),
+                (projectile.Flags & ProjectileFlags.DetonateOnContact) != 0,
                 new decimal(projectile.Drag),
                 new decimal(projectile.Gravity),
+                new decimal(projectile.Lifespan),
+                (projectile.Flags & ProjectileFlags.LifespanDetonate) != 0,
+                projectile.LockonAcceleration.ToNullableDecimal(),
+                projectile.LockonLifespan.ToNullableDecimal(),
+                projectile.LockonLoseAngle.ToNullableUShort(),
+                (projectile.Flags & ProjectileFlags.LockonSeekInFlight1) != 0,
+                projectile.ProjectileFlightTypeID,
                 new decimal(projectile.ProjectileRadiusMeters),
-                projectile.LockonAcceleration == 0 ? null : new decimal(projectile.LockonAcceleration),
-                projectile.LockonLifespan == 0 ? null : new decimal(projectile.LockonLifespan),
-                projectile.ArmDistance == 0 ? null : projectile.ArmDistance,
-                projectile.TetherDistance == 0 ? null : new decimal(projectile.TetherDistance),
-                projectile.DetonateDistance == 0 ? null : projectile.DetonateDistance,
-                projectile.ProximityLockonRangeHalfMeters == 0 ? null : new decimal(projectile.ProximityLockonRangeHalfMeters),
+                projectile.ProximityLockonRangeHalfMeters.ToNullableDecimal(),
+                new decimal(projectile.Speed),
+                projectile.SpeedMax.ToNullableDecimal(),
                 (projectile.Flags & ProjectileFlags.Sticky) != 0,
                 (projectile.Flags & ProjectileFlags.SticksToPlayer) != 0,
-                (projectile.Flags & ProjectileFlags.DetonateOnContact) != 0,
-                projectile.LockonLoseAngle == 0 ? null : projectile.LockonLoseAngle,
-                (projectile.Flags & ProjectileFlags.LockonSeekInFlight1) != 0,
-                projectile.ActorDefinition
+                projectile.TetherDistance.ToNullableDecimal(),
+                projectile.TracerFrequency.ToNullableByte(),
+                projectile.FpTracerFrequency.ToNullableByte(),
+                new decimal(projectile.TurnRate),
+                new decimal(projectile.VelocityInheritScalar)
             );
             builtProjectiles.Add(built.ProjectileId, built);
         }

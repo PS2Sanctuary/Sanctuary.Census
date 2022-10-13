@@ -13,6 +13,12 @@ Date format: DD/MM/YYYY
 
 ⚠ Further, the `RecoilRecoveryDelayMs` field has been re-typed from an unsigned to a signed 16-bit integer.
 
+**projectile** - added the following fields:
+- `ActorDefinitionFirstPerson`: the model used to represent the projectile.
+- `LifespanDetonate`: indicates whether the projectile will detonate at the end of its lifespan.
+- `TracerFrequency` and `TracerFrequencyFirstPerson`: the number of projectiles that must be fired before a tracer is spawned.
+- `VelocityInheritScalar`: the magnitude of velocity that the projectile inherits from the player entity.
+
 ## 16/09/2022
 
 **fire_mode_2**

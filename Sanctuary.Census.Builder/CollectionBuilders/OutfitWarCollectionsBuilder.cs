@@ -63,6 +63,10 @@ public class OutfitWarCollectionsBuilder : ICollectionBuilder
         CancellationToken ct
     )
     {
+        // No active wars! No point in building
+        if (_serverDataCache.OutfitWars.Count == 0)
+            return;
+
         await BuildWarsAsync(dbContext, ct).ConfigureAwait(false);
         await BuildRankingsAsync(dbContext, ct).ConfigureAwait(false);
         await BuildRegistrationsAsync(dbContext, ct).ConfigureAwait(false);
@@ -75,9 +79,6 @@ public class OutfitWarCollectionsBuilder : ICollectionBuilder
     {
         try
         {
-            if (_serverDataCache.OutfitWars.Count == 0)
-                throw new MissingCacheDataException(typeof(OutfitWarWar));
-
             Dictionary<uint, MWar> builtWars = new();
 
             foreach ((ServerDefinition server, OutfitWarWar war) in _serverDataCache.OutfitWars)
@@ -134,9 +135,6 @@ public class OutfitWarCollectionsBuilder : ICollectionBuilder
     {
         try
         {
-            if (_serverDataCache.OutfitWars.Count == 0)
-                throw new MissingCacheDataException(typeof(OutfitWarWar));
-
             if (_serverDataCache.OutfitWarRankings.Count == 0)
                 throw new MissingCacheDataException(typeof(OutfitWarRankings));
 
@@ -179,9 +177,6 @@ public class OutfitWarCollectionsBuilder : ICollectionBuilder
     {
         try
         {
-            if (_serverDataCache.OutfitWars.Count == 0)
-                throw new MissingCacheDataException(typeof(OutfitWarWar));
-
             if (_serverDataCache.OutfitWarRegistrations.Count == 0)
                 throw new MissingCacheDataException(typeof(OutfitWarRegistrations));
 
@@ -295,11 +290,12 @@ public class OutfitWarCollectionsBuilder : ICollectionBuilder
     {
         try
         {
+            // Cannot classify these as errors; match data is
+            // not present pre- and post-combat phase
             if (_serverDataCache.OutfitWarMatchParticipants.Count == 0)
-                throw new MissingCacheDataException(typeof(OutfitWarMatchParticipant));
-
+                return;
             if (_serverDataCache.OutfitWarMatchTimes.Count == 0)
-                throw new MissingCacheDataException(typeof(OutfitWarMatchTime));
+                return;
 
             Dictionary<ulong, MMatch> builtMatches = new();
 

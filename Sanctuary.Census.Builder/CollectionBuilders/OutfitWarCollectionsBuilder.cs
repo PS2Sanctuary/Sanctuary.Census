@@ -182,16 +182,16 @@ public class OutfitWarCollectionsBuilder : ICollectionBuilder
             if (_serverDataCache.OutfitWars.Count == 0)
                 throw new MissingCacheDataException(typeof(OutfitWarWar));
 
-            if (_serverDataCache.RegisteredOutfits.Count == 0)
-                throw new MissingCacheDataException(typeof(RegisteredOutfit));
+            if (_serverDataCache.OutfitWarRegistrations.Count == 0)
+                throw new MissingCacheDataException(typeof(OutfitWarRegistrations));
 
             Dictionary<ulong, MRegistration> builtRegistrations = new();
-            foreach ((ServerDefinition server, RegisteredOutfits outfits) in _serverDataCache.RegisteredOutfits)
+            foreach ((ServerDefinition server, OutfitWarRegistrations outfits) in _serverDataCache.OutfitWarRegistrations)
             {
                 if (!_serverDataCache.OutfitWars.TryGetValue(server, out OutfitWarWar? activeWar))
                     throw new MissingCacheDataException(typeof(OutfitWarWar), $"Missing the {nameof(OutfitWarWar)} data for the {server} server");
 
-                foreach (RegisteredOutfit outfit in outfits.Outfits)
+                foreach (OutfitWarRegistration outfit in outfits.Outfits)
                 {
                     MRegistration built = new
                     (
@@ -201,7 +201,7 @@ public class OutfitWarCollectionsBuilder : ICollectionBuilder
                         activeWar.OutfitWarID,
                         outfit.RegistrationOrder,
                         (MRegistration.RegistrationStatus)outfit.Status,
-                        outfit.Status is RegistrationStatus.Full or RegistrationStatus.WaitingOnNextFullReg
+                        outfit.Status is OutfitWarRegistrationStatus.Full or OutfitWarRegistrationStatus.WaitingOnNextFullReg
                             ? activeWar.MaybePlayerSignupRequirement
                             : outfit.MemberSignupCount
                     );

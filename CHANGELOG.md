@@ -2,6 +2,10 @@
 
 Date format: DD/MM/YYYY
 
+## 22/10/2022
+
+Setup a CORS policy allowing GET requests from any domain, with any headers.
+
 ## 13/10/2022
 
 Added the `resist_info` collection. Do note that it's missing the `description` field.

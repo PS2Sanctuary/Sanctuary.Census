@@ -49,7 +49,8 @@ public static class Program
 
         builder.Services.AddCommonServices();
 
-        builder.Services.AddControllers(options =>
+        builder.Services.AddCors()
+            .AddControllers(options =>
             {
                 options.ModelBinderProviders.Insert(0, new BooleanModelBinderProvider());
             })
@@ -137,6 +138,12 @@ public static class Program
         });
 
         app.UseRouting();
+        app.UseCors
+        (
+            x => x.WithMethods(HttpMethods.Get)
+                .AllowAnyHeader()
+                .AllowAnyOrigin()
+        );
         app.UseAuthorization();
         app.MapControllers();
         app.MapRazorPages();

@@ -1,5 +1,5 @@
-﻿using System.Collections.Generic;
-using System.Text;
+﻿using System;
+using System.Buffers;
 using System.Text.Json;
 
 namespace Sanctuary.Census.Common;
@@ -10,6 +10,15 @@ namespace Sanctuary.Census.Common;
 /// </summary>
 public class SnakeCaseJsonNamingPolicy : JsonNamingPolicy
 {
+    private enum InputState
+    {
+        Start,
+        Lower,
+        Upper
+    }
+
+    private const int MAX_STACKALLOC_SIZE = 128;
+
     /// <summary>
     /// Gets a default instance of the <see cref="SnakeCaseJsonNamingPolicy"/>.
     /// </summary>
@@ -21,53 +30,79 @@ public class SnakeCaseJsonNamingPolicy : JsonNamingPolicy
         if (string.IsNullOrEmpty(name))
             return name;
 
-        StringBuilder sb = new();
-        Queue<int> wordBoundaries = new();
+        int maxOutputSize = name.Length + name.Length / 2;
+        string result;
 
-        char? previousLetter = null;
-        int lastAddedBoundary = 0;
-        for (int i = 0; i < name.Length; i++)
+        if (maxOutputSize > MAX_STACKALLOC_SIZE)
         {
-            char letter = name[i];
-
-            if (previousLetter is not null && char.IsUpper(previousLetter.Value) && char.IsLower(letter) && i - 1 != lastAddedBoundary)
-            {
-                lastAddedBoundary = i - 1;
-                wordBoundaries.Enqueue(lastAddedBoundary);
-            }
-
-            if (previousLetter is not null && char.IsLower(previousLetter.Value) && char.IsUpper(letter) && i != lastAddedBoundary)
-            {
-                lastAddedBoundary = i;
-                wordBoundaries.Enqueue(lastAddedBoundary);
-            }
-
-            // Split on the first of a sequence of digits
-            if (letter is >= '1' and <= '9' && previousLetter is <= '1' or >= '9')
-            {
-                lastAddedBoundary = i;
-                wordBoundaries.Enqueue(lastAddedBoundary);
-            }
-
-            previousLetter = letter;
+            char[] output = ArrayPool<char>.Shared.Rent(maxOutputSize);
+            result = ConvertCore(name, output);
+            ArrayPool<char>.Shared.Return(output);
+        }
+        else
+        {
+            Span<char> output = stackalloc char[maxOutputSize];
+            result = ConvertCore(name, output);
         }
 
-        wordBoundaries.TryDequeue(out int nextWordBoundary);
+        return result;
+    }
+
+    private static string ConvertCore(ReadOnlySpan<char> name, Span<char> outputBuffer)
+    {
+        int index = 0;
+        InputState state = InputState.Start;
+
         for (int i = 0; i < name.Length; i++)
         {
-            char letter = name[i];
-
-            if (i == nextWordBoundary)
+            if (char.IsUpper(name[i]))
             {
-                wordBoundaries.TryDequeue(out nextWordBoundary);
+                switch (state)
+                {
+                    case InputState.Upper:
+                    {
+                        bool hasNext = i + 1 < name.Length;
+                        if (i > 0 && hasNext)
+                        {
+                            char nextChar = name[i + 1];
+                            if (!char.IsUpper(nextChar) && nextChar != '_')
+                            {
+                                outputBuffer[index] = '_';
+                                index++;
+                            }
+                        }
 
-                if (i != 0)
-                    sb.Append('_');
+                        break;
+                    }
+                    case InputState.Lower:
+                    {
+                        outputBuffer[index] = '_';
+                        index++;
+                        break;
+                    }
+                }
+
+                char c = char.ToLowerInvariant(name[i]);
+
+                outputBuffer[index] = c;
+                index++;
+
+                state = InputState.Upper;
             }
-
-            sb.Append(char.ToLowerInvariant(letter));
+            else if (name[i] == '_')
+            {
+                outputBuffer[index] = '_';
+                index++;
+                state = InputState.Start;
+            }
+            else
+            {
+                outputBuffer[index] = name[i];
+                index++;
+                state = InputState.Lower;
+            }
         }
 
-        return sb.ToString();
+        return new string(outputBuffer[..index]);
     }
 }

@@ -1,5 +1,6 @@
 ﻿using Sanctuary.Census.Common.Abstractions.Objects.Collections;
 using Sanctuary.Census.Common.Attributes;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 
 namespace Sanctuary.Census.Common.Objects.Collections;
@@ -11,6 +12,7 @@ namespace Sanctuary.Census.Common.Objects.Collections;
 /// <param name="PrimaryRoundID">The ID of the war's primary round.</param>
 /// <param name="Rounds">The rounds.</param>
 [Collection]
+[Description("OBSOLETE: This collection has been superseded by outfit_war_round and will be deprecated after Nexus Season One ends")]
 public record OutfitWarRounds
 (
     [property: Key] uint OutfitWarID,

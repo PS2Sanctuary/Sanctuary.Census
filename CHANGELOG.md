@@ -4,6 +4,9 @@ Date format: DD/MM/YYYY
 
 ## vNext
 
+🚨 The deprecated `outfit_war_rounds` collection will be **removed** on November 1st. Please migrate to using
+`outfit_war_round`, which provides the same data but in a more query/join-friendly structure.
+
 Added the `describe` verb, which returns a result detailing the fields of the provided collection. E.g.:
 
 > GET https://census.lithafalcon.cc/describe/ps2/fire_mode_2

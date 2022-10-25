@@ -93,6 +93,7 @@ public class FireModeCollectionBuilder : ICollectionBuilder
                 fireMode.DamageHeadMultiplier.ToNullableDecimal(),
                 fireMode.DamageLegsMultiplier.ToNullableDecimal(),
                 fireMode.DamageIndirectEffectID.ToNullableUInt(),
+                fireMode.DeployAnimTimeMs.ToNullableUShort(),
                 fireMode.FanAngleDegrees.ToNullableDecimal(),
                 fireMode.FanAngleRotateDegrees.ToNullableDecimal(),
                 fireMode.FanConicalSpread.ToNullableDecimal(),

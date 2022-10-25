@@ -36,6 +36,9 @@ namespace Sanctuary.Census.Common.Objects.Collections;
 /// <param name="DamageHeadMultiplier"></param>
 /// <param name="DamageLegsMultiplier"></param>
 /// <param name="DamageIndirectEffectID"></param>
+/// <param name="DeployAnimTimeMs">
+/// Time time taken by the deployment animation of a relevant weapon, e.g. the Shield Recharging Device. May have additional functionality.
+/// </param>
 /// <param name="FanAngle">
 /// The angle in degrees at which fan-based pellets, such as those on the VE-C Horizon, diverge from their rotational axis at.
 /// </param>
@@ -134,6 +137,7 @@ public record FireMode2
     decimal? DamageHeadMultiplier,
     decimal? DamageLegsMultiplier,
     uint? DamageIndirectEffectID,
+    ushort? DeployAnimTimeMs,
     decimal? FanAngle,
     decimal? FanAngleRotateDegrees,
     decimal? FanConicalSpread,

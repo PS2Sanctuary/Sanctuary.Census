@@ -26,6 +26,9 @@ Added the `describe` verb, which returns a result detailing the fields of the pr
 }
 ```
 
+**fire_mode_2** - added the following fields:
+- `deploy_anim_time_ms` (`ushort?`): Time time taken by the deployment animation of a relevant weapon, e.g. the Shield Recharging Device. May have additional functionality.
+
 ## 22/10/2022
 
 Setup a CORS policy allowing GET requests from any domain, with any headers.

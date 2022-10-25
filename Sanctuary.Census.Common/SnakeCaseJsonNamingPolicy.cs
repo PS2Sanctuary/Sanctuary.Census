@@ -55,7 +55,7 @@ public class SnakeCaseJsonNamingPolicy : JsonNamingPolicy
 
         for (int i = 0; i < name.Length; i++)
         {
-            if (char.IsUpper(name[i]))
+            if (char.IsUpper(name[i]) || char.IsDigit(name[i]))
             {
                 switch (state)
                 {
@@ -65,7 +65,7 @@ public class SnakeCaseJsonNamingPolicy : JsonNamingPolicy
                         if (i > 0 && hasNext)
                         {
                             char nextChar = name[i + 1];
-                            if (!char.IsUpper(nextChar) && nextChar != '_')
+                            if (!char.IsUpper(nextChar) && !char.IsDigit(nextChar) && nextChar != '_')
                             {
                                 outputBuffer[index] = '_';
                                 index++;

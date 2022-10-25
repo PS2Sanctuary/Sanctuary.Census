@@ -102,11 +102,10 @@ public class CollectionDescriptionService
         Dictionary<string, string?> fieldComments = new();
         string? lastName = null;
 
-        string path = Path.Combine
-        (
-            Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)!,
-            DOCUMENTATION_FILE_NAME
-        );
+        string? executionLocation = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+        string path = executionLocation is null
+            ? DOCUMENTATION_FILE_NAME
+            : Path.Combine(executionLocation, DOCUMENTATION_FILE_NAME);
         using XmlReader reader = XmlReader.Create(path);
 
         while (reader.Read())
@@ -126,7 +125,7 @@ public class CollectionDescriptionService
                 if (lastName != null)
                 {
                     string inner = reader.ReadInnerXml();
-                    fieldComments[lastName] = inner.Length == 0 ? null : inner;
+                    fieldComments[lastName] = inner.Length == 0 ? null : inner.Trim();
                 }
                 lastName = null;
             }

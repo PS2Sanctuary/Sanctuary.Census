@@ -105,6 +105,9 @@ namespace Sanctuary.Census.Common.Objects.Collections;
 /// <param name="SwayAmplitudeY"></param>
 /// <param name="SwayPeriodX"></param>
 /// <param name="SwayPeriodY"></param>
+/// <param name="TargetRequirementExpression">
+/// An expression defining the type of target the user must be aiming at for firing to be enabled.
+/// </param>
 /// <param name="ZoomDefault"></param>
 [Collection]
 [Description("Specific properties of a weapon's firing characteristics")]
@@ -198,5 +201,6 @@ public record FireMode2
     decimal? SwayAmplitudeY,
     decimal? SwayPeriodX,
     decimal? SwayPeriodY,
+    string? TargetRequirementExpression,
     decimal ZoomDefault
 ) : ISanctuaryCollection;

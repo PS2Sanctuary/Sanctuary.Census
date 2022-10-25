@@ -1,5 +1,6 @@
 ﻿using Sanctuary.Census.Builder.Abstractions.CollectionBuilders;
 using Sanctuary.Census.Builder.Abstractions.Database;
+using Sanctuary.Census.Builder.Abstractions.Services;
 using Sanctuary.Census.Builder.Exceptions;
 using Sanctuary.Census.ClientData.Abstractions.Services;
 using Sanctuary.Census.ClientData.ClientDataModels;
@@ -22,6 +23,7 @@ public class FireModeCollectionBuilder : ICollectionBuilder
     private readonly IClientDataCacheService _clientDataCache;
     private readonly ILocaleDataCacheService _localeDataCache;
     private readonly IServerDataCacheService _serverDataCache;
+    private readonly IRequirementsHelperService _requirementsHelper;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="FireModeCollectionBuilder"/> class.
@@ -29,16 +31,19 @@ public class FireModeCollectionBuilder : ICollectionBuilder
     /// <param name="clientDataCache">The client data cache.</param>
     /// <param name="localeDataCache">The locale data cache.</param>
     /// <param name="serverDataCache">The server data cache.</param>
+    /// <param name="requirementsHelper">The requirements helper service.</param>
     public FireModeCollectionBuilder
     (
         IClientDataCacheService clientDataCache,
         ILocaleDataCacheService localeDataCache,
-        IServerDataCacheService serverDataCache
+        IServerDataCacheService serverDataCache,
+        IRequirementsHelperService requirementsHelper
     )
     {
         _clientDataCache = clientDataCache;
         _localeDataCache = localeDataCache;
         _serverDataCache = serverDataCache;
+        _requirementsHelper = requirementsHelper;
     }
 
     /// <inheritdoc />
@@ -50,6 +55,9 @@ public class FireModeCollectionBuilder : ICollectionBuilder
     {
         if (_serverDataCache.WeaponDefinitions is null)
             throw new MissingCacheDataException(typeof(WeaponDefinitions));
+
+        if (_clientDataCache.ClientRequirementExpressions is null)
+            throw new MissingCacheDataException(typeof(ClientRequirementExpression));
 
         if (_clientDataCache.FireModeDisplayStats is null)
             throw new MissingCacheDataException(typeof(FireModeDisplayStat));
@@ -63,6 +71,11 @@ public class FireModeCollectionBuilder : ICollectionBuilder
         {
             _localeDataCache.TryGetLocaleString(fireMode.TypeDescriptionID, out LocaleString? description);
             clientDisplayStats.TryGetValue(fireMode.ID, out FireModeDisplayStat? displayStats);
+            _requirementsHelper.TryGetClientExpression
+            (
+                fireMode.TargetClientRequirementExpressionID,
+                out string? targetRequirementExpression
+            );
 
             FireMode2 built = new
             (
@@ -154,6 +167,7 @@ public class FireModeCollectionBuilder : ICollectionBuilder
                 fireMode.SwayAmplitudeY.ToNullableDecimal(),
                 fireMode.SwayPeriodX.ToNullableDecimal(),
                 fireMode.SwayPeriodY.ToNullableDecimal(),
+                targetRequirementExpression,
                 new decimal(fireMode.ZoomDefault)
             );
             builtFireModes.TryAdd(built.FireModeID, built);

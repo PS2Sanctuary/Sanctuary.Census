@@ -28,6 +28,10 @@ Added the `describe` verb, which returns a result detailing the fields of the pr
 
 **fire_mode_2** - added the following fields:
 - `deploy_anim_time_ms` (`ushort?`): Time time taken by the deployment animation of a relevant weapon, e.g. the Shield Recharging Device. May have additional functionality.
+- `target_requirement_expression` (`string?`): An expression defining the type of target the user must be aiming at for firing to be enabled.
+
+**projectile** - added the following field:
+- `stick_to_target_requirement_expression` (`string?`): An expression defining the type of target that the projectile can stick to.
 
 ## 22/10/2022
 

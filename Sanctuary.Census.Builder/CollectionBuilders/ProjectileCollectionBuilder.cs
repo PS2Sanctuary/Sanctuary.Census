@@ -1,6 +1,9 @@
 ﻿using Sanctuary.Census.Builder.Abstractions.CollectionBuilders;
 using Sanctuary.Census.Builder.Abstractions.Database;
+using Sanctuary.Census.Builder.Abstractions.Services;
 using Sanctuary.Census.Builder.Exceptions;
+using Sanctuary.Census.ClientData.Abstractions.Services;
+using Sanctuary.Census.ClientData.ClientDataModels;
 using Sanctuary.Census.Common.Objects.Collections;
 using Sanctuary.Census.ServerData.Internal.Abstractions.Services;
 using Sanctuary.Zone.Packets.ReferenceData;
@@ -16,18 +19,26 @@ namespace Sanctuary.Census.Builder.CollectionBuilders;
 /// </summary>
 public class ProjectileCollectionBuilder : ICollectionBuilder
 {
+    private readonly IClientDataCacheService _clientDataCache;
     private readonly IServerDataCacheService _serverDataCache;
+    private readonly IRequirementsHelperService _requirementsHelper;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="ProjectileCollectionBuilder"/> class.
     /// </summary>
+    /// <param name="clientDataCache">The client data cache.</param>
     /// <param name="serverDataCache">The server data cache.</param>
+    /// <param name="requirementsHelper">The requirements helper service.</param>
     public ProjectileCollectionBuilder
     (
-        IServerDataCacheService serverDataCache
+        IClientDataCacheService clientDataCache,
+        IServerDataCacheService serverDataCache,
+        IRequirementsHelperService requirementsHelper
     )
     {
+        _clientDataCache = clientDataCache;
         _serverDataCache = serverDataCache;
+        _requirementsHelper = requirementsHelper;
     }
 
     /// <inheritdoc />
@@ -40,9 +51,18 @@ public class ProjectileCollectionBuilder : ICollectionBuilder
         if (_serverDataCache.ProjectileDefinitions is null)
             throw new MissingCacheDataException(typeof(ProjectileDefinitions));
 
+        if (_clientDataCache.ClientRequirementExpressions is null)
+            throw new MissingCacheDataException(typeof(ClientRequirementExpression));
+
         Dictionary<uint, Projectile> builtProjectiles = new();
         foreach (ProjectileDefinition projectile in _serverDataCache.ProjectileDefinitions.Projectiles)
         {
+            _requirementsHelper.TryGetClientExpression
+            (
+                projectile.StickToTargetClientRequirementExpressionId,
+                out string? stickTotargetRequirementExpression
+            );
+
             Projectile built = new
             (
                 projectile.ProjectileID,
@@ -67,6 +87,7 @@ public class ProjectileCollectionBuilder : ICollectionBuilder
                 projectile.SpeedMax.ToNullableDecimal(),
                 (projectile.Flags & ProjectileFlags.Sticky) != 0,
                 (projectile.Flags & ProjectileFlags.SticksToPlayer) != 0,
+                stickTotargetRequirementExpression,
                 projectile.TetherDistance.ToNullableDecimal(),
                 projectile.TracerFrequency.ToNullableByte(),
                 projectile.FpTracerFrequency.ToNullableByte(),

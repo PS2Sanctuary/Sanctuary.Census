@@ -40,6 +40,9 @@ public class ClientDataCacheService : IClientDataCacheService
     public IReadOnlyList<ClientItemDefinition>? ClientItemDefinitions { get; private set; }
 
     /// <inheritdoc />
+    public IReadOnlyList<ClientRequirementExpression>? ClientRequirementExpressions { get; private set; }
+
+    /// <inheritdoc />
     public IReadOnlyList<Currency>? Currencies { get; private set; }
 
     /// <inheritdoc />
@@ -158,6 +161,14 @@ public class ClientDataCacheService : IClientDataCacheService
         ClientItemDefinitions = await ExtractDatasheet<ClientItemDefinition>
         (
             "ClientItemDefinitions.txt",
+            assetHeaders,
+            reader,
+            ct
+        ).ConfigureAwait(false);
+
+        ClientRequirementExpressions = await ExtractDatasheet<ClientRequirementExpression>
+        (
+            "ClientRequirementExpressions.txt",
             assetHeaders,
             reader,
             ct
@@ -366,6 +377,7 @@ public class ClientDataCacheService : IClientDataCacheService
         AreaDefinitions = null;
         ClientItemDatasheetDatas = null;
         ClientItemDefinitions = null;
+        ClientRequirementExpressions = null;
         Currencies = null;
         Experiences = null;
         Factions = null;

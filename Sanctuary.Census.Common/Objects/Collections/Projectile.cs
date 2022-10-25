@@ -31,6 +31,9 @@ namespace Sanctuary.Census.Common.Objects.Collections;
 /// <param name="SpeedMax">The maximum speed of the projectile.</param>
 /// <param name="Sticky">Indicates whether the projectile is sticky.</param>
 /// <param name="SticksToPlayers">Indicates whether the projectile can stick to players.</param>
+/// <param name="StickToTargetRequirementExpression">
+/// An expression defining the type of target that the projectile can stick to.
+/// </param>
 /// <param name="TetherDistance">The distance that a projectile can travel from its origin entity.</param>
 /// <param name="TracerFrequency">The number of projectiles that must be fired before a tracer is spawned for a third-person observer.</param>
 /// <param name="TracerFrequencyFirstPerson">The number of projectiles that must be fired before a tracer is spawned.</param>
@@ -61,6 +64,7 @@ public record Projectile
     decimal? SpeedMax,
     bool Sticky,
     bool SticksToPlayers,
+    string? StickToTargetRequirementExpression,
     decimal? TetherDistance,
     byte? TracerFrequency,
     byte? TracerFrequencyFirstPerson,

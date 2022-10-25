@@ -25,6 +25,11 @@ public interface IClientDataCacheService : IDataCacheService
     IReadOnlyList<ClientItemDefinition>? ClientItemDefinitions { get; }
 
     /// <summary>
+    /// Gets the cached <see cref="ClientRequirementExpression"/> objects.
+    /// </summary>
+    IReadOnlyList<ClientRequirementExpression>? ClientRequirementExpressions { get; }
+
+    /// <summary>
     /// Gets the cached <see cref="Currency"/> objects.
     /// </summary>
     IReadOnlyList<Currency>? Currencies { get; }

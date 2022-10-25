@@ -55,6 +55,7 @@ public static class Program
                     .AddScoped<ICollectionsContext, CollectionsContext>()
                     .AddScoped<ICollectionDiffService, CollectionDiffService>()
                     .AddScoped<IImageSetHelperService, ImageSetHelperService>()
+                    .AddScoped<IRequirementsHelperService, RequirementsHelperService>()
                     .RegisterCollectionConfigurations()
                     .RegisterCollectionBuilders()
                     .AddHostedService<CollectionBuildWorker>();

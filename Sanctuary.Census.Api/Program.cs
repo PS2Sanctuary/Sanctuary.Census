@@ -13,6 +13,7 @@ using Sanctuary.Census.Api.Exceptions;
 using Sanctuary.Census.Api.Json;
 using Sanctuary.Census.Api.Middleware;
 using Sanctuary.Census.Api.Models;
+using Sanctuary.Census.Api.Services;
 using Serilog;
 using Serilog.Events;
 using System;
@@ -47,7 +48,8 @@ public static class Program
 
         builder.Services.Configure<CommonOptions>(builder.Configuration.GetSection(nameof(CommonOptions)));
 
-        builder.Services.AddCommonServices();
+        builder.Services.AddCommonServices()
+            .AddSingleton<CollectionDescriptionService>();
 
         builder.Services.AddCors()
             .AddControllers(options =>
@@ -161,8 +163,10 @@ public static class Program
             .MinimumLevel.Override("Serilog.AspNetCore.RequestLoggingMiddleware", LogEventLevel.Warning)
             .MinimumLevel.Override("System.Net.Http.HttpClient", LogEventLevel.Warning)
             .Enrich.FromLogContext()
-            .WriteTo.Console(
-                outputTemplate: "[{Timestamp:HH:mm:ss} {Level:u3}] [{SourceContext}] {Message:lj}{NewLine}{Exception}");
+            .WriteTo.Console
+            (
+                outputTemplate: "[{Timestamp:HH:mm:ss} {Level:u3}] [{SourceContext}] {Message:lj}{NewLine}{Exception}"
+            );
 
 #if !DEBUG
         if (!string.IsNullOrEmpty(seqIngestionEndpoint) && !string.IsNullOrEmpty(seqApiKey))

@@ -2,6 +2,30 @@
 
 Date format: DD/MM/YYYY
 
+## vNext
+
+Added the `describe` verb, which returns a result detailing the fields of the provided collection. E.g.:
+
+> GET https://census.lithafalcon.cc/describe/ps2/fire_mode_2
+```json
+{
+  "fire_mode_2_list": [
+    {
+      "name": "fire_mode_id",
+      "type": "UInt32",
+      "is_nullable": "false",
+      "description": "The ID of the fire mode"
+    },
+    {
+      "name": "ammo_slot",
+      "type": "Byte",
+      "is_nullable": "true"
+    },
+    ...
+  ]
+}
+```
+
 ## 22/10/2022
 
 Setup a CORS policy allowing GET requests from any domain, with any headers.

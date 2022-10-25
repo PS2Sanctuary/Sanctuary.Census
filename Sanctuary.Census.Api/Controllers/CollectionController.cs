@@ -11,6 +11,7 @@ using Sanctuary.Census.Api.Database;
 using Sanctuary.Census.Api.Exceptions;
 using Sanctuary.Census.Api.Json;
 using Sanctuary.Census.Api.Models;
+using Sanctuary.Census.Api.Services;
 using Sanctuary.Census.Api.Util;
 using System;
 using System.Collections.Generic;
@@ -43,6 +44,7 @@ public class CollectionController : ControllerBase
 
     private readonly IMongoContext _mongoContext;
     private readonly IMemoryCache _memoryCache;
+    private readonly CollectionDescriptionService _descriptionService;
 
     static CollectionController()
     {
@@ -64,6 +66,7 @@ public class CollectionController : ControllerBase
         _allStringOptions.Converters.Remove(_allStringOptions.Converters.First(x => x is BsonDocumentJsonConverter));
         _allStringOptions.Converters.Add(new BsonDocumentJsonConverter(true));
         _allStringOptions.NumberHandling = JsonNumberHandling.WriteAsString;
+        _allStringOptions.Converters.Insert(0, new BooleanJsonConverter(true));
 
         _incNullAndAllStringOptions = new JsonSerializerOptions(_allStringOptions)
         {
@@ -76,14 +79,17 @@ public class CollectionController : ControllerBase
     /// </summary>
     /// <param name="mongoContext">The Mongo DB collections context.</param>
     /// <param name="memoryCache">The memory cache.</param>
+    /// <param name="descriptionService">The description service.</param>
     public CollectionController
     (
         IMongoContext mongoContext,
-        IMemoryCache memoryCache
+        IMemoryCache memoryCache,
+        CollectionDescriptionService descriptionService
     )
     {
         _mongoContext = mongoContext;
         _memoryCache = memoryCache;
+        _descriptionService = descriptionService;
     }
 
     /// <summary>
@@ -136,6 +142,33 @@ public class CollectionController : ControllerBase
         (
             (await GetAndCacheDatatypeListAsync(env, ct).ConfigureAwait(false)).Count,
             GetJsonOptions(censusJSON, true)
+        );
+    }
+
+    /// <summary>
+    /// Describes the fields of a collection.
+    /// </summary>
+    /// <param name="environment">The environment that the collection is from.</param>
+    /// <param name="collectionName">The name of the collection.</param>
+    /// <param name="queryParams">The query parameters.</param>
+    /// <returns>Descriptions of the collection's fields.</returns>
+    /// <response code="200">Returns the descriptions of the collection's fields.</response>
+    [HttpGet("/describe/{environment}/{collectionName}")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    public JsonResult DescribeCollection
+    (
+        string environment,
+        string collectionName,
+        [FromQuery] CollectionQueryParameters queryParams
+    )
+    {
+        JsonSerializerOptions jsonOptions = GetJsonOptions(queryParams.CensusJsonMode, queryParams.IncludeNullFields);
+        IReadOnlyList<CollectionFieldInformation> fieldInfos = _descriptionService.GetFieldInformation(collectionName);
+
+        return new JsonResult
+        (
+            new DataResponse<CollectionFieldInformation>(fieldInfos, fieldInfos.Count, collectionName, null),
+            jsonOptions
         );
     }
 

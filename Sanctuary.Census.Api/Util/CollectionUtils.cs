@@ -4,6 +4,7 @@ using Sanctuary.Census.Common.Objects.CommonModels;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Reflection;
 
@@ -14,12 +15,14 @@ namespace Sanctuary.Census.Api.Util;
 /// </summary>
 public static class CollectionUtils
 {
+    private static readonly Dictionary<string, Type> _collectionSnakeNameToType;
     private static readonly Dictionary<string, HashSet<string>> _collectionNamesAndFields;
     private static readonly Dictionary<string, HashSet<string>> _keyFields;
     private static readonly Dictionary<string, List<string>> _langFields;
 
     static CollectionUtils()
     {
+        _collectionSnakeNameToType = new Dictionary<string, Type>();
         _collectionNamesAndFields = new Dictionary<string, HashSet<string>>();
         _keyFields = new Dictionary<string, HashSet<string>>();
         _langFields = new Dictionary<string, List<string>>();
@@ -33,6 +36,7 @@ public static class CollectionUtils
             HashSet<string> propNames = new();
             string collName = SnakeCaseJsonNamingPolicy.Default.ConvertName(collType.Name);
 
+            _collectionSnakeNameToType.Add(collName, collType);
             _collectionNamesAndFields.Add(collName, propNames);
             _keyFields.Add(collName, new HashSet<string>());
             _langFields.Add(collName, new List<string>());
@@ -50,6 +54,21 @@ public static class CollectionUtils
             }
         }
     }
+
+    /// <summary>
+    /// Attempts to match a snake_case collection name to its associated
+    /// POCO type.
+    /// </summary>
+    /// <param name="snakeName">The snake_case name of the collection.</param>
+    /// <param name="collectionType">The type of the collection if found, else <c>null</c>.</param>
+    /// <returns>
+    /// <c>True</c> if a collection with the given snake_case name representation exists, otherwise <c>false</c>.
+    /// </returns>
+    public static bool TryGetCollectionTypeFromSnakeName
+    (
+        string snakeName,
+        [NotNullWhen(true)] out Type? collectionType
+    ) => _collectionSnakeNameToType.TryGetValue(snakeName, out collectionType);
 
     /// <summary>
     /// Checks that a collection exists.

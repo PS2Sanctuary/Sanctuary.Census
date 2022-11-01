@@ -2,7 +2,7 @@
 
 Date format: DD/MM/YYYY
 
-## 02/11/2021
+## 02/11/2022
 
 💥 The deprecated `outfit_war_rounds` collection has been **removed**. Please migrate to using
 `outfit_war_round`, which provides the same data but in a more query/join-friendly structure.

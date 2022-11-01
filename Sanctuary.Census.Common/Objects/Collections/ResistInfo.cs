@@ -20,7 +20,7 @@ public record ResistInfo
 (
     [property: Key] uint ResistInfoId,
     [property: Key] ushort ResistTypeId,
-    int ResistPercent,
+    decimal ResistPercent,
     int? ResistAmount,
     decimal MultiplierWhenHeadshot,
     [property: Key] uint? ImageSetId,

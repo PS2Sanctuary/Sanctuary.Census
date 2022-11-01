@@ -17,7 +17,7 @@ public partial record ResistInfo
 (
     uint ID,
     ushort ResistType,
-    int ResistPercent,
+    decimal ResistPercent,
     int ResistAmount,
     decimal MultiplierWhenHeadshot,
     uint ResistIcon,

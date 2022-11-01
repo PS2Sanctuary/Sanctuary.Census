@@ -105,6 +105,11 @@ public interface IClientDataCacheService : IDataCacheService
     IReadOnlyList<ResistInfo>? ResistInfos { get; }
 
     /// <summary>
+    /// Gets the cached <see cref="Resource"/> objects.
+    /// </summary>
+    IReadOnlyList<Resource>? Resources { get; }
+
+    /// <summary>
     /// Gets the cached <see cref="ResourceType"/> objects.
     /// </summary>
     IReadOnlyList<ResourceType>? ResourceTypes { get; }

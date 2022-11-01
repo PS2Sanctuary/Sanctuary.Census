@@ -71,4 +71,15 @@ public static class PrimitiveExtensions
         => value == nullValue
             ? null
             : value;
+
+    /// <summary>
+    /// Checks whether a string matches a nullable constraint.
+    /// </summary>
+    /// <param name="value">The value to convert.</param>
+    /// <param name="nullValue">The value to consider as null.</param>
+    /// <returns>The converted, possibly null value.</returns>
+    public static string? ToNullableString(this string value, string nullValue = "")
+        => value == nullValue
+            ? null
+            : value;
 }

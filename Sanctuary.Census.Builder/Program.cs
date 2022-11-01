@@ -69,6 +69,16 @@ public static class Program
         CollectionConfigurationProvider configProvider = new();
         services.AddSingleton(configProvider);
 
+        configProvider.Register<Ability>()
+            .WithIndex(x => x.AbilityId, true)
+            .WithEqualityKey(x => x.AbilityId);
+
+        configProvider.Register<AbilitySet>()
+            .WithIndex(x => x.AbilitySetId, false)
+            .WithIndex(x => x.AbilityId, false)
+            .WithEqualityKey(x => x.AbilitySetId)
+            .WithEqualityKey(x => x.AbilityId);
+
         configProvider.Register<Currency>()
             .WithIndex(x => x.CurrencyID, true)
             .WithEqualityKey(x => x.CurrencyID);
@@ -384,7 +394,8 @@ public static class Program
             s => s.GetRequiredService<IOptions<CollectionBuilderRepository>>().Value
         );
 
-        return services.RegisterCollectionBuilder<AreaCollectionsBuilder>()
+        return services.RegisterCollectionBuilder<AbilityCollectionsBuilder>()
+            .RegisterCollectionBuilder<AreaCollectionsBuilder>()
             .RegisterCollectionBuilder<CurrencyCollectionBuilder>()
             .RegisterCollectionBuilder<DirectiveCollectionsBuilder>()
             .RegisterCollectionBuilder<ExperienceCollectionBuilder>()

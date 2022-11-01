@@ -8,6 +8,7 @@ using Sanctuary.Census.Common.Objects.Collections;
 using Sanctuary.Census.Common.Objects.CommonModels;
 using Sanctuary.Census.ServerData.Internal.Abstractions.Services;
 using Sanctuary.Zone.Packets.ReferenceData;
+using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
@@ -25,6 +26,7 @@ public class ItemCollectionBuilder : ICollectionBuilder
     private readonly ILocaleDataCacheService _localeDataCache;
     private readonly IServerDataCacheService _serverDataCache;
     private readonly IImageSetHelperService _imageSetHelper;
+    private readonly IRequirementsHelperService _requirementsHelper;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="ItemCollectionBuilder"/> class.
@@ -33,18 +35,21 @@ public class ItemCollectionBuilder : ICollectionBuilder
     /// <param name="localeDataCache">The locale data cache.</param>
     /// <param name="serverDataCache">The server data cache.</param>
     /// <param name="imageSetHelper">The image set helper service.</param>
+    /// <param name="requirementsHelper">The requirements helper service.</param>
     public ItemCollectionBuilder
     (
         IClientDataCacheService clientDataCache,
         ILocaleDataCacheService localeDataCache,
         IServerDataCacheService serverDataCache,
-        IImageSetHelperService imageSetHelper
+        IImageSetHelperService imageSetHelper,
+        IRequirementsHelperService requirementsHelper
     )
     {
         _clientDataCache = clientDataCache;
         _localeDataCache = localeDataCache;
         _serverDataCache = serverDataCache;
         _imageSetHelper = imageSetHelper;
+        _requirementsHelper = requirementsHelper;
     }
 
     /// <inheritdoc />
@@ -107,7 +112,11 @@ public class ItemCollectionBuilder : ICollectionBuilder
         {
             _localeDataCache.TryGetLocaleString(definition.NameID, out LocaleString? name);
             _localeDataCache.TryGetLocaleString(definition.DescriptionID, out LocaleString? description);
+            _requirementsHelper.TryGetClientExpression(definition.ClientUseRequirementID, out string? useRequirement);
+            _requirementsHelper.TryGetClientExpression(definition.ClientDisplayRequirementID, out string? equipRequirement);
 
+            // Image set IDs can be negative on item definitions,
+            // hence the added logic
             bool hasDefaultImage = false;
             uint defaultImage = 0;
             if (definition.ImageSetID > 0)
@@ -120,21 +129,23 @@ public class ItemCollectionBuilder : ICollectionBuilder
             (
                 definition.ID,
                 definition.ItemType,
-                definition.CategoryID == 0 ? null : definition.CategoryID,
+                definition.CategoryID.ToNullableUInt(),
                 (uint)faction,
                 name,
                 description,
-                definition.ActivatableAbilityID == 0 ? null : definition.ActivatableAbilityID,
-                definition.PassiveAbilityID == 0 ? null : definition.PassiveAbilityID,
-                definition.PassiveAbilitySetID == 0 ? null: definition.PassiveAbilitySetID,
-                definition.SkillSetID == 0 ? null : definition.SkillSetID,
+                definition.ActivatableAbilityID.ToNullableUInt(),
+                definition.PassiveAbilityID.ToNullableUInt(),
+                definition.PassiveAbilitySetID.ToNullableUInt(),
+                definition.SkillSetID.ToNullableUInt(),
                 definition.ImageSetID <= 0 ? null : (uint)definition.ImageSetID,
                 hasDefaultImage ? defaultImage : null,
                 hasDefaultImage ? _imageSetHelper.GetRelativeImagePath(defaultImage) : null,
-                definition.HudImageSetID == 0 ? null : definition.HudImageSetID,
+                definition.HudImageSetID.ToNullableUInt(),
                 definition.MaxStackSize,
                 vehicleWeaponCategories.Contains(definition.CategoryID),
-                definition.CodeFactoryName
+                definition.CodeFactoryName,
+                useRequirement,
+                equipRequirement
             );
             builtItems.TryAdd(built.ItemID, built);
         }

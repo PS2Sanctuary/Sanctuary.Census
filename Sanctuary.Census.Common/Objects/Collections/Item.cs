@@ -25,6 +25,12 @@ namespace Sanctuary.Census.Common.Objects.Collections;
 /// <param name="HudImageSetID">The ID of the item's HUD display image.</param>
 /// <param name="IsVehicleWeapon">Indicates whether this item is a vehicle weapon.</param>
 /// <param name="CodeFactoryName">An alternative category indicator for the item.</param>
+/// <param name="UseRequirementExpression">
+/// An expression defining the conditions that must be met for an item to be used in a loadout.
+/// </param>
+/// <param name="EquipRequirementExpression">
+/// An expression defining the conditions that must be met for the item to be equip-able.
+/// </param>
 [Collection]
 public record Item
 (
@@ -44,5 +50,7 @@ public record Item
     uint? HudImageSetID,
     int MaxStackSize,
     bool IsVehicleWeapon,
-    string CodeFactoryName
+    string CodeFactoryName,
+    string? UseRequirementExpression,
+    string? EquipRequirementExpression
 ) : ISanctuaryCollection;

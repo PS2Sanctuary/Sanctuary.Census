@@ -13,6 +13,12 @@ Date format: DD/MM/YYYY
 - `resource`
 - `resource_type`
 
+➕ `item` field additions:
+- `use_requirement_expression` (`string?`). Defines when an item can be used in a loadout.
+Can be used, for example, to identify seasonal weapons such as the _Haunted Ichabod Crown_ (ID 801959).
+- `equip_requirement_expression` (`string?`). Defines when a loadout item can be equipped.
+See the _Spawn Beacon_ (ID 7) for an example.
+
 🔧 Re-typed `resist_info.resist_percent` from `int` to `decimal`.
 
 ## 25/10/2022

@@ -82,7 +82,7 @@ public partial record AbilityEx
     uint ResourceType,
     uint ResourceThreshold,
     uint ResourceFirstCost,
-    float ResourceCostPerMsec,
+    decimal ResourceCostPerMsec,
     uint ReqSetId,
     uint TargetReqSetId,
     uint ClientReqSetId,

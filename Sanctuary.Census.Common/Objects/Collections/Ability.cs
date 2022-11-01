@@ -68,7 +68,7 @@ public record Ability
     decimal? ResourceCostPerMsec,
     uint? ResourceFirstCost,
     uint? ResourceThreshold,
-    uint? ResourceTypeId,
+    [property: Key] uint? ResourceTypeId,
     uint? DistanceMax,
     uint? RadiusMax,
     uint? Param1,
@@ -90,7 +90,7 @@ public record Ability
     string? String3,
     string? String4,
     bool UseWeaponCharge,
-    uint? ImageSetId,
-    uint? ImageId,
+    [property: Key] uint? ImageSetId,
+    [property: Key] uint? ImageId,
     string? ImagePath
 ) : ISanctuaryCollection;

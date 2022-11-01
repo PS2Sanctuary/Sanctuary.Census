@@ -15,7 +15,7 @@ namespace Sanctuary.Census.ClientData.ClientDataModels;
 /// <param name="ActivateCompEffectId"></param>
 /// <param name="TerminateCompEffectId"></param>
 /// <param name="DepletedCompEffectId"></param>
-/// <param name="initialValue"></param>
+/// <param name="InitialValue"></param>
 /// <param name="InitialValueMax"></param>
 /// <param name="UseInitialValueAsMax"></param>
 /// <param name="MaxValue"></param>
@@ -51,18 +51,18 @@ public partial record Resource
     uint ActivateCompEffectId,
     uint TerminateCompEffectId,
     uint DepletedCompEffectId,
-    uint initialValue,
+    uint InitialValue,
     uint InitialValueMax,
     bool UseInitialValueAsMax,
     uint MaxValue,
     uint ValueMarkerLo,
     uint ValueMarkerMed,
     uint ValueMarkerHi,
-    uint RegenPerMs,
+    decimal RegenPerMs,
     uint RegenDelayMs,
     uint RegenDamageInterruptMs,
     uint RegenTickMsec,
-    uint BurnPerMs,
+    decimal BurnPerMs,
     uint BurnTickMsec,
     uint BurnDelayMs,
     bool FlagProfileScope,

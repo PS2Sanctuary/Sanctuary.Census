@@ -12,6 +12,17 @@ public static class PrimitiveExtensions
     /// <param name="value">The value to convert.</param>
     /// <param name="nullValue">The value to consider as null.</param>
     /// <returns>The converted value.</returns>
+    public static decimal? ToNullableDecimal(this decimal value, decimal nullValue = 0)
+        => value == nullValue
+            ? null
+            : value;
+
+    /// <summary>
+    /// Converts a floating-point value to a nullable decimal value.
+    /// </summary>
+    /// <param name="value">The value to convert.</param>
+    /// <param name="nullValue">The value to consider as null.</param>
+    /// <returns>The converted value.</returns>
     public static decimal? ToNullableDecimal(this float value, float nullValue = 0)
         => Math.Abs(value - nullValue) < 0.001
             ? null

@@ -328,7 +328,7 @@ public partial record {@class.Name} : IDatasheet<{@class.Name}>
                 (
                     $@"{paramName} = Utf8Parser.TryParse({paramValueSpanName}, out byte {paramName}Value, out _)
             ? {paramName}Value
-            : throw new Exception(""Failed to parse a '{paramName}' field as a {paramType}"");
+            : throw new Exception($""Failed to parse a '{paramName}' field as a {paramType}. Value: {{System.Text.Encoding.UTF8.GetString({paramValueSpanName})}}"");
 
         "
                 );
@@ -340,7 +340,7 @@ public partial record {@class.Name} : IDatasheet<{@class.Name}>
                 (
                     $@"{paramName} = Utf8Parser.TryParse({paramValueSpanName}, out sbyte {paramName}Value, out _)
             ? {paramName}Value
-            : throw new Exception(""Failed to parse a '{paramName}' field as a {paramType}"");
+            : throw new Exception($""Failed to parse a '{paramName}' field as a {paramType}. Value: {{System.Text.Encoding.UTF8.GetString({paramValueSpanName})}}"");
 
         "
                 );
@@ -352,7 +352,7 @@ public partial record {@class.Name} : IDatasheet<{@class.Name}>
                 (
                     $@"{paramName} = Utf8Parser.TryParse({paramValueSpanName}, out ushort {paramName}Value, out _)
             ? {paramName}Value
-            : throw new Exception(""Failed to parse a '{paramName}' field as a {paramType}"");
+            : throw new Exception($""Failed to parse a '{paramName}' field as a {paramType}. Value: {{System.Text.Encoding.UTF8.GetString({paramValueSpanName})}}"");
 
         "
                 );
@@ -364,7 +364,7 @@ public partial record {@class.Name} : IDatasheet<{@class.Name}>
                 (
                     $@"{paramName} = Utf8Parser.TryParse({paramValueSpanName}, out short {paramName}Value, out _)
             ? {paramName}Value
-            : throw new Exception(""Failed to parse a '{paramName}' field as a {paramType}"");
+            : throw new Exception($""Failed to parse a '{paramName}' field as a {paramType}. Value: {{System.Text.Encoding.UTF8.GetString({paramValueSpanName})}}"");
 
         "
                 );
@@ -376,7 +376,7 @@ public partial record {@class.Name} : IDatasheet<{@class.Name}>
                 (
                     $@"{paramName} = Utf8Parser.TryParse({paramValueSpanName}, out uint {paramName}Value, out _)
             ? {paramName}Value
-            : throw new Exception(""Failed to parse a '{paramName}' field as a {paramType}"");
+            : throw new Exception($""Failed to parse a '{paramName}' field as a {paramType}. Value: {{System.Text.Encoding.UTF8.GetString({paramValueSpanName})}}"");
 
         "
                 );
@@ -388,7 +388,7 @@ public partial record {@class.Name} : IDatasheet<{@class.Name}>
                 (
                     $@"{paramName} = Utf8Parser.TryParse({paramValueSpanName}, out int {paramName}Value, out _)
             ? {paramName}Value
-            : throw new Exception(""Failed to parse a '{paramName}' field as a {paramType}"");
+            : throw new Exception($""Failed to parse a '{paramName}' field as a {paramType}. Value: {{System.Text.Encoding.UTF8.GetString({paramValueSpanName})}}"");
 
         "
                 );
@@ -400,7 +400,7 @@ public partial record {@class.Name} : IDatasheet<{@class.Name}>
                 (
                     $@"{paramName} = Utf8Parser.TryParse({paramValueSpanName}, out ulong {paramName}Value, out _)
             ? {paramName}Value
-            : throw new Exception(""Failed to parse a '{paramName}' field as a {paramType}"");
+            : throw new Exception($""Failed to parse a '{paramName}' field as a {paramType}. Value: {{System.Text.Encoding.UTF8.GetString({paramValueSpanName})}}"");
 
         "
                 );
@@ -412,7 +412,7 @@ public partial record {@class.Name} : IDatasheet<{@class.Name}>
                 (
                     $@"{paramName} = Utf8Parser.TryParse({paramValueSpanName}, out long {paramName}Value, out _)
             ? {paramName}Value
-            : throw new Exception(""Failed to parse a '{paramName}' field as a {paramType}"");
+            : throw new Exception($""Failed to parse a '{paramName}' field as a {paramType}. Value: {{System.Text.Encoding.UTF8.GetString({paramValueSpanName})}}"");
 
         "
                 );
@@ -424,7 +424,7 @@ public partial record {@class.Name} : IDatasheet<{@class.Name}>
                 (
                     $@"{paramName} = Utf8Parser.TryParse({paramValueSpanName}, out float {paramName}Value, out _)
             ? {paramName}Value
-            : throw new Exception(""Failed to parse a '{paramName}' field as a {paramType}"");
+            : throw new Exception($""Failed to parse a '{paramName}' field as a {paramType}. Value: {{System.Text.Encoding.UTF8.GetString({paramValueSpanName})}}"");
 
         "
                 );
@@ -436,7 +436,7 @@ public partial record {@class.Name} : IDatasheet<{@class.Name}>
                 (
                     $@"{paramName} = Utf8Parser.TryParse({paramValueSpanName}, out double {paramName}Value, out _)
             ? {paramName}Value
-            : throw new Exception(""Failed to parse a '{paramName}' field as a {paramType}"");
+            : throw new Exception($""Failed to parse a '{paramName}' field as a {paramType}. Value: {{System.Text.Encoding.UTF8.GetString({paramValueSpanName})}}"");
 
         "
                 );
@@ -448,7 +448,7 @@ public partial record {@class.Name} : IDatasheet<{@class.Name}>
                 (
                     $@"{paramName} = Utf8Parser.TryParse({paramValueSpanName}, out decimal {paramName}Value, out _)
             ? {paramName}Value
-            : throw new Exception(""Failed to parse a '{paramName}' field as a decimal"");
+            : throw new Exception($""Failed to parse a '{paramName}' field as a decimal. Value: {{System.Text.Encoding.UTF8.GetString({paramValueSpanName})}}"");
 
         "
                 );

@@ -31,6 +31,9 @@ public class ClientDataCacheService : IClientDataCacheService
     public DateTimeOffset LastPopulated { get; private set; }
 
     /// <inheritdoc />
+    public IReadOnlyList<AbilityEx>? AbilityExs { get; private set; }
+
+    /// <inheritdoc />
     public IReadOnlyDictionary<AssetZone, IReadOnlyList<AreaDefinition>>? AreaDefinitions { get; private set; }
 
     /// <inheritdoc />
@@ -149,6 +152,14 @@ public class ClientDataCacheService : IClientDataCacheService
         IReadOnlyList<Asset2Header> assetHeaders = await reader.ReadAssetHeadersAsync(ct).ConfigureAwait(false);
 
         await ExtractAreasAsync(assetHeaders, reader, ct).ConfigureAwait(false);
+
+        AbilityExs = await ExtractDatasheet<AbilityEx>
+        (
+            "AbilityEx.txt",
+            assetHeaders,
+            reader,
+            ct
+        ).ConfigureAwait(false);
 
         ClientItemDatasheetDatas = await ExtractDatasheet<ClientItemDatasheetData>
         (
@@ -374,6 +385,7 @@ public class ClientDataCacheService : IClientDataCacheService
     public void Clear()
     {
         LastPopulated = DateTimeOffset.MinValue;
+        AbilityExs = null;
         AreaDefinitions = null;
         ClientItemDatasheetDatas = null;
         ClientItemDefinitions = null;

@@ -303,6 +303,10 @@ public partial record {@class.Name} : IDatasheet<{@class.Name}>
         Action<Diagnostic> reportDiagnostic
     )
     {
+        // NOTE: We don't use UTF-8 parsing for integer types, as the Utf8Parser
+        // silently rounds decimal numbers, which reduces our ability to catch
+        // data that should be represented appropriately.
+
         switch (paramType.SpecialType)
         {
             case SpecialType.System_Boolean:
@@ -326,11 +330,11 @@ public partial record {@class.Name} : IDatasheet<{@class.Name}>
             {
                 sb.Append
                 (
-                    $@"{paramName} = Utf8Parser.TryParse({paramValueSpanName}, out byte {paramName}Value, out _)
+                    $@"{paramName} = byte.TryParse(System.Text.Encoding.UTF8.GetString({paramValueSpanName}), out byte {paramName}Value)
             ? {paramName}Value
             : throw new Exception($""Failed to parse a '{paramName}' field as a {paramType}. Value: {{System.Text.Encoding.UTF8.GetString({paramValueSpanName})}}"");
 
-        "
+            "
                 );
                 break;
             }
@@ -338,11 +342,11 @@ public partial record {@class.Name} : IDatasheet<{@class.Name}>
             {
                 sb.Append
                 (
-                    $@"{paramName} = Utf8Parser.TryParse({paramValueSpanName}, out sbyte {paramName}Value, out _)
+                    $@"{paramName} = sbyte.TryParse(System.Text.Encoding.UTF8.GetString({paramValueSpanName}), out sbyte {paramName}Value)
             ? {paramName}Value
             : throw new Exception($""Failed to parse a '{paramName}' field as a {paramType}. Value: {{System.Text.Encoding.UTF8.GetString({paramValueSpanName})}}"");
 
-        "
+            "
                 );
                 break;
             }
@@ -374,11 +378,11 @@ public partial record {@class.Name} : IDatasheet<{@class.Name}>
             {
                 sb.Append
                 (
-                    $@"{paramName} = Utf8Parser.TryParse({paramValueSpanName}, out uint {paramName}Value, out _)
+                    $@"{paramName} = uint.TryParse(System.Text.Encoding.UTF8.GetString({paramValueSpanName}), out uint {paramName}Value)
             ? {paramName}Value
             : throw new Exception($""Failed to parse a '{paramName}' field as a {paramType}. Value: {{System.Text.Encoding.UTF8.GetString({paramValueSpanName})}}"");
 
-        "
+            "
                 );
                 break;
             }
@@ -386,11 +390,11 @@ public partial record {@class.Name} : IDatasheet<{@class.Name}>
             {
                 sb.Append
                 (
-                    $@"{paramName} = Utf8Parser.TryParse({paramValueSpanName}, out int {paramName}Value, out _)
+                    $@"{paramName} = int.TryParse(System.Text.Encoding.UTF8.GetString({paramValueSpanName}), out int {paramName}Value)
             ? {paramName}Value
             : throw new Exception($""Failed to parse a '{paramName}' field as a {paramType}. Value: {{System.Text.Encoding.UTF8.GetString({paramValueSpanName})}}"");
 
-        "
+            "
                 );
                 break;
             }
@@ -398,11 +402,11 @@ public partial record {@class.Name} : IDatasheet<{@class.Name}>
             {
                 sb.Append
                 (
-                    $@"{paramName} = Utf8Parser.TryParse({paramValueSpanName}, out ulong {paramName}Value, out _)
+                    $@"{paramName} = ulong.TryParse(System.Text.Encoding.UTF8.GetString({paramValueSpanName}), out ulong {paramName}Value)
             ? {paramName}Value
             : throw new Exception($""Failed to parse a '{paramName}' field as a {paramType}. Value: {{System.Text.Encoding.UTF8.GetString({paramValueSpanName})}}"");
 
-        "
+            "
                 );
                 break;
             }
@@ -410,11 +414,11 @@ public partial record {@class.Name} : IDatasheet<{@class.Name}>
             {
                 sb.Append
                 (
-                    $@"{paramName} = Utf8Parser.TryParse({paramValueSpanName}, out long {paramName}Value, out _)
+                    $@"{paramName} = long.TryParse(System.Text.Encoding.UTF8.GetString({paramValueSpanName}), out long {paramName}Value)
             ? {paramName}Value
             : throw new Exception($""Failed to parse a '{paramName}' field as a {paramType}. Value: {{System.Text.Encoding.UTF8.GetString({paramValueSpanName})}}"");
 
-        "
+            "
                 );
                 break;
             }

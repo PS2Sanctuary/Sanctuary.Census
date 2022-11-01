@@ -15,6 +15,11 @@ public interface IClientDataCacheService : IDataCacheService
     IReadOnlyList<AbilityEx>? AbilityExs { get; }
 
     /// <summary>
+    /// Gets the cached <see cref="AbilitySet"/> objects.
+    /// </summary>
+    IReadOnlyList<AbilitySet>? AbilitySets { get; }
+
+    /// <summary>
     /// Gets the cached <see cref="AreaDefinition"/> objects.
     /// </summary>
     IReadOnlyDictionary<AssetZone, IReadOnlyList<AreaDefinition>>? AreaDefinitions { get; }

@@ -34,6 +34,9 @@ public class ClientDataCacheService : IClientDataCacheService
     public IReadOnlyList<AbilityEx>? AbilityExs { get; private set; }
 
     /// <inheritdoc />
+    public IReadOnlyList<AbilitySet>? AbilitySets { get; private set; }
+
+    /// <inheritdoc />
     public IReadOnlyDictionary<AssetZone, IReadOnlyList<AreaDefinition>>? AreaDefinitions { get; private set; }
 
     /// <inheritdoc />
@@ -159,6 +162,14 @@ public class ClientDataCacheService : IClientDataCacheService
         AbilityExs = await ExtractDatasheet<AbilityEx>
         (
             "AbilityEx.txt",
+            assetHeaders,
+            reader,
+            ct
+        ).ConfigureAwait(false);
+
+        AbilitySets = await ExtractDatasheet<AbilitySet>
+        (
+            "AbilitySets.txt",
             assetHeaders,
             reader,
             ct
@@ -397,6 +408,7 @@ public class ClientDataCacheService : IClientDataCacheService
     {
         LastPopulated = DateTimeOffset.MinValue;
         AbilityExs = null;
+        AbilitySets = null;
         AreaDefinitions = null;
         ClientItemDatasheetDatas = null;
         ClientItemDefinitions = null;

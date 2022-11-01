@@ -46,6 +46,9 @@ namespace Sanctuary.Census.Common.Objects.Collections;
 /// <param name="String3"></param>
 /// <param name="String4"></param>
 /// <param name="UseWeaponCharge"></param>
+/// <param name="ImageSetId">The ID of the image set linked to this ability.</param>
+/// <param name="ImageId">The ID of the ability's default image.</param>
+/// <param name="ImagePath">The relative path to the ability's default image.</param>
 [Collection]
 public record Ability
 (
@@ -86,5 +89,8 @@ public record Ability
     string? String2,
     string? String3,
     string? String4,
-    bool UseWeaponCharge
+    bool UseWeaponCharge,
+    uint? ImageSetId,
+    uint? ImageId,
+    string? ImagePath
 ) : ISanctuaryCollection;

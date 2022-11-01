@@ -1,5 +1,6 @@
 ﻿using Sanctuary.Census.Builder.Abstractions.CollectionBuilders;
 using Sanctuary.Census.Builder.Abstractions.Database;
+using Sanctuary.Census.Builder.Abstractions.Services;
 using Sanctuary.Census.Builder.Exceptions;
 using Sanctuary.Census.ClientData.Abstractions.Services;
 using Sanctuary.Census.ClientData.ClientDataModels;
@@ -20,20 +21,24 @@ namespace Sanctuary.Census.Builder.CollectionBuilders;
 public class AbilityCollectionsBuilder : ICollectionBuilder
 {
     private readonly IClientDataCacheService _clientDataCache;
+    private readonly IImageSetHelperService _imageSetHelper;
     private readonly ILocaleDataCacheService _localeDataCache;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="AbilityCollectionsBuilder"/> class.
     /// </summary>
     /// <param name="clientDataCache">The client data cache.</param>
+    /// <param name="imageSetHelper">The image set helper service.</param>
     /// <param name="localeDataCache">The locale data cache.</param>
     public AbilityCollectionsBuilder
     (
         IClientDataCacheService clientDataCache,
+        IImageSetHelperService imageSetHelper,
         ILocaleDataCacheService localeDataCache
     )
     {
         _clientDataCache = clientDataCache;
+        _imageSetHelper = imageSetHelper;
         _localeDataCache = localeDataCache;
     }
 
@@ -54,6 +59,7 @@ public class AbilityCollectionsBuilder : ICollectionBuilder
         {
             _localeDataCache.TryGetLocaleString(ability.NameId, out LocaleString? name);
             _localeDataCache.TryGetLocaleString(ability.DescriptionId, out LocaleString? description);
+            bool hasDefaultImage = _imageSetHelper.TryGetDefaultImage(ability.IconId, out uint defaultImage);
 
             builtAbilities.Add(ability.Id, new MAbility
             (
@@ -94,7 +100,10 @@ public class AbilityCollectionsBuilder : ICollectionBuilder
                 ability.String2.ToNullableString(),
                 ability.String3.ToNullableString(),
                 ability.String4.ToNullableString(),
-                ability.UseWeaponCharge
+                ability.UseWeaponCharge,
+                ability.IconId.ToNullableUInt(),
+                defaultImage.ToNullableUInt(),
+                hasDefaultImage ? _imageSetHelper.GetRelativeImagePath(defaultImage) : null
             ));
         }
 

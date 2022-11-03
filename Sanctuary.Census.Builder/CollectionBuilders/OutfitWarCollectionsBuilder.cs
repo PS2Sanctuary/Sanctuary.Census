@@ -19,13 +19,12 @@ using MMatch = Sanctuary.Census.Common.Objects.Collections.OutfitWarMatch;
 using MRanking = Sanctuary.Census.Common.Objects.Collections.OutfitWarRanking;
 using MRegistration = Sanctuary.Census.Common.Objects.Collections.OutfitWarRegistration;
 using MRound = Sanctuary.Census.Common.Objects.Collections.OutfitWarRound;
-using MRounds = Sanctuary.Census.Common.Objects.Collections.OutfitWarRounds;
 using MWar = Sanctuary.Census.Common.Objects.Collections.OutfitWar;
 
 namespace Sanctuary.Census.Builder.CollectionBuilders;
 
 /// <summary>
-/// Builds the <see cref="MWar"/>, <see cref="MRanking"/>, <see cref="MRound"/>, <see cref="MRounds"/>,
+/// Builds the <see cref="MWar"/>, <see cref="MRanking"/>, <see cref="MRound"/>,
 /// <see cref="MRegistration"/> and <see cref="MMatch"/> collections.
 /// </summary>
 public class OutfitWarCollectionsBuilder : ICollectionBuilder
@@ -70,7 +69,6 @@ public class OutfitWarCollectionsBuilder : ICollectionBuilder
         await BuildWarsAsync(dbContext, ct).ConfigureAwait(false);
         await BuildRankingsAsync(dbContext, ct).ConfigureAwait(false);
         await BuildRegistrationsAsync(dbContext, ct).ConfigureAwait(false);
-        await BuildSingleRoundsAsync(dbContext, ct).ConfigureAwait(false);
         await BuildRoundsAsync(dbContext, ct).ConfigureAwait(false);
         await BuildMatchesAsync(dbContext, ct).ConfigureAwait(false);
     }
@@ -212,7 +210,7 @@ public class OutfitWarCollectionsBuilder : ICollectionBuilder
         }
     }
 
-    private async Task BuildSingleRoundsAsync(ICollectionsContext dbContext, CancellationToken ct)
+    private async Task BuildRoundsAsync(ICollectionsContext dbContext, CancellationToken ct)
     {
         try
         {
@@ -236,46 +234,6 @@ public class OutfitWarCollectionsBuilder : ICollectionBuilder
                         sRound.EndTime
                     ));
                 }
-            }
-
-            await dbContext.UpsertCollectionAsync(builtRounds.Values, ct).ConfigureAwait(false);
-        }
-        catch (Exception ex)
-        {
-            _logger.LogError(ex, "Failed to build the OutfitWarRounds collection");
-        }
-    }
-
-    private async Task BuildRoundsAsync(ICollectionsContext dbContext, CancellationToken ct)
-    {
-        try
-        {
-            if (_serverDataCache.OutfitWarRounds.Count == 0)
-                throw new MissingCacheDataException(typeof(OutfitWarRounds));
-
-            Dictionary<uint, MRounds> builtRounds = new();
-
-            foreach (OutfitWarRounds sRounds in _serverDataCache.OutfitWarRounds.Values)
-            {
-                ValueEqualityList<MRounds.Round> rounds = new();
-                foreach (OutfitWarRounds_Round sRound in sRounds.Rounds)
-                {
-                    rounds.Add(new MRounds.Round
-                    (
-                        sRound.Order,
-                        (MRounds.RoundStage)sRound.Stage,
-                        sRound.StartTime,
-                        sRound.EndTime
-                    ));
-                }
-
-                MRounds built = new
-                (
-                    sRounds.OutfitWarID,
-                    sRounds.ActiveWarInfo.RoundID,
-                    rounds
-                );
-                builtRounds.TryAdd(built.OutfitWarID, built);
             }
 
             await dbContext.UpsertCollectionAsync(builtRounds.Values, ct).ConfigureAwait(false);

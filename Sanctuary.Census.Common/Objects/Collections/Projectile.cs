@@ -23,6 +23,7 @@ namespace Sanctuary.Census.Common.Objects.Collections;
 /// <param name="LockonLoseAngle">The angle to target at which the projectile will lose its lock.</param>
 /// <param name="LockonSeekInFlight">Indicates whether the projectile will lock-on to a target while in flight.</param>
 /// <param name="ProjectileFlightTypeId">The flight type of the projectile.</param>
+/// <param name="ProjectileFlightTypeDescription">Describes the <paramref name="ProjectileFlightTypeId"/>.</param>
 /// <param name="ProjectileRadiusMeters">The radius of the projectile in meters.</param>
 /// <param name="ProximityLockonRangeHalfMeters">
 /// The range, in half-meters (divide by two in order to match in-game meters), at which a proximity projectile will lock on to a target.

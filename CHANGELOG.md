@@ -2,6 +2,11 @@
 
 Date format: DD/MM/YYYY
 
+## vNext
+
+➕ `projectile` additions:
+- `projectile_flight_type_description` (`string?`). Describes the `projectile_flight_type_id` field, when known.
+
 ## 02/11/2022
 
 💥 The deprecated `outfit_war_rounds` collection has been **removed**. Please migrate to using

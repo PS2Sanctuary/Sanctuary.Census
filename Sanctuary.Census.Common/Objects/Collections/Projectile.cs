@@ -42,7 +42,7 @@ namespace Sanctuary.Census.Common.Objects.Collections;
 [Collection]
 public record Projectile
 (
-    [property:Key] uint ProjectileId,
+    [property: Key] uint ProjectileId,
     decimal? Acceleration,
     string ActorDefinition,
     string? ActorDefinitionFirstPerson,
@@ -58,6 +58,7 @@ public record Projectile
     ushort? LockonLoseAngle,
     bool LockonSeekInFlight,
     byte ProjectileFlightTypeId,
+    string? ProjectileFlightTypeDescription,
     decimal ProjectileRadiusMeters,
     decimal? ProximityLockonRangeHalfMeters,
     decimal Speed,
@@ -70,4 +71,22 @@ public record Projectile
     byte? TracerFrequencyFirstPerson,
     decimal TurnRate,
     decimal VelocityInheritScalar
-) : ISanctuaryCollection;
+) : ISanctuaryCollection
+{
+    /// <summary>
+    /// Enumerates the various projectile flight types.
+    /// </summary>
+    public enum FlightType
+    {
+        /// <summary>
+        /// The standard projectile flight model. 'Fakes being effected by gravity'.
+        /// Details of implementation unknown.
+        /// </summary>
+        Ballistic = 1,
+
+        /// <summary>
+        /// True ballistic projectiles are properly effected by gravity based on the firing angle.
+        /// </summary>
+        TrueBallistic = 3
+    }
+}

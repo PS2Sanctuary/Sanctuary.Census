@@ -81,6 +81,7 @@ public class ProjectileCollectionBuilder : ICollectionBuilder
                 projectile.LockonLoseAngle.ToNullableUShort(),
                 (projectile.Flags & ProjectileFlags.LockonSeekInFlight1) != 0,
                 projectile.ProjectileFlightTypeID,
+                FlightTypeToString(projectile.ProjectileFlightTypeID),
                 new decimal(projectile.ProjectileRadiusMeters),
                 projectile.ProximityLockonRangeHalfMeters.ToNullableDecimal(),
                 new decimal(projectile.Speed),
@@ -99,4 +100,12 @@ public class ProjectileCollectionBuilder : ICollectionBuilder
 
         await dbContext.UpsertCollectionAsync(builtProjectiles.Values, ct).ConfigureAwait(false);
     }
+
+    private static string? FlightTypeToString(byte flightTypeId)
+        => (Projectile.FlightType)flightTypeId switch
+        {
+            Projectile.FlightType.Ballistic => nameof(Projectile.FlightType.Ballistic),
+            Projectile.FlightType.TrueBallistic => nameof(Projectile.FlightType.TrueBallistic),
+            _ => null
+        };
 }

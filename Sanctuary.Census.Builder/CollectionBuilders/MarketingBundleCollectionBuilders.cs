@@ -8,6 +8,7 @@ using Sanctuary.Census.Common.Objects.CommonModels;
 using Sanctuary.Census.ServerData.Internal.Abstractions.Services;
 using Sanctuary.Zone.Packets.InGamePurchase;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -52,8 +53,11 @@ public class MarketingBundleCollectionBuilders : ICollectionBuilder
 
         Dictionary<uint, MarketingBundle> builtBundles = new();
         List<MarketingBundleItem> builtItems = new();
-        foreach (StoreBundles_Bundle bundle in _serverDataCache.StoreBundles.Bundles)
+        foreach (StoreBundles_Bundle bundle in _serverDataCache.StoreBundles.Values.SelectMany(x => x.Bundles))
         {
+            if (builtBundles.ContainsKey(bundle.BundleID_1))
+                continue;
+
             _localeDataCache.TryGetLocaleString(bundle.NameID, out LocaleString? name);
             _localeDataCache.TryGetLocaleString(bundle.DescriptionID, out LocaleString? description);
             uint imageSetID = uint.Parse(bundle.BundleImage.ImageSetID);
@@ -78,7 +82,7 @@ public class MarketingBundleCollectionBuilders : ICollectionBuilder
                 hasDefaultImage ? defaultImage : null,
                 hasDefaultImage ? _imageSetHelper.GetRelativeImagePath(defaultImage) : null
             );
-            builtBundles.TryAdd(builtBundle.MarketingBundleID, builtBundle);
+            builtBundles.Add(builtBundle.MarketingBundleID, builtBundle);
 
             foreach (StoreBundles_ItemListDetail item in bundle.ItemListDetails)
             {

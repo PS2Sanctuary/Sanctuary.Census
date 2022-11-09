@@ -2,7 +2,7 @@
 
 Date format: DD/MM/YYYY
 
-## vNext
+## 09/11/2022
 
 ➕ `projectile` additions:
 - `projectile_flight_type_description` (`string?`). Describes the `projectile_flight_type_id` field, when known.

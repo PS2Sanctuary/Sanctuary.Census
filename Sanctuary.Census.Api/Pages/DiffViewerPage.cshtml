@@ -25,10 +25,10 @@
         </div>
         <div class="message-body">
             <ul>
-                @foreach (string collection in Model.DiffEntryBuckets.Keys)
+                @foreach ((string collection, List<DiffViewerPage.DiffObjectsDisplay> entries) in Model.DiffEntryBuckets)
                 {
                     <li>
-                        <a href="#coll-@collection">@collection</a>
+                        <a href="#coll-@collection">@collection</a> - @entries.Count changes
                     </li>
                 }
             </ul>
@@ -52,7 +52,7 @@
     {
         <div class="container" id="coll-@collectionName">
             <p class="notification is-link">
-                @collectionName
+                @collectionName - @entries.Count changes
             </p>
 
             @foreach (DiffViewerPage.DiffObjectsDisplay entry in entries)

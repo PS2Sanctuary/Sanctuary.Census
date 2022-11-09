@@ -7,9 +7,10 @@ Date format: DD/MM/YYYY
 ➕ `projectile` additions:
 - `projectile_flight_type_description` (`string?`). Describes the `projectile_flight_type_id` field, when known.
 
-🐛 Miscellaneous fixes:
+🐛 Fixes:
+- Fixed faction-specific `marketing_bundle`s only ever being present for a single faction.
 - Fixed entries in the `image_set` collection changing type every update cycle, owing to duplicates with different types
-  in the underlying data source. Now, the first entry will be used every time.
+  in the underlying data source. Now, all entries will be present.
 
 ## 02/11/2022
 

@@ -7,6 +7,10 @@ Date format: DD/MM/YYYY
 ➕ `projectile` additions:
 - `projectile_flight_type_description` (`string?`). Describes the `projectile_flight_type_id` field, when known.
 
+🐛 Miscellaneous fixes:
+- Fixed entries in the `image_set` collection changing type every update cycle, owing to duplicates with different types
+  in the underlying data source. Now, the first entry will be used every time.
+
 ## 02/11/2022
 
 💥 The deprecated `outfit_war_rounds` collection has been **removed**. Please migrate to using

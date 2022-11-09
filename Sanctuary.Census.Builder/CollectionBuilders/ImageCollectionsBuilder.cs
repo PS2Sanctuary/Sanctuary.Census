@@ -70,19 +70,11 @@ public class ImageCollectionsBuilder : ICollectionBuilder
         Dictionary<ImageSetType.Type, ImageSetType> types = _clientDataCache.ImageSetTypes
             .ToDictionary(x => x.ID);
 
-        // We need to maintain a list of pairs that we've already processed,
-        // as the ImageSetMapping collection can sometimes contain duplicates
-        // with different ImageTypes
-        Dictionary<uint, HashSet<uint>> setPairs = new();
         List<MImageSet> builtSets = new();
         foreach (ImageSet set in _clientDataCache.ImageSets)
         {
             if (!maps.ContainsKey(set.ID))
                 continue;
-
-            // Setup a pairing table for this set
-            setPairs.TryAdd(set.ID, new HashSet<uint>());
-            HashSet<uint> existingPairs = setPairs[set.ID];
 
             foreach (ImageSetMapping map in maps[set.ID])
             {
@@ -90,10 +82,6 @@ public class ImageCollectionsBuilder : ICollectionBuilder
                     continue;
 
                 if (string.IsNullOrEmpty(images[map.ImageID].FileName))
-                    continue;
-
-                // Don't overwrite an existing pair
-                if (!existingPairs.Add(map.ImageID))
                     continue;
 
                 builtSets.Add(new MImageSet

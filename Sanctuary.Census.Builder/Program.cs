@@ -171,7 +171,8 @@ public static class Program
             .WithIndex(x => x.ImageSetID, false)
             .WithIndex(x => x.ImageID, false)
             .WithEqualityKey(x => x.ImageSetID)
-            .WithEqualityKey(x => x.ImageID);
+            .WithEqualityKey(x => x.ImageID)
+            .WithEqualityKey(x => x.TypeID);
 
         configProvider.Register<ImageSetDefault>()
             .WithIndex(x => x.ImageSetID, true)

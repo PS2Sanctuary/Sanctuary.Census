@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.Options;
 using Sanctuary.Census.Common.Objects;
+using System;
 using System.IO;
 using System.IO.Abstractions;
 using System.Net.Http;
@@ -40,8 +41,15 @@ public class DebugManifestService : CachingManifestService
     {
         string filePath = Path.Combine(CacheDirectory, ps2Environment.ToString(), fileName);
         FileInfo info = new(filePath);
+
         if (!info.Exists)
             return await base.GetFileAsync(fileName, ps2Environment, ct);
+
+        if (info.LastWriteTime.AddHours(24) < DateTime.Now)
+        {
+            info.Delete();
+            return await base.GetFileAsync(fileName, ps2Environment, ct);;
+        }
 
         return new ManifestFile
         (

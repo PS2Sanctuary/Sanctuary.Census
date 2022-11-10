@@ -73,9 +73,6 @@ public class DirectiveCollectionsBuilder : ICollectionBuilder
         CancellationToken ct
     )
     {
-        if (_serverDataCache.DirectiveData.Count == 0)
-            throw new MissingCacheDataException(typeof(DirectiveInitialize));
-
         IEnumerable<FactionDefinition> expectedFactions = _loginOptions
             .Accounts[_environmentContextProvider.Environment]
             .SelectMany(x => x.Factions);

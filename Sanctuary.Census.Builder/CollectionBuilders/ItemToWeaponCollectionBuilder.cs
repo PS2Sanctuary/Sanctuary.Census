@@ -5,7 +5,6 @@ using Sanctuary.Census.ClientData.Abstractions.Services;
 using Sanctuary.Census.ClientData.ClientDataModels;
 using Sanctuary.Census.Common.Objects.Collections;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -37,12 +36,41 @@ public class ItemToWeaponCollectionBuilder : ICollectionBuilder
         CancellationToken ct
     )
     {
+        if (_clientDataCache.ClientItemDefinitions is null)
+            throw new MissingCacheDataException(typeof(ClientItemDefinition));
+
         if (_clientDataCache.ClientItemDatasheetDatas is null)
             throw new MissingCacheDataException(typeof(ClientItemDatasheetData));
 
-        IEnumerable<ItemToWeapon> builtItemsToWeapon = _clientDataCache.ClientItemDatasheetDatas
-            .Select(i => new ItemToWeapon(i.ItemID, i.WeaponID));
+        Dictionary<uint, ItemToWeapon> builtItemsToWeapons = new();
 
-        await dbContext.UpsertCollectionAsync(builtItemsToWeapon, ct).ConfigureAwait(false);
+        foreach (ClientItemDefinition itemDef in _clientDataCache.ClientItemDefinitions)
+        {
+            if (itemDef.CodeFactoryName is not "Weapon")
+                continue;
+
+            if (itemDef.Param1 is 0)
+                continue;
+
+            builtItemsToWeapons.TryAdd
+            (
+                itemDef.ID,
+                new ItemToWeapon(itemDef.ID, (uint)itemDef.Param1)
+            );
+        }
+
+        foreach (ClientItemDatasheetData element in _clientDataCache.ClientItemDatasheetDatas)
+        {
+            if (element.WeaponID is 0)
+                continue;
+
+            builtItemsToWeapons.TryAdd
+            (
+                element.ItemID,
+                new ItemToWeapon(element.ItemID, element.WeaponID)
+            );
+        }
+
+        await dbContext.UpsertCollectionAsync(builtItemsToWeapons.Values, ct).ConfigureAwait(false);
     }
 }

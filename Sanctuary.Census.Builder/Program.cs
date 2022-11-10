@@ -48,10 +48,10 @@ public static class Program
                     .Configure<LoginClientOptions>(context.Configuration.GetSection(nameof(LoginClientOptions)))
                     .Configure<GatewayClientOptions>(context.Configuration.GetSection(nameof(GatewayClientOptions)));
 
-                services.AddCommonServices()
-                    .AddClientDataServices()
-                    .AddPatchDataServices()
-                    .AddInternalServerDataServices()
+                services.AddCommonServices(context.HostingEnvironment)
+                    .AddClientDataServices(context.HostingEnvironment)
+                    .AddPatchDataServices(context.HostingEnvironment)
+                    .AddInternalServerDataServices(context.HostingEnvironment)
                     .AddScoped<ICollectionsContext, CollectionsContext>()
                     .AddScoped<ICollectionDiffService, CollectionDiffService>()
                     .AddScoped<IImageSetHelperService, ImageSetHelperService>()

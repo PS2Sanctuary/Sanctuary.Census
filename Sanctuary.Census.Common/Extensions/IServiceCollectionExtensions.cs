@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
+using Microsoft.Extensions.Hosting;
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization;
 using MongoDB.Bson.Serialization.Serializers;
@@ -23,15 +24,19 @@ namespace Sanctuary.Census.Common.Extensions;
 /// </summary>
 public static class IServiceCollectionExtensions
 {
-    private static bool _classMapsRegistered;
+    private static bool _registrationComplete;
 
     /// <summary>
     /// Adds common Sanctuary.Census services to the service collection.
     /// </summary>
     /// <param name="services">The service collection.</param>
     /// <returns>The <see cref="IServiceCollection"/> instance, so that calls may be chained.</returns>
-    public static IServiceCollection AddCommonServices(this IServiceCollection services)
+    /// <param name="hostEnvironment">The current host environment.</param>
+    public static IServiceCollection AddCommonServices(this IServiceCollection services, IHostEnvironment hostEnvironment)
     {
+        if (_registrationComplete)
+            return services;
+
         services.TryAddSingleton<IFileSystem, FileSystem>();
         services.TryAddScoped<EnvironmentContextProvider>();
 
@@ -40,20 +45,18 @@ public static class IServiceCollectionExtensions
         RegisterCollectionClassMaps();
 
         services.AddHttpClient(nameof(ManifestService));
-#if DEBUG
-        services.TryAddSingleton<IManifestService, DebugManifestService>();
-#else
-        services.TryAddSingleton<IManifestService, CachingManifestService>();
-#endif
 
+        if (hostEnvironment.IsProduction())
+            services.TryAddSingleton<IManifestService, CachingManifestService>();
+        else
+            services.TryAddSingleton<IManifestService, DebugManifestService>();
+
+        _registrationComplete = true;
         return services;
     }
 
     private static void RegisterCollectionClassMaps()
     {
-        if (_classMapsRegistered)
-            return;
-
         BsonSerializer.RegisterSerializer(new DecimalSerializer(BsonType.Decimal128));
 
         IEnumerable<Type> collTypes = typeof(CollectionAttribute).Assembly
@@ -68,7 +71,5 @@ public static class IServiceCollectionExtensions
         BsonClassMap.RegisterClassMap(MongoContext.AutoClassMap<DiffRecord>());
         BsonClassMap.RegisterClassMap(MongoContext.AutoClassMap<LocaleString>());
         BsonClassMap.RegisterClassMap(MongoContext.AutoClassMap<NewCollection>());
-
-        _classMapsRegistered = true;
     }
 }

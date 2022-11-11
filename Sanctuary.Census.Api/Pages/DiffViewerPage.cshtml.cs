@@ -6,6 +6,8 @@ using Sanctuary.Census.Common.Objects;
 using Sanctuary.Census.Common.Objects.DiffModels;
 using System;
 using System.Collections.Generic;
+using System.Dynamic;
+using System.Reflection;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
@@ -18,6 +20,7 @@ namespace Sanctuary.Census.Api.Pages;
 public class DiffViewerPage : PageModel
 {
     private static readonly JsonSerializerOptions EntryDisplayJsonOptions;
+    private static readonly Dictionary<Type, PropertyInfo[]> CollectionTypeProperties;
 
     private readonly IMongoContext _mongoContext;
 
@@ -45,6 +48,7 @@ public class DiffViewerPage : PageModel
             PropertyNamingPolicy = new SnakeCaseJsonNamingPolicy(),
             WriteIndented = true
         };
+        CollectionTypeProperties = new Dictionary<Type, PropertyInfo[]>();
     }
 
     /// <summary>
@@ -75,19 +79,73 @@ public class DiffViewerPage : PageModel
 
         foreach (CollectionDiffEntry diff in entries)
         {
+            // This should never occur, but worth checking
+            if (diff.OldObject is null && diff.NewObject is null)
+                continue;
+
             DiffEntryBuckets.TryAdd(diff.CollectionName, new List<DiffObjectsDisplay>());
 
-            string? oldObject = null;
-            if (diff.OldObject is not null)
-                oldObject = JsonSerializer.Serialize(diff.OldObject, EntryDisplayJsonOptions);
+            object? oldObject = diff.OldObject;
+            object? newObject = diff.NewObject;
 
-            string? newObject = null;
-            if (diff.NewObject is not null)
-                newObject = JsonSerializer.Serialize(diff.NewObject, EntryDisplayJsonOptions);
+            if (oldObject is not null && newObject is not null)
+            {
+                ExpandoObject tempOld = new();
+                ExpandoObject tempNew = new();
 
-            DiffObjectsDisplay objectsDisplay = new(oldObject, newObject);
+                void AddProperty(PropertyInfo prop)
+                {
+                    string name = SnakeCaseJsonNamingPolicy.Default.ConvertName(prop.Name);
+                    tempOld.TryAdd(name, prop.GetValue(diff.OldObject));
+                    tempNew.TryAdd(name, prop.GetValue(diff.NewObject));
+                }
+
+                foreach (PropertyInfo prop in GetCollectionTypeProperties(diff))
+                {
+                    if (prop.Name.EndsWith("id", StringComparison.OrdinalIgnoreCase))
+                    {
+                        AddProperty(prop);
+                    }
+                    else
+                    {
+                        object? oldValue = prop.GetValue(oldObject);
+                        object? newValue = prop.GetValue(newObject);
+
+                        if (oldValue is null && newValue is not null || oldValue is not null && newValue is null)
+                            AddProperty(prop);
+                        else if (oldValue is not null && newValue is not null && !oldValue.Equals(newValue))
+                            AddProperty(prop);
+                    }
+                }
+
+                oldObject = tempOld;
+                newObject = tempNew;
+            }
+
+            string? oldObjectString = null;
+            if (oldObject is not null)
+                oldObjectString = JsonSerializer.Serialize(oldObject, EntryDisplayJsonOptions);
+
+            string? newObjectString = null;
+            if (newObject is not null)
+                newObjectString = JsonSerializer.Serialize(newObject, EntryDisplayJsonOptions);
+
+            DiffObjectsDisplay objectsDisplay = new(oldObjectString, newObjectString);
             DiffEntryBuckets[diff.CollectionName].Add(objectsDisplay);
         }
+    }
+
+    private static PropertyInfo[] GetCollectionTypeProperties(CollectionDiffEntry diffEntry)
+    {
+        Type type = diffEntry.OldObject?.GetType() ?? diffEntry.NewObject!.GetType();
+
+        if (CollectionTypeProperties.ContainsKey(type))
+            return CollectionTypeProperties[type];
+
+        PropertyInfo[] props = type.GetProperties();
+        CollectionTypeProperties[type] = props;
+
+        return props;
     }
 
     /// <summary>

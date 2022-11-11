@@ -1,6 +1,8 @@
-﻿using Microsoft.Extensions.Options;
+﻿using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using Sanctuary.Census.Common.Objects;
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.IO.Abstractions;
 using System.Net.Http;
@@ -13,10 +15,10 @@ namespace Sanctuary.Census.Common.Services;
 /// <remarks>This service will cache manifest files in local appdata.</remarks>
 public class CachingManifestService : ManifestService
 {
-    private readonly SemaphoreSlim _cachedStreamLock;
-
-    private MemoryStream? _manifestStream;
-    private DateTimeOffset _streamLastUpdated;
+    private readonly ILogger<CachingManifestService> _logger;
+    private readonly SemaphoreSlim _streamCacheLock;
+    private readonly Dictionary<PS2Environment, MemoryStream> _manifestStreams;
+    private readonly Dictionary<PS2Environment, DateTimeOffset> _streamsLastUpdated;
 
     /// <summary>
     /// Gets the file system implementation.
@@ -31,17 +33,23 @@ public class CachingManifestService : ManifestService
     /// <summary>
     /// Initializes a new instance of the <see cref="CachingManifestService"/> class.
     /// </summary>
+    /// <param name="logger">The logging interface to use.</param>
     /// <param name="clientFactory">The HTTP client to use.</param>
     /// <param name="commonOptions">The configured common options.</param>
     /// <param name="fileSystem">The file system implementation to use.</param>
     public CachingManifestService
     (
+        ILogger<CachingManifestService> logger,
         IHttpClientFactory clientFactory,
         IOptions<CommonOptions> commonOptions,
         IFileSystem fileSystem
     ) : base(clientFactory)
     {
-        _cachedStreamLock = new SemaphoreSlim(1);
+        _logger = logger;
+        _streamCacheLock = new SemaphoreSlim(1);
+        _manifestStreams = new Dictionary<PS2Environment, MemoryStream>();
+        _streamsLastUpdated = new Dictionary<PS2Environment, DateTimeOffset>();
+
         FileSystem = fileSystem;
         CacheDirectory = FileSystem.Path.Combine(commonOptions.Value.AppDataDirectory, "ManifestCache");
     }
@@ -57,7 +65,16 @@ public class CachingManifestService : ManifestService
         IFileInfo fileInfo = FileSystem.FileInfo.FromFileName(filePath);
 
         if (fileInfo.Exists && fileInfo.LastWriteTimeUtc >= file.Timestamp)
+        {
+            _logger.LogDebug
+            (
+                "[{Env}] Manifest file retrieve from cache. Last write time: {Lwt}. Manifest timestamp: {Ts}",
+                file.Environment,
+                fileInfo.LastWriteTimeUtc,
+                file.Timestamp
+            );
             return FileSystem.File.OpenRead(filePath);
+        }
 
         Stream dataStream = await base.GetFileDataAsync(file, ct).ConfigureAwait(false);
         await using Stream fs = FileSystem.File.OpenWrite(filePath);
@@ -71,25 +88,33 @@ public class CachingManifestService : ManifestService
     /// <inheritdoc />
     protected override async Task<Stream> GetManifestStreamAsync(PS2Environment environment, CancellationToken ct)
     {
-        if (_streamLastUpdated.AddMinutes(5) < DateTimeOffset.UtcNow || _manifestStream is null)
+        await _streamCacheLock.WaitAsync(ct);
+
+        bool streamNeedsUpdating = !_streamsLastUpdated.TryGetValue(environment, out DateTimeOffset lastUpdate)
+            || lastUpdate.AddMinutes(5) < DateTimeOffset.UtcNow;
+
+        bool streamNotPresent = !_manifestStreams.TryGetValue(environment, out MemoryStream? cacheStream);
+
+        if (streamNeedsUpdating || streamNotPresent)
         {
-            if (_manifestStream is not null)
-                await _manifestStream.DisposeAsync();
-            _manifestStream = new MemoryStream();
+            if (cacheStream is not null)
+                await cacheStream.DisposeAsync();
+
+            cacheStream = new MemoryStream();
+            _manifestStreams[environment] = cacheStream;
 
             await using Stream s = await base.GetManifestStreamAsync(environment, ct);
-            await s.CopyToAsync(_manifestStream, ct);
-            _streamLastUpdated = DateTimeOffset.UtcNow;
+            await s.CopyToAsync(cacheStream, ct);
+            _streamsLastUpdated[environment] = DateTimeOffset.UtcNow;
         }
 
-        await _cachedStreamLock.WaitAsync(ct);
-        _manifestStream.Seek(0, SeekOrigin.Begin);
+        cacheStream!.Seek(0, SeekOrigin.Begin);
 
         MemoryStream ms = new();
-        await _manifestStream.CopyToAsync(ms, ct);
+        await cacheStream.CopyToAsync(ms, ct);
         ms.Seek(0, SeekOrigin.Begin);
 
-        _cachedStreamLock.Release();
+        _streamCacheLock.Release();
         return ms;
     }
 }

@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Options;
+﻿using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using Sanctuary.Census.Common.Objects;
 using System;
 using System.IO;
@@ -19,15 +20,17 @@ public class DebugManifestService : CachingManifestService
     /// <summary>
     /// Initializes a new instance of the <see cref="DebugManifestService"/> class.
     /// </summary>
+    /// <param name="logger">The logging interface to use.</param>
     /// <param name="clientFactory">The HTTP client to use.</param>
     /// <param name="commonOptions">The configured common options.</param>
     /// <param name="fileSystem">The filesystem to use.</param>
     public DebugManifestService
     (
+        ILogger<DebugManifestService> logger,
         IHttpClientFactory clientFactory,
         IOptions<CommonOptions> commonOptions,
         IFileSystem fileSystem
-    ) : base(clientFactory, commonOptions, fileSystem)
+    ) : base(logger, clientFactory, commonOptions, fileSystem)
     {
     }
 

@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Options;
+﻿using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using Moq;
 using Moq.Protected;
 using Sanctuary.Census.Common.Objects;
@@ -81,6 +82,7 @@ public class CachingManifestServiceTests
 
         return new CachingManifestService
         (
+            new Mock<ILogger<CachingManifestService>>().Object,
             factoryMock.Object,
             Options.Create(new CommonOptions { AppDataDirectory = "AppData" }),
             fileSystem

@@ -1,7 +1,7 @@
-﻿using MongoDB.Bson;
+﻿using MemoryReaders;
+using MongoDB.Bson;
 using MongoDB.Bson.Serialization;
 using MongoDB.Driver;
-using Sanctuary.Census.Common.Util;
 using Sanctuary.Census.Api.Exceptions;
 using Sanctuary.Census.Api.Models;
 using Sanctuary.Census.Api.Util;

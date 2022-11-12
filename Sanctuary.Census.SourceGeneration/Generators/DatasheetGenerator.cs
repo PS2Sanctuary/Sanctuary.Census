@@ -173,8 +173,8 @@ public class DatasheetGenerator : IIncrementalGenerator
 
         return $@"#nullable enable
 
+using MemoryReaders;
 using Sanctuary.Census.ClientData.Abstractions.ClientDataModels;
-using Sanctuary.Census.Common.Util;
 using System;
 using System.Buffers.Text;
 using System.Collections.Generic;

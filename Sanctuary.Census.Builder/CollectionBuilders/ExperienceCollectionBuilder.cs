@@ -53,7 +53,8 @@ public class ExperienceCollectionBuilder : ICollectionBuilder
             (
                 experience.ID,
                 experience.AwardTypeID,
-                name!,
+                name?.En,
+                name,
                 new decimal(experience.XP),
                 experience.NotableEvent
             );

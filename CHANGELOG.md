@@ -2,6 +2,12 @@
 
 Date format: DD/MM/YYYY
 
+## vNext
+
+🚨 Breaking change to the `experience` collection:
+- The `description` field has been re-typed as a nullable `string`, to match DBG Census.
+- The localized description is now called `localized_description`, and is also explicitly nullable.
+
 ## 09/11/2022
 
 ➕ `projectile` additions:

@@ -1,0 +1,16 @@
+<Project>
+
+  <Import Project="..\Directory.Build.props"/>
+
+  <!-- NuGet-related properties -->
+  <PropertyGroup>
+    <IsPackable>false</IsPackable>
+  </PropertyGroup>
+
+  <!-- NuGet-related release properties -->
+  <PropertyGroup Condition="'$(Configuration)'=='Release'">
+    <GenerateDocumentationFile>false</GenerateDocumentationFile>
+    <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
+  </PropertyGroup>
+
+</Project>

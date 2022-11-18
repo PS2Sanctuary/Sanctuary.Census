@@ -1,24 +1,41 @@
 ﻿# Sanctuary.Census
 
 An unofficial supplement to [Daybreak Game Company's Census API](https://census.daybreakgames.com), which aims to present up-to-date
-static PlanetSide 2 data. The methods through which Sanctuary.Census retrieves data allow it to keep itself up-to-date automatically,
-until such a time as the structure of the data it depends on, or the methods required to retrieve it, change.
+static PlanetSide 2 data. The methods through which Sanctuary.Census retrieves data allow it to keep itself up-to-date (mostly) automatically,
+until such a time as the structure of the data it depends on, or the methods required to retrieve it, change. Major PlanetSide 2 updates will
+often require small changes in order to update certain collections, which can take a small amount of time to implement.
 
 ## Getting Started
 
 An instance of Sanctuary.Census can be found at `https://census.lithafalcon.cc/`. It largely provides the same query interface
-as the official Census, so make sure you're familiar with using it. I'd recommend checking out
+as the official Census, so ensure you are familiar with using that. I'd recommend reading
 [Leonhard's Census Primer](https://github.com/leonhard-s/auraxium/wiki/Census-API-Primer) if you're not.
 
 Jump right in by heading to [https://census.lithafalcon.cc/get/ps2](https://census.lithafalcon.cc/get/ps2) to view the available collections.
 
-⚠ Finally, please read the [migrating from Census](docs/migrating-from-census.md) documentation.
+> **Warning**:
+> Please read the [migrating from Census](docs/migrating-from-census.md) documentation to get an overview of any differences between
+> Sanctuary.Census and the official Census.
 
-⚠ The API should be considered unstable, although hopefully only in a manner that features are being added in a non-disruptive way.
+### Namespaces
+
+Sanctuary.Census only provides two namespaces:
+
+- `ps2` - data from the current 'live' release of the game.
+- `pts` - data from the current 'test' release of the game.
+
+### The `describe` verb
+
+Sanctuary.Census provides some collections, and fields on existing collections, that the official Census does not have.
+In order to better understand these collections, the `describe` verb may be used to obtain typing information and
+descriptions of the collection's fields.
+
+> GET /describe/&lt;namespace&gt;/&lt;collection&gt;\
+> e.g https://census.lithafalcon.cc/describe/ps2/fire_mode_2
 
 ## Building
 
-To build Sanctuary.Census, you'll require the [.NET 6 SDK](https://dotnet.microsoft.com/en-us/download/dotnet/6.0).
+To build Sanctuary.Census, you'll require the [.NET 7 SDK](https://dotnet.microsoft.com/en-us/download/dotnet/7.0).
 Furthermore, you'll need access to a MongoDB instance. This is simple to [install locally](https://www.mongodb.com/docs/manual/installation/).
 Sanctuary.Census expects the database to be running on the default endpoint of `localhost:27017`, and there is currently
 no way to configure this.
@@ -51,5 +68,5 @@ specific data models, data retrieval logic and an object inheriting from `IDataC
 
 ## Contributing
 
-Contributions are more than welcome! Please consider opening an issue first to detail your ideas. This gives a maintainer a chance to pre-approve
-the work, and reduces the likelihood of two people working on the same feature simultaneously.
+Contributions are more than welcome! Please consider opening an issue first to detail your ideas. This gives a maintainer a chance
+to pre-approve the work, and reduces the likelihood of two people working on the same feature simultaneously.

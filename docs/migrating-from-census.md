@@ -1,6 +1,7 @@
 # Migrating from Census
 
-This document serves as an outline of how well Sanctuary.Census maintains parity with DBG Census.
+This document serves as an outline of how well Sanctuary.Census maintains parity with the official Census.
+It **does not** document any additional features that Sanctuary.Census provides over the official Census.
 
 ## Queries
 
@@ -23,11 +24,11 @@ Command behaviour differences:
 - `c:tree` does not support the `start` key.
 - `c:timing` inserts a slightly different model.
 
-Any other commands not listed here are fully supported and should behave exactly as they do on the DBG Census.
+Any other commands not listed here are fully supported and should behave exactly as they do on the official Census.
 
 ## Response Shape
 
-The shape of the response document should be exactly the same as DBG Census.
+The shape of the response document should be exactly the same as the official Census.
 
 If you would prefer that responses are serialized according to JSON spec, you can add the `c:censusJSON=false` command.
 All number, boolean and `null` values will then be represented appropriately, rather than as strings.
@@ -39,7 +40,8 @@ Please note that the error response format is not consistent, although it should
 
 ## Collections
 
-ℹ Please see the [collection model definitions here](../Sanctuary.Census.Common/Objects/Collections).
+> **Note**:
+> Please see the [collection model definitions here](../Sanctuary.Census.Common/Objects/Collections).
 
 This section lists the Collections provided by Sanctuary.Census, and compares them to the DBG Census.
 Many collections add additional data on top of the DBG Census data, and collections which DBG Census does
@@ -47,13 +49,14 @@ not provide also exist, but this is not documented here. The source of truth for
 current set of collections can be found at the root endpoint of an environment
 (e.g. [https://census.lithafalcon.cc/get/ps2](https://census.lithafalcon.cc/get/ps2)).
 
-⚠ If a DBG Census collection is not listed here, it not supported.
+⚠ If an official Census collection is not listed here, it not supported.
 
 ### 🌠 Gold Tier Collections
 
 These collections provide the same data as their DBG Census equivalents. The shape is not guaranteed to match,
 but is likely to be very similar.
 
+- ability
 - currency
 - directive_tier*
 - directive_tree
@@ -64,16 +67,21 @@ but is likely to be very similar.
 - fire_group
 - fire_group_to_fire_mode
 - fire_mode_to_projectile
+- image
 - image_set
+- image_set_default
 - item_category
 - item_to_weapon
 - map_hex
 - marketing_bundle
 - marketing_bundle_item
-- ⚠ player_state_group - please query on `player_state_group_2` instead, which is a direct upgrade
 - player_state_group_2
-- ⚠ profile_2 - please query on `profile` instead, which is a direct upgrade
 - projectile
+- resource_type
+- skill
+- skill_category
+- skill_line
+- skill_set
 - vehicle_attachment
 - vehicle_skill_set
 - weapon_to_attachment
@@ -163,4 +171,5 @@ equivalents invalid.
 
 #### profile
 
-Missing the `movement_speed`, `backpedal_speed_modifier`, `sprint_speed_modifier` and `strafe_speed_modifier` fields.
+Missing the `profile_type_description`, `movement_speed`, `backpedal_speed_modifier`, `sprint_speed_modifier`
+and `strafe_speed_modifier` fields.

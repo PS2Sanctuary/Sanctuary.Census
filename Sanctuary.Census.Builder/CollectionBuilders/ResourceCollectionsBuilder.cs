@@ -115,7 +115,7 @@ public class ResourceCollectionsBuilder : ICollectionBuilder
             builtTypes.Add(type.TypeID, new MResourceType
             (
                 type.TypeID,
-                type.TypeName,
+                type.TypeName?.Replace("ResourceType", string.Empty),
                 name,
                 type.ImageSet.ToNullableUInt(),
                 defaultImage.ToNullableUInt(),

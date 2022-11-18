@@ -5,8 +5,12 @@ Date format: DD/MM/YYYY
 ## vNext
 
 🚨 Breaking change to the `experience` collection:
-- The `description` field has been re-typed as a nullable `string`, to match DBG Census.
+- The `description` field has been re-typed as a nullable `string`, to match the official Census.
 - The localized description is now called `localized_description`, and is also explicitly nullable.
+
+🚨 Breaking change to the `resource_type` collection:
+- The `code_name` field has been re-named to `description` and the value has been stripped of the
+  `ResourceType` prefix, in order to match the official Census.
 
 ## 09/11/2022
 

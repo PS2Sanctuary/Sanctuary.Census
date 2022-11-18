@@ -10,7 +10,7 @@ namespace Sanctuary.Census.Common.Objects.Collections;
 /// Represents a resource type.
 /// </summary>
 /// <param name="ResourceTypeId">The ID of the type.</param>
-/// <param name="CodeName">The code name of the type.</param>
+/// <param name="Description">The description of the type.</param>
 /// <param name="Name">The localized name of the resource type.</param>
 /// <param name="ImageSetId">The ID of the image set linked to the resource type.</param>
 /// <param name="ImageId">The ID of the resource type's default image.</param>
@@ -20,7 +20,7 @@ namespace Sanctuary.Census.Common.Objects.Collections;
 public record ResourceType
 (
     [property: Key] uint ResourceTypeId,
-    string? CodeName,
+    string? Description,
     LocaleString? Name,
     [property: Key] uint? ImageSetId,
     [property: Key] uint? ImageId,

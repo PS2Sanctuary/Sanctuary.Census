@@ -297,10 +297,10 @@ public class DirectiveCollectionsBuilder : ICollectionBuilder
     {
         try
         {
-            Dictionary<uint, MRewardSet> builtSets = new();
-            List<MReward> builtRewards = new();
+            Dictionary<int, MRewardSet> builtSets = new();
+            Dictionary<int, MReward> builtRewards = new();
 
-            foreach (DirectiveInitialize data in _serverDataCache.DirectiveData.Values)
+            foreach ((FactionDefinition faction, DirectiveInitialize data) in _serverDataCache.DirectiveData)
             {
                 foreach (DirectiveTree tree in data.Trees)
                 {
@@ -312,15 +312,17 @@ public class DirectiveCollectionsBuilder : ICollectionBuilder
                     {
                         ct.ThrowIfCancellationRequested();
 
-                        if (reward.RewardSetID == 0 || builtSets.ContainsKey(reward.RewardSetID))
+                        if (reward.RewardSetID == 0)
                             continue;
 
                         _localeDataCache.TryGetLocaleString(reward.NameID, out LocaleString? setName);
                         bool setHasDefaultImage = _imageSetHelper.TryGetDefaultImage(tree.ImageSetID, out uint setDefaultImage);
 
-                        builtSets.Add(reward.RewardSetID, new MRewardSet
+                        int setHashCode = HashCode.Combine(reward.RewardSetID, faction);
+                        builtSets.TryAdd(setHashCode, new MRewardSet
                         (
                             reward.RewardSetID,
+                            (byte)faction,
                             setName,
                             reward.ImageSetID,
                             setHasDefaultImage ? setDefaultImage : null,
@@ -332,7 +334,8 @@ public class DirectiveCollectionsBuilder : ICollectionBuilder
                             _localeDataCache.TryGetLocaleString(item.NameID, out LocaleString? rewardName);
                             bool hasDefaultImage = _imageSetHelper.TryGetDefaultImage(tree.ImageSetID, out uint defaultImage);
 
-                            builtRewards.Add(new MReward
+                            int itemHashCode = HashCode.Combine(reward.RewardSetID, item.ItemID);
+                            builtRewards.TryAdd(itemHashCode, new MReward
                             (
                                 reward.RewardSetID,
                                 item.ItemID,
@@ -348,7 +351,7 @@ public class DirectiveCollectionsBuilder : ICollectionBuilder
             }
 
             await dbContext.UpsertCollectionAsync(builtSets.Values, ct).ConfigureAwait(false);
-            await dbContext.UpsertCollectionAsync(builtRewards, ct).ConfigureAwait(false);
+            await dbContext.UpsertCollectionAsync(builtRewards.Values, ct).ConfigureAwait(false);
         }
         catch (Exception ex)
         {

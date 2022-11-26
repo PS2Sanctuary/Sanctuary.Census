@@ -10,6 +10,7 @@ namespace Sanctuary.Census.Common.Objects.Collections;
 /// Represents a reward of a directive tier.
 /// </summary>
 /// <param name="RewardSetID">The ID of the reward set.</param>
+/// <param name="FactionId">The ID of the faction that this reward set is offered on.</param>
 /// <param name="Name">The name of the reward set.</param>
 /// <param name="ImageSetID">The ID of the reward set's image set.</param>
 /// <param name="ImageID">The ID of the reward set's default image.</param>
@@ -19,6 +20,7 @@ namespace Sanctuary.Census.Common.Objects.Collections;
 public record DirectiveTierRewardSet
 (
     [property: Key] uint RewardSetID,
+    [property: Key] byte FactionId,
     LocaleString? Name,
     [property: Key] uint ImageSetID,
     [property: Key] uint? ImageID,

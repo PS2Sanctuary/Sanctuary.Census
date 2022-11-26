@@ -446,19 +446,12 @@ public class JoinBuilder
         }
 
         CollectionUtils.TryGetMatchingKeyFields(onCollection, ToCollection, out string? matchingKeyField);
-        if (OnField is null)
-        {
-            OnField = matchingKeyField
-                ?? throw new QueryException(QueryErrorCode.JoinFieldRequired, $"The {onCollection} requires the 'on' key to be specified.");
-        }
-        if (ToField is null)
-        {
-            ToField = matchingKeyField
-                ?? throw new QueryException(QueryErrorCode.JoinFieldRequired, $"The {ToCollection} requires the 'to' key to be specified.");
-        }
+        OnField ??= matchingKeyField
+            ?? throw new QueryException(QueryErrorCode.JoinFieldRequired, $"Joining from {onCollection} requires the 'on' key to be specified.");
+        ToField ??= matchingKeyField
+            ?? throw new QueryException(QueryErrorCode.JoinFieldRequired, $"Joining to {ToCollection} requires the 'to' key to be specified.");
 
-        if (InjectAt is null)
-            InjectAt = $"{OnField}_join_{ToCollection}";
+        InjectAt ??= $"{OnField}_join_{ToCollection}";
 
         foreach (string term in Terms)
             filters.Add(FilterBuilder.Parse(ToCollection, term));

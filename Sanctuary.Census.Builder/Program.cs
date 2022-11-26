@@ -105,8 +105,9 @@ public static class Program
             .WithEqualityKey(x => x.ItemID);
 
         configProvider.Register<DirectiveTierRewardSet>()
-            .WithIndex(x => x.RewardSetID, true)
-            .WithEqualityKey(x => x.RewardSetID);
+            .WithIndex(x => x.RewardSetID, false)
+            .WithEqualityKey(x => x.RewardSetID)
+            .WithEqualityKey(x => x.FactionId);
 
         configProvider.Register<DirectiveTreeCategory>()
             .WithIndex(x => x.DirectiveTreeCategoryID, true)

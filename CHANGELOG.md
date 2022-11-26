@@ -4,13 +4,25 @@ Date format: DD/MM/YYYY
 
 ## vNext
 
-🚨 Breaking change to the `experience` collection:
-- The `description` field has been re-typed as a nullable `string`, to match the official Census.
-- The localized description is now called `localized_description`, and is also explicitly nullable.
+🚨 **Breaking changes** 
 
-🚨 Breaking change to the `resource_type` collection:
-- The `code_name` field has been re-named to `description` and the value has been stripped of the
+On the `experience` collection:
+- the `description` field has been re-typed as a nullable `string`, to match the official Census.
+- the localized description is now called `localized_description`, and is also explicitly nullable.
+
+On the `resource_type` collection:
+- the `code_name` field has been re-named to `description` and the value has been stripped of the
   `ResourceType` prefix, in order to match the official Census.
+
+➕ **Collection field additions**
+
+On the `directive_tier_reward_set` collection:
+- The `faction_id` field has been added. Entries will now exist for each faction they are available on.
+
+🐛 **Fixes**
+
+- Multiple entries in the `directive_tier_reward` collection will now appear, in cases where the reward
+  set is offered on multiple factions.
 
 ## 09/11/2022
 

@@ -139,6 +139,10 @@ public static class Program
                     && r.ZoneID is not (uint)ZoneDefinition.Tutorial2
             );
 
+        configProvider.Register<FacilityType>()
+            .WithIndex(x => x.FacilityTypeId, true)
+            .WithEqualityKey(x => x.FacilityTypeId);
+
         configProvider.Register<Faction>()
             .WithIndex(x => x.FactionID, true)
             .WithEqualityKey(x => x.FactionID);

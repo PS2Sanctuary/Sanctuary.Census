@@ -14,7 +14,9 @@ On the `resource_type` collection:
 - the `code_name` field has been re-named to `description` and the value has been stripped of the
   `ResourceType` prefix, in order to match the official Census.
 
-➕ **Collection field additions**
+➕ **Additions**
+
+Added the `facility_type` collection. Note that this is manually updated.
 
 On the `directive_tier_reward_set` collection:
 - The `faction_id` field has been added. Entries will now exist for each faction they are available on.

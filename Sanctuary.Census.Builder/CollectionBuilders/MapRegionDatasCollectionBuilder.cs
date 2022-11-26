@@ -79,6 +79,7 @@ public class MapRegionDatasCollectionBuilder : ICollectionBuilder
         else
             _logger.LogError("Cannot build FacilityLinks collection - map region build failed");
 
+        await UpsertFacilityTypesAsync(dbContext, ct).ConfigureAwait(false);
     }
 
     private async Task<Dictionary<uint, MapRegion>?> UpsertRegionsAsync
@@ -218,6 +219,25 @@ public class MapRegionDatasCollectionBuilder : ICollectionBuilder
         catch (Exception ex)
         {
             _logger.LogError(ex, "Failed to upsert the MapHex collection");
+        }
+    }
+
+    private async Task UpsertFacilityTypesAsync
+    (
+        ICollectionsContext dbContext,
+        CancellationToken ct
+    )
+    {
+        try
+        {
+            if (_patchDataCache.FacilityTypes is null)
+                throw new MissingCacheDataException(typeof(FacilityType));
+
+            await dbContext.UpsertCollectionAsync(_patchDataCache.FacilityTypes, ct).ConfigureAwait(false);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Failed to upsert the FacilityType collection");
         }
     }
 

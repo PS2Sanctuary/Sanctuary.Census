@@ -2,7 +2,7 @@
 
 Date format: DD/MM/YYYY
 
-## vNext
+## 27/11/2022
 
 🚨 **Breaking changes** 
 

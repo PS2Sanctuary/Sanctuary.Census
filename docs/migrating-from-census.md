@@ -63,6 +63,7 @@ but is likely to be very similar.
 - directive_tree_category
 - experience
 - facility_link
+- facility_type
 - faction
 - fire_group
 - fire_group_to_fire_mode

@@ -5,6 +5,7 @@ using Sanctuary.Census.Builder.Exceptions;
 using Sanctuary.Census.ClientData.Abstractions.Services;
 using Sanctuary.Census.Common.Objects.Collections;
 using Sanctuary.Census.Common.Objects.CommonModels;
+using Sanctuary.Census.PatchData.Abstractions.Services;
 using Sanctuary.Census.ServerData.Internal.Abstractions.Services;
 using Sanctuary.Common.Objects;
 using Sanctuary.Zone.Packets.MapRegion;
@@ -25,6 +26,7 @@ public class MapRegionDatasCollectionBuilder : ICollectionBuilder
     private readonly ILogger<MapRegionDatasCollectionBuilder> _logger;
     private readonly ILocaleDataCacheService _localeDataCache;
     private readonly IServerDataCacheService _serverDataCache;
+    private readonly IPatchDataCacheService _patchDataCache;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="MapRegionDatasCollectionBuilder"/> class.
@@ -32,16 +34,19 @@ public class MapRegionDatasCollectionBuilder : ICollectionBuilder
     /// <param name="logger">The logging interface to use.</param>
     /// <param name="localeDataCache">The locale data cache.</param>
     /// <param name="serverDataCache">The server data cache.</param>
+    /// <param name="patchDataCache">The patch data cache.</param>
     public MapRegionDatasCollectionBuilder
     (
         ILogger<MapRegionDatasCollectionBuilder> logger,
         ILocaleDataCacheService localeDataCache,
-        IServerDataCacheService serverDataCache
+        IServerDataCacheService serverDataCache,
+        IPatchDataCacheService patchDataCache
     )
     {
         _logger = logger;
         _localeDataCache = localeDataCache;
         _serverDataCache = serverDataCache;
+        _patchDataCache = patchDataCache;
     }
 
     /// <inheritdoc />
@@ -91,6 +96,13 @@ public class MapRegionDatasCollectionBuilder : ICollectionBuilder
             foreach (FacilityInfo fac in _serverDataCache.StaticFacilityInfos.Facilities)
                 facilityInfos.TryAdd(fac.FacilityID, fac);
 
+            Dictionary<byte, string> facilityTypeDescriptions = new();
+            if (_patchDataCache.FacilityTypes is not null)
+            {
+                foreach (FacilityType facType in _patchDataCache.FacilityTypes)
+                    facilityTypeDescriptions.Add(facType.FacilityTypeId, facType.Description);
+            }
+
             Dictionary<uint, MapRegion> builtRegions = new();
 
             foreach ((ZoneDefinition zone, MapRegionData regionData) in _serverDataCache.MapRegionDatas)
@@ -104,6 +116,7 @@ public class MapRegionDatasCollectionBuilder : ICollectionBuilder
 
                     _localeDataCache.TryGetLocaleString(region.FacilityNameID, out LocaleString? name);
                     facilityInfos.TryGetValue(region.FacilityID, out FacilityInfo? facility);
+                    facilityTypeDescriptions.TryGetValue(region.FacilityTypeID, out string? facTypeDescription);
 
                     builtRegions.TryAdd(region.MapRegionID_1, new MapRegion
                     (
@@ -113,7 +126,7 @@ public class MapRegionDatasCollectionBuilder : ICollectionBuilder
                         name?.En,
                         name,
                         region.FacilityTypeID,
-                        FacilityTypeToName(region.FacilityTypeID),
+                        facTypeDescription,
                         facility is null ? null : new decimal(facility.LocationX),
                         facility is null ? null : new decimal(facility.LocationY),
                         facility is null ? null : new decimal(facility.LocationZ)
@@ -207,25 +220,6 @@ public class MapRegionDatasCollectionBuilder : ICollectionBuilder
             _logger.LogError(ex, "Failed to upsert the MapHex collection");
         }
     }
-
-    private static string FacilityTypeToName(byte facilityType)
-        => facilityType switch
-        {
-            1 => "Default",
-            2 => "Amp Station",
-            3 => "Bio Lab",
-            4 => "Tech Plant",
-            5 => "Large Outpost",
-            6 => "Small Outpost",
-            7 => "Warpgate",
-            8 => "Interlink Facility",
-            9 => "Construction Outpost",
-            10 => "Relic Outpost (Desolation)",
-            11 => "Containment Site",
-            12 => "Trident",
-            13 => "Seapost",
-            _ => "Unknown"
-        };
 
     private static string HexTypeToName(byte hexType)
         => hexType switch

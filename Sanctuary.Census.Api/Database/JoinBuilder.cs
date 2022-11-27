@@ -374,7 +374,14 @@ public class JoinBuilder
                 subPipeline.Add(new BsonDocument
                 (
                     "$unwind",
-                    new BsonDocument("path", $"${child.InjectAt}")
+                    new BsonDocument
+                    (
+                        (IEnumerable<BsonElement>)new BsonElement[]
+                        {
+                            new("path", $"${child.InjectAt}"),
+                            new("preserveNullAndEmptyArrays", true)
+                        }
+                    )
                 ));
             }
 

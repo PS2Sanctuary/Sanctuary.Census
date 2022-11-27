@@ -3,7 +3,6 @@ using Sanctuary.Census.Common.Attributes;
 using Sanctuary.Census.Common.Objects.CommonModels;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Reflection;
@@ -17,14 +16,14 @@ public static class CollectionUtils
 {
     private static readonly Dictionary<string, Type> _collectionSnakeNameToType;
     private static readonly Dictionary<string, HashSet<string>> _collectionNamesAndFields;
-    private static readonly Dictionary<string, HashSet<string>> _keyFields;
+    private static readonly Dictionary<string, HashSet<string>> _joinKeyFields;
     private static readonly Dictionary<string, List<string>> _langFields;
 
     static CollectionUtils()
     {
         _collectionSnakeNameToType = new Dictionary<string, Type>();
         _collectionNamesAndFields = new Dictionary<string, HashSet<string>>();
-        _keyFields = new Dictionary<string, HashSet<string>>();
+        _joinKeyFields = new Dictionary<string, HashSet<string>>();
         _langFields = new Dictionary<string, List<string>>();
 
         IEnumerable<Type> collTypes = typeof(CollectionAttribute).Assembly
@@ -38,7 +37,7 @@ public static class CollectionUtils
 
             _collectionSnakeNameToType.Add(collName, collType);
             _collectionNamesAndFields.Add(collName, propNames);
-            _keyFields.Add(collName, new HashSet<string>());
+            _joinKeyFields.Add(collName, new HashSet<string>());
             _langFields.Add(collName, new List<string>());
 
             foreach (PropertyInfo prop in collType.GetProperties())
@@ -46,8 +45,8 @@ public static class CollectionUtils
                 string propName = SnakeCaseJsonNamingPolicy.Default.ConvertName(prop.Name);
                 propNames.Add(propName);
 
-                if (prop.IsDefined(typeof(KeyAttribute)))
-                    _keyFields[collName].Add(propName);
+                if (prop.IsDefined(typeof(JoinKeyAttribute)))
+                    _joinKeyFields[collName].Add(propName);
 
                 if (prop.PropertyType == typeof(LocaleString))
                     _langFields[collName].Add(propName);
@@ -104,9 +103,9 @@ public static class CollectionUtils
     {
         matchingKeyFieldName = null;
 
-        if (!_keyFields.TryGetValue(collectionNameA, out HashSet<string>? keyFieldsA))
+        if (!_joinKeyFields.TryGetValue(collectionNameA, out HashSet<string>? keyFieldsA))
             return false;
-        if (!_keyFields.TryGetValue(collectionNameB, out HashSet<string>? keyFieldsB))
+        if (!_joinKeyFields.TryGetValue(collectionNameB, out HashSet<string>? keyFieldsB))
             return false;
 
         matchingKeyFieldName = keyFieldsA.FirstOrDefault(k => keyFieldsB.Contains(k));

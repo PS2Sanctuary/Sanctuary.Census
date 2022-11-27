@@ -2,7 +2,6 @@
 using Sanctuary.Census.Common.Attributes;
 using Sanctuary.Census.Common.Objects.CommonModels;
 using System.ComponentModel;
-using System.ComponentModel.DataAnnotations;
 
 namespace Sanctuary.Census.Common.Objects.Collections;
 
@@ -21,8 +20,8 @@ namespace Sanctuary.Census.Common.Objects.Collections;
 [Description("Represents a slot of an infantry loadout; i.e. the primary weapon or suit slot")]
 public record LoadoutSlot
 (
-    [property: Key] uint LoadoutID,
-    [property: Key] uint SlotID,
+    [property: JoinKey] uint LoadoutID,
+    [property: JoinKey] uint SlotID,
     LocaleString? Name,
     LocaleString? Description,
     bool IsAutoEquipped,

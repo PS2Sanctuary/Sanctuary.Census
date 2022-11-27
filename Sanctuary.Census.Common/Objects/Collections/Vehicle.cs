@@ -1,7 +1,6 @@
 ﻿using Sanctuary.Census.Common.Abstractions.Objects.Collections;
 using Sanctuary.Census.Common.Attributes;
 using Sanctuary.Census.Common.Objects.CommonModels;
-using System.ComponentModel.DataAnnotations;
 
 namespace Sanctuary.Census.Common.Objects.Collections;
 
@@ -35,14 +34,14 @@ namespace Sanctuary.Census.Common.Objects.Collections;
 [Collection]
 public record Vehicle
 (
-    [property:Key] int VehicleId,
+    [property: JoinKey] int VehicleId,
     LocaleString Name,
     LocaleString Description,
     byte TypeId,
     ushort DecaySec,
     ushort PurchaseCooldown,
-    [property: Key] uint? ImageSetId,
-    [property: Key] uint? ImageId,
+    [property: JoinKey] uint? ImageSetId,
+    [property: JoinKey] uint? ImageId,
     string? ImagePath,
     uint Cost,
     uint CostResourceId,

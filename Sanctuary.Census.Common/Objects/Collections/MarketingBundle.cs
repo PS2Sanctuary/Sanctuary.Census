@@ -2,7 +2,6 @@
 using Sanctuary.Census.Common.Attributes;
 using Sanctuary.Census.Common.Objects.CommonModels;
 using System.ComponentModel;
-using System.ComponentModel.DataAnnotations;
 
 namespace Sanctuary.Census.Common.Objects.Collections;
 
@@ -29,8 +28,8 @@ namespace Sanctuary.Census.Common.Objects.Collections;
 [Description("Represents a purchasable item from the in-game depot")]
 public record MarketingBundle
 (
-    [property: Key] uint MarketingBundleID,
-    [property: Key] uint MarketingBundleCategoryID,
+    [property: JoinKey] uint MarketingBundleID,
+    [property: JoinKey] uint MarketingBundleCategoryID,
     LocaleString Name,
     LocaleString? Description,
     uint StationCashPrice,
@@ -42,7 +41,7 @@ public record MarketingBundle
     bool IsUnavailable,
     bool IsGiftable,
     string? CreatorName,
-    [property: Key] uint ImageSetID,
-    [property: Key] uint? ImageID,
+    [property: JoinKey] uint ImageSetID,
+    [property: JoinKey] uint? ImageID,
     string? ImagePath
 ) : ISanctuaryCollection;

@@ -2,7 +2,6 @@
 using Sanctuary.Census.Common.Attributes;
 using Sanctuary.Census.Common.Objects.CommonModels;
 using System.ComponentModel;
-using System.ComponentModel.DataAnnotations;
 
 namespace Sanctuary.Census.Common.Objects.Collections;
 
@@ -23,13 +22,13 @@ namespace Sanctuary.Census.Common.Objects.Collections;
     "directive_tier_reward_set (and subsequently directive_tier_reward) for reward information")]
 public record DirectiveTier
 (
-    [property: Key] uint DirectiveTreeID,
-    [property: Key] uint DirectiveTierID,
+    [property: JoinKey] uint DirectiveTreeID,
+    [property: JoinKey] uint DirectiveTierID,
     LocaleString Name,
-    [property: Key] uint? RewardSetID,
+    [property: JoinKey] uint? RewardSetID,
     uint DirectivePoints,
     uint CompletionCount,
-    [property: Key] uint ImageSetID,
-    [property: Key] uint? ImageID,
+    [property: JoinKey] uint ImageSetID,
+    [property: JoinKey] uint? ImageID,
     string? ImagePath
 ) : ISanctuaryCollection;

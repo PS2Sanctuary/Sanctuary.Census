@@ -1,7 +1,6 @@
 ﻿using Sanctuary.Census.Common.Abstractions.Objects.Collections;
 using Sanctuary.Census.Common.Attributes;
 using System.ComponentModel;
-using System.ComponentModel.DataAnnotations;
 
 namespace Sanctuary.Census.Common.Objects.Collections;
 
@@ -14,6 +13,6 @@ namespace Sanctuary.Census.Common.Objects.Collections;
 [Description("Contains information about facility types. Note that this collection is manually updated.")]
 public record FacilityType
 (
-    [property: Key] byte FacilityTypeId,
+    [property: JoinKey] byte FacilityTypeId,
     string Description
 ) : ISanctuaryCollection;

@@ -1,6 +1,5 @@
 ﻿using Sanctuary.Census.Common.Abstractions.Objects.Collections;
 using Sanctuary.Census.Common.Attributes;
-using System.ComponentModel.DataAnnotations;
 
 namespace Sanctuary.Census.Common.Objects.Collections;
 
@@ -15,7 +14,7 @@ namespace Sanctuary.Census.Common.Objects.Collections;
 [Collection]
 public record WeaponAmmoSlot
 (
-    [property:Key] uint WeaponId,
+    [property: JoinKey] uint WeaponId,
     uint WeaponSlotIndex,
     short ClipSize,
     ushort Capacity,

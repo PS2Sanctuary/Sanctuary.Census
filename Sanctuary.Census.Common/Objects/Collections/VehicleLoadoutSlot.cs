@@ -2,7 +2,6 @@
 using Sanctuary.Census.Common.Attributes;
 using Sanctuary.Census.Common.Objects.CommonModels;
 using System.ComponentModel;
-using System.ComponentModel.DataAnnotations;
 
 namespace Sanctuary.Census.Common.Objects.Collections;
 
@@ -24,15 +23,15 @@ namespace Sanctuary.Census.Common.Objects.Collections;
 [Description("Represents a slot of a vehicle loadout; i.e. the primary weapon or defensive slot")]
 public record VehicleLoadoutSlot
 (
-    [property: Key] uint LoadoutID,
-    [property: Key] uint SlotID,
+    [property: JoinKey] uint LoadoutID,
+    [property: JoinKey] uint SlotID,
     LocaleString? Name,
     LocaleString? Description,
     bool IsAutoEquipped,
     bool IsRequired,
     bool IsVisible,
     string? UiTag,
-    [property: Key] uint? ImageSetID,
-    [property: Key] uint? ImageID,
+    [property: JoinKey] uint? ImageSetID,
+    [property: JoinKey] uint? ImageID,
     string? ImagePath
 ) : ISanctuaryCollection;

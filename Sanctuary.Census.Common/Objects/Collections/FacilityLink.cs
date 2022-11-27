@@ -1,7 +1,6 @@
 ﻿using Sanctuary.Census.Common.Abstractions.Objects.Collections;
 using Sanctuary.Census.Common.Attributes;
 using System.ComponentModel;
-using System.ComponentModel.DataAnnotations;
 
 namespace Sanctuary.Census.Common.Objects.Collections;
 
@@ -16,7 +15,7 @@ namespace Sanctuary.Census.Common.Objects.Collections;
 [Description("Information about lattice links between facilities.")]
 public record FacilityLink
 (
-    [property:Key] uint ZoneID,
+    [property: JoinKey] uint ZoneID,
     int FacilityIdA,
     int FacilityIdB,
     string? Description

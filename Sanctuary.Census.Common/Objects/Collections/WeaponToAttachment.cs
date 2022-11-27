@@ -1,6 +1,5 @@
 ﻿using Sanctuary.Census.Common.Abstractions.Objects.Collections;
 using Sanctuary.Census.Common.Attributes;
-using System.ComponentModel.DataAnnotations;
 
 namespace Sanctuary.Census.Common.Objects.Collections;
 
@@ -13,7 +12,7 @@ namespace Sanctuary.Census.Common.Objects.Collections;
 [Collection]
 public record WeaponToAttachment
 (
-    [property: Key] uint WeaponGroupID,
-    [property: Key] uint AttachmentID,
-    [property: Key] uint ItemID
+    [property: JoinKey] uint WeaponGroupID,
+    [property: JoinKey] uint AttachmentID,
+    [property: JoinKey] uint ItemID
 ) : ISanctuaryCollection;

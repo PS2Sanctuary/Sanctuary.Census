@@ -1,7 +1,6 @@
 ﻿using Sanctuary.Census.Common.Abstractions.Objects.Collections;
 using Sanctuary.Census.Common.Attributes;
 using Sanctuary.Census.Common.Objects.CommonModels;
-using System.ComponentModel.DataAnnotations;
 
 namespace Sanctuary.Census.Common.Objects.Collections;
 
@@ -22,15 +21,15 @@ namespace Sanctuary.Census.Common.Objects.Collections;
 [Collection]
 public record SkillLine
 (
-    [property: Key] uint SkillLineID,
-    [property: Key] uint? SkillSetID,
+    [property: JoinKey] uint SkillLineID,
+    [property: JoinKey] uint? SkillSetID,
     ushort? SkillSetIndex,
-    [property: Key] uint? SkillCategoryID,
+    [property: JoinKey] uint? SkillCategoryID,
     ushort? SkillCategoryIndex,
     uint SkillPoints,
     LocaleString? Name,
     LocaleString? Description,
-    [property: Key] uint? ImageSetID,
-    [property: Key] uint? ImageID,
+    [property: JoinKey] uint? ImageSetID,
+    [property: JoinKey] uint? ImageID,
     string? ImagePath
 ) : ISanctuaryCollection;

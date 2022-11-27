@@ -1,6 +1,5 @@
 ﻿using Sanctuary.Census.Common.Abstractions.Objects.Collections;
 using Sanctuary.Census.Common.Attributes;
-using System.ComponentModel.DataAnnotations;
 
 namespace Sanctuary.Census.Common.Objects.Collections;
 
@@ -13,7 +12,7 @@ namespace Sanctuary.Census.Common.Objects.Collections;
 [Collection]
 public record AbilitySet
 (
-    [property: Key] uint AbilitySetId,
-    [property: Key] uint AbilityId,
+    [property: JoinKey] uint AbilitySetId,
+    [property: JoinKey] uint AbilityId,
     byte OrderIndex
 ) : ISanctuaryCollection;

@@ -1,7 +1,6 @@
 ﻿using Sanctuary.Census.Common.Abstractions.Objects.Collections;
 using Sanctuary.Census.Common.Attributes;
 using Sanctuary.Census.Common.Objects.CommonModels;
-using System.ComponentModel.DataAnnotations;
 
 namespace Sanctuary.Census.Common.Objects.Collections;
 
@@ -21,9 +20,9 @@ namespace Sanctuary.Census.Common.Objects.Collections;
 [Collection]
 public record MapRegion
 (
-    [property: Key] uint MapRegionId,
-    [property: Key] uint ZoneId,
-    [property: Key] uint? FacilityId,
+    [property: JoinKey] uint MapRegionId,
+    [property: JoinKey] uint ZoneId,
+    [property: JoinKey] uint? FacilityId,
     string? FacilityName,
     LocaleString? LocalizedFacilityName,
     uint FacilityTypeId,

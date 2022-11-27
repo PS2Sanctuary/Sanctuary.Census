@@ -1,6 +1,5 @@
 ﻿using Sanctuary.Census.Common.Abstractions.Objects.Collections;
 using Sanctuary.Census.Common.Attributes;
-using System.ComponentModel.DataAnnotations;
 
 namespace Sanctuary.Census.Common.Objects.Collections;
 
@@ -26,8 +25,8 @@ namespace Sanctuary.Census.Common.Objects.Collections;
 [Collection]
 public record NoDeployArea
 (
-    [property: Key] long AreaID, // In reality this is a uint32. Thanks Mongo
-    [property: Key] uint ZoneID,
+    [property: JoinKey] long AreaID, // In reality this is a uint32. Thanks Mongo
+    [property: JoinKey] uint ZoneID,
     string? Name,
     string Type,
     string Shape,
@@ -41,5 +40,5 @@ public record NoDeployArea
     decimal? RotationX,
     decimal? RotationY,
     decimal? RotationZ,
-    [property: Key] uint? FacilityID
+    [property: JoinKey] uint? FacilityID
 ) : ISanctuaryCollection;

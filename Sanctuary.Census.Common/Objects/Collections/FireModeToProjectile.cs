@@ -1,6 +1,5 @@
 ﻿using Sanctuary.Census.Common.Abstractions.Objects.Collections;
 using Sanctuary.Census.Common.Attributes;
-using System.ComponentModel.DataAnnotations;
 
 namespace Sanctuary.Census.Common.Objects.Collections;
 
@@ -12,6 +11,6 @@ namespace Sanctuary.Census.Common.Objects.Collections;
 [Collection]
 public record FireModeToProjectile
 (
-    [property:Key] uint FireModeID,
-    [property:Key] uint ProjectileID
+    [property: JoinKey] uint FireModeID,
+    [property: JoinKey] uint ProjectileID
 ) : ISanctuaryCollection;

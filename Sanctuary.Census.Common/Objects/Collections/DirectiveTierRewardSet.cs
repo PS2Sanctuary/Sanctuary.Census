@@ -2,7 +2,6 @@
 using Sanctuary.Census.Common.Attributes;
 using Sanctuary.Census.Common.Objects.CommonModels;
 using System.ComponentModel;
-using System.ComponentModel.DataAnnotations;
 
 namespace Sanctuary.Census.Common.Objects.Collections;
 
@@ -19,10 +18,10 @@ namespace Sanctuary.Census.Common.Objects.Collections;
 [Description("Contains rewards obtained upon completion of a directive_tier")]
 public record DirectiveTierRewardSet
 (
-    [property: Key] uint RewardSetID,
-    [property: Key] byte FactionId,
+    [property: JoinKey] uint RewardSetID,
+    [property: JoinKey] byte FactionId,
     LocaleString? Name,
-    [property: Key] uint ImageSetID,
-    [property: Key] uint? ImageID,
+    [property: JoinKey] uint ImageSetID,
+    [property: JoinKey] uint? ImageID,
     string? ImagePath
 ) : ISanctuaryCollection;

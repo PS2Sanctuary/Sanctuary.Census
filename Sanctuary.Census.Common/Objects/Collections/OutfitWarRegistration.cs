@@ -1,7 +1,6 @@
 ﻿using Sanctuary.Census.Common.Abstractions.Objects.Collections;
 using Sanctuary.Census.Common.Attributes;
 using System.ComponentModel;
-using System.ComponentModel.DataAnnotations;
 
 namespace Sanctuary.Census.Common.Objects.Collections;
 
@@ -19,10 +18,10 @@ namespace Sanctuary.Census.Common.Objects.Collections;
 [Description("Information about outfit signups to the active outfit war")]
 public record OutfitWarRegistration
 (
-    [property: Key] ulong OutfitID,
-    [property: Key] uint FactionID,
-    [property: Key] uint WorldID,
-    [property: Key] uint OutfitWarID,
+    [property: JoinKey] ulong OutfitID,
+    [property: JoinKey] uint FactionID,
+    [property: JoinKey] uint WorldID,
+    [property: JoinKey] uint OutfitWarID,
     uint RegistrationOrder,
     OutfitWarRegistration.RegistrationStatus Status,
     uint MemberSignupCount

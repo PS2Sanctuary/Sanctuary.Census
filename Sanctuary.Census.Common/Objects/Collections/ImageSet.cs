@@ -1,6 +1,5 @@
 ﻿using Sanctuary.Census.Common.Abstractions.Objects.Collections;
 using Sanctuary.Census.Common.Attributes;
-using System.ComponentModel.DataAnnotations;
 
 namespace Sanctuary.Census.Common.Objects.Collections;
 
@@ -16,8 +15,8 @@ namespace Sanctuary.Census.Common.Objects.Collections;
 [Collection]
 public record ImageSet
 (
-    [property: Key] uint ImageSetID,
-    [property: Key] uint ImageID,
+    [property: JoinKey] uint ImageSetID,
+    [property: JoinKey] uint ImageID,
     string Description,
     uint TypeID,
     string? TypeDescription,

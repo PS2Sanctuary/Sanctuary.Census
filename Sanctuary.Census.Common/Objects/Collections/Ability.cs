@@ -1,7 +1,6 @@
 ﻿using Sanctuary.Census.Common.Abstractions.Objects.Collections;
 using Sanctuary.Census.Common.Attributes;
 using Sanctuary.Census.Common.Objects.CommonModels;
-using System.ComponentModel.DataAnnotations;
 
 namespace Sanctuary.Census.Common.Objects.Collections;
 
@@ -52,7 +51,7 @@ namespace Sanctuary.Census.Common.Objects.Collections;
 [Collection]
 public record Ability
 (
-    [property: Key] uint AbilityId,
+    [property: JoinKey] uint AbilityId,
     string AbilityType,
     LocaleString? Name,
     LocaleString? Description,
@@ -68,7 +67,7 @@ public record Ability
     decimal? ResourceCostPerMsec,
     decimal? ResourceFirstCost,
     uint? ResourceThreshold,
-    [property: Key] uint? ResourceTypeId,
+    [property: JoinKey] uint? ResourceTypeId,
     decimal? DistanceMax,
     decimal? RadiusMax,
     uint? Param1,
@@ -90,7 +89,7 @@ public record Ability
     string? String3,
     string? String4,
     bool UseWeaponCharge,
-    [property: Key] uint? ImageSetId,
-    [property: Key] uint? ImageId,
+    [property: JoinKey] uint? ImageSetId,
+    [property: JoinKey] uint? ImageId,
     string? ImagePath
 ) : ISanctuaryCollection;

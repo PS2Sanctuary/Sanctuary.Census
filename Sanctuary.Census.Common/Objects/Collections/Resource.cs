@@ -1,7 +1,6 @@
 ﻿using Sanctuary.Census.Common.Abstractions.Objects.Collections;
 using Sanctuary.Census.Common.Attributes;
 using Sanctuary.Census.Common.Objects.CommonModels;
-using System.ComponentModel.DataAnnotations;
 
 namespace Sanctuary.Census.Common.Objects.Collections;
 
@@ -41,13 +40,13 @@ namespace Sanctuary.Census.Common.Objects.Collections;
 [Collection]
 public record Resource
 (
-    [property: Key] uint ResourceId,
-    [property: Key] uint ResourceTypeId,
+    [property: JoinKey] uint ResourceId,
+    [property: JoinKey] uint ResourceTypeId,
     LocaleString? Name,
     LocaleString? Description,
-    [property: Key] uint? ActivatedAbilityId,
-    [property: Key] uint? DepletedAbilityId,
-    [property: Key] uint? RemovedAbilityId,
+    [property: JoinKey] uint? ActivatedAbilityId,
+    [property: JoinKey] uint? DepletedAbilityId,
+    [property: JoinKey] uint? RemovedAbilityId,
     uint InitialValue,
     uint? InitialValueMax,
     bool UseInitialValueAsMax,
@@ -65,8 +64,8 @@ public record Resource
     bool FlagProfileScope,
     bool FlagNotVehMountScope,
     bool AllowBurnHealXp,
-    [property: Key] uint? FullAbilityId,
-    [property: Key] uint? ImageSetId,
-    [property: Key] uint? ImageId,
+    [property: JoinKey] uint? FullAbilityId,
+    [property: JoinKey] uint? ImageSetId,
+    [property: JoinKey] uint? ImageId,
     string? ImagePath
 ) : ISanctuaryCollection;

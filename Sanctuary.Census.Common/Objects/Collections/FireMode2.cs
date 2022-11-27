@@ -2,7 +2,6 @@
 using Sanctuary.Census.Common.Attributes;
 using Sanctuary.Census.Common.Objects.CommonModels;
 using System.ComponentModel;
-using System.ComponentModel.DataAnnotations;
 
 namespace Sanctuary.Census.Common.Objects.Collections;
 
@@ -113,10 +112,10 @@ namespace Sanctuary.Census.Common.Objects.Collections;
 [Description("Specific properties of a weapon's firing characteristics")]
 public record FireMode2
 (
-    [property:Key] uint FireModeID,
+    [property: JoinKey] uint FireModeID,
     byte FireModeTypeID,
     LocaleString Description,
-    [property: Key] uint? AbilityID,
+    [property: JoinKey] uint? AbilityID,
     uint? AmmoItemID,
     byte AmmoSlot,
     decimal? AnimKickMagnitude,
@@ -169,7 +168,7 @@ public record FireMode2
     decimal MinDamageIndRadius,
     decimal MoveModifier,
     decimal TurnModifier,
-    [property: Key] uint? PlayerStateGroupID,
+    [property: JoinKey] uint? PlayerStateGroupID,
     decimal? ProjectileSpeedOverride,
     decimal RecoilAngleMax,
     decimal RecoilAngleMin,

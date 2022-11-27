@@ -1,6 +1,5 @@
 ﻿using Sanctuary.Census.Common.Abstractions.Objects.Collections;
 using Sanctuary.Census.Common.Attributes;
-using System.ComponentModel.DataAnnotations;
 
 namespace Sanctuary.Census.Common.Objects.Collections;
 
@@ -14,8 +13,8 @@ namespace Sanctuary.Census.Common.Objects.Collections;
 [Collection]
 public record Loadout
 (
-    [property: Key] uint LoadoutID,
-    [property: Key] uint ProfileID,
-    [property: Key] uint FactionID,
+    [property: JoinKey] uint LoadoutID,
+    [property: JoinKey] uint ProfileID,
+    [property: JoinKey] uint FactionID,
     string? CodeName
 ) : ISanctuaryCollection;

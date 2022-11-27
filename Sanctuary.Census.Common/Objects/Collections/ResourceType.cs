@@ -2,7 +2,6 @@
 using Sanctuary.Census.Common.Attributes;
 using Sanctuary.Census.Common.Objects.CommonModels;
 using System.ComponentModel;
-using System.ComponentModel.DataAnnotations;
 
 namespace Sanctuary.Census.Common.Objects.Collections;
 
@@ -19,10 +18,10 @@ namespace Sanctuary.Census.Common.Objects.Collections;
 [Description("Represents a resource type. Note that types without a name are excluded from this collection.")]
 public record ResourceType
 (
-    [property: Key] uint ResourceTypeId,
+    [property: JoinKey] uint ResourceTypeId,
     string? Description,
     LocaleString? Name,
-    [property: Key] uint? ImageSetId,
-    [property: Key] uint? ImageId,
+    [property: JoinKey] uint? ImageSetId,
+    [property: JoinKey] uint? ImageId,
     string? ImagePath
 ) : ISanctuaryCollection;

@@ -1,7 +1,6 @@
 ﻿using Sanctuary.Census.Common.Abstractions.Objects.Collections;
 using Sanctuary.Census.Common.Attributes;
 using System.ComponentModel;
-using System.ComponentModel.DataAnnotations;
 
 namespace Sanctuary.Census.Common.Objects.Collections;
 
@@ -23,13 +22,13 @@ namespace Sanctuary.Census.Common.Objects.Collections;
 public record OutfitWarMatch
 (
     ulong MatchID,
-    [property: Key] ulong? RoundID,
-    [property: Key] uint OutfitWarID,
+    [property: JoinKey] ulong? RoundID,
+    [property: JoinKey] uint OutfitWarID,
     ulong OutfitAId,
     ulong OutfitBId,
     ulong StartTime,
     uint Order,
-    [property: Key] uint WorldID,
+    [property: JoinKey] uint WorldID,
     uint OutfitAFactionId,
     uint OutfitBFactionId
 ) : ISanctuaryCollection;

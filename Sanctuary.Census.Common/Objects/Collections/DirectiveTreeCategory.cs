@@ -2,7 +2,6 @@
 using Sanctuary.Census.Common.Attributes;
 using Sanctuary.Census.Common.Objects.CommonModels;
 using System.ComponentModel;
-using System.ComponentModel.DataAnnotations;
 
 namespace Sanctuary.Census.Common.Objects.Collections;
 
@@ -17,7 +16,7 @@ namespace Sanctuary.Census.Common.Objects.Collections;
 [Description("Represents a category of directive_tree entries. E.g. 'Weapons'")]
 public record DirectiveTreeCategory
 (
-    [property: Key] uint DirectiveTreeCategoryID,
+    [property: JoinKey] uint DirectiveTreeCategoryID,
     ValueEqualityList<uint> FactionIds,
     LocaleString Name,
     byte DisplayOrder

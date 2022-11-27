@@ -2,6 +2,7 @@
 using Sanctuary.Census.Builder.Abstractions.Database;
 using Sanctuary.Census.Builder.Exceptions;
 using Sanctuary.Census.ClientData.Abstractions.Services;
+using Sanctuary.Census.Common.Objects;
 using Sanctuary.Census.Common.Objects.CommonModels;
 using Sanctuary.Census.ServerData.Internal.Abstractions.Services;
 using Sanctuary.Zone.Packets.ReferenceData;
@@ -76,7 +77,7 @@ public class ItemCategoryCollectionBuilder : ICollectionBuilder
             (
                 category.ItemCategoryID,
                 name!,
-                parents.Count == 0 ? null : parents.ToArray()
+                parents.Count == 0 ? null : new ValueEqualityList<uint>(parents)
             );
             builtCategories.TryAdd(built.ItemCategoryID, built);
         }

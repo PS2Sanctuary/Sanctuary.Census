@@ -2,7 +2,6 @@
 using Sanctuary.Census.Common.Attributes;
 using Sanctuary.Census.Common.Objects.CommonModels;
 using System.ComponentModel;
-using System.ComponentModel.DataAnnotations;
 
 namespace Sanctuary.Census.Common.Objects.Collections;
 
@@ -19,10 +18,10 @@ namespace Sanctuary.Census.Common.Objects.Collections;
 [Description("Represents a category from the in-game depot")]
 public record MarketingBundleCategory
 (
-    [property: Key] uint MarketingBundleCategoryID,
+    [property: JoinKey] uint MarketingBundleCategoryID,
     LocaleString Name,
     uint DisplayIndex,
-    [property: Key] uint ImageSetID,
-    [property: Key] uint? ImageID,
+    [property: JoinKey] uint ImageSetID,
+    [property: JoinKey] uint? ImageID,
     string? ImagePath
 ) : ISanctuaryCollection;

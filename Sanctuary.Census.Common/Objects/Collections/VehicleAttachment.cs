@@ -1,7 +1,6 @@
 ﻿using Sanctuary.Census.Common.Abstractions.Objects.Collections;
 using Sanctuary.Census.Common.Attributes;
 using Sanctuary.Census.Common.Objects.CommonModels;
-using System.ComponentModel.DataAnnotations;
 
 namespace Sanctuary.Census.Common.Objects.Collections;
 
@@ -17,10 +16,10 @@ namespace Sanctuary.Census.Common.Objects.Collections;
 [Collection]
 public record VehicleAttachment
 (
-    [property: Key] uint ItemID,
+    [property: JoinKey] uint ItemID,
     uint VehicleLoadoutID,
-    [property: Key] uint VehicleID,
-    [property: Key] uint FactionID,
+    [property: JoinKey] uint VehicleID,
+    [property: JoinKey] uint FactionID,
     uint? VehicleLoadoutSlotID,
     LocaleString? Description
 ) : ISanctuaryCollection;

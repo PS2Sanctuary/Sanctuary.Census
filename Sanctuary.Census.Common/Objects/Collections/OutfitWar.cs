@@ -2,7 +2,6 @@
 using Sanctuary.Census.Common.Attributes;
 using Sanctuary.Census.Common.Objects.CommonModels;
 using System.ComponentModel;
-using System.ComponentModel.DataAnnotations;
 
 namespace Sanctuary.Census.Common.Objects.Collections;
 
@@ -25,16 +24,16 @@ namespace Sanctuary.Census.Common.Objects.Collections;
 [Description("Contains basic descriptive information about an outfit war")]
 public record OutfitWar
 (
-    [property: Key] uint OutfitWarID,
-    [property: Key] uint WorldID,
+    [property: JoinKey] uint OutfitWarID,
+    [property: JoinKey] uint WorldID,
     ulong PrimaryRoundID,
     LocaleString? Title,
     uint OutfitSizeRequirement,
     uint OutfitSignupRequirement,
     ulong StartTime,
     ulong EndTime,
-    [property: Key] uint ImageSetID,
-    [property: Key] uint? ImageID,
+    [property: JoinKey] uint ImageSetID,
+    [property: JoinKey] uint? ImageID,
     string? ImagePath,
     ValueEqualityList<OutfitWar.Phase> Phases
 ) : ISanctuaryCollection

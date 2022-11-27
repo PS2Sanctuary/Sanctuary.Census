@@ -1,7 +1,6 @@
 ﻿using Sanctuary.Census.Common.Abstractions.Objects.Collections;
 using Sanctuary.Census.Common.Attributes;
 using System.ComponentModel;
-using System.ComponentModel.DataAnnotations;
 
 namespace Sanctuary.Census.Common.Objects.Collections;
 
@@ -20,7 +19,7 @@ namespace Sanctuary.Census.Common.Objects.Collections;
 [Description("Common properties of a weapon's firing characteristics. Link to more specific properties via fire_group_to_fire_mode")]
 public record FireGroup
 (
-    [property:Key] uint FireGroupID,
+    [property: JoinKey] uint FireGroupID,
     ushort? ChamberDurationMS,
     ushort? TransitionDurationMS,
     ushort? SpinUpTimeMS,

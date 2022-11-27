@@ -1,7 +1,6 @@
 ﻿using Sanctuary.Census.Common.Abstractions.Objects.Collections;
 using Sanctuary.Census.Common.Attributes;
 using System.ComponentModel;
-using System.ComponentModel.DataAnnotations;
 
 namespace Sanctuary.Census.Common.Objects.Collections;
 
@@ -15,7 +14,7 @@ namespace Sanctuary.Census.Common.Objects.Collections;
 [Description("Links a fire_group to the fire_mode_2 entries it uses.")]
 public record FireGroupToFireMode
 (
-    [property:Key] uint FireGroupId,
-    [property:Key] uint FireModeId,
+    [property: JoinKey] uint FireGroupId,
+    [property: JoinKey] uint FireModeId,
     uint FireModeIndex
 ) : ISanctuaryCollection;

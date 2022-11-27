@@ -1,6 +1,5 @@
 ﻿using Sanctuary.Census.Common.Abstractions.Objects.Collections;
 using Sanctuary.Census.Common.Attributes;
-using System.ComponentModel.DataAnnotations;
 
 namespace Sanctuary.Census.Common.Objects.Collections;
 
@@ -18,12 +17,12 @@ namespace Sanctuary.Census.Common.Objects.Collections;
 [Collection]
 public record ResistInfo
 (
-    [property: Key] uint ResistInfoId,
-    [property: Key] ushort ResistTypeId,
+    [property: JoinKey] uint ResistInfoId,
+    [property: JoinKey] ushort ResistTypeId,
     decimal ResistPercent,
     int? ResistAmount,
     decimal MultiplierWhenHeadshot,
-    [property: Key] uint? ImageSetId,
-    [property: Key] uint? ImageId,
+    [property: JoinKey] uint? ImageSetId,
+    [property: JoinKey] uint? ImageId,
     string? ImagePath
 ) : ISanctuaryCollection;

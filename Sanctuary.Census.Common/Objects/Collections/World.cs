@@ -1,7 +1,6 @@
 ﻿using Sanctuary.Census.Common.Abstractions.Objects.Collections;
 using Sanctuary.Census.Common.Attributes;
 using Sanctuary.Census.Common.Objects.CommonModels;
-using System.ComponentModel.DataAnnotations;
 
 namespace Sanctuary.Census.Common.Objects.Collections;
 
@@ -15,7 +14,7 @@ namespace Sanctuary.Census.Common.Objects.Collections;
 [Collection]
 public record World
 (
-    [property:Key] uint WorldID,
+    [property: JoinKey] uint WorldID,
     LocaleString Name,
     bool IsLocked,
     bool IsUnprivilegedAccessAllowed

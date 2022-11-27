@@ -2,7 +2,6 @@
 using Sanctuary.Census.Common.Attributes;
 using Sanctuary.Census.Common.Objects.CommonModels;
 using System;
-using System.ComponentModel.DataAnnotations;
 
 namespace Sanctuary.Census.Common.Objects.Collections;
 
@@ -18,9 +17,9 @@ namespace Sanctuary.Census.Common.Objects.Collections;
 [Collection]
 public record ItemCategory
 (
-    [property: Key] uint ItemCategoryID,
+    [property: JoinKey] uint ItemCategoryID,
     LocaleString Name,
-    uint[]? ParentCategoryIds
+    ValueEqualityList<uint>? ParentCategoryIds
 ) : ISanctuaryCollection
 {
     /// <inheritdoc />

@@ -1,6 +1,5 @@
 ﻿using Sanctuary.Census.Common.Abstractions.Objects.Collections;
 using Sanctuary.Census.Common.Attributes;
-using System.ComponentModel.DataAnnotations;
 
 namespace Sanctuary.Census.Common.Objects.Collections;
 
@@ -17,8 +16,8 @@ namespace Sanctuary.Census.Common.Objects.Collections;
 [Collection]
 public record OutfitWarRound
 (
-    [property: Key] ulong RoundID,
-    [property: Key] uint OutfitWarID,
+    [property: JoinKey] ulong RoundID,
+    [property: JoinKey] uint OutfitWarID,
     ulong PrimaryRoundID,
     uint Order,
     OutfitWarRound.RoundStage Stage,

@@ -2,7 +2,6 @@
 using Sanctuary.Census.Common.Attributes;
 using Sanctuary.Census.Common.Objects.CommonModels;
 using System.ComponentModel;
-using System.ComponentModel.DataAnnotations;
 
 namespace Sanctuary.Census.Common.Objects.Collections;
 
@@ -22,13 +21,13 @@ namespace Sanctuary.Census.Common.Objects.Collections;
 [Description("Represents an objective of a directive_tier. E.g. 'Kill 10 enemy players'")]
 public record Directive
 (
-    [property: Key] uint DirectiveID,
-    [property: Key] uint DirectiveTreeID,
-    [property: Key] uint DirectiveTierID,
+    [property: JoinKey] uint DirectiveID,
+    [property: JoinKey] uint DirectiveTreeID,
+    [property: JoinKey] uint DirectiveTierID,
     ValueEqualityList<byte> Factions,
     LocaleString? Name,
     LocaleString? Description,
-    [property: Key] uint ImageSetID,
-    [property: Key] uint? ImageID,
+    [property: JoinKey] uint ImageSetID,
+    [property: JoinKey] uint? ImageID,
     string? ImagePath
 ) : ISanctuaryCollection;

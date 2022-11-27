@@ -1,7 +1,6 @@
 ﻿using Sanctuary.Census.Common.Abstractions.Objects.Collections;
 using Sanctuary.Census.Common.Attributes;
 using Sanctuary.Census.Common.Objects.CommonModels;
-using System.ComponentModel.DataAnnotations;
 
 namespace Sanctuary.Census.Common.Objects.Collections;
 
@@ -34,18 +33,18 @@ namespace Sanctuary.Census.Common.Objects.Collections;
 [Collection]
 public record Item
 (
-    [property:Key] uint ItemID,
+    [property: JoinKey] uint ItemID,
     uint ItemTypeID,
-    [property: Key] uint? ItemCategoryID,
-    [property: Key] uint FactionID,
+    [property: JoinKey] uint? ItemCategoryID,
+    [property: JoinKey] uint FactionID,
     LocaleString? Name,
     LocaleString? Description,
     uint? ActivatableAbilityID,
     uint? PassiveAbilityID,
     uint? PassiveAbilitySetID,
-    [property: Key] uint? SkillSetID,
-    [property: Key] uint? ImageSetID,
-    [property: Key] uint? ImageID,
+    [property: JoinKey] uint? SkillSetID,
+    [property: JoinKey] uint? ImageSetID,
+    [property: JoinKey] uint? ImageID,
     string? ImagePath,
     uint? HudImageSetID,
     int MaxStackSize,

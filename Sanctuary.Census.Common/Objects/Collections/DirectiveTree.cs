@@ -2,7 +2,6 @@
 using Sanctuary.Census.Common.Attributes;
 using Sanctuary.Census.Common.Objects.CommonModels;
 using System.ComponentModel;
-using System.ComponentModel.DataAnnotations;
 
 namespace Sanctuary.Census.Common.Objects.Collections;
 
@@ -21,12 +20,12 @@ namespace Sanctuary.Census.Common.Objects.Collections;
 [Description("Represents a single directive as a whole, e.g. Exceptional III. Generally linked to four children directive_tier entries")]
 public record DirectiveTree
 (
-    [property: Key] uint DirectiveTreeID,
-    [property: Key] uint DirectiveTreeCategoryID,
+    [property: JoinKey] uint DirectiveTreeID,
+    [property: JoinKey] uint DirectiveTreeCategoryID,
     ValueEqualityList<uint> FactionIds,
     LocaleString Name,
     LocaleString? Description,
-    [property: Key] uint ImageSetID,
-    [property: Key] uint? ImageID,
+    [property: JoinKey] uint ImageSetID,
+    [property: JoinKey] uint? ImageID,
     string? ImagePath
 ) : ISanctuaryCollection;

@@ -1,7 +1,6 @@
 ﻿using Sanctuary.Census.Common.Abstractions.Objects.Collections;
 using Sanctuary.Census.Common.Attributes;
 using System.ComponentModel;
-using System.ComponentModel.DataAnnotations;
 
 namespace Sanctuary.Census.Common.Objects.Collections;
 
@@ -18,10 +17,10 @@ namespace Sanctuary.Census.Common.Objects.Collections;
 [Description("Contains rankings of an outfit within an outfit war. This collection is keyed by the primary_round_id of an outfit_war_rounds record.")]
 public record OutfitWarRanking
 (
-    [property: Key] ulong RoundID,
-    [property: Key] ulong OutfitID,
-    [property: Key] byte FactionID,
-    [property: Key] uint OutfitWarID,
+    [property: JoinKey] ulong RoundID,
+    [property: JoinKey] ulong OutfitID,
+    [property: JoinKey] byte FactionID,
+    [property: JoinKey] uint OutfitWarID,
     uint Order,
     ValueEqualityDictionary<string, int> RankingParameters
 ) : ISanctuaryCollection;

@@ -2,7 +2,6 @@
 using Sanctuary.Census.Common.Attributes;
 using Sanctuary.Census.Common.Objects.CommonModels;
 using System.ComponentModel;
-using System.ComponentModel.DataAnnotations;
 
 namespace Sanctuary.Census.Common.Objects.Collections;
 
@@ -20,8 +19,8 @@ namespace Sanctuary.Census.Common.Objects.Collections;
 [Description("Information about in-game facilities. While missing some of the fields of map_region, this collection is more likely to contain data for all known zones.")]
 public record FacilityInfo
 (
-    [property: Key] ushort ZoneID,
-    [property: Key] uint FacilityID,
+    [property: JoinKey] ushort ZoneID,
+    [property: JoinKey] uint FacilityID,
     LocaleString FacilityName,
     byte FacilityTypeID,
     decimal LocationX,

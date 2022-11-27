@@ -1,6 +1,5 @@
 ﻿using Sanctuary.Census.Common.Abstractions.Objects.Collections;
 using Sanctuary.Census.Common.Attributes;
-using System.ComponentModel.DataAnnotations;
 
 namespace Sanctuary.Census.Common.Objects.Collections;
 
@@ -43,7 +42,7 @@ namespace Sanctuary.Census.Common.Objects.Collections;
 [Collection]
 public record Projectile
 (
-    [property: Key] uint ProjectileId,
+    [property: JoinKey] uint ProjectileId,
     decimal? Acceleration,
     string ActorDefinition,
     string? ActorDefinitionFirstPerson,

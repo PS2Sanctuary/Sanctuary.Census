@@ -1,7 +1,6 @@
 ﻿using Sanctuary.Census.Common.Abstractions.Objects.Collections;
 using Sanctuary.Census.Common.Attributes;
 using System.ComponentModel;
-using System.ComponentModel.DataAnnotations;
 
 namespace Sanctuary.Census.Common.Objects.Collections;
 
@@ -16,8 +15,8 @@ namespace Sanctuary.Census.Common.Objects.Collections;
 [Description("Represents an item from a marketing_bundle")]
 public record MarketingBundleItem
 (
-    [property: Key] uint MarketingBundleID,
-    [property: Key] uint ItemID,
+    [property: JoinKey] uint MarketingBundleID,
+    [property: JoinKey] uint ItemID,
     uint Quantity,
     ulong ReleaseTime
 ) : ISanctuaryCollection;

@@ -1,6 +1,5 @@
 ﻿using Sanctuary.Census.Common.Abstractions.Objects.Collections;
 using Sanctuary.Census.Common.Attributes;
-using System.ComponentModel.DataAnnotations;
 
 namespace Sanctuary.Census.Common.Objects.Collections;
 
@@ -16,8 +15,8 @@ namespace Sanctuary.Census.Common.Objects.Collections;
 [Collection]
 public record MapHex
 (
-    [property: Key] uint ZoneID,
-    [property: Key] uint MapRegionID,
+    [property: JoinKey] uint ZoneID,
+    [property: JoinKey] uint MapRegionID,
     short X,
     short Y,
     byte HexType,

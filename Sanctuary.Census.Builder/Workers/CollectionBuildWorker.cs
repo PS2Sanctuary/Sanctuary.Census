@@ -93,7 +93,7 @@ public class CollectionBuildWorker : BackgroundService
                 IPatchDataCacheService patchDataCache = services.GetRequiredService<IPatchDataCacheService>();
                 IMongoContext mongoContext = services.GetRequiredService<IMongoContext>();
                 ICollectionsContext collectionsContext = services.GetRequiredService<ICollectionsContext>();
-                ICollectionDiffService collectionDiffService = services.GetRequiredService<ICollectionDiffService>();
+                IEnumerable<ICollectionDiffService> differs = services.GetServices<ICollectionDiffService>();
 
                 try
                 {
@@ -147,8 +147,11 @@ public class CollectionBuildWorker : BackgroundService
                 await UpdateDatatypes(mongoContext, _buildOptions.CurrentValue.BuildIntervalSeconds, ct).ConfigureAwait(false);
                 _logger.LogInformation("[{Environment}] Datatype upsert complete", env);
 
-                await collectionDiffService.CommitAsync(ct).ConfigureAwait(false);
-                _logger.LogInformation("[{Environment}] Collection diff committed", env);
+                foreach (ICollectionDiffService differ in differs)
+                {
+                    await differ.CommitAsync(ct).ConfigureAwait(false);
+                    _logger.LogInformation("[{Environment}] ({Differ}) Collection diff committed", env, differ);
+                }
 
                 clientDataCache.Clear();
                 serverDataCache.Clear();

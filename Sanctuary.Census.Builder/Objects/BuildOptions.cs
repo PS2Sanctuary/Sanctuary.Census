@@ -13,6 +13,11 @@ public class BuildOptions
     public int BuildIntervalSeconds { get; set; }
 
     /// <summary>
+    /// Gets the path to the git repo used to store collection diffs.
+    /// </summary>
+    public string? GitDiffRepoPath { get; set; }
+
+    /// <summary>
     /// Initializes a new instance of the <see cref="BuildOptions"/> class.
     /// </summary>
     public BuildOptions()

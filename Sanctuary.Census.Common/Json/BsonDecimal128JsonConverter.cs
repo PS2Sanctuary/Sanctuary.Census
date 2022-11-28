@@ -3,7 +3,7 @@ using System;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
-namespace Sanctuary.Census.Api.Json;
+namespace Sanctuary.Census.Common.Json;
 
 /// <inheritdoc />
 public class BsonDecimal128JsonConverter : JsonConverter<Decimal128>

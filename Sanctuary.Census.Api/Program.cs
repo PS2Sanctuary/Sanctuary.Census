@@ -14,6 +14,7 @@ using Sanctuary.Census.Api.Json;
 using Sanctuary.Census.Api.Middleware;
 using Sanctuary.Census.Api.Models;
 using Sanctuary.Census.Api.Services;
+using Sanctuary.Census.Common.Json;
 using Serilog;
 using Serilog.Events;
 using System;

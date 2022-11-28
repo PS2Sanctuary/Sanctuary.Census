@@ -2,7 +2,7 @@
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
-namespace Sanctuary.Census.Api.Json;
+namespace Sanctuary.Census.Common.Json;
 
 /// <inheritdoc />
 public class BooleanJsonConverter : JsonConverter<bool>
@@ -20,7 +20,18 @@ public class BooleanJsonConverter : JsonConverter<bool>
 
     /// <inheritdoc />
     public override bool Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
-        => throw new NotImplementedException();
+    {
+        if (reader.TokenType is not JsonTokenType.String)
+            return reader.GetBoolean();
+
+        return reader.GetString() switch
+        {
+            "1" => true,
+            "0" => false,
+            _ => throw new JsonException()
+        };
+
+    }
 
     /// <inheritdoc />
     public override void Write(Utf8JsonWriter writer, bool value, JsonSerializerOptions options)

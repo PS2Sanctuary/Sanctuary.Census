@@ -13,6 +13,7 @@ using Sanctuary.Census.Api.Json;
 using Sanctuary.Census.Api.Models;
 using Sanctuary.Census.Api.Services;
 using Sanctuary.Census.Api.Util;
+using Sanctuary.Census.Common.Json;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;

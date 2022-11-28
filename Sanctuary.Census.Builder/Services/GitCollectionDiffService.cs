@@ -29,6 +29,7 @@ public class GitCollectionDiffService : ICollectionDiffService
     private static readonly IReadOnlyList<Type> _knownCollectionTypes;
 
     private readonly string _gitDiffRepoPath;
+    private readonly bool _pushOnCommit;
     private readonly IMongoContext _mongoContext;
     private readonly EnvironmentContextProvider _environmentContextProvider;
     private readonly HashSet<Type> _modifiedCollections;
@@ -38,8 +39,10 @@ public class GitCollectionDiffService : ICollectionDiffService
         JSON_OPTIONS = new JsonSerializerOptions
         {
             DefaultIgnoreCondition = JsonIgnoreCondition.Never,
+            Encoder = System.Text.Encodings.Web.JavaScriptEncoder.UnsafeRelaxedJsonEscaping,
             NumberHandling = JsonNumberHandling.WriteAsString,
-            PropertyNamingPolicy = new SnakeCaseJsonNamingPolicy()
+            PropertyNamingPolicy = new SnakeCaseJsonNamingPolicy(),
+            WriteIndented = true
         };
 
         JSON_OPTIONS.Converters.Insert(0, new BooleanJsonConverter(true));
@@ -69,6 +72,7 @@ public class GitCollectionDiffService : ICollectionDiffService
         _environmentContextProvider = environmentContextProvider;
         _modifiedCollections = new HashSet<Type>();
 
+        _pushOnCommit = options.Value.PushGitDiffToRemote;
         _gitDiffRepoPath = options.Value.GitDiffRepoPath
             ?? throw new InvalidOperationException("A path to the git diff repo must be provided");
     }
@@ -131,14 +135,25 @@ public class GitCollectionDiffService : ICollectionDiffService
         await Cli.Wrap("git")
             .WithArguments("add -A")
             .WithWorkingDirectory(_gitDiffRepoPath)
-            .ExecuteAsync(ct).ConfigureAwait(false);
+            .ExecuteAsync(ct)
+            .ConfigureAwait(false);
 
         CommandResult commitResult = await Cli.Wrap("git")
-            .WithArguments($"commit -m \"{DateTimeOffset.UtcNow.ToString(CultureInfo.InvariantCulture)}\"")
+            .WithArguments($"commit -m \"[{_environmentContextProvider.Environment}] {DateTimeOffset.UtcNow.ToString(CultureInfo.InvariantCulture)}\"")
             .WithWorkingDirectory(_gitDiffRepoPath)
             .WithValidation(CommandResultValidation.None)
-            .ExecuteAsync(ct).ConfigureAwait(false);
+            .ExecuteAsync(ct)
+            .ConfigureAwait(false);
         if (commitResult.ExitCode is not (0 or 141)) // 141 thrown because STDOUT closed too fast
-            throw new Exception("Failed to stage diff files");
+            throw new Exception("Failed to commit diff files");
+
+        if (_pushOnCommit)
+        {
+            await Cli.Wrap("git")
+                .WithArguments("push")
+                .WithWorkingDirectory(_gitDiffRepoPath)
+                .ExecuteAsync(ct)
+                .ConfigureAwait(false);
+        }
     }
 }

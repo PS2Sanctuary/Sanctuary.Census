@@ -18,6 +18,12 @@ public class BuildOptions
     public string? GitDiffRepoPath { get; set; }
 
     /// <summary>
+    /// Gets a value indicating whether the git diff repo should be pushed to
+    /// the default remote after a commit is made.
+    /// </summary>
+    public bool PushGitDiffToRemote { get; set; }
+
+    /// <summary>
     /// Initializes a new instance of the <see cref="BuildOptions"/> class.
     /// </summary>
     public BuildOptions()

@@ -4,6 +4,10 @@ Date format: DD/MM/YYYY
 
 ## vNext
 
+🆕 **Additions**
+
+- Diffs are now pushed to https://github.com/PS2Sanctuary/sanctuary-census-diff
+
 🐛 **Fixes**
 
 - Documents of non-root joins that had their own joins (e.g. item -> **item_to_weapon** -> weapon) were being removed

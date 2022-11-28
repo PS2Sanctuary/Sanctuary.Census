@@ -88,6 +88,12 @@ public class ClientDataCacheService : IClientDataCacheService
     public IReadOnlyList<LoadoutSlot>? LoadoutSlots { get; private set; }
 
     /// <inheritdoc />
+    public IReadOnlyList<LoadoutSlotItemClass>? LoadoutSlotItemClasses { get; private set; }
+
+    /// <inheritdoc />
+    public IReadOnlyList<LoadoutSlotTintItemClass>? LoadoutSlotTintItemClasses { get; private set; }
+
+    /// <inheritdoc />
     public IReadOnlyList<ResistInfo>? ResistInfos { get; private set; }
 
     /// <inheritdoc />
@@ -119,6 +125,9 @@ public class ClientDataCacheService : IClientDataCacheService
 
     /// <inheritdoc />
     public IReadOnlyList<VehicleLoadoutSlotItemClass>? VehicleLoadoutSlotItemClasses { get; private set; }
+
+    /// <inheritdoc />
+    public IReadOnlyList<VehicleLoadoutSlotTintItemClass>? VehicleLoadoutSlotTintItemClasses { get; private set; }
 
     /// <inheritdoc />
     public IReadOnlyList<VehicleSkillSet>? VehicleSkillSets { get; private set; }
@@ -303,6 +312,22 @@ public class ClientDataCacheService : IClientDataCacheService
             ct
         ).ConfigureAwait(false);
 
+        LoadoutSlotItemClasses = await ExtractDatasheet<LoadoutSlotItemClass>
+        (
+            "LoadoutSlotItemClasses.txt",
+            assetHeaders,
+            reader,
+            ct
+        ).ConfigureAwait(false);
+
+        LoadoutSlotTintItemClasses = await ExtractDatasheet<LoadoutSlotTintItemClass>
+        (
+            "LoadoutSlotTintItemClasses.txt",
+            assetHeaders,
+            reader,
+            ct
+        ).ConfigureAwait(false);
+
         ResistInfos = await ExtractDatasheet<ResistInfo>
         (
             "ResistInfo.txt",
@@ -391,6 +416,14 @@ public class ClientDataCacheService : IClientDataCacheService
             ct
         ).ConfigureAwait(false);
 
+        VehicleLoadoutSlotTintItemClasses = await ExtractDatasheet<VehicleLoadoutSlotTintItemClass>
+        (
+            "VehicleLoadoutSlotTintItemClasses.txt",
+            assetHeaders,
+            reader,
+            ct
+        ).ConfigureAwait(false);
+
         VehicleSkillSets = await ExtractDatasheet<VehicleSkillSet>
         (
             "VehicleSkillSets.txt",
@@ -426,6 +459,8 @@ public class ClientDataCacheService : IClientDataCacheService
         Loadouts = null;
         LoadoutAttachmentGroupMaps = null;
         LoadoutSlots = null;
+        LoadoutSlotItemClasses = null;
+        LoadoutSlotTintItemClasses = null;
         ResistInfos = null;
         Resources = null;
         ResourceTypes = null;
@@ -437,6 +472,7 @@ public class ClientDataCacheService : IClientDataCacheService
         VehicleLoadouts = null;
         VehicleLoadoutSlots = null;
         VehicleLoadoutSlotItemClasses = null;
+        VehicleLoadoutSlotTintItemClasses = null;
         VehicleSkillSets = null;
     }
 

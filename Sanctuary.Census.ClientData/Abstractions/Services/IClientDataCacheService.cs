@@ -105,6 +105,16 @@ public interface IClientDataCacheService : IDataCacheService
     IReadOnlyList<LoadoutSlot>? LoadoutSlots { get; }
 
     /// <summary>
+    /// Gets the cached <see cref="LoadoutSlotItemClass"/> objects.
+    /// </summary>
+    IReadOnlyList<LoadoutSlotItemClass>? LoadoutSlotItemClasses { get; }
+
+    /// <summary>
+    /// Gets the cached <see cref="LoadoutSlotTintItemClass"/> objects.
+    /// </summary>
+    IReadOnlyList<LoadoutSlotTintItemClass>? LoadoutSlotTintItemClasses { get; }
+
+    /// <summary>
     /// Gets the cached <see cref="ResistInfo"/> objects.
     /// </summary>
     IReadOnlyList<ResistInfo>? ResistInfos { get; }
@@ -158,6 +168,11 @@ public interface IClientDataCacheService : IDataCacheService
     /// Gets the cached <see cref="VehicleLoadoutSlotItemClass"/> objects.
     /// </summary>
     IReadOnlyList<VehicleLoadoutSlotItemClass>? VehicleLoadoutSlotItemClasses { get; }
+
+    /// <summary>
+    /// Gets the cached <see cref="LoadoutSlotTintItemClass"/> objects.
+    /// </summary>
+    IReadOnlyList<VehicleLoadoutSlotTintItemClass>? VehicleLoadoutSlotTintItemClasses { get; }
 
     /// <summary>
     /// Gets the cached <see cref="VehicleSkillSet"/> objects.

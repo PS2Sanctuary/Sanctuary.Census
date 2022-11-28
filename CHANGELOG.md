@@ -10,7 +10,7 @@ Date format: DD/MM/YYYY
 
 🐛 **Fixes**
 
-- Documents of non-root joins that had their own joins (e.g. item -> **item_to_weapon** -> weapon) were being removed
+- Documents of non-root joins that had their own non-list joins (e.g. item -> **item_to_weapon** -> weapon) were being removed
   when their child join returned no values. This has been resolved.
 
 - Improved the resolution of `item` factions. This was a particular issue for camo items.

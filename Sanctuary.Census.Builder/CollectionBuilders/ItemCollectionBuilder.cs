@@ -10,8 +10,11 @@ using Sanctuary.Census.ServerData.Internal.Abstractions.Services;
 using Sanctuary.Zone.Packets.ReferenceData;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Loadout = Sanctuary.Census.ClientData.ClientDataModels.Loadout;
+using VehicleLoadout = Sanctuary.Census.ClientData.ClientDataModels.VehicleLoadout;
 
 namespace Sanctuary.Census.Builder.CollectionBuilders;
 
@@ -62,14 +65,10 @@ public class ItemCollectionBuilder : ICollectionBuilder
         if (_clientDataCache.ClientItemDefinitions is null)
             throw new MissingCacheDataException(typeof(ClientItemDefinition));
 
-        if (_clientDataCache.ItemProfiles is null)
-            throw new MissingCacheDataException(typeof(ItemProfile));
-
-        if (_clientDataCache.ItemVehicles is null)
-            throw new MissingCacheDataException(typeof(ItemVehicle));
-
         if (_serverDataCache.ItemCategories is null)
             throw new MissingCacheDataException(typeof(ItemCategories));
+
+        ItemFactionResolver factionResolver = new(_clientDataCache);
 
         HashSet<uint> vehicleWeaponCategories = new();
         foreach (CategoryHierarchy heirarchy in _serverDataCache.ItemCategories.Hierarchies)
@@ -92,21 +91,6 @@ public class ItemCollectionBuilder : ICollectionBuilder
         vehicleWeaponCategories.Add(221); // Corsair Front Turret
         vehicleWeaponCategories.Add(222); // Corsair Rear Turret
 
-        Dictionary<uint, FactionDefinition> itemFactionMap = new();
-        foreach (ItemProfile profile in _clientDataCache.ItemProfiles)
-        {
-            itemFactionMap.TryAdd(profile.ItemID, profile.FactionID);
-            if (itemFactionMap[profile.ItemID] != profile.FactionID)
-                itemFactionMap[profile.ItemID] = FactionDefinition.All;
-        }
-
-        foreach (ItemVehicle vItem in _clientDataCache.ItemVehicles)
-        {
-            itemFactionMap.TryAdd(vItem.ItemID, (FactionDefinition)vItem.FactionID);
-            if (itemFactionMap[vItem.ItemID] != (FactionDefinition)vItem.FactionID)
-                itemFactionMap[vItem.ItemID] = FactionDefinition.All;
-        }
-
         Dictionary<uint, Item> builtItems = new();
         foreach (ClientItemDefinition definition in _clientDataCache.ClientItemDefinitions)
         {
@@ -122,8 +106,13 @@ public class ItemCollectionBuilder : ICollectionBuilder
             if (definition.ImageSetID > 0)
                 hasDefaultImage = _imageSetHelper.TryGetDefaultImage((uint)definition.ImageSetID, out defaultImage);
 
-            if (!itemFactionMap.TryGetValue(definition.ID, out FactionDefinition faction))
-                faction = FactionDefinition.All;
+            FactionDefinition faction = factionResolver.Resolve
+            (
+                definition.ID,
+                definition.ItemClass,
+                useRequirement,
+                equipRequirement
+            );
 
             Item built = new
             (
@@ -151,5 +140,117 @@ public class ItemCollectionBuilder : ICollectionBuilder
         }
 
         await dbContext.UpsertCollectionAsync(builtItems.Values, ct).ConfigureAwait(false);
+    }
+
+    private class ItemFactionResolver
+    {
+        private readonly IReadOnlyDictionary<uint, FactionDefinition> _itemClassToFaction;
+        private readonly IReadOnlyDictionary<uint, FactionDefinition> _itemToFaction;
+
+        public ItemFactionResolver(IClientDataCacheService clientDataCache)
+        {
+            if (clientDataCache.ItemProfiles is null)
+                throw new MissingCacheDataException(typeof(ItemProfile));
+
+            if (clientDataCache.ItemVehicles is null)
+                throw new MissingCacheDataException(typeof(ItemVehicle));
+
+            if (clientDataCache.Loadouts is null)
+                throw new MissingCacheDataException(typeof(Loadout));
+
+            if (clientDataCache.VehicleLoadouts is null)
+                throw new MissingCacheDataException(typeof(VehicleLoadout));
+
+            if (clientDataCache.LoadoutSlotItemClasses is null)
+                throw new MissingCacheDataException(typeof(LoadoutSlotItemClass));
+
+            if (clientDataCache.LoadoutSlotTintItemClasses is null)
+                throw new MissingCacheDataException(typeof(LoadoutSlotTintItemClass));
+
+            if (clientDataCache.VehicleLoadoutSlotItemClasses is null)
+                throw new MissingCacheDataException(typeof(VehicleLoadoutSlotItemClass));
+
+            if (clientDataCache.VehicleLoadoutSlotTintItemClasses is null)
+                throw new MissingCacheDataException(typeof(VehicleLoadoutSlotTintItemClass));
+
+            Dictionary<uint, uint> loadoutToFaction = clientDataCache.Loadouts
+                .ToDictionary(x => x.LoadoutID, x => x.FactionID);
+            Dictionary<uint, uint> vehicleLoadoutToFaction = clientDataCache.VehicleLoadouts
+                .ToDictionary(x => x.ID, x => x.FactionID);
+
+            Dictionary<uint, FactionDefinition> itemClassToFaction = new();
+
+            void AddItemClassToFaction(uint classId, FactionDefinition faction)
+            {
+                if (itemClassToFaction.TryAdd(classId, faction))
+                    return;
+
+                if (itemClassToFaction[classId] != faction)
+                    itemClassToFaction[classId] = FactionDefinition.All;
+            }
+
+            foreach (LoadoutSlotItemClass lsic in clientDataCache.LoadoutSlotItemClasses)
+            {
+                FactionDefinition faction = (FactionDefinition)loadoutToFaction[lsic.LoadoutId];
+                AddItemClassToFaction(lsic.ItemClass, faction);
+            }
+
+            foreach (LoadoutSlotTintItemClass lstic in clientDataCache.LoadoutSlotTintItemClasses)
+            {
+                FactionDefinition faction = (FactionDefinition)loadoutToFaction[lstic.LoadoutId];
+                AddItemClassToFaction(lstic.TintItemClass, faction);
+            }
+
+            foreach (VehicleLoadoutSlotItemClass vlsic in clientDataCache.VehicleLoadoutSlotItemClasses)
+            {
+                FactionDefinition faction = (FactionDefinition)vehicleLoadoutToFaction[vlsic.LoadoutID];
+                AddItemClassToFaction(vlsic.ItemClass, faction);
+            }
+
+            foreach (VehicleLoadoutSlotTintItemClass vlstic in clientDataCache.VehicleLoadoutSlotTintItemClasses)
+            {
+                FactionDefinition faction = (FactionDefinition)vehicleLoadoutToFaction[vlstic.LoadoutId];
+                AddItemClassToFaction(vlstic.TintItemClass, faction);
+            }
+
+            _itemClassToFaction = itemClassToFaction;
+
+            Dictionary<uint, FactionDefinition> itemFactionMap = new();
+            foreach (ItemProfile profile in clientDataCache.ItemProfiles)
+            {
+                itemFactionMap.TryAdd(profile.ItemID, profile.FactionID);
+                if (itemFactionMap[profile.ItemID] != profile.FactionID)
+                    itemFactionMap[profile.ItemID] = FactionDefinition.All;
+            }
+
+            foreach (ItemVehicle vItem in clientDataCache.ItemVehicles)
+            {
+                itemFactionMap.TryAdd(vItem.ItemID, (FactionDefinition)vItem.FactionID);
+                if (itemFactionMap[vItem.ItemID] != (FactionDefinition)vItem.FactionID)
+                    itemFactionMap[vItem.ItemID] = FactionDefinition.All;
+            }
+
+            _itemToFaction = itemFactionMap;
+        }
+
+        public FactionDefinition Resolve(uint itemId, uint itemClassId, string? useRequirement, string? equipRequirement)
+        {
+            if (useRequirement == "LocalPlayerVS" || equipRequirement == "LocalPlayerVS")
+                return FactionDefinition.VS;
+            if (useRequirement == "LocalPlayerNC" || equipRequirement == "LocalPlayerNC")
+                return FactionDefinition.NC;
+            if (useRequirement == "LocalPlayerTR" || equipRequirement == "LocalPlayerTR")
+                return FactionDefinition.TR;
+            if (useRequirement == "LocalPlayerNSO" || equipRequirement == "LocalPlayerNSO")
+                return FactionDefinition.NSO;
+
+            if (_itemClassToFaction.ContainsKey(itemClassId))
+                return _itemClassToFaction[itemClassId];
+
+            if (_itemToFaction.ContainsKey(itemId))
+                return _itemToFaction[itemId];
+
+            return FactionDefinition.All;
+        }
     }
 }

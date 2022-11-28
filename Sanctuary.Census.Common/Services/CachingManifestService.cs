@@ -68,7 +68,7 @@ public class CachingManifestService : ManifestService
         {
             _logger.LogDebug
             (
-                "[{Env}] Manifest file retrieve from cache. Last write time: {Lwt}. Manifest timestamp: {Ts}",
+                "[{Env}] Manifest file retrieved from cache. Last write time: {Lwt}. Manifest timestamp: {Ts}",
                 file.Environment,
                 fileInfo.LastWriteTimeUtc,
                 file.Timestamp

@@ -31,12 +31,17 @@ public class RequirementsHelperService : IRequirementsHelperService
         if (id == 0)
             return false;
 
+        SetupClientExpressionMappings();
+        return _clientExpressionMappings.TryGetValue(id, out expression);
+    }
+
+    [MemberNotNull(nameof(_clientExpressionMappings))]
+    private void SetupClientExpressionMappings()
+    {
         if (_clientDataCache.ClientRequirementExpressions is null)
             throw new MissingCacheDataException(typeof(ClientRequirementExpression));
 
         _clientExpressionMappings ??= _clientDataCache.ClientRequirementExpressions
             .ToDictionary(x => x.ID, x => x.Expression);
-
-        return _clientExpressionMappings.TryGetValue(id, out expression);
     }
 }

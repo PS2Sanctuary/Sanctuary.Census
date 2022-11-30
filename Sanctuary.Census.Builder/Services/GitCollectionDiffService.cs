@@ -132,11 +132,14 @@ public class GitCollectionDiffService : ICollectionDiffService
             await JsonSerializer.SerializeAsync(fs, items, JSON_OPTIONS, ct).ConfigureAwait(false);
         }
 
-        await Cli.Wrap("git")
+        CommandResult addResult = await Cli.Wrap("git")
             .WithArguments("add -A")
             .WithWorkingDirectory(_gitDiffRepoPath)
+            .WithValidation(CommandResultValidation.None)
             .ExecuteAsync(ct)
             .ConfigureAwait(false);
+        if (addResult.ExitCode is not (0 or 141)) // 141 thrown because STDOUT closed too fast
+            throw new Exception("Failed to commit diff files");
 
         CommandResult commitResult = await Cli.Wrap("git")
             .WithArguments($"commit -m \"[{_environmentContextProvider.Environment}] {DateTimeOffset.UtcNow.ToString(CultureInfo.InvariantCulture)}\"")
@@ -149,11 +152,14 @@ public class GitCollectionDiffService : ICollectionDiffService
 
         if (_pushOnCommit)
         {
-            await Cli.Wrap("git")
+            CommandResult pushResult = await Cli.Wrap("git")
                 .WithArguments("push")
                 .WithWorkingDirectory(_gitDiffRepoPath)
+                .WithValidation(CommandResultValidation.None)
                 .ExecuteAsync(ct)
                 .ConfigureAwait(false);
+            if (pushResult.ExitCode is not (0 or 141)) // 141 thrown because STDOUT closed too fast
+                throw new Exception("Failed to commit diff files");
         }
     }
 }

@@ -149,8 +149,15 @@ public class CollectionBuildWorker : BackgroundService
 
                 foreach (ICollectionDiffService differ in differs)
                 {
-                    await differ.CommitAsync(ct).ConfigureAwait(false);
-                    _logger.LogInformation("[{Environment}] ({Differ}) Collection diff committed", env, differ);
+                    try
+                    {
+                        await differ.CommitAsync(ct).ConfigureAwait(false);
+                        _logger.LogInformation("[{Environment}] ({Differ}) Collection diff committed", env, differ);
+                    }
+                    catch (Exception ex)
+                    {
+                        _logger.LogError(ex, "[{Environment}] Failed to run the {Differ}", env, differ);
+                    }
                 }
 
                 clientDataCache.Clear();

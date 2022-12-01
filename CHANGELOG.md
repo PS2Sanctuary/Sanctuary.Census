@@ -2,6 +2,13 @@
 
 Date format: DD/MM/YYYY
 
+## vNext
+
+**Miscellaneous Changes**
+
+- The `item_to_weapon` collection will no longer contain entries linking to non-existent weapons.
+- The directive collections will no longer have data removed, in order to preserve information about temporary directives.
+
 ## 28/11/2022
 
 🆕 **Additions**

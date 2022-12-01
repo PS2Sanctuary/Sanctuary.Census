@@ -87,32 +87,38 @@ public static class Program
         configProvider.Register<Directive>()
             .WithIndex(x => x.DirectiveID, true)
             .WithIndex(x => x.DirectiveTreeID, false)
-            .WithEqualityKey(x => x.DirectiveID);
+            .WithEqualityKey(x => x.DirectiveID)
+            .WithRemoveOldEntryTest(_ => false);
 
         configProvider.Register<DirectiveTree>()
             .WithIndex(x => x.DirectiveTreeID, true)
             .WithIndex(x => x.DirectiveTreeCategoryID, false)
-            .WithEqualityKey(x => x.DirectiveTreeID);
+            .WithEqualityKey(x => x.DirectiveTreeID)
+            .WithRemoveOldEntryTest(_ => false);
 
         configProvider.Register<DirectiveTier>()
             .WithIndex(x => x.DirectiveTreeID, false)
             .WithEqualityKey(x => x.DirectiveTreeID)
-            .WithEqualityKey(x => x.DirectiveTierID);
+            .WithEqualityKey(x => x.DirectiveTierID)
+            .WithRemoveOldEntryTest(_ => false);
 
         configProvider.Register<DirectiveTierReward>()
             .WithIndex(x => x.RewardSetID, false)
             .WithIndex(x => x.ItemID, false)
             .WithEqualityKey(x => x.RewardSetID)
-            .WithEqualityKey(x => x.ItemID);
+            .WithEqualityKey(x => x.ItemID)
+            .WithRemoveOldEntryTest(_ => false);
 
         configProvider.Register<DirectiveTierRewardSet>()
             .WithIndex(x => x.RewardSetID, false)
             .WithEqualityKey(x => x.RewardSetID)
-            .WithEqualityKey(x => x.FactionId);
+            .WithEqualityKey(x => x.FactionId)
+            .WithRemoveOldEntryTest(_ => false);
 
         configProvider.Register<DirectiveTreeCategory>()
             .WithIndex(x => x.DirectiveTreeCategoryID, true)
-            .WithEqualityKey(x => x.DirectiveTreeCategoryID);
+            .WithEqualityKey(x => x.DirectiveTreeCategoryID)
+            .WithRemoveOldEntryTest(_ => false);
 
         configProvider.Register<Experience>()
             .WithIndex(x => x.ExperienceID, true)

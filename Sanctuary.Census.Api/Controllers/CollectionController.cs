@@ -484,8 +484,11 @@ public class CollectionController : ControllerBase
             if (paramName.AsSpan().StartsWith(QueryCommandIdentifier))
                 continue;
 
-            foreach (string value in paramValues)
+            foreach (string? value in paramValues)
             {
+                if (value is null)
+                    continue;
+
                 FilterBuilder fb = FilterBuilder.Parse(collectionName, paramName, value);
                 fb.Build(ref filter, !queryParams.IsCaseSensitive);
             }

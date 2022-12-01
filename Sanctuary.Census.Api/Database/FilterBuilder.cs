@@ -5,6 +5,7 @@ using Sanctuary.Census.Common;
 using Sanctuary.Census.Common.Attributes;
 using Sanctuary.Census.Api.Exceptions;
 using Sanctuary.Census.Api.Models;
+using Sanctuary.Census.Common.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;

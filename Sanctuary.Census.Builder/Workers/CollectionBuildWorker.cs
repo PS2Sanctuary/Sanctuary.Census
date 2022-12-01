@@ -12,6 +12,7 @@ using Sanctuary.Census.ClientData.Abstractions.Services;
 using Sanctuary.Census.Common;
 using Sanctuary.Census.Common.Abstractions.Services;
 using Sanctuary.Census.Common.Attributes;
+using Sanctuary.Census.Common.Json;
 using Sanctuary.Census.Common.Objects;
 using Sanctuary.Census.Common.Services;
 using Sanctuary.Census.PatchData.Abstractions.Services;

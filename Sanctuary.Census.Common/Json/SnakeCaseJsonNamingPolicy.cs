@@ -2,7 +2,7 @@
 using System.Buffers;
 using System.Text.Json;
 
-namespace Sanctuary.Census.Common;
+namespace Sanctuary.Census.Common.Json;
 
 /// <summary>
 /// A naming policy which converts camel and pascal-case names

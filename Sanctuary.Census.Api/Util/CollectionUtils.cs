@@ -1,5 +1,6 @@
 ﻿using Sanctuary.Census.Common;
 using Sanctuary.Census.Common.Attributes;
+using Sanctuary.Census.Common.Json;
 using Sanctuary.Census.Common.Objects.CommonModels;
 using System;
 using System.Collections.Generic;

@@ -63,5 +63,5 @@ public enum QueryErrorCode
     /// <summary>
     /// An invalid projection was made.
     /// </summary>
-    InvalidProjection
+    InvalidProjection = 11
 }

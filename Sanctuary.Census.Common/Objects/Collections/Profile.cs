@@ -11,6 +11,8 @@ namespace Sanctuary.Census.Common.Objects.Collections;
 /// <param name="ProfileTypeId">The ID of the profile's type.</param>
 /// <param name="FactionId">The faction that this profile is built for.</param>
 /// <param name="Name">The name of the profile.</param>
+/// <param name="CameraHeight">The height of the player's camera.</param>
+/// <param name="CrouchCameraHeight">The height of the player's camera while crouched.</param>
 /// <param name="Description">The description of the profile.</param>
 /// <param name="ImageSetId">The ID of the profile's image set.</param>
 /// <param name="ImageId">The ID of the profile's default image.</param>

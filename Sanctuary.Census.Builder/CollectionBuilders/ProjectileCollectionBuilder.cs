@@ -63,6 +63,18 @@ public class ProjectileCollectionBuilder : ICollectionBuilder
                 out string? stickTotargetRequirementExpression
             );
 
+            _requirementsHelper.TryGetClientExpression
+            (
+                projectile.CanProximityLockTargetRequirementExpressionId,
+                out string? canProximityLockTargetExpression
+            );
+
+            _requirementsHelper.TryGetClientExpression
+            (
+                projectile.CreateFlakExplosionRequirementExpressionId,
+                out string? createFlakExplosionExpression
+            );
+
             Projectile built = new
             (
                 projectile.ProjectileID,
@@ -70,6 +82,10 @@ public class ProjectileCollectionBuilder : ICollectionBuilder
                 projectile.ActorDefinition,
                 projectile.FpActorDefinition.Length == 0 ? null : projectile.FpActorDefinition,
                 projectile.ArmDistance.ToNullableUShort(),
+                projectile.BombletDetonationMaxRange.ToNullableDecimal(),
+                projectile.BombletDetonationMinRange.ToNullableDecimal(),
+                canProximityLockTargetExpression,
+                createFlakExplosionExpression,
                 projectile.DetonateDistance.ToNullableUShort(),
                 (projectile.Flags & ProjectileFlags.DetonateOnContact) != 0,
                 new decimal(projectile.Drag),

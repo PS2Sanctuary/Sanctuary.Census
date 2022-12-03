@@ -11,6 +11,14 @@ namespace Sanctuary.Census.Common.Objects.Collections;
 /// <param name="ActorDefinition">The model used to represent the projectile to a third-person observer.</param>
 /// <param name="ActorDefinitionFirstPerson">The model used to represent the projectile.</param>
 /// <param name="ArmDistance">The distance after which a projectile becomes 'active'. E.g., under-barrel grenades only explode after travelling 10m.</param>
+/// <param name="BombletDetonationMaxRange">The maximum range at which a bomblet projectile can detonate.</param>
+/// <param name="BombletDetonationMinRange">The minimum range at which a bomblet projectile can detonate.</param>
+/// <param name="CanProximityLockTargetRequirementExpression">
+/// An expression defining the conditions that must be met for a proximity lock to be achieved on a target.
+/// </param>
+/// <param name="CreateFlakExplosionRequirementExpression">
+/// An expression defining the conditions that must be met for a flak explosion to be created on a target.
+/// </param>
 /// <param name="DetonateDistance">The distance a projectile must travel before it can be detonated.</param>
 /// <param name="DetonateOnContact">Indicates whether the projectile detonates on contact with a target.</param>
 /// <param name="Drag">The force of drag on the projectile.</param>
@@ -47,6 +55,10 @@ public record Projectile
     string ActorDefinition,
     string? ActorDefinitionFirstPerson,
     ushort? ArmDistance,
+    decimal? BombletDetonationMaxRange,
+    decimal? BombletDetonationMinRange,
+    string? CanProximityLockTargetRequirementExpression,
+    string? CreateFlakExplosionRequirementExpression,
     ushort? DetonateDistance,
     bool DetonateOnContact,
     decimal Drag,

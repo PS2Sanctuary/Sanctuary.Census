@@ -4,6 +4,16 @@ Date format: DD/MM/YYYY
 
 ## vNext
 
+🚀 **Additions**
+
+**projectile**:
+- Added the `bomblet_detonation_max_range` and `bomblet_detonation_min_range` fields (`decimal?`). This is the max/min
+  range at which a bomblet projectile (e.g. use by the Scorpion) can detonate.
+- Added the `can_proximity_lock_target_requirement_expression` (`string?`) which indicates the conditions that must be met for a
+  proximity lock to be achieved on a target.
+- Added the `create_flak_explosion_requirement_expression` (`string?`) which indicates the conditions that must be met for a flak
+  explosion to be created on a target.
+
 **Miscellaneous Changes**
 
 - The `item_to_weapon` collection will no longer contain entries linking to non-existent weapons.

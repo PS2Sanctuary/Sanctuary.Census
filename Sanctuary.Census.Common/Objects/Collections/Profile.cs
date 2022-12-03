@@ -23,6 +23,8 @@ public record Profile
     [property: JoinKey] uint? FactionId,
     LocaleString? Name,
     LocaleString? Description,
+    decimal? CameraHeight,
+    decimal? CrouchCameraHeight,
     [property: JoinKey] uint? ImageSetId,
     [property: JoinKey] uint? ImageId,
     string? ImagePath

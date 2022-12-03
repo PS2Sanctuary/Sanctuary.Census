@@ -7,6 +7,7 @@ using Sanctuary.Census.ClientData.ClientDataModels;
 using Sanctuary.Census.Common.Objects.CommonModels;
 using Sanctuary.Census.ServerData.Internal.Abstractions.Services;
 using Sanctuary.Zone.Packets.ReferenceData;
+using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
@@ -82,7 +83,9 @@ public class ProfileCollectionBuilder : ICollectionBuilder
                 hasFaction ? (uint)factionId : null,
                 name,
                 description,
-                profile.ImageSetID == 0 ? null : profile.ImageSetID,
+                profile.CameraHeight.ToNullableDecimal(),
+                profile.CrouchCameraHeight.ToNullableDecimal(),
+                profile.ImageSetID.ToNullableUInt(),
                 hasDefaultImage ? defaultImage : null,
                 hasDefaultImage ? _imageSetHelper.GetRelativeImagePath(defaultImage) : null
             );

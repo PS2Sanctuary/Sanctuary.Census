@@ -6,6 +6,12 @@ Date format: DD/MM/YYYY
 
 🚀 **Additions**
 
+Thanks to Aysom for discovering these new fields.
+
+**profile**
+- Added the `camera_height` and `crouch_camera_height` fields (`decimal?`), which indicate the height at which the
+  player's camera is set to while using the profile.
+
 **projectile**:
 - Added the `bomblet_detonation_max_range` and `bomblet_detonation_min_range` fields (`decimal?`). This is the max/min
   range at which a bomblet projectile (e.g. use by the Scorpion) can detonate.

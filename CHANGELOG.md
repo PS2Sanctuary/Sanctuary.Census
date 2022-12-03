@@ -2,7 +2,7 @@
 
 Date format: DD/MM/YYYY
 
-## vNext
+## 03/12/2022
 
 🚀 **Additions**
 
@@ -24,6 +24,7 @@ Thanks to Aysom for discovering these new fields.
 
 - The `item_to_weapon` collection will no longer contain entries linking to non-existent weapons.
 - The directive collections will no longer have data removed, in order to preserve information about temporary directives.
+- The old diff interface has been disabled. Diffing to https://github.com/PS2Sanctuary/sanctuary-census-diff appears to be running smoothly.
 
 ## 28/11/2022
 

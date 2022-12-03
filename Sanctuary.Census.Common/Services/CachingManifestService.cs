@@ -62,7 +62,7 @@ public class CachingManifestService : ManifestService
             FileSystem.Directory.CreateDirectory(cacheDirectory);
 
         string filePath = FileSystem.Path.Combine(cacheDirectory, file.FileName);
-        IFileInfo fileInfo = FileSystem.FileInfo.FromFileName(filePath);
+        IFileInfo fileInfo = FileSystem.FileInfo.New(filePath);
 
         if (fileInfo.Exists && fileInfo.LastWriteTimeUtc >= file.Timestamp)
         {

@@ -53,7 +53,6 @@ public static class Program
                     .AddPatchDataServices(context.HostingEnvironment)
                     .AddInternalServerDataServices(context.HostingEnvironment)
                     .AddScoped<ICollectionsContext, CollectionsContext>()
-                    .AddScoped<ICollectionDiffService, CollectionDiffService>()
                     .AddScoped<ICollectionDiffService, GitCollectionDiffService>()
                     .AddScoped<IImageSetHelperService, ImageSetHelperService>()
                     .AddScoped<IRequirementsHelperService, RequirementsHelperService>()

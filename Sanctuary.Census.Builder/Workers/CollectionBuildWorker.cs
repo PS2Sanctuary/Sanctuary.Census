@@ -9,7 +9,6 @@ using Sanctuary.Census.Builder.Abstractions.Database;
 using Sanctuary.Census.Builder.Abstractions.Services;
 using Sanctuary.Census.Builder.Objects;
 using Sanctuary.Census.ClientData.Abstractions.Services;
-using Sanctuary.Census.Common;
 using Sanctuary.Census.Common.Abstractions.Services;
 using Sanctuary.Census.Common.Attributes;
 using Sanctuary.Census.Common.Json;
@@ -94,7 +93,7 @@ public class CollectionBuildWorker : BackgroundService
                 IPatchDataCacheService patchDataCache = services.GetRequiredService<IPatchDataCacheService>();
                 IMongoContext mongoContext = services.GetRequiredService<IMongoContext>();
                 ICollectionsContext collectionsContext = services.GetRequiredService<ICollectionsContext>();
-                IEnumerable<ICollectionDiffService> differs = services.GetServices<ICollectionDiffService>();
+                ICollectionDiffService diffService = services.GetRequiredService<ICollectionDiffService>();
 
                 try
                 {
@@ -148,17 +147,14 @@ public class CollectionBuildWorker : BackgroundService
                 await UpdateDatatypes(mongoContext, _buildOptions.CurrentValue.BuildIntervalSeconds, ct).ConfigureAwait(false);
                 _logger.LogInformation("[{Environment}] Datatype upsert complete", env);
 
-                foreach (ICollectionDiffService differ in differs)
+                try
                 {
-                    try
-                    {
-                        await differ.CommitAsync(ct).ConfigureAwait(false);
-                        _logger.LogInformation("[{Environment}] ({Differ}) Collection diff committed", env, differ);
-                    }
-                    catch (Exception ex)
-                    {
-                        _logger.LogError(ex, "[{Environment}] Failed to run the {Differ}", env, differ);
-                    }
+                    await diffService.CommitAsync(ct).ConfigureAwait(false);
+                    _logger.LogInformation("[{Environment}]Collection diff committed", env);
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogError(ex, "[{Environment}] Failed to run the diff service", env);
                 }
 
                 clientDataCache.Clear();

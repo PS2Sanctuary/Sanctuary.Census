@@ -6,7 +6,6 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Sanctuary.Census.Api.Controllers;
-using Sanctuary.Census.Common;
 using Sanctuary.Census.Common.Extensions;
 using Sanctuary.Census.Common.Objects;
 using Sanctuary.Census.Api.Exceptions;
@@ -65,7 +64,10 @@ public static class Program
                 options.JsonSerializerOptions.Converters.Add(new DataResponseJsonConverter());
                 options.JsonSerializerOptions.Converters.Add(new BsonDecimal128JsonConverter());
             });
-        builder.Services.AddRazorPages();
+
+        string? exposeDiffInterfaceStr = builder.Configuration["ApiOptions:ExposeDiffInterface"];
+        if (bool.TryParse(exposeDiffInterfaceStr, out bool exposeDiffInterface) && exposeDiffInterface)
+            builder.Services.AddRazorPages();
 
         // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
         builder.Services.AddEndpointsApiExplorer();
@@ -149,7 +151,9 @@ public static class Program
         );
         app.UseAuthorization();
         app.MapControllers();
-        app.MapRazorPages();
+
+        if (exposeDiffInterface)
+            app.MapRazorPages();
 
         app.Run();
     }

@@ -72,12 +72,12 @@ public class ProfileCollectionBuilder : ICollectionBuilder
             _localeDataCache.TryGetLocaleString(profile.NameID, out LocaleString? name);
             _localeDataCache.TryGetLocaleString(profile.DescriptionID, out LocaleString? description);
 
-            bool hasFaction = profileFactionMap.TryGetValue(profile.ProfileID, out FactionDefinition factionId);
+            bool hasFaction = profileFactionMap.TryGetValue(profile.ProfileId_1, out FactionDefinition factionId);
             bool hasDefaultImage = _imageSetHelper.TryGetDefaultImage(profile.ImageSetID, out uint defaultImage);
 
             MProfile built = new
             (
-                profile.ProfileID,
+                profile.ProfileId_1,
                 profile.ProfileTypeID,
                 hasFaction ? (uint)factionId : null,
                 name,

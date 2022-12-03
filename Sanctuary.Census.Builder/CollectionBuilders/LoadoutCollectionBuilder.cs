@@ -61,7 +61,7 @@ public class LoadoutCollectionBuilder : ICollectionBuilder
                 .Profiles
                 .ToDictionary
                 (
-                    x => x.ProfileID,
+                    x => x.ProfileId_1,
                     x => _localeDataCache.TryGetLocaleString(x.NameID, out LocaleString? profileName)
                         ? profileName.En ?? string.Empty
                         : string.Empty

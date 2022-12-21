@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
     <ItemGroup>
-        <PackageReference Include="carlst99.Mandible" Version="1.3.0" />
+        <PackageReference Include="carlst99.Mandible" Version="1.4.0" />
         <PackageReference Include="carlst99.MemoryReaders" Version="1.0.0" />
         <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="7.0.0" />
         <PackageReference Include="Microsoft.Extensions.Hosting.Abstractions" Version="7.0.0" />
@@ -9,7 +9,7 @@
         <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="7.0.0" />
         <PackageReference Include="Microsoft.Extensions.Options" Version="7.0.0" />
         <PackageReference Include="MongoDB.Driver" Version="2.18.0" />
-        <PackageReference Include="System.IO.Abstractions" Version="18.0.1" />
+        <PackageReference Include="System.IO.Abstractions" Version="19.1.5" />
     </ItemGroup>
 
 </Project>

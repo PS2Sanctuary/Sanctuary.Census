@@ -5,6 +5,9 @@ static PlanetSide 2 data. The methods through which Sanctuary.Census retrieves d
 until such a time as the structure of the data it depends on, or the methods required to retrieve it, change. Major PlanetSide 2 updates will
 often require small changes in order to update certain collections, which can take a small amount of time to implement.
 
+Want to chat with developers of all things Census related? Come say hello in the Planetside Community Developers Discord!\
+![Discord](https://img.shields.io/discord/1019343142471880775?color=blue&label=Planetside%20Community%20Developers&logo=discord&logoColor=%2302B4FF)
+
 ## Getting Started
 
 An instance of Sanctuary.Census can be found at `https://census.lithafalcon.cc/`. It largely provides the same query interface

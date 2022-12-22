@@ -116,15 +116,19 @@ public class LocaleDataCacheService : ILocaleDataCacheService
 
         foreach ((string packName, Dictionary<uint, string> store) in localePacks)
         {
-            ManifestFile manifestFile = await _manifestService.GetFileAsync
+            ManifestFileWrapper manifestFile = await _manifestService.GetFileAsync
             (
                 packName,
                 _environmentContextProvider.Environment,
                 ct
             ).ConfigureAwait(false);
 
-            await using Stream fileData = await _manifestService.GetFileDataAsync(manifestFile, ct)
-                .ConfigureAwait(false);
+            await using Stream fileData = await _manifestService.GetFileDataAsync
+            (
+                manifestFile,
+                _environmentContextProvider.Environment,
+                ct
+            ).ConfigureAwait(false);
 
             await StoreLocaleDataAsync(fileData, store, ct).ConfigureAwait(false);
         }
@@ -155,7 +159,7 @@ public class LocaleDataCacheService : ILocaleDataCacheService
         {
             ct.ThrowIfCancellationRequested();
 
-            string? line = await sr.ReadLineAsync().ConfigureAwait(false);
+            string? line = await sr.ReadLineAsync(ct).ConfigureAwait(false);
             if (string.IsNullOrEmpty(line))
                 continue;
 

@@ -1,11 +1,13 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using Mandible.Manifest;
+using Microsoft.Extensions.Caching.Memory;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using Sanctuary.Census.Common.Abstractions.Services;
 using Sanctuary.Census.Common.Objects;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.IO.Abstractions;
-using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -13,12 +15,22 @@ namespace Sanctuary.Census.Common.Services;
 
 /// <inheritdoc />
 /// <remarks>This service will cache manifest files in local appdata.</remarks>
-public class CachingManifestService : ManifestService
+public class CachingManifestService : IManifestService
 {
+    private static readonly Dictionary<PS2Environment, string> ManifestUrls = new()
+    {
+        { PS2Environment.PS2, "http://manifest.patch.daybreakgames.com/patch/sha/manifest/planetside2/planetside2-livecommon/livenext/planetside2-livecommon.sha.soe.txt" },
+        { PS2Environment.PTS, "http://manifest.patch.daybreakgames.com/patch/sha/manifest/planetside2/planetside2-testcommon/livenext/planetside2-testcommon.sha.soe.txt" }
+    };
+
+    /// <summary>
+    /// Gets the length of time for which a digest should be cached for.
+    /// </summary>
+    protected static readonly TimeSpan DigestCacheTime = TimeSpan.FromMinutes(10);
+
     private readonly ILogger<CachingManifestService> _logger;
-    private readonly SemaphoreSlim _streamCacheLock;
-    private readonly Dictionary<PS2Environment, MemoryStream> _manifestStreams;
-    private readonly Dictionary<PS2Environment, DateTimeOffset> _streamsLastUpdated;
+    private readonly Mandible.Abstractions.Manifest.IManifestService _manifestService;
+    private readonly IMemoryCache _memoryCache;
 
     /// <summary>
     /// Gets the file system implementation.
@@ -34,49 +46,85 @@ public class CachingManifestService : ManifestService
     /// Initializes a new instance of the <see cref="CachingManifestService"/> class.
     /// </summary>
     /// <param name="logger">The logging interface to use.</param>
-    /// <param name="clientFactory">The HTTP client to use.</param>
+    /// <param name="manifestService">The underlying manifest service to use.</param>
+    /// <param name="memoryCache">The memory cache to use.</param>
     /// <param name="commonOptions">The configured common options.</param>
     /// <param name="fileSystem">The file system implementation to use.</param>
     public CachingManifestService
     (
         ILogger<CachingManifestService> logger,
-        IHttpClientFactory clientFactory,
+        Mandible.Abstractions.Manifest.IManifestService manifestService,
+        IMemoryCache memoryCache,
         IOptions<CommonOptions> commonOptions,
         IFileSystem fileSystem
-    ) : base(clientFactory)
+    )
     {
         _logger = logger;
-        _streamCacheLock = new SemaphoreSlim(1);
-        _manifestStreams = new Dictionary<PS2Environment, MemoryStream>();
-        _streamsLastUpdated = new Dictionary<PS2Environment, DateTimeOffset>();
+        _manifestService = manifestService;
+        _memoryCache = memoryCache;
 
         FileSystem = fileSystem;
         CacheDirectory = FileSystem.Path.Combine(commonOptions.Value.AppDataDirectory, "ManifestCache");
     }
 
     /// <inheritdoc />
-    public override async Task<Stream> GetFileDataAsync(ManifestFile file, CancellationToken ct = default)
+    public virtual async Task<ManifestFileWrapper> GetFileAsync
+    (
+        string fileName,
+        PS2Environment ps2Environment,
+        CancellationToken ct = default
+    )
     {
-        string cacheDirectory = Path.Combine(CacheDirectory, file.Environment.ToString());
+        bool hasCachedDigest = _memoryCache.TryGetValue
+        (
+            GetDigestCacheKey(ps2Environment),
+            out Digest? digest
+        );
+
+        if (digest is null || !hasCachedDigest)
+            digest = await CacheDigestAsync(ps2Environment, ct).ConfigureAwait(false);
+
+        ManifestFile? file = null;
+        foreach (Folder folder in digest.Folders)
+        {
+            file = FindManifestFile(fileName, folder);
+            if (file is not null)
+                break;
+        }
+
+        return file is null
+            ? throw new KeyNotFoundException($"Failed to find the file {fileName}")
+            : new ManifestFileWrapper(file, digest);
+    }
+
+    /// <inheritdoc />
+    public virtual async Task<Stream> GetFileDataAsync
+    (
+        ManifestFileWrapper file,
+        PS2Environment ps2Environment,
+        CancellationToken ct = default
+    )
+    {
+        string cacheDirectory = Path.Combine(CacheDirectory, ps2Environment.ToString());
         if (!FileSystem.Directory.Exists(cacheDirectory))
             FileSystem.Directory.CreateDirectory(cacheDirectory);
 
-        string filePath = FileSystem.Path.Combine(cacheDirectory, file.FileName);
+        string filePath = FileSystem.Path.Combine(cacheDirectory, file.File.Name);
         IFileInfo fileInfo = FileSystem.FileInfo.New(filePath);
 
-        if (fileInfo.Exists && fileInfo.LastWriteTimeUtc >= file.Timestamp)
+        if (fileInfo.Exists && fileInfo.LastWriteTimeUtc >= file.File.Timestamp)
         {
             _logger.LogDebug
             (
                 "[{Env}] Manifest file retrieved from cache. Last write time: {Lwt}. Manifest timestamp: {Ts}",
-                file.Environment,
+                ps2Environment,
                 fileInfo.LastWriteTimeUtc,
-                file.Timestamp
+                file.File.Timestamp
             );
             return FileSystem.File.OpenRead(filePath);
         }
 
-        Stream dataStream = await base.GetFileDataAsync(file, ct).ConfigureAwait(false);
+        Stream dataStream = await _manifestService.GetFileDataAsync(file.Owner, file.File, ct).ConfigureAwait(false);
         await using Stream fs = FileSystem.File.OpenWrite(filePath);
 
         await dataStream.CopyToAsync(fs, ct).ConfigureAwait(false);
@@ -85,36 +133,48 @@ public class CachingManifestService : ManifestService
         return dataStream;
     }
 
-    /// <inheritdoc />
-    protected override async Task<Stream> GetManifestStreamAsync(PS2Environment environment, CancellationToken ct)
+    /// <summary>
+    /// Caches the latest digest.
+    /// </summary>
+    /// <param name="environment">The environment to cache the digest of.</param>
+    /// <param name="ct">A <see cref="CancellationToken"/> that can be used to stop the operation.</param>
+    /// <returns>The retrieved digest.</returns>
+    protected async Task<Digest> CacheDigestAsync(PS2Environment environment, CancellationToken ct)
     {
-        await _streamCacheLock.WaitAsync(ct);
+        Digest digest = await _manifestService.GetDigestAsync(ManifestUrls[environment], ct).ConfigureAwait(false);
+        _memoryCache.Set(GetDigestCacheKey(environment), digest, DigestCacheTime);
+        return digest;
+    }
 
-        bool streamNeedsUpdating = !_streamsLastUpdated.TryGetValue(environment, out DateTimeOffset lastUpdate)
-            || lastUpdate.AddMinutes(5) < DateTimeOffset.UtcNow;
-
-        bool streamNotPresent = !_manifestStreams.TryGetValue(environment, out MemoryStream? cacheStream);
-
-        if (streamNeedsUpdating || streamNotPresent)
+    /// <summary>
+    /// Recursively attempts to find a manifest file within a folder.
+    /// </summary>
+    /// <param name="fileName">The name of the file.</param>
+    /// <param name="searchRoot">The folder begin searching from.</param>
+    /// <returns>The file, or <c>null</c> if it does not exist within the <paramref name="searchRoot"/>.</returns>
+    protected static ManifestFile? FindManifestFile(string fileName, Folder searchRoot)
+    {
+        foreach (ManifestFile file in searchRoot.Files)
         {
-            if (cacheStream is not null)
-                await cacheStream.DisposeAsync();
-
-            cacheStream = new MemoryStream();
-            _manifestStreams[environment] = cacheStream;
-
-            await using Stream s = await base.GetManifestStreamAsync(environment, ct);
-            await s.CopyToAsync(cacheStream, ct);
-            _streamsLastUpdated[environment] = DateTimeOffset.UtcNow;
+            if (file.Name == fileName)
+                return file;
         }
 
-        cacheStream!.Seek(0, SeekOrigin.Begin);
+        foreach (Folder child in searchRoot.Children)
+        {
+            ManifestFile? childFile = FindManifestFile(fileName, child);
+            if (childFile is not null)
+                return childFile;
+        }
 
-        MemoryStream ms = new();
-        await cacheStream.CopyToAsync(ms, ct);
-        ms.Seek(0, SeekOrigin.Begin);
-
-        _streamCacheLock.Release();
-        return ms;
+        return null;
     }
+
+    /// <summary>
+    /// Gets the key used to store digest objects in the memory cache.
+    /// </summary>
+    /// <param name="environment">The environment that the digest was retrieved from.</param>
+    /// <returns>The cache key.</returns>
+    protected static object GetDigestCacheKey(PS2Environment environment)
+        => (typeof(Digest), environment);
 }

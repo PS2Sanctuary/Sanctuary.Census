@@ -152,16 +152,20 @@ public class ClientDataCacheService : IClientDataCacheService
     /// <inheritdoc />
     public async Task RepopulateAsync(CancellationToken ct = default)
     {
-        ManifestFile dataPackManifest = await _manifestService.GetFileAsync
+        ManifestFileWrapper dataPackManifest = await _manifestService.GetFileAsync
         (
             "data_x64_0.pack2",
             _environmentContextProvider.Environment,
             ct
         ).ConfigureAwait(false);
 
-        await using Stream dataPackStrema = await _manifestService.GetFileDataAsync(dataPackManifest, ct)
-            .ConfigureAwait(false);
-        await using StreamDataReaderService sdrs = new(dataPackStrema, false);
+        await using Stream dataPackStream = await _manifestService.GetFileDataAsync
+        (
+            dataPackManifest,
+            _environmentContextProvider.Environment,
+            ct
+        ).ConfigureAwait(false);
+        await using StreamDataReaderService sdrs = new(dataPackStream, false);
 
         using Pack2Reader reader = new(sdrs);
         IReadOnlyList<Asset2Header> assetHeaders = await reader.ReadAssetHeadersAsync(ct).ConfigureAwait(false);

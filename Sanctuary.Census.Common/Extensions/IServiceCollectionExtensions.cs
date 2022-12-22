@@ -37,6 +37,8 @@ public static class IServiceCollectionExtensions
         if (_registrationComplete)
             return services;
 
+        services.AddMemoryCache();
+
         services.TryAddSingleton<IFileSystem, FileSystem>();
         services.TryAddScoped<EnvironmentContextProvider>();
 
@@ -44,12 +46,11 @@ public static class IServiceCollectionExtensions
         services.TryAddScoped<IMongoContext, MongoContext>();
         RegisterCollectionClassMaps();
 
-        services.AddHttpClient(nameof(ManifestService));
-
+        services.AddHttpClient<Mandible.Abstractions.Manifest.IManifestService, Mandible.Manifest.ManifestService>();
         if (hostEnvironment.IsProduction())
-            services.TryAddSingleton<IManifestService, CachingManifestService>();
+            services.TryAddScoped<IManifestService, CachingManifestService>();
         else
-            services.TryAddSingleton<IManifestService, DebugManifestService>();
+            services.TryAddScoped<IManifestService, DebugManifestService>();
 
         _registrationComplete = true;
         return services;

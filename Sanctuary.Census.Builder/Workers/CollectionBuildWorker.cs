@@ -150,7 +150,7 @@ public class CollectionBuildWorker : BackgroundService
                 try
                 {
                     await diffService.CommitAsync(ct).ConfigureAwait(false);
-                    _logger.LogInformation("[{Environment}]Collection diff committed", env);
+                    _logger.LogInformation("[{Environment}] Collection diff committed", env);
                 }
                 catch (Exception ex)
                 {

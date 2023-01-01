@@ -59,6 +59,7 @@ public static class IServiceCollectionExtensions
     private static void RegisterCollectionClassMaps()
     {
         BsonSerializer.RegisterSerializer(new DecimalSerializer(BsonType.Decimal128));
+        BsonSerializer.RegisterSerializer(new EnumSerializer<FactionDefinition>(BsonType.String));
 
         IEnumerable<Type> collTypes = typeof(CollectionAttribute).Assembly
             .GetTypes()

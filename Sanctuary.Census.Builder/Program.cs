@@ -18,6 +18,7 @@ using Sanctuary.Census.ServerData.Internal.Objects;
 using Sanctuary.Common.Objects;
 using Serilog;
 using Serilog.Events;
+using System;
 using System.Threading.Tasks;
 
 namespace Sanctuary.Census.Builder;
@@ -395,10 +396,31 @@ public static class Program
             .WithIndex(x => x.WorldID, true)
             .WithEqualityKey(x => x.WorldID);
 
+        configProvider.Register<WorldPopulation>()
+            .WithIndex(x => x.WorldId, true)
+            .WithEqualityKey(x => x.WorldId)
+            .WithRemoveOldEntryTest
+            (
+                x => DateTimeOffset.FromUnixTimeSeconds(x.LastUpdated).AddMinutes(15) < DateTimeOffset.UtcNow
+            )
+            .IsDynamic();
+
         configProvider.Register<Common.Objects.Collections.Zone>()
             .WithIndex(x => x.ZoneID, true)
             .WithEqualityKey(x => x.ZoneID)
             .WithRemoveOldEntryTest(_ => false);
+
+        configProvider.Register<ZonePopulation>()
+            .WithIndex(x => x.WorldId, false)
+            .WithIndex(x => x.ZoneId, false)
+            .WithEqualityKey(x => x.WorldId)
+            .WithEqualityKey(x => x.ZoneId)
+            .WithEqualityKey(x => x.ZoneInstance)
+            .WithRemoveOldEntryTest
+            (
+                x => DateTimeOffset.FromUnixTimeSeconds(x.LastUpdated).AddMinutes(15) < DateTimeOffset.UtcNow
+            )
+            .IsDynamic();
 
         return services;
     }

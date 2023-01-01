@@ -61,6 +61,7 @@ public static class Program
                     .RegisterCollectionConfigurations()
                     .RegisterCollectionBuilders()
                     .AddHostedService<CollectionBuildWorker>();
+                //.AddHostedService<ContinuousServerDataBuildWorker>();
             });
 
         await builder.Build().RunAsync().ConfigureAwait(false);
@@ -475,9 +476,10 @@ public static class Program
     private static void SetupLogger(string? seqIngestionEndpoint, string? seqApiKey)
     {
         LoggerConfiguration loggerConfig = new LoggerConfiguration()
-            .MinimumLevel.Debug()
+            .MinimumLevel.Information()
             .MinimumLevel.Override("Microsoft", LogEventLevel.Information)
             .MinimumLevel.Override("Microsoft.AspNetCore", LogEventLevel.Warning)
+            .MinimumLevel.Override("Sanctuary.Core.CoreProtocolManager", LogEventLevel.Error)
             .MinimumLevel.Override("Serilog.AspNetCore.RequestLoggingMiddleware", LogEventLevel.Warning)
             .MinimumLevel.Override("System.Net.Http.HttpClient", LogEventLevel.Warning)
             .Enrich.FromLogContext()

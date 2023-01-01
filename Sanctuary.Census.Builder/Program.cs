@@ -46,7 +46,8 @@ public static class Program
             {
                 services.Configure<BuildOptions>(context.Configuration.GetSection(nameof(BuildOptions)))
                     .Configure<LoginClientOptions>(context.Configuration.GetSection(nameof(LoginClientOptions)))
-                    .Configure<GatewayClientOptions>(context.Configuration.GetSection(nameof(GatewayClientOptions)));
+                    .Configure<GatewayClientOptions>(context.Configuration.GetSection(nameof(GatewayClientOptions)))
+                    .Configure<ContinuousDataOptions>(context.Configuration.GetSection(nameof(ContinuousDataOptions)));
 
                 services.AddCommonServices(context.HostingEnvironment)
                     .AddClientDataServices(context.HostingEnvironment)

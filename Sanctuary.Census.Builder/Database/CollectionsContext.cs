@@ -2,7 +2,6 @@
 using MongoDB.Driver;
 using Sanctuary.Census.Builder.Abstractions.Database;
 using Sanctuary.Census.Builder.Abstractions.Services;
-using Sanctuary.Census.Common;
 using Sanctuary.Census.Common.Abstractions.Objects.Collections;
 using Sanctuary.Census.Common.Abstractions.Services;
 using Sanctuary.Census.Common.Json;
@@ -90,6 +89,7 @@ public class CollectionsContext : ICollectionsContext
             data,
             configuration.EqualitySelectors,
             removeOldEntryTest,
+            !configuration.IsDynamicCollection,
             ct
         ).ConfigureAwait(false);
     }
@@ -99,6 +99,7 @@ public class CollectionsContext : ICollectionsContext
         IEnumerable<T> data,
         IReadOnlyList<Expression<Func<T, object?>>> equalitySelectors,
         Func<T, bool> oldEntryRemovalTest,
+        bool includeInDiff,
         CancellationToken ct = default
     ) where T : ISanctuaryCollection
     {
@@ -146,7 +147,8 @@ public class CollectionsContext : ICollectionsContext
                         DeleteOneModel<T> deleteModel = new(filter);
 
                         dbWriteModels.Add(deleteModel);
-                        _diffService.SetDeleted(document);
+                        if (includeInDiff)
+                            _diffService.SetDeleted(document);
                     }
                 }
                 else if (!dataList[itemIndex].Equals(document))
@@ -158,7 +160,8 @@ public class CollectionsContext : ICollectionsContext
                     ReplaceOneModel<T> upsertModel = new(filter, item);
 
                     dbWriteModels.Add(upsertModel);
-                    _diffService.SetUpdated(document, item);
+                    if (includeInDiff)
+                        _diffService.SetUpdated(document, item);
                 }
 
                 // No need to worry about the document any more
@@ -168,7 +171,7 @@ public class CollectionsContext : ICollectionsContext
             }
         }
 
-        if (isNewCollection && dataList.Count > 0)
+        if (isNewCollection && dataList.Count > 0 && includeInDiff)
         {
             string collName = NameConverter.ConvertName(typeof(T).Name);
             _diffService.SetAdded(new NewCollection
@@ -185,7 +188,7 @@ public class CollectionsContext : ICollectionsContext
             InsertOneModel<T> insertModel = new(item);
             dbWriteModels.Add(insertModel);
 
-            if (!isNewCollection)
+            if (!isNewCollection && includeInDiff)
                 _diffService.SetAdded(item);
         }
 

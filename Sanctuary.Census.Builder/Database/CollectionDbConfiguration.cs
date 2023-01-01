@@ -55,6 +55,11 @@ public class CollectionDbConfiguration<TCollection> : ICollectionDbConfiguration
     public Func<TCollection, bool> RemoveOldEntryTest { get; private set; }
 
     /// <summary>
+    /// Gets a value indicating whether this collection stores dynamic data.
+    /// </summary>
+    public bool IsDynamicCollection { get; private set; }
+
+    /// <summary>
     /// Initializes a new instance of the <see cref="CollectionDbConfiguration{TCollection}"/> class.
     /// </summary>
     public CollectionDbConfiguration()
@@ -105,6 +110,16 @@ public class CollectionDbConfiguration<TCollection> : ICollectionDbConfiguration
     public CollectionDbConfiguration<TCollection> WithRemoveOldEntryTest(Func<TCollection, bool> test)
     {
         RemoveOldEntryTest = test;
+        return this;
+    }
+
+    /// <summary>
+    /// Indicates that the given collection contains dynamic data.
+    /// </summary>
+    /// <returns>The <see cref="CollectionDbConfiguration{TCollection}"/> instance, so that calls may be chained.</returns>
+    public CollectionDbConfiguration<TCollection> IsDynamic()
+    {
+        IsDynamicCollection = true;
         return this;
     }
 

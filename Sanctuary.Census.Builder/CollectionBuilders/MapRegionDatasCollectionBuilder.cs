@@ -59,7 +59,7 @@ public class MapRegionDatasCollectionBuilder : ICollectionBuilder
             && _serverDataCache.MapRegionDatas.ContainsKey(ZoneDefinition.Esamir)
             && _serverDataCache.MapRegionDatas.ContainsKey(ZoneDefinition.Amerish)
             && _serverDataCache.MapRegionDatas.ContainsKey(ZoneDefinition.Hossin)
-            && (_serverDataCache.MapRegionDatas.ContainsKey(ZoneDefinition.Oshur) || _serverDataCache.MapRegionDatas.ContainsKey(ZoneDefinition.Oshur2));
+            && _serverDataCache.MapRegionDatas.ContainsKey(ZoneDefinition.Oshur);
         if (!hasAllStaticZones)
         {
             throw new Exception

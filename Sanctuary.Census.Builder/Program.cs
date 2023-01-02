@@ -476,7 +476,7 @@ public static class Program
     private static void SetupLogger(string? seqIngestionEndpoint, string? seqApiKey)
     {
         LoggerConfiguration loggerConfig = new LoggerConfiguration()
-            .MinimumLevel.Information()
+            .MinimumLevel.Debug()
             .MinimumLevel.Override("Microsoft", LogEventLevel.Information)
             .MinimumLevel.Override("Microsoft.AspNetCore", LogEventLevel.Warning)
             .MinimumLevel.Override("Sanctuary.Core.CoreProtocolManager", LogEventLevel.Error)

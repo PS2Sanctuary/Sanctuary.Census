@@ -26,6 +26,10 @@ Added the following fields to `profile`:
 
 `profile` is now a silver-tier collection, missing only the `profile_type_description` field.
 
+🐛 **Fixes**
+
+- The `c:tree` command no longer requires the `field` key to be explicitly provided (i.e. `&c:tree=<field_name>` is now valid syntax)
+
 ## 03/12/2022
 
 🚀 **Additions**

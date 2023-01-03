@@ -50,26 +50,35 @@ public class GroupBuilder
         SpanReader<char> reader = new(value);
         while (!reader.End)
         {
-            if (!reader.TryReadTo(out ReadOnlySpan<char> key, ':'))
-                break;
+            bool validValue = (reader.TryReadTo(out ReadOnlySpan<char> keyValuePair, '^')
+                    || reader.TryReadExact(out keyValuePair, reader.Remaining))
+                && keyValuePair.Length > 0;
+            if (!validValue)
+                throw new QueryException(QueryErrorCode.Malformed, "A value must be provided to the c:tree command");
 
-            bool validValue = (reader.TryReadTo(out ReadOnlySpan<char> keyValue, '^')
-                                || reader.TryReadExact(out keyValue, reader.Remaining))
-                                && keyValue.Length > 0;
+            SpanReader<char> valueReader = new(keyValuePair);
+
+            if (!valueReader.TryReadTo(out ReadOnlySpan<char> key, ':'))
+            {
+                field = keyValuePair.ToString();
+                continue;
+            }
+
+            validValue = valueReader.TryReadExact(out ReadOnlySpan<char> keyValue, valueReader.Remaining)
+                && keyValue.Length > 0;
             if (!validValue)
                 throw new QueryException(QueryErrorCode.Malformed, $"A value must be provided for the c:tree key '{key}'");
 
             if (key.SequenceEqual(FieldKey))
                 field = keyValue.ToString();
-
-            if (key.SequenceEqual(ListKey))
+            else if (key.SequenceEqual(ListKey))
                 isList = keyValue[0] == '1';
-
-            if (key.SequenceEqual(PrefixKey))
+            else if (key.SequenceEqual(PrefixKey))
                 prefix = keyValue.ToString();
-
-            if (key.SequenceEqual(StartKey))
+            else if (key.SequenceEqual(StartKey))
                 start = keyValue.ToString();
+            else
+                throw new QueryException(QueryErrorCode.InvalidCommandValue, $"The '{key}' key is not recognised by c:tree");
         }
 
         if (field is null)

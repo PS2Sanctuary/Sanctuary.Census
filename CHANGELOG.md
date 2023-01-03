@@ -2,6 +2,30 @@
 
 Date format: DD/MM/YYYY
 
+## 03/01/2023
+
+🚀 **The Profile Update**
+
+Added the following fields to `profile`:
+- `decimal? movement_speed`,
+- `decimal? backpedal_speed_multiplier`
+- `decimal? crouch_speed_multiplier`
+- `decimal? sprint_speed_multiplier`
+- `decimal? strafe_speed_multiplier`
+- `decimal? sprint_acceleration_time_sec`
+- `decimal? sprint_deceleration_time_sec`
+- `decimal? forward_acceleration_time_sec`
+- `decimal? forward_deceleration_time_sec`
+- `decimal? back_acceleration_time_sec`
+- `decimal? back_deceleration_time_sec`
+- `decimal? strafe_acceleration_time_sec`
+- `decimal? strafe_deceleration_time_sec`
+- `decimal? max_water_speed_multiplier`
+
+> See https://census.lithafalcon.cc/describe/ps2/profile for descriptions of the new fields
+
+`profile` is now a silver-tier collection, missing only the `profile_type_description` field.
+
 ## 03/12/2022
 
 🚀 **Additions**

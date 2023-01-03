@@ -17,6 +17,20 @@ namespace Sanctuary.Census.Common.Objects.Collections;
 /// <param name="ImageSetId">The ID of the profile's image set.</param>
 /// <param name="ImageId">The ID of the profile's default image.</param>
 /// <param name="ImagePath">The relative path to the profile's default image.</param>
+/// <param name="MovementSpeed">The walking speed of the profile. Valid only for infantry profiles.</param>
+/// <param name="BackpedalSpeedMultiplier">Multiplied against the <see cref="MovementSpeed"/>. Valid only for infantry profiles.</param>
+/// <param name="CrouchSpeedMultiplier">Multiplied against the <see cref="MovementSpeed"/>. Valid only for infantry profiles.</param>
+/// <param name="SprintSpeedMultiplier">Multiplied against the <see cref="MovementSpeed"/>. Valid only for infantry profiles.</param>
+/// <param name="StrafeSpeedMultiplier">Multiplied against the <see cref="MovementSpeed"/>. Valid only for infantry profiles.</param>
+/// <param name="SprintAccelerationTimeSec">The time in seconds taken to accelerate into a sprint. Valid only for infantry profiles.</param>
+/// <param name="SprintDecelerationTimeSec">The time in seconds taken to decelerate from a sprint. Valid only for infantry profiles.</param>
+/// <param name="ForwardAccelerationTimeSec">The time in seconds taken to accelerate into a walk. Valid only for infantry profiles.</param>
+/// <param name="ForwardDecelerationTimeSec">The time in seconds taken to decelerate from from a walk. Valid only for infantry profiles.</param>
+/// <param name="BackAccelerationTimeSec">The time in seconds taken to accelerate into a backpedal. Valid only for infantry profiles.</param>
+/// <param name="BackDecelerationTimeSec">The time in seconds taken to decelerate from from a backpedal. Valid only for infantry profiles.</param>
+/// <param name="StrafeAccelerationTimeSec">The time in seconds taken to accelerate into a strafe. Valid only for infantry profiles.</param>
+/// <param name="StrafeDecelerationTimeSec">The time in seconds taken to decelerate from from a strafe. Valid only for infantry profiles.</param>
+/// <param name="MaxWaterSpeedMultiplier">Multiplied against the <see cref="MovementSpeed"/>. Valid only for infantry profiles.</param>
 [Collection]
 public record Profile
 (
@@ -29,5 +43,19 @@ public record Profile
     decimal? CrouchCameraHeight,
     [property: JoinKey] uint? ImageSetId,
     [property: JoinKey] uint? ImageId,
-    string? ImagePath
+    string? ImagePath,
+    decimal? MovementSpeed,
+    decimal? BackpedalSpeedMultiplier,
+    decimal? CrouchSpeedMultiplier,
+    decimal? SprintSpeedMultiplier,
+    decimal? StrafeSpeedMultiplier,
+    decimal? SprintAccelerationTimeSec,
+    decimal? SprintDecelerationTimeSec,
+    decimal? ForwardAccelerationTimeSec,
+    decimal? ForwardDecelerationTimeSec,
+    decimal? BackAccelerationTimeSec,
+    decimal? BackDecelerationTimeSec,
+    decimal? StrafeAccelerationTimeSec,
+    decimal? StrafeDecelerationTimeSec,
+    decimal? MaxWaterSpeedMultiplier
 ) : ISanctuaryCollection;

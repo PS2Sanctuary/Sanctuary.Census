@@ -104,6 +104,7 @@ in such a way that retrieving certain data may not be immediately obvious.
 - item
 - loadout
 - map_region
+- profile
 - resist_info
 - vehicle
 - weapon
@@ -121,6 +122,10 @@ Missing the `is_default_attachment` field.
 #### map_region
 
 Missing the `reward_amount` and `reward_currency_id` fields.
+
+#### profile
+
+Missing the `profile_type_description` field.
 
 #### resist_info
 
@@ -148,7 +153,6 @@ Missing the `state` field. This is partially replaced by the `is_locked` field.
 These collections are missing significant amounts of data, or are shaped very differently.
 
 - fire_mode
-- profile
 
 #### fire_mode
 
@@ -165,12 +169,3 @@ Missing the follow fields:
 - `lockon_range_close`
 - `lockon_range_far`
 - `lockon_required`
-
-Of note is that lock-on parameters are theorised to be calculated dynamically by the game nowadays, using an unknown
-algorithm. Hence, it's not surprising that these fields have been un-obtainable and you should consider the DBG Census
-equivalents invalid.
-
-#### profile
-
-Missing the `profile_type_description`, `movement_speed`, `backpedal_speed_modifier`, `sprint_speed_modifier`
-and `strafe_speed_modifier` fields.

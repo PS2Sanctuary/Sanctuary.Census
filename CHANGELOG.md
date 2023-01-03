@@ -22,13 +22,12 @@ Added the following fields to `profile`:
 - `decimal? strafe_deceleration_time_sec`
 - `decimal? max_water_speed_multiplier`
 
-> See https://census.lithafalcon.cc/describe/ps2/profile for descriptions of the new fields
-
+See https://census.lithafalcon.cc/describe/ps2/profile for descriptions of the new fields. They are only valid for infantry profiles.
 `profile` is now a silver-tier collection, missing only the `profile_type_description` field.
 
 🐛 **Fixes**
 
-- The `c:tree` command no longer requires the `field` key to be explicitly provided (i.e. `&c:tree=<field_name>` is now valid syntax)
+- The `c:tree` command no longer requires the `field` key to be explicitly provided (i.e. `&c:tree=<field_name>` is now valid syntax).
 
 ## 03/12/2022
 

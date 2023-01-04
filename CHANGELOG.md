@@ -2,11 +2,16 @@
 
 Date format: DD/MM/YYYY
 
-## 03/01/2023
+## 04/01/2022
 
-🚀 **The Profile Update**
+🚀 **Additions**
 
-Added the following fields to `profile`:
+**map_region**
+- Added the `outfit_resource_reward_type_description` and `outfit_resource_reward_amount` fields.
+
+## 03/01/2023 | The Profile Update
+
+🚀 Added the following fields to `profile`:
 - `decimal? movement_speed`,
 - `decimal? backpedal_speed_multiplier`
 - `decimal? crouch_speed_multiplier`

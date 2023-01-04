@@ -12,6 +12,7 @@ using Sanctuary.Zone.Packets.MapRegion;
 using Sanctuary.Zone.Packets.StaticFacilityInfo;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using FacilityInfo = Sanctuary.Zone.Packets.StaticFacilityInfo.FacilityInfo;
@@ -104,6 +105,10 @@ public class MapRegionDatasCollectionBuilder : ICollectionBuilder
                     facilityTypeDescriptions.Add(facType.FacilityTypeId, facType.Description);
             }
 
+            Dictionary<uint, (OutfitResource, uint)> facilityOutfitRewards = _serverDataCache.OutfitWarFacilityRewards
+                .SelectMany(x => x.Value.Facilities)
+                .ToDictionary(x => x.FacilityId, x => (x.ResourceId, x.RewardAmount));
+
             Dictionary<uint, MapRegion> builtRegions = new();
 
             foreach ((ZoneDefinition zone, MapRegionData regionData) in _serverDataCache.MapRegionDatas)
@@ -119,6 +124,14 @@ public class MapRegionDatasCollectionBuilder : ICollectionBuilder
                     facilityInfos.TryGetValue(region.FacilityID, out FacilityInfo? facility);
                     facilityTypeDescriptions.TryGetValue(region.FacilityTypeID, out string? facTypeDescription);
 
+                    OutfitResource? rewardType = null;
+                    uint? rewardAmount = null;
+                    if (facilityOutfitRewards.TryGetValue(region.FacilityID, out (OutfitResource, uint) reward))
+                    {
+                        rewardType = reward.Item1;
+                        rewardAmount = reward.Item2;
+                    }
+
                     builtRegions.TryAdd(region.MapRegionID_1, new MapRegion
                     (
                         region.MapRegionID_1,
@@ -130,7 +143,9 @@ public class MapRegionDatasCollectionBuilder : ICollectionBuilder
                         facTypeDescription,
                         facility is null ? null : new decimal(facility.LocationX),
                         facility is null ? null : new decimal(facility.LocationY),
-                        facility is null ? null : new decimal(facility.LocationZ)
+                        facility is null ? null : new decimal(facility.LocationZ),
+                        rewardType?.ToString(),
+                        (int?)rewardAmount
                     ));
                 }
             }

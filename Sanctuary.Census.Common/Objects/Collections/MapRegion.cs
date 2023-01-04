@@ -17,6 +17,8 @@ namespace Sanctuary.Census.Common.Objects.Collections;
 /// <param name="LocationX">The X coordinate of the center of the region.</param>
 /// <param name="LocationY">The Y coordinate of the center of the region.</param>
 /// <param name="LocationZ">The Z coordinate of the center of the region.</param>
+/// <param name="OutfitResourceRewardTypeDescription">The type of the Outfit Resource rewarded by this facility upon capture.</param>
+/// <param name="OutfitResourceRewardAmount">The amount of the Outfit Resource rewarded by this facility upon capture.</param>
 [Collection]
 public record MapRegion
 (
@@ -29,5 +31,7 @@ public record MapRegion
     string? FacilityType,
     decimal? LocationX,
     decimal? LocationY,
-    decimal? LocationZ
+    decimal? LocationZ,
+    string? OutfitResourceRewardTypeDescription,
+    int? OutfitResourceRewardAmount
 ) : ISanctuaryCollection;

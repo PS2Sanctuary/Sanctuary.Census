@@ -4,10 +4,22 @@ Date format: DD/MM/YYYY
 
 ## 04/01/2022
 
+🚨 **Breaking changes**
+
+On the `fire_mode_2` collection:
+- the `cloak_after_fire_delay_ms` field has been renamed to `ability_after_fire_delay_ms`.
+
 🚀 **Additions**
 
 **map_region**
 - Added the `outfit_resource_reward_type_description` and `outfit_resource_reward_amount` fields.
+
+**fire_mode_2**
+- `bool can_lock` - Indicates whether a lock-on weapon can obtain a lock while the fire mode is active.
+- `string? fire_requirement_expression` - An expression defining the conditions that must be met for firing to be enabled.
+
+**weapon**
+- `equip_needs_ammo` - Indicates whether the fire mode requires ammo to be available to allow equipping.
 
 ## 03/01/2023 | The Profile Update
 

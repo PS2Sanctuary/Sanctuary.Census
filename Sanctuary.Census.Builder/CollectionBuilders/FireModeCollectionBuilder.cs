@@ -71,10 +71,17 @@ public class FireModeCollectionBuilder : ICollectionBuilder
         {
             _localeDataCache.TryGetLocaleString(fireMode.TypeDescriptionID, out LocaleString? description);
             clientDisplayStats.TryGetValue(fireMode.ID, out FireModeDisplayStat? displayStats);
+
             _requirementsHelper.TryGetClientExpression
             (
                 fireMode.TargetClientRequirementExpressionID,
                 out string? targetRequirementExpression
+            );
+
+            _requirementsHelper.TryGetClientExpression
+            (
+                fireMode.CanFireClientRequirementExpressionID,
+                out string? canFireRequirementExpression
             );
 
             FireMode2 built = new
@@ -96,15 +103,16 @@ public class FireModeCollectionBuilder : ICollectionBuilder
                 (fireMode.Flags & FireModeFlags.SprintFire) != 0,
                 (fireMode.Flags & FireModeFlags.SwayCanSteady) != 0,
                 (fireMode.Flags & FireModeFlags.UseInWater) != 0,
-                fireMode.CloakAfterFireDelayMs.ToNullableInt(),
+                fireMode.AbilityAfterFireDelayMs.ToNullableInt(),
+                (fireMode.Flags & FireModeFlags.CanLockTarget) != 0,
                 new decimal(fireMode.CofOverride),
                 new decimal(fireMode.CofPelletSpread),
                 new decimal(fireMode.CofRange),
                 new decimal(fireMode.CofRecoil),
                 new decimal(fireMode.CofScalar),
                 new decimal(fireMode.CofScalarMoving),
-                fireMode.DamageHeadMultiplier.ToNullableDecimal(),
-                fireMode.DamageLegsMultiplier.ToNullableDecimal(),
+                fireMode.DamageHeadModifier.ToNullableDecimal(),
+                fireMode.DamageLegsModifier.ToNullableDecimal(),
                 fireMode.DamageIndirectEffectID.ToNullableUInt(),
                 fireMode.DeployAnimTimeMs.ToNullableUShort(),
                 fireMode.FanAngleDegrees.ToNullableDecimal(),
@@ -122,6 +130,7 @@ public class FireModeCollectionBuilder : ICollectionBuilder
                 (fireMode.Flags & FireModeFlags.FireNeedsLock) != 0,
                 fireMode.FirePelletsPerShot,
                 fireMode.FireRefireMs,
+                canFireRequirementExpression,
                 fireMode.HeatPerShot.ToNullableUInt(),
                 fireMode.HeatRecoveryDelayMS.ToNullableUShort(),
                 fireMode.HeatThreshold.ToNullableUInt(),
@@ -155,7 +164,7 @@ public class FireModeCollectionBuilder : ICollectionBuilder
                 fireMode.RecoilRecoveryRate.ToNullableDecimal(),
                 fireMode.RecoilShotsAtMinMagnitude.ToNullableByte(),
                 fireMode.ReloadAmmoFillMs.ToNullableUShort(),
-                (fireMode.Flags & FireModeFlags.ReloadBlockAuto) != 0,
+                (fireMode.Flags & FireModeFlags.BlockAutoReload) != 0,
                 fireMode.ReloadChamberMs.ToNullableUShort(),
                 (fireMode.Flags & FireModeFlags.ReloadContinuous) != 0,
                 fireMode.ReloadLoopStartTimeMs.ToNullableUShort(),

@@ -25,7 +25,8 @@ namespace Sanctuary.Census.Common.Objects.Collections;
 /// <param name="SprintFire">Indicates whether the fire mode is usable while sprinting.</param>
 /// <param name="SwayCanSteady">Indicates whether any scope sway applied by the fire mode can be steadied.</param>
 /// <param name="UseInWater">Indicates whether the fire mode is usable underwater.</param>
-/// <param name="CloakAfterFireDelayMs">The delay in milliseconds before the infiltrator's cloak ability is usable, after firing.</param>
+/// <param name="AbilityAfterFireDelayMs">The delay in milliseconds before a profile's ability is usable, after firing.</param>
+/// <param name="CanLock">Indicates whether a lock-on weapon can obtain a lock while the fire mode is active.</param>
 /// <param name="CofOverride"></param>
 /// <param name="CofPelletSpread"></param>
 /// <param name="CofRange"></param>
@@ -59,6 +60,9 @@ namespace Sanctuary.Census.Common.Objects.Collections;
 /// <param name="FireNeedsLock">Indicates whether a lock on a target is required before the fire mode can be used.</param>
 /// <param name="FirePelletsPerShot"></param>
 /// <param name="FireRefireMs"></param>
+/// <param name="FireRequirementExpression">
+/// An expression defining the conditions that must be met for firing to be enabled.
+/// </param>
 /// <param name="HeatPerShot"></param>
 /// <param name="HeatRecoveryDelayMs"></param>
 /// <param name="HeatThreshold"></param>
@@ -92,7 +96,10 @@ namespace Sanctuary.Census.Common.Objects.Collections;
 /// <param name="RecoilRecoveryRate"></param>
 /// <param name="RecoilShotsAtMinMagnitude"></param>
 /// <param name="ReloadAmmoFillMs"></param>
-/// <param name="ReloadBlockAuto"></param>
+/// <param name="ReloadBlockAuto">
+/// Better know as BlockAutoReload. Indicates whether the fire mode prevents the weapon from automatically
+/// reloading when the magazine is depleted.
+/// </param>
 /// <param name="ReloadChamberMs"></param>
 /// <param name="ReloadContinuous"></param>
 /// <param name="ReloadLoopStartMs"></param>
@@ -129,7 +136,8 @@ public record FireMode2
     bool SprintFire,
     bool SwayCanSteady,
     bool UseInWater,
-    int? CloakAfterFireDelayMs,
+    int? AbilityAfterFireDelayMs,
+    bool CanLock,
     decimal CofOverride,
     decimal CofPelletSpread,
     decimal CofRange,
@@ -155,6 +163,7 @@ public record FireMode2
     bool FireNeedsLock,
     byte FirePelletsPerShot,
     ushort FireRefireMs,
+    string? FireRequirementExpression,
     uint? HeatPerShot,
     ushort? HeatRecoveryDelayMs,
     uint? HeatThreshold,

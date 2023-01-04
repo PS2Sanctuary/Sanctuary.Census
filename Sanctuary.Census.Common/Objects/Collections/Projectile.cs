@@ -99,6 +99,16 @@ public record Projectile
         /// <summary>
         /// True ballistic projectiles are properly effected by gravity based on the firing angle.
         /// </summary>
-        TrueBallistic = 3
+        TrueBallistic = 3,
+
+        /// <summary>
+        /// Unknown.
+        /// </summary>
+        Dynamic = 9,
+
+        /// <summary>
+        /// Projectiles detonate within a certain distance of a target.
+        /// </summary>
+        ProximityDetonate = 10
     }
 }

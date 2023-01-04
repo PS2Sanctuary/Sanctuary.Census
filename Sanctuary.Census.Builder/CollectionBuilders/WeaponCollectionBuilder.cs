@@ -58,6 +58,7 @@ public class WeaponCollectionBuilder : ICollectionBuilder
             (
                 definition.WeaponID,
                 definition.GroupID == 0 ? null : definition.GroupID,
+                (definition.Flags & WeaponFlags.EquipNeedsAmmo) != 0,
                 definition.EquipMs,
                 definition.UnequipMs,
                 definition.ToIronSightsMs,

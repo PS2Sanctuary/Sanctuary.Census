@@ -9,7 +9,7 @@ namespace Sanctuary.Census.Common.Objects.Collections;
 /// </summary>
 /// <param name="WeaponId">The ID of the weapon.</param>
 /// <param name="WeaponGroupId">The ID of the group that the weapon belongs to.</param>
-/// <param name="EquipNeedsAmmo">Indicates whether the fire mode requires ammo to be available to allow equipping.</param>
+/// <param name="EquipNeedsAmmo">Indicates whether the weapon requires ammo to be available to allow equipping.</param>
 /// <param name="EquipMs">The time in milliseconds that it takes to equip this weapon.</param>
 /// <param name="UnequipMs">The time in milliseconds that it takes to unequip this weapon.</param>
 /// <param name="ToIronSightsMs">The time in milliseconds that it takes to scope into the iron sights of this weapon.</param>

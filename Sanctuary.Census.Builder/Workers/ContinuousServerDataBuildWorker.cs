@@ -16,7 +16,6 @@ using System.IO;
 using System.Linq;
 using System.Text.Json;
 using System.Threading;
-using System.Threading.Channels;
 using System.Threading.Tasks;
 using FactionDefinition = Sanctuary.Census.Common.Objects.CommonModels.FactionDefinition;
 
@@ -65,47 +64,42 @@ public sealed class ContinuousServerDataBuildWorker : BackgroundService
     /// <inheritdoc />
     protected override async Task ExecuteAsync(CancellationToken ct)
     {
-        FileStream fs = new(_factionLimitsStoragePath, FileMode.OpenOrCreate, FileAccess.Read);
-        try
-        {
-            _factionLimits = await JsonSerializer.DeserializeAsync<Dictionary<ServerDefinition, Dictionary<ZoneDefinition, ushort[]>>>
-            (
-                fs,
-                cancellationToken: ct
-            ) ?? new Dictionary<ServerDefinition, Dictionary<ZoneDefinition, ushort[]>>();
-        }
-        catch
-        {
-            _factionLimits = new Dictionary<ServerDefinition, Dictionary<ZoneDefinition, ushort[]>>();
-        }
-        await fs.DisposeAsync();
+        await TryLoadFactionLimits(ct);
 
-        // Don't overload LaunchPad on first-time run
+        // Don't overload LaunchPad on first-time run (as normal collectors are running)
         await Task.Delay(TimeSpan.FromSeconds(30), ct);
 
-        await Task.WhenAny
-        (
-            ProcessUpdates(_continuousServiceService.DataOutputReader, ct),
-            _continuousServiceService.RunAsync(ct)
-        );
+        using CancellationTokenSource internalCts = CancellationTokenSource.CreateLinkedTokenSource(ct);
+        Task processTask = ProcessUpdates(internalCts.Token);
+        Task runTask = _continuousServiceService.RunAsync(internalCts.Token);
+
+        await Task.WhenAny(processTask, runTask);
+        internalCts.Cancel();
+
+        try
+        {
+            await Task.WhenAll(processTask, runTask);
+        }
+        catch (AggregateException aex)
+        {
+            foreach (Exception ex in aex.InnerExceptions)
+                _logger.LogError(ex, "Failed to process continuous server updates");
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Failed to process continuous server updates");
+        }
+
+        await TrySaveFactionLimits(ct);
     }
 
-    /// <inheritdoc />
-    public override async Task StopAsync(CancellationToken ct)
-    {
-        await using FileStream fs = new(_factionLimitsStoragePath, FileMode.Create, FileAccess.Write);
-        await JsonSerializer.SerializeAsync(fs, _factionLimits, cancellationToken: ct);
-
-        await base.StopAsync(ct);
-    }
-
-    private async Task ProcessUpdates(ChannelReader<ContinuousDataBundle> reader, CancellationToken ct)
+    private async Task ProcessUpdates(CancellationToken ct)
     {
         try
         {
             await Task.Yield();
 
-            await foreach (ContinuousDataBundle bundle in reader.ReadAllAsync(ct))
+            await foreach (ContinuousDataBundle bundle in _continuousServiceService.DataOutputReader.ReadAllAsync(ct))
             {
                 try
                 {
@@ -218,5 +212,38 @@ public sealed class ContinuousServerDataBuildWorker : BackgroundService
         }
 
         await dbContext.UpsertCollectionAsync(zonePops, ct).ConfigureAwait(false);
+    }
+
+    private async Task TryLoadFactionLimits(CancellationToken ct)
+    {
+        if (!File.Exists(_factionLimitsStoragePath))
+            return;
+
+        try
+        {
+            await using FileStream fs = new(_factionLimitsStoragePath, FileMode.Open, FileAccess.Read);
+            _factionLimits = await JsonSerializer.DeserializeAsync<Dictionary<ServerDefinition, Dictionary<ZoneDefinition, ushort[]>>>
+            (
+                fs,
+                cancellationToken: ct
+            ) ?? new Dictionary<ServerDefinition, Dictionary<ZoneDefinition, ushort[]>>();
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Failed to load faction limits");
+        }
+    }
+
+    private async Task TrySaveFactionLimits(CancellationToken ct)
+    {
+        try
+        {
+            await using FileStream fs = new(_factionLimitsStoragePath, FileMode.Create, FileAccess.Write);
+            await JsonSerializer.SerializeAsync(fs, _factionLimits, cancellationToken: ct);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Failed to load faction limits");
+        }
     }
 }

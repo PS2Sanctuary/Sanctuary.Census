@@ -65,12 +65,20 @@ public sealed class ContinuousServerDataBuildWorker : BackgroundService
     /// <inheritdoc />
     protected override async Task ExecuteAsync(CancellationToken ct)
     {
-        await using FileStream fs = new(_factionLimitsStoragePath, FileMode.Open, FileAccess.Read);
-        _factionLimits = await JsonSerializer.DeserializeAsync<Dictionary<ServerDefinition, Dictionary<ZoneDefinition, ushort[]>>>
-        (
-            fs,
-            cancellationToken: ct
-        ) ?? new Dictionary<ServerDefinition, Dictionary<ZoneDefinition, ushort[]>>();
+        FileStream fs = new(_factionLimitsStoragePath, FileMode.OpenOrCreate, FileAccess.Read);
+        try
+        {
+            _factionLimits = await JsonSerializer.DeserializeAsync<Dictionary<ServerDefinition, Dictionary<ZoneDefinition, ushort[]>>>
+            (
+                fs,
+                cancellationToken: ct
+            ) ?? new Dictionary<ServerDefinition, Dictionary<ZoneDefinition, ushort[]>>();
+        }
+        catch
+        {
+            _factionLimits = new Dictionary<ServerDefinition, Dictionary<ZoneDefinition, ushort[]>>();
+        }
+        await fs.DisposeAsync();
 
         // Don't overload LaunchPad on first-time run
         await Task.Delay(TimeSpan.FromSeconds(30), ct);

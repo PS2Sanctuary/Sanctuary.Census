@@ -70,8 +70,8 @@ public sealed class ContinuousServerDataBuildWorker : BackgroundService
         await Task.Delay(TimeSpan.FromSeconds(30), ct);
 
         using CancellationTokenSource internalCts = CancellationTokenSource.CreateLinkedTokenSource(ct);
-        Task processTask = ProcessUpdates(internalCts.Token);
-        Task runTask = _continuousServiceService.RunAsync(internalCts.Token);
+        using Task processTask = ProcessUpdates(internalCts.Token);
+        using Task runTask = _continuousServiceService.RunAsync(internalCts.Token);
 
         await Task.WhenAny(processTask, runTask);
         internalCts.Cancel();
@@ -90,7 +90,7 @@ public sealed class ContinuousServerDataBuildWorker : BackgroundService
             _logger.LogError(ex, "Failed to process continuous server updates");
         }
 
-        await TrySaveFactionLimits(ct);
+        await TrySaveFactionLimits(CancellationToken.None);
     }
 
     private async Task ProcessUpdates(CancellationToken ct)
@@ -243,7 +243,7 @@ public sealed class ContinuousServerDataBuildWorker : BackgroundService
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Failed to load faction limits");
+            _logger.LogError(ex, "Failed to save faction limits");
         }
     }
 }

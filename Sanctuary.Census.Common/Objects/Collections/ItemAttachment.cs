@@ -15,8 +15,8 @@ namespace Sanctuary.Census.Common.Objects.Collections;
 [Description("Links items to any attachments they may have. Note that items which do not have any default attachments will not be included in this collection.")]
 public record ItemAttachment
 (
-    uint ItemId,
-    uint AttachmentItemId,
+    [property: JoinKey] uint ItemId,
+    [property: JoinKey] uint AttachmentItemId,
     bool IsDefaultAttachment,
     bool IsRequiredAttachment
 ) : ISanctuaryCollection;

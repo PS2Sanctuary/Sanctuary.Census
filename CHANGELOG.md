@@ -8,6 +8,10 @@ Date format: DD/MM/YYYY
 
 **New collection:** `item_attachment`.
 
+**item**
+- Added the `is_default_attachment` field.
+- `item` now has full parity with the official Census 🌠.
+
 ## 04/01/2022
 
 🚨 **Breaking changes**

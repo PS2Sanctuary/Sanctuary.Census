@@ -5,6 +5,7 @@ using MongoDB.Bson;
 using MongoDB.Bson.Serialization;
 using MongoDB.Bson.Serialization.Serializers;
 using MongoDB.Driver;
+using MongoDB.Driver.Linq;
 using Sanctuary.Census.Common.Abstractions.Services;
 using Sanctuary.Census.Common.Attributes;
 using Sanctuary.Census.Common.Objects;
@@ -42,7 +43,10 @@ public static class IServiceCollectionExtensions
         services.TryAddSingleton<IFileSystem, FileSystem>();
         services.TryAddScoped<EnvironmentContextProvider>();
 
-        services.TryAddSingleton(new MongoClient("mongodb://localhost:27017"));
+        // TODO: Use of v2 linq provider is temporary and pending bugfix in MongoDb C# driver
+        MongoClientSettings mongoSettings = MongoClientSettings.FromConnectionString("mongodb://localhost:27017");
+        mongoSettings.LinqProvider = LinqProvider.V2;
+        services.TryAddSingleton(new MongoClient(mongoSettings));
         services.TryAddScoped<IMongoContext, MongoContext>();
         RegisterCollectionClassMaps();
 

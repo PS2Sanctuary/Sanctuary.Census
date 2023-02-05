@@ -71,6 +71,7 @@ but is likely to be very similar.
 - image
 - image_set
 - image_set_default
+- item
 - item_attachment
 - item_category
 - item_to_weapon
@@ -102,7 +103,6 @@ These collections are missing small amounts of data as compared to their DBG Cen
 in such a way that retrieving certain data may not be immediately obvious.
 
 - directive
-- item
 - loadout
 - map_region
 - profile
@@ -115,10 +115,6 @@ in such a way that retrieving certain data may not be immediately obvious.
 #### directive
 
 Missing the `objective_set_id` and `qualify_requirement_id` fields.
-
-#### item
-
-Missing the `is_default_attachment` field.
 
 #### map_region
 

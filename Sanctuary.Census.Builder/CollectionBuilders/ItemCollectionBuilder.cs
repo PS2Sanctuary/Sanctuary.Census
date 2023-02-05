@@ -70,6 +70,8 @@ public class ItemCollectionBuilder : ICollectionBuilder
 
         ItemFactionResolver factionResolver = new(_clientDataCache);
 
+        HashSet<uint> defaultAttachmentItems = GetDefaultAttachmentItems();
+
         HashSet<uint> vehicleWeaponCategories = new();
         foreach (CategoryHierarchy heirarchy in _serverDataCache.ItemCategories.Hierarchies)
         {
@@ -132,6 +134,7 @@ public class ItemCollectionBuilder : ICollectionBuilder
                 definition.HudImageSetID.ToNullableUInt(),
                 definition.MaxStackSize,
                 vehicleWeaponCategories.Contains(definition.CategoryID),
+                defaultAttachmentItems.Contains(definition.ID),
                 definition.CodeFactoryName,
                 useRequirement,
                 equipRequirement
@@ -140,6 +143,49 @@ public class ItemCollectionBuilder : ICollectionBuilder
         }
 
         await dbContext.UpsertCollectionAsync(builtItems.Values, ct).ConfigureAwait(false);
+    }
+
+    private HashSet<uint> GetDefaultAttachmentItems()
+    {
+        if (_clientDataCache.ItemLineMembers is null)
+            throw new MissingCacheDataException(typeof(ItemLineMember));
+
+        if (_clientDataCache.LoadoutAttachments is null)
+            throw new MissingCacheDataException(typeof(LoadoutAttachment));
+
+        if (_clientDataCache.LoadoutItemAttachments is null)
+            throw new MissingCacheDataException(typeof(LoadoutItemAttachment));
+
+        Dictionary<uint, List<uint>> itemLineToItems = new();
+        foreach (ItemLineMember ilm in _clientDataCache.ItemLineMembers)
+        {
+            if (!itemLineToItems.TryGetValue(ilm.ItemLineId, out List<uint>? items))
+            {
+                items = new List<uint>();
+                itemLineToItems.Add(ilm.ItemLineId, items);
+            }
+            items.Add(ilm.ItemId);
+        }
+
+        Dictionary<uint, uint> attachmentToItemLine = _clientDataCache.LoadoutAttachments
+            .ToDictionary(x => x.Id, x => x.ItemLineId);
+
+        HashSet<uint> defaultAttachmentItems = new();
+        foreach (LoadoutItemAttachment lia in _clientDataCache.LoadoutItemAttachments)
+        {
+            // These are all default attachments
+
+            if (!attachmentToItemLine.TryGetValue(lia.AttachmentId, out uint attachmentItemLine))
+                continue;
+
+            if (!itemLineToItems.TryGetValue(attachmentItemLine, out List<uint>? items))
+                continue;
+
+            foreach (uint element in items)
+                defaultAttachmentItems.Add(element);
+        }
+
+        return defaultAttachmentItems;
     }
 
     private class ItemFactionResolver

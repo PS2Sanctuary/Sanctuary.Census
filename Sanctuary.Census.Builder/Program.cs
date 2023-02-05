@@ -198,6 +198,12 @@ public static class Program
             .WithIndex(x => x.Name!.En, false)
             .WithEqualityKey(x => x.ItemID);
 
+        configProvider.Register<ItemAttachment>()
+            .WithIndex(x => x.ItemId, false)
+            .WithIndex(x => x.AttachmentItemId, false)
+            .WithEqualityKey(x => x.ItemId)
+            .WithEqualityKey(x => x.AttachmentItemId);
+
         configProvider.Register<ItemCategory>()
             .WithIndex(x => x.ItemCategoryID, true)
             .WithEqualityKey(x => x.ItemCategoryID);
@@ -445,6 +451,7 @@ public static class Program
             .RegisterCollectionBuilder<FireModeCollectionBuilder>()
             .RegisterCollectionBuilder<FireModeToProjectileCollectionBuilder>()
             .RegisterCollectionBuilder<ImageCollectionsBuilder>()
+            .RegisterCollectionBuilder<ItemAttachmentCollectionBuilder>()
             .RegisterCollectionBuilder<ItemCollectionBuilder>()
             .RegisterCollectionBuilder<ItemCategoryCollectionBuilder>()
             .RegisterCollectionBuilder<ItemToWeaponCollectionBuilder>()

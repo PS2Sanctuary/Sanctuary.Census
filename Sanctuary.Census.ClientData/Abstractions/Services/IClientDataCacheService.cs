@@ -80,6 +80,11 @@ public interface IClientDataCacheService : IDataCacheService
     IReadOnlyList<ImageSetType>? ImageSetTypes { get; }
 
     /// <summary>
+    /// Gets the cached <see cref="ItemLineMember"/> objects.
+    /// </summary>
+    IReadOnlyList<ItemLineMember>? ItemLineMembers { get; }
+
+    /// <summary>
     /// Gets the cached <see cref="ItemProfile"/> objects.
     /// </summary>
     IReadOnlyList<ItemProfile>? ItemProfiles { get; }
@@ -95,9 +100,19 @@ public interface IClientDataCacheService : IDataCacheService
     IReadOnlyList<Loadout>? Loadouts { get; }
 
     /// <summary>
+    /// Gets the cached <see cref="LoadoutAttachment"/> objects.
+    /// </summary>
+    IReadOnlyList<LoadoutAttachment>? LoadoutAttachments { get; }
+
+    /// <summary>
     /// Gets the cached <see cref="LoadoutAttachmentGroupMap"/> objects.
     /// </summary>
     IReadOnlyList<LoadoutAttachmentGroupMap>? LoadoutAttachmentGroupMaps { get; }
+
+    /// <summary>
+    /// Gets the cached <see cref="LoadoutItemAttachment"/> objects.
+    /// </summary>
+    IReadOnlyList<LoadoutItemAttachment>? LoadoutItemAttachments { get; }
 
     /// <summary>
     /// Gets the cached <see cref="LoadoutSlot"/> objects.

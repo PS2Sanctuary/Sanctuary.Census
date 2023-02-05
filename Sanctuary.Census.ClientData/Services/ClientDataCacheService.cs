@@ -73,6 +73,9 @@ public class ClientDataCacheService : IClientDataCacheService
     public IReadOnlyList<ImageSetType>? ImageSetTypes { get; private set; }
 
     /// <inheritdoc />
+    public IReadOnlyList<ItemLineMember>? ItemLineMembers { get; private set; }
+
+    /// <inheritdoc />
     public IReadOnlyList<ItemProfile>? ItemProfiles { get; private set; }
 
     /// <inheritdoc />
@@ -82,7 +85,13 @@ public class ClientDataCacheService : IClientDataCacheService
     public IReadOnlyList<Loadout>? Loadouts { get; private set; }
 
     /// <inheritdoc />
+    public IReadOnlyList<LoadoutAttachment>? LoadoutAttachments { get; private set; }
+
+    /// <inheritdoc />
     public IReadOnlyList<LoadoutAttachmentGroupMap>? LoadoutAttachmentGroupMaps { get; private set; }
+
+    /// <inheritdoc />
+    public IReadOnlyList<LoadoutItemAttachment>? LoadoutItemAttachments { get; private set; }
 
     /// <inheritdoc />
     public IReadOnlyList<LoadoutSlot>? LoadoutSlots { get; private set; }
@@ -276,6 +285,14 @@ public class ClientDataCacheService : IClientDataCacheService
             ct
         ).ConfigureAwait(false);
 
+        ItemLineMembers = await ExtractDatasheet<ItemLineMember>
+        (
+            "ItemLineMembers.txt",
+            assetHeaders,
+            reader,
+            ct
+        ).ConfigureAwait(false);
+
         ItemProfiles = await ExtractDatasheet<ItemProfile>
         (
             "ItemProfiles.txt",
@@ -300,9 +317,25 @@ public class ClientDataCacheService : IClientDataCacheService
             ct
         ).ConfigureAwait(false);
 
+        LoadoutAttachments = await ExtractDatasheet<LoadoutAttachment>
+        (
+            "LoadoutAttachments.txt",
+            assetHeaders,
+            reader,
+            ct
+        ).ConfigureAwait(false);
+
         LoadoutAttachmentGroupMaps = await ExtractDatasheet<LoadoutAttachmentGroupMap>
         (
             "LoadoutAttachmentGroupMap.txt",
+            assetHeaders,
+            reader,
+            ct
+        ).ConfigureAwait(false);
+
+        LoadoutItemAttachments = await ExtractDatasheet<LoadoutItemAttachment>
+        (
+            "LoadoutItemAttachments.txt",
             assetHeaders,
             reader,
             ct

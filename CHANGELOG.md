@@ -2,6 +2,12 @@
 
 Date format: DD/MM/YYYY
 
+## vNext
+
+🚀 **Additions**
+
+**New collection:** `item_attachment`.
+
 ## 04/01/2022
 
 🚨 **Breaking changes**

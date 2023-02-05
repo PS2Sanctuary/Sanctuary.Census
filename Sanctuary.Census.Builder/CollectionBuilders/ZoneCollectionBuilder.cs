@@ -47,7 +47,7 @@ public class ZoneCollectionBuilder : ICollectionBuilder
             throw new MissingCacheDataException(typeof(ContinentBattleInfo));
 
         Dictionary<uint, Common.Objects.Collections.Zone> builtZones = new();
-        foreach (ZonePopulationInfo zone in _serverDataCache.ContinentBattleInfos.Zones.OrderBy(x => x.ZoneID))
+        foreach (ContinentBattleInfo_ZoneData zone in _serverDataCache.ContinentBattleInfos.Zones.OrderBy(x => x.ZoneID))
         {
             _localeDataCache.TryGetLocaleString(zone.NameID, out LocaleString? name);
             _localeDataCache.TryGetLocaleString(zone.DescriptionID, out LocaleString? description);

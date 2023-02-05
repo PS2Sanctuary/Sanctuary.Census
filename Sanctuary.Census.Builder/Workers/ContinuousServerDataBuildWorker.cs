@@ -177,9 +177,9 @@ public sealed class ContinuousServerDataBuildWorker : BackgroundService
     {
         List<ZonePopulation> zonePops = new(cbi.Zones.Length);
 
-        foreach (ZonePopulationInfo zone in cbi.Zones)
+        foreach (ContinentBattleInfo_ZoneData zone in cbi.Zones)
         {
-            if (zone.Population.All(x => x == 0))
+            if (zone.PopulationPercent.All(x => x == 0))
             {
                 _factionLimits.TryAdd(server, new Dictionary<ZoneDefinition, ushort[]>());
                 _factionLimits[server][zone.ZoneID] = zone.RemainingCharacterLimit;

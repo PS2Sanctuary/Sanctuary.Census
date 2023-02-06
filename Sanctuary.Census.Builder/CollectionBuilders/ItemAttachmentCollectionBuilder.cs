@@ -4,6 +4,8 @@ using Sanctuary.Census.Builder.Exceptions;
 using Sanctuary.Census.ClientData.Abstractions.Services;
 using Sanctuary.Census.ClientData.ClientDataModels;
 using Sanctuary.Census.Common.Objects.Collections;
+using Sanctuary.Census.ServerData.Internal.Abstractions.Services;
+using Sanctuary.Zone.Packets.InGamePurchase;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
@@ -16,14 +18,21 @@ namespace Sanctuary.Census.Builder.CollectionBuilders;
 public class ItemAttachmentCollectionBuilder : ICollectionBuilder
 {
     private readonly IClientDataCacheService _clientDataCache;
+    private readonly IServerDataCacheService _serverDataCache;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="ItemAttachmentCollectionBuilder"/> class.
     /// </summary>
     /// <param name="clientDataCache">The client data cache.</param>
-    public ItemAttachmentCollectionBuilder(IClientDataCacheService clientDataCache)
+    /// <param name="serverDataCache">The server data cache.</param>
+    public ItemAttachmentCollectionBuilder
+    (
+        IClientDataCacheService clientDataCache,
+        IServerDataCacheService serverDataCache
+    )
     {
         _clientDataCache = clientDataCache;
+        _serverDataCache = serverDataCache;
     }
 
     /// <inheritdoc />
@@ -37,6 +46,19 @@ public class ItemAttachmentCollectionBuilder : ICollectionBuilder
 
         if (_clientDataCache.LoadoutAttachments is null)
             throw new MissingCacheDataException(typeof(LoadoutAttachment));
+
+        if (_serverDataCache.StoreBundles.Count != 4)
+            throw new MissingCacheDataException(typeof(StoreBundles));
+
+        HashSet<uint> validItems = new();
+        foreach (StoreBundles bundles in _serverDataCache.StoreBundles.Values)
+        {
+            foreach (StoreBundles_Bundle bundle in bundles.Bundles)
+            {
+                foreach (StoreBundles_ItemListDetail item in bundle.ItemListDetails)
+                    validItems.Add(item.ItemID);
+            }
+        }
 
         Dictionary<uint, List<uint>> itemLineToItems = new();
         foreach (ItemLineMember ilm in _clientDataCache.ItemLineMembers)
@@ -99,6 +121,9 @@ public class ItemAttachmentCollectionBuilder : ICollectionBuilder
                 bool isDefault = defaultAttachments.Contains(attachment);
                 foreach (uint item in items)
                 {
+                    if (!validItems.Contains(item))
+                        continue;
+
                     builtAttachments.Add(new ItemAttachment
                     (
                         lineMember.ItemId,

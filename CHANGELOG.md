@@ -2,6 +2,12 @@
 
 Date format: DD/MM/YYYY
 
+## vNext
+
+🐛 **Fixes**
+
+- The `item_attachment` collection no longer includes entries for non-purchasable attachments.
+
 ## 05/02/2022
 
 🚀 **Additions**

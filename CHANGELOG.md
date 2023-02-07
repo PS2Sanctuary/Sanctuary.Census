@@ -2,7 +2,7 @@
 
 Date format: DD/MM/YYYY
 
-## vNext
+## 07/02/2022
 
 🚀 **Additions**
 
@@ -16,7 +16,8 @@ Date format: DD/MM/YYYY
 
 🐛 **Fixes**
 
-- The `item_attachment` collection no longer includes entries for non-purchasable attachments.
+- The `item_attachment` collection no longer includes entries for non-purchasable attachments, and some
+  erroneously missing links have been added.
 
 ## 05/02/2022
 

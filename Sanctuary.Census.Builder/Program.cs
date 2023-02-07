@@ -61,7 +61,7 @@ public static class Program
                     .RegisterCollectionConfigurations()
                     .RegisterCollectionBuilders()
                     .AddHostedService<CollectionBuildWorker>();
-                //.AddHostedService<ContinuousServerDataBuildWorker>();
+                    //.AddHostedService<ContinuousServerDataBuildWorker>();
             });
 
         await builder.Build().RunAsync().ConfigureAwait(false);

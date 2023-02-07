@@ -104,11 +104,18 @@ public class ItemAttachmentCollectionBuilder : ICollectionBuilder
             if (defaultAttachments.Count is 0)
                 continue;
 
-            if (!attachmentDetails.TryGetValue(defaultAttachments[0], out LoadoutAttachment? groupMarker))
-                continue;
+            HashSet<uint> allAttachments = new(defaultAttachments);
+            foreach (uint element in defaultAttachments)
+            {
+                if (!attachmentDetails.TryGetValue(element, out LoadoutAttachment? groupMarker))
+                    continue;
 
-            groupToAttachments.TryGetValue(groupMarker.GroupId, out List<uint>? allAttachments);
-            allAttachments ??= defaultAttachments;
+                if (!groupToAttachments.TryGetValue(groupMarker.GroupId, out List<uint>? groupedAttachments))
+                    continue;
+
+                foreach (uint attachment in groupedAttachments)
+                    allAttachments.Add(attachment);
+            }
 
             foreach (uint attachment in allAttachments)
             {

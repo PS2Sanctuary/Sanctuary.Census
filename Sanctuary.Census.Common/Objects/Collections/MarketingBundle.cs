@@ -13,6 +13,8 @@ namespace Sanctuary.Census.Common.Objects.Collections;
 /// <param name="Name">The name of the bundle.</param>
 /// <param name="Description">The description of the bundle.</param>
 /// <param name="StationCashPrice">The station cash price of the bundle.</param>
+/// <param name="CurrencyId">The ID of the non-station-cash currency that the bundle can be purchased using.</param>
+/// <param name="CurrencyPrice">The amount of currency that can be used to purchase the bundle.</param>
 /// <param name="SalePrice">The sale price of the bundle, if the bundle <paramref name="IsOnSale"/>.</param>
 /// <param name="MemberSalePrice">The sale price of the bundle for members.</param>
 /// <param name="ReleaseTime">The time that the bundle was released.</param>
@@ -33,6 +35,8 @@ public record MarketingBundle
     LocaleString Name,
     LocaleString? Description,
     uint StationCashPrice,
+    uint? CurrencyId,
+    uint? CurrencyPrice,
     uint? SalePrice,
     uint? MemberSalePrice,
     ulong ReleaseTime,

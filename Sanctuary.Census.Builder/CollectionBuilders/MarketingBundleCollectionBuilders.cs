@@ -10,6 +10,7 @@ using Sanctuary.Census.Common.Services;
 using Sanctuary.Census.ServerData.Internal.Abstractions.Services;
 using Sanctuary.Census.ServerData.Internal.Objects;
 using Sanctuary.Zone.Packets.InGamePurchase;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
@@ -94,6 +95,8 @@ public class MarketingBundleCollectionBuilders : ICollectionBuilder
                 name!,
                 description,
                 bundle.StationCashPrice,
+                bundle.CurrencyID.ToNullableUInt(),
+                bundle.CurrencyPrice.ToNullableUInt(),
                 bundle.SalePrice1 == 0 ? null : bundle.SalePrice1,
                 bundle.MemberSalePrice == 0 ? null : bundle.MemberSalePrice,
                 bundle.Times1.ReleaseTime,

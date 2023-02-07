@@ -4,6 +4,12 @@ Date format: DD/MM/YYYY
 
 ## vNext
 
+🚀 **Additions**
+
+**marketing_bundle**
+- `uint? currency_id` - The ID of the non-station-cash currency that the bundle can be purchased using.
+- `uint? currency_price` - The amount of currency that can be used to purchase the bundle.
+
 🐛 **Fixes**
 
 - The `item_attachment` collection no longer includes entries for non-purchasable attachments.

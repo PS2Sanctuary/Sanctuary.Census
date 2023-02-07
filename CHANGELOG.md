@@ -6,6 +6,10 @@ Date format: DD/MM/YYYY
 
 🚀 **Additions**
 
+**map_region**
+- `int? empire_score` - The amount of empire score contributed by owning the region's facility.
+- `uint? image_set_id`, `uint? image_id`, `string? image_path` - The usual, for the facility's icon.
+
 **marketing_bundle**
 - `uint? currency_id` - The ID of the non-station-cash currency that the bundle can be purchased using.
 - `uint? currency_price` - The amount of currency that can be used to purchase the bundle.

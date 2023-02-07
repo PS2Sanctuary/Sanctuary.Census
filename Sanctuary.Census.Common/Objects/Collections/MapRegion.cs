@@ -19,6 +19,10 @@ namespace Sanctuary.Census.Common.Objects.Collections;
 /// <param name="LocationZ">The Z coordinate of the center of the region.</param>
 /// <param name="OutfitResourceRewardTypeDescription">The type of the Outfit Resource rewarded by this facility upon capture.</param>
 /// <param name="OutfitResourceRewardAmount">The amount of the Outfit Resource rewarded by this facility upon capture.</param>
+/// <param name="EmpireScore">The amount of empire score contributed by owning the region's facility.</param>
+/// <param name="ImageSetID">The ID of the facility's image set.</param>
+/// <param name="ImageID">The ID of the facility's default image.</param>
+/// <param name="ImagePath">The relative path to the facility's default image.</param>
 [Collection]
 public record MapRegion
 (
@@ -33,5 +37,9 @@ public record MapRegion
     decimal? LocationY,
     decimal? LocationZ,
     string? OutfitResourceRewardTypeDescription,
-    int? OutfitResourceRewardAmount
+    int? OutfitResourceRewardAmount,
+    int? EmpireScore,
+    [property: JoinKey] uint? ImageSetID,
+    [property: JoinKey] uint? ImageID,
+    string? ImagePath
 ) : ISanctuaryCollection;

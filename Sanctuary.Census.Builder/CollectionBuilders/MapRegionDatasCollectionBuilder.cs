@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.Logging;
 using Sanctuary.Census.Builder.Abstractions.CollectionBuilders;
 using Sanctuary.Census.Builder.Abstractions.Database;
+using Sanctuary.Census.Builder.Abstractions.Services;
 using Sanctuary.Census.Builder.Exceptions;
 using Sanctuary.Census.ClientData.Abstractions.Services;
 using Sanctuary.Census.Common.Objects.Collections;
@@ -9,13 +10,11 @@ using Sanctuary.Census.PatchData.Abstractions.Services;
 using Sanctuary.Census.ServerData.Internal.Abstractions.Services;
 using Sanctuary.Common.Objects;
 using Sanctuary.Zone.Packets.MapRegion;
-using Sanctuary.Zone.Packets.StaticFacilityInfo;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using FacilityInfo = Sanctuary.Zone.Packets.StaticFacilityInfo.FacilityInfo;
 
 namespace Sanctuary.Census.Builder.CollectionBuilders;
 
@@ -28,6 +27,7 @@ public class MapRegionDatasCollectionBuilder : ICollectionBuilder
     private readonly ILocaleDataCacheService _localeDataCache;
     private readonly IServerDataCacheService _serverDataCache;
     private readonly IPatchDataCacheService _patchDataCache;
+    private readonly IImageSetHelperService _imageSetHelper;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="MapRegionDatasCollectionBuilder"/> class.
@@ -36,39 +36,27 @@ public class MapRegionDatasCollectionBuilder : ICollectionBuilder
     /// <param name="localeDataCache">The locale data cache.</param>
     /// <param name="serverDataCache">The server data cache.</param>
     /// <param name="patchDataCache">The patch data cache.</param>
+    /// <param name="imageSetHelper">The image set helper service.</param>
     public MapRegionDatasCollectionBuilder
     (
         ILogger<MapRegionDatasCollectionBuilder> logger,
         ILocaleDataCacheService localeDataCache,
         IServerDataCacheService serverDataCache,
-        IPatchDataCacheService patchDataCache
+        IPatchDataCacheService patchDataCache,
+        IImageSetHelperService imageSetHelper
     )
     {
         _logger = logger;
         _localeDataCache = localeDataCache;
         _serverDataCache = serverDataCache;
         _patchDataCache = patchDataCache;
+        _imageSetHelper = imageSetHelper;
     }
 
     /// <inheritdoc />
     public async Task BuildAsync(ICollectionsContext dbContext, CancellationToken ct = default)
     {
-        if (_serverDataCache.MapRegionDatas.Count == 0)
-            throw new MissingCacheDataException(typeof(MapRegionData));
-
-        bool hasAllStaticZones = _serverDataCache.MapRegionDatas.ContainsKey(ZoneDefinition.Indar)
-            && _serverDataCache.MapRegionDatas.ContainsKey(ZoneDefinition.Esamir)
-            && _serverDataCache.MapRegionDatas.ContainsKey(ZoneDefinition.Amerish)
-            && _serverDataCache.MapRegionDatas.ContainsKey(ZoneDefinition.Hossin)
-            && _serverDataCache.MapRegionDatas.ContainsKey(ZoneDefinition.Oshur);
-        if (!hasAllStaticZones)
-        {
-            throw new Exception
-            (
-                "Missing a static zone. Present: " +
-                string.Join(", ", _serverDataCache.MapRegionDatas.Keys)
-            );
-        }
+        CheckForRequiredZonesHelper(_serverDataCache.MapRegionDatas);
 
         await UpsertHexesAsync(dbContext, ct).ConfigureAwait(false);
 
@@ -91,12 +79,16 @@ public class MapRegionDatasCollectionBuilder : ICollectionBuilder
     {
         try
         {
-            if (_serverDataCache.StaticFacilityInfos is null)
-                throw new MissingCacheDataException(typeof(StaticFacilityInfoAllZones));
+            CheckForRequiredZonesHelper(_serverDataCache.MapRegionEmpireScoreUpdates);
+            CheckForRequiredZonesHelper(_serverDataCache.MapRegionExternalFacilityData);
+            CheckForRequiredZonesHelper(_serverDataCache.OutfitWarFacilityRewards);
 
-            Dictionary<uint, FacilityInfo> facilityInfos = new();
-            foreach (FacilityInfo fac in _serverDataCache.StaticFacilityInfos.Facilities)
-                facilityInfos.TryAdd(fac.FacilityID, fac);
+            Dictionary<uint, MapRegion_ExternalFacilityData_Facility> regionFacilityInfos = new();
+            foreach (ExternalFacilityData externalFacilityData in _serverDataCache.MapRegionExternalFacilityData.Values)
+            {
+                foreach (MapRegion_ExternalFacilityData_Facility facility in externalFacilityData.Facilities)
+                    regionFacilityInfos.TryAdd(facility.MapRegionId, facility);
+            }
 
             Dictionary<byte, string> facilityTypeDescriptions = new();
             if (_patchDataCache.FacilityTypes is not null)
@@ -108,6 +100,13 @@ public class MapRegionDatasCollectionBuilder : ICollectionBuilder
             Dictionary<uint, (OutfitResource, uint)> facilityOutfitRewards = _serverDataCache.OutfitWarFacilityRewards
                 .SelectMany(x => x.Value.Facilities)
                 .ToDictionary(x => x.FacilityId, x => (x.ResourceId, x.RewardAmount));
+
+            Dictionary<uint, uint> regionEmpireScores = new();
+            foreach (EmpireScoreUpdate esu in _serverDataCache.MapRegionEmpireScoreUpdates.Values)
+            {
+                foreach (MapRegion_EmpireScoreUpdate_Region region in esu.Regions)
+                    regionEmpireScores.TryAdd(region.MapRegionId, region.EmpireScore);
+            }
 
             Dictionary<uint, MapRegion> builtRegions = new();
 
@@ -121,8 +120,9 @@ public class MapRegionDatasCollectionBuilder : ICollectionBuilder
                     ct.ThrowIfCancellationRequested();
 
                     _localeDataCache.TryGetLocaleString(region.FacilityNameID, out LocaleString? name);
-                    facilityInfos.TryGetValue(region.FacilityID, out FacilityInfo? facility);
+                    regionFacilityInfos.TryGetValue(region.MapRegionID_1, out MapRegion_ExternalFacilityData_Facility? facility);
                     facilityTypeDescriptions.TryGetValue(region.FacilityTypeID, out string? facTypeDescription);
+                    bool hasEmpireScore = regionEmpireScores.TryGetValue(region.MapRegionID_1, out uint empireScore);
 
                     OutfitResource? rewardType = null;
                     uint? rewardAmount = null;
@@ -131,6 +131,11 @@ public class MapRegionDatasCollectionBuilder : ICollectionBuilder
                         rewardType = reward.Item1;
                         rewardAmount = reward.Item2;
                     }
+
+                    bool hasDefaultImage = false;
+                    uint defaultImage = 0;
+                    if (facility is not null)
+                        hasDefaultImage = _imageSetHelper.TryGetDefaultImage(facility.IconImageSetId, out defaultImage);
 
                     builtRegions.TryAdd(region.MapRegionID_1, new MapRegion
                     (
@@ -145,7 +150,11 @@ public class MapRegionDatasCollectionBuilder : ICollectionBuilder
                         facility is null ? null : new decimal(facility.LocationY),
                         facility is null ? null : new decimal(facility.LocationZ),
                         rewardType?.ToString(),
-                        (int?)rewardAmount
+                        (int?)rewardAmount,
+                        hasEmpireScore ? (int)empireScore : null,
+                        facility?.IconImageSetId,
+                        hasDefaultImage ? defaultImage : null,
+                        hasDefaultImage ? _imageSetHelper.GetRelativeImagePath(defaultImage) : null
                     ));
                 }
             }
@@ -254,6 +263,27 @@ public class MapRegionDatasCollectionBuilder : ICollectionBuilder
         {
             _logger.LogError(ex, "Failed to upsert the FacilityType collection");
         }
+    }
+
+    private static void CheckForRequiredZonesHelper<T>(IReadOnlyDictionary<ZoneDefinition, T> zonesPresent)
+    {
+        if (zonesPresent.Count == 0)
+            throw new MissingCacheDataException(typeof(T));
+
+        bool hasAllStaticZones = zonesPresent.ContainsKey(ZoneDefinition.Indar)
+            && zonesPresent.ContainsKey(ZoneDefinition.Esamir)
+            && zonesPresent.ContainsKey(ZoneDefinition.Amerish)
+            && zonesPresent.ContainsKey(ZoneDefinition.Hossin)
+            && zonesPresent.ContainsKey(ZoneDefinition.Oshur);
+
+        if (hasAllStaticZones)
+            return;
+
+        throw new Exception
+        (
+            "Missing a static zone. Present: " +
+            string.Join(", ", zonesPresent.Keys)
+        );
     }
 
     private static string HexTypeToName(byte hexType)

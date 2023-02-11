@@ -2,7 +2,8 @@
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using Sanctuary.Census.Builder.Abstractions.Database;
+using MongoDB.Driver;
+using Sanctuary.Census.Common.Abstractions.Services;
 using Sanctuary.Census.Common.Objects;
 using Sanctuary.Census.Common.Objects.Collections;
 using Sanctuary.Census.Common.Services;
@@ -19,7 +20,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using FactionDefinition = Sanctuary.Census.Common.Objects.CommonModels.FactionDefinition;
 
-namespace Sanctuary.Census.Builder.Workers;
+namespace Sanctuary.Census.Realtime.Workers;
 
 /// <summary>
 /// A service worker responsible for building collections that rely on continuous
@@ -66,9 +67,6 @@ public sealed class ContinuousServerDataBuildWorker : BackgroundService
     {
         await TryLoadFactionLimits(ct);
 
-        // Don't overload LaunchPad on first-time run (as normal collectors are running)
-        await Task.Delay(TimeSpan.FromSeconds(30), ct);
-
         using CancellationTokenSource internalCts = CancellationTokenSource.CreateLinkedTokenSource(ct);
         using Task processTask = ProcessUpdates(internalCts.Token);
         using Task runTask = _continuousServiceService.RunAsync(internalCts.Token);
@@ -108,19 +106,13 @@ public sealed class ContinuousServerDataBuildWorker : BackgroundService
                     await using AsyncServiceScope serviceScope = _serviceScopeFactory.CreateAsyncScope();
                     IServiceProvider services = serviceScope.ServiceProvider;
                     services.GetRequiredService<EnvironmentContextProvider>().Environment = PS2Environment.PS2;
-                    ICollectionsContext dbContext = services.GetRequiredService<ICollectionsContext>();
+                    IMongoContext dbContext = services.GetRequiredService<IMongoContext>();
 
                     if (bundle.ServerPopulation is not null)
-                    {
-                        await ProcessWorldPopulation(bundle.Server, bundle.ServerPopulation, dbContext, ct)
-                            .ConfigureAwait(false);
-                    }
+                        await ProcessWorldPopulation(bundle.Server, bundle.ServerPopulation, dbContext, ct);
 
                     if (bundle.ContinentInfo is not null)
-                    {
-                        await ProcessZonePopulation(bundle.Server, bundle.ContinentInfo, dbContext, ct)
-                            .ConfigureAwait(false);
-                    }
+                        await ProcessZonePopulation(bundle.Server, bundle.ContinentInfo, dbContext, ct);
                 }
                 catch (OperationCanceledException)
                 {
@@ -142,7 +134,7 @@ public sealed class ContinuousServerDataBuildWorker : BackgroundService
     (
         ServerDefinition server,
         ServerPopulationInfo spi,
-        ICollectionsContext dbContext,
+        IMongoContext dbContext,
         CancellationToken ct
     )
     {
@@ -164,18 +156,25 @@ public sealed class ContinuousServerDataBuildWorker : BackgroundService
             pops
         );
 
-        await dbContext.UpsertCollectionAsync(new[] { worldPop }, ct).ConfigureAwait(false);
+        IMongoCollection<WorldPopulation> popColl = dbContext.GetCollection<WorldPopulation>();
+        await popColl.ReplaceOneAsync
+        (
+            Builders<WorldPopulation>.Filter.Eq(x => x.WorldId, worldPop.WorldId),
+            worldPop,
+            new ReplaceOptions { IsUpsert = true },
+            ct
+        );
     }
 
     private async Task ProcessZonePopulation
     (
         ServerDefinition server,
         ContinentBattleInfo cbi,
-        ICollectionsContext dbContext,
+        IMongoContext dbContext,
         CancellationToken ct
     )
     {
-        List<ZonePopulation> zonePops = new(cbi.Zones.Length);
+        List<ReplaceOneModel<ZonePopulation>> replacementModels = new();
 
         foreach (ContinentBattleInfo_ZoneData zone in cbi.Zones)
         {
@@ -200,7 +199,7 @@ public sealed class ContinuousServerDataBuildWorker : BackgroundService
                 total += value;
             }
 
-            zonePops.Add(new ZonePopulation
+            ZonePopulation zonePop = new
             (
                 (uint)server,
                 (ushort)zone.ZoneID,
@@ -208,10 +207,20 @@ public sealed class ContinuousServerDataBuildWorker : BackgroundService
                 DateTimeOffset.UtcNow.ToUnixTimeSeconds(),
                 total,
                 pops
-            ));
+            );
+
+            ReplaceOneModel<ZonePopulation> replacementModel = new
+            (
+                Builders<ZonePopulation>.Filter.Eq(x => x.WorldId, (uint)server)
+                    & Builders<ZonePopulation>.Filter.Eq(x => x.ZoneId, (ushort)zone.ZoneID)
+                    & Builders<ZonePopulation>.Filter.Eq(x => x.ZoneInstance, zone.Instance),
+                zonePop
+            ) { IsUpsert = true };
+            replacementModels.Add(replacementModel);
         }
 
-        await dbContext.UpsertCollectionAsync(zonePops, ct).ConfigureAwait(false);
+        IMongoCollection<ZonePopulation> zonePopColl = dbContext.GetCollection<ZonePopulation>();
+        await zonePopColl.BulkWriteAsync(replacementModels, null, ct);
     }
 
     private async Task TryLoadFactionLimits(CancellationToken ct)

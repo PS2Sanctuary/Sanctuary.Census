@@ -47,8 +47,7 @@ public static class Program
             {
                 services.Configure<BuildOptions>(context.Configuration.GetSection(nameof(BuildOptions)))
                     .Configure<LoginClientOptions>(context.Configuration.GetSection(nameof(LoginClientOptions)))
-                    .Configure<GatewayClientOptions>(context.Configuration.GetSection(nameof(GatewayClientOptions)))
-                    .Configure<ContinuousDataOptions>(context.Configuration.GetSection(nameof(ContinuousDataOptions)));
+                    .Configure<GatewayClientOptions>(context.Configuration.GetSection(nameof(GatewayClientOptions)));
 
                 services.AddCommonServices(context.HostingEnvironment)
                     .AddClientDataServices(context.HostingEnvironment)
@@ -61,7 +60,6 @@ public static class Program
                     .RegisterCollectionConfigurations()
                     .RegisterCollectionBuilders()
                     .AddHostedService<CollectionBuildWorker>();
-                    //.AddHostedService<ContinuousServerDataBuildWorker>();
             });
 
         await builder.Build().RunAsync().ConfigureAwait(false);

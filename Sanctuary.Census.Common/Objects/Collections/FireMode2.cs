@@ -37,7 +37,7 @@ namespace Sanctuary.Census.Common.Objects.Collections;
 /// <param name="DamageLegsMultiplier"></param>
 /// <param name="DamageIndirectEffectID"></param>
 /// <param name="DeployAnimTimeMs">
-/// Time time taken by the deployment animation of a relevant weapon, e.g. the Shield Recharging Device. May have additional functionality.
+/// Time taken by the deployment animation of a relevant weapon, e.g. the Shield Recharging Device. May have additional functionality.
 /// </param>
 /// <param name="FanAngle">
 /// The angle in degrees at which fan-based pellets, such as those on the VE-C Horizon, diverge from their rotational axis at.

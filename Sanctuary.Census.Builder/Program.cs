@@ -208,6 +208,12 @@ public static class Program
             .WithIndex(x => x.ItemCategoryID, true)
             .WithEqualityKey(x => x.ItemCategoryID);
 
+        configProvider.Register<ItemToItemLine>()
+            .WithIndex(x => x.ItemId, true)
+            .WithIndex(x => x.ItemLineId, false)
+            .WithEqualityKey(x => x.ItemId)
+            .WithEqualityKey(x => x.ItemLineId);
+
         configProvider.Register<ItemToWeapon>()
             .WithIndex(x => x.ItemId, false)
             .WithIndex(x => x.WeaponId, false)
@@ -454,6 +460,7 @@ public static class Program
             .RegisterCollectionBuilder<ItemAttachmentCollectionBuilder>()
             .RegisterCollectionBuilder<ItemCollectionBuilder>()
             .RegisterCollectionBuilder<ItemCategoryCollectionBuilder>()
+            .RegisterCollectionBuilder<ItemToItemLineCollectionBuilder>()
             .RegisterCollectionBuilder<ItemToWeaponCollectionBuilder>()
             .RegisterCollectionBuilder<LoadoutCollectionBuilder>()
             .RegisterCollectionBuilder<LoadoutSlotCollectionBuilder>()

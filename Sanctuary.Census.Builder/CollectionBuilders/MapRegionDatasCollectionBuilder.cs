@@ -79,7 +79,6 @@ public class MapRegionDatasCollectionBuilder : ICollectionBuilder
     {
         try
         {
-            CheckForRequiredZonesHelper(_serverDataCache.MapRegionEmpireScoreUpdates);
             CheckForRequiredZonesHelper(_serverDataCache.MapRegionExternalFacilityData);
             CheckForRequiredZonesHelper(_serverDataCache.OutfitWarFacilityRewards);
 
@@ -101,13 +100,6 @@ public class MapRegionDatasCollectionBuilder : ICollectionBuilder
                 .SelectMany(x => x.Value.Facilities)
                 .ToDictionary(x => x.FacilityId, x => (x.ResourceId, x.RewardAmount));
 
-            Dictionary<uint, uint> regionEmpireScores = new();
-            foreach (EmpireScoreUpdate esu in _serverDataCache.MapRegionEmpireScoreUpdates.Values)
-            {
-                foreach (MapRegion_EmpireScoreUpdate_Region region in esu.Regions)
-                    regionEmpireScores.TryAdd(region.MapRegionId, region.EmpireScore);
-            }
-
             Dictionary<uint, MapRegion> builtRegions = new();
 
             foreach ((ZoneDefinition zone, MapRegionData regionData) in _serverDataCache.MapRegionDatas)
@@ -122,7 +114,6 @@ public class MapRegionDatasCollectionBuilder : ICollectionBuilder
                     _localeDataCache.TryGetLocaleString(region.FacilityNameID, out LocaleString? name);
                     regionFacilityInfos.TryGetValue(region.MapRegionID_1, out MapRegion_ExternalFacilityData_Facility? facility);
                     facilityTypeDescriptions.TryGetValue(region.FacilityTypeID, out string? facTypeDescription);
-                    bool hasEmpireScore = regionEmpireScores.TryGetValue(region.MapRegionID_1, out uint empireScore);
 
                     OutfitResource? rewardType = null;
                     uint? rewardAmount = null;
@@ -151,7 +142,6 @@ public class MapRegionDatasCollectionBuilder : ICollectionBuilder
                         facility is null ? null : new decimal(facility.LocationZ),
                         rewardType?.ToString(),
                         (int?)rewardAmount,
-                        hasEmpireScore ? (int)empireScore : null,
                         facility?.IconImageSetId,
                         hasDefaultImage ? defaultImage : null,
                         hasDefaultImage ? _imageSetHelper.GetRelativeImagePath(defaultImage) : null

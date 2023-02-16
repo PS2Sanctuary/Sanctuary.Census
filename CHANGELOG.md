@@ -2,6 +2,14 @@
 
 Date format: DD/MM/YYYY
 
+## vNext
+
+🚀 **Additions**
+
+**zone**
+- `uint geometry_id` - The geometry ('terrain') ID of the zone.
+- `string type` - The type of the zone.
+
 ## 07/02/2022
 
 🚀 **Additions**

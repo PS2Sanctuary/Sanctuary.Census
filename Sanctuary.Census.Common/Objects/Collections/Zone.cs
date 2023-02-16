@@ -12,6 +12,8 @@ namespace Sanctuary.Census.Common.Objects.Collections;
 /// <param name="HexSize">The size of the zone's hexes.</param>
 /// <param name="Name">The localized name.</param>
 /// <param name="Description">The localized description.</param>
+/// <param name="GeometryId">The geometry ('terrain') ID of the zone. Used to identify non-static zones.</param>
+/// <param name="Type">The type of the zone.</param>
 [Collection]
 public record Zone
 (
@@ -19,5 +21,7 @@ public record Zone
     string Code,
     decimal HexSize,
     LocaleString Name,
-    LocaleString Description
+    LocaleString Description,
+    uint GeometryId,
+    string Type
 ) : ISanctuaryCollection;

@@ -58,7 +58,9 @@ public class ZoneCollectionBuilder : ICollectionBuilder
                 zone.Name,
                 new decimal(zone.HexSize),
                 name!,
-                description!
+                description!,
+                zone.GeometryId,
+                zone.ZoneType.ToString()
             );
             builtZones.TryAdd(built.ZoneID, built);
         }

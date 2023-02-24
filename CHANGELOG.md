@@ -18,6 +18,7 @@ Date format: DD/MM/YYYY
 **zone**
 - `uint geometry_id` - The geometry ('terrain') ID of the zone.
 - `string type` - The type of the zone.
+- `bool dynamic` - Indicates whether the zone is dynamic.
 
 ## 07/02/2022
 

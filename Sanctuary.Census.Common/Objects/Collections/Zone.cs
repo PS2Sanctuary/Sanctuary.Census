@@ -14,6 +14,7 @@ namespace Sanctuary.Census.Common.Objects.Collections;
 /// <param name="Description">The localized description.</param>
 /// <param name="GeometryId">The geometry ('terrain') ID of the zone. Used to identify non-static zones.</param>
 /// <param name="Type">The type of the zone.</param>
+/// <param name="Dynamic">Indicates whether the zone is dynamic.</param>
 [Collection]
 public record Zone
 (
@@ -23,5 +24,6 @@ public record Zone
     LocaleString Name,
     LocaleString Description,
     uint GeometryId,
-    string Type
+    string Type,
+    bool Dynamic
 ) : ISanctuaryCollection;

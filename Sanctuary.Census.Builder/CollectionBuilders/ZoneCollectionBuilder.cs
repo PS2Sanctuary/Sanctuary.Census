@@ -47,10 +47,14 @@ public class ZoneCollectionBuilder : ICollectionBuilder
             throw new MissingCacheDataException(typeof(ContinentBattleInfo));
 
         Dictionary<uint, Common.Objects.Collections.Zone> builtZones = new();
-        foreach (ContinentBattleInfo_ZoneData zone in _serverDataCache.ContinentBattleInfos.Zones.OrderBy(x => x.ZoneID))
+        IEnumerable<ContinentBattleInfo_ZoneData> zones = _serverDataCache.ContinentBattleInfos.Zones
+            .OrderBy(x => x.ZoneID);
+
+        foreach (ContinentBattleInfo_ZoneData zone in zones)
         {
             _localeDataCache.TryGetLocaleString(zone.NameID, out LocaleString? name);
             _localeDataCache.TryGetLocaleString(zone.DescriptionID, out LocaleString? description);
+            bool isDynamic = zone.ZoneType is not ZoneType.Static;
 
             Common.Objects.Collections.Zone built = new
             (
@@ -60,7 +64,8 @@ public class ZoneCollectionBuilder : ICollectionBuilder
                 name!,
                 description!,
                 zone.GeometryId,
-                zone.ZoneType.ToString()
+                zone.ZoneType.ToString(),
+                isDynamic
             );
             builtZones.TryAdd(built.ZoneID, built);
         }

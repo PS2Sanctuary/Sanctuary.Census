@@ -62,6 +62,7 @@ but is likely to be very similar.
 - directive_tree
 - directive_tree_category
 - experience
+- experience_rank
 - facility_link
 - facility_type
 - faction

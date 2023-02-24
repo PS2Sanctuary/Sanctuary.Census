@@ -11,11 +11,15 @@ Date format: DD/MM/YYYY
 
 🚀 **Additions**
 
+**experience_rank**
+- New collection. Maintains parity with the official Census, but adds NSO data and prestige level mappings.
+
 **item_to_item_line**
-- New collection! Links items within the same 'line' together. Useful for determining the upgrade order
-  items such as vehicle attachments.
+- New collection. Links items within the same 'line' together. Useful for determining the upgrade order for
+items such as vehicle attachments.
 
 **zone**
+- Updates to maintain parity with the official Census:
 - `uint geometry_id` - The geometry ('terrain') ID of the zone.
 - `string type` - The type of the zone.
 - `bool dynamic` - Indicates whether the zone is dynamic.

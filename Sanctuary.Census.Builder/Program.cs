@@ -124,6 +124,12 @@ public static class Program
             .WithIndex(x => x.ExperienceID, true)
             .WithEqualityKey(x => x.ExperienceID);
 
+        configProvider.Register<ExperienceRank>()
+            .WithIndex(x => x.Id, true)
+            .WithIndex(x => x.Rank, false)
+            .WithIndex(x => x.PrestigeLevel, false)
+            .WithEqualityKey(x => x.Id);
+
         configProvider.Register<FacilityInfo>()
             .WithIndex(x => x.FacilityID, true)
             .WithIndex(x => x.ZoneID, false)
@@ -448,6 +454,7 @@ public static class Program
             .RegisterCollectionBuilder<CurrencyCollectionBuilder>()
             .RegisterCollectionBuilder<DirectiveCollectionsBuilder>()
             .RegisterCollectionBuilder<ExperienceCollectionBuilder>()
+            .RegisterCollectionBuilder<ExperienceRankCollectionBuilder>()
             .RegisterCollectionBuilder<FacilityInfoCollectionBuilder>()
             .RegisterCollectionBuilder<FactionCollectionBuilder>()
             .RegisterCollectionBuilder<FireGroupCollectionBuilder>()

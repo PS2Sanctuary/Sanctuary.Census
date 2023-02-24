@@ -35,6 +35,11 @@ public interface IClientDataCacheService : IDataCacheService
     IReadOnlyList<ClientItemDefinition>? ClientItemDefinitions { get; }
 
     /// <summary>
+    /// Gets the cached <see cref="ClientPrestigeLevel"/> objects.
+    /// </summary>
+    IReadOnlyList<ClientPrestigeLevel>? ClientPrestigeLevels { get; }
+
+    /// <summary>
     /// Gets the cached <see cref="ClientRequirementExpression"/> objects.
     /// </summary>
     IReadOnlyList<ClientRequirementExpression>? ClientRequirementExpressions { get; }
@@ -48,6 +53,11 @@ public interface IClientDataCacheService : IDataCacheService
     /// Gets the cached <see cref="Experience"/> objects.
     /// </summary>
     IReadOnlyList<Experience>? Experiences { get; }
+
+    /// <summary>
+    /// Gets the cached <see cref="ExperienceRank"/> objects.
+    /// </summary>
+    IReadOnlyList<ExperienceRank>? ExperienceRanks { get; }
 
     /// <summary>
     /// Gets the cached <see cref="Faction"/> objects.
@@ -128,6 +138,16 @@ public interface IClientDataCacheService : IDataCacheService
     /// Gets the cached <see cref="LoadoutSlotTintItemClass"/> objects.
     /// </summary>
     IReadOnlyList<LoadoutSlotTintItemClass>? LoadoutSlotTintItemClasses { get; }
+
+    /// <summary>
+    /// Gets the cached <see cref="PrestigeLevelRankSet"/> objects.
+    /// </summary>
+    IReadOnlyList<PrestigeLevelRankSet>? PrestigeLevelRankSets { get; }
+
+    /// <summary>
+    /// Gets the cached <see cref="PrestigeRankSetMapping"/> objects.
+    /// </summary>
+    IReadOnlyList<PrestigeRankSetMapping>? PrestigeRankSetMappings { get; }
 
     /// <summary>
     /// Gets the cached <see cref="ResistInfo"/> objects.

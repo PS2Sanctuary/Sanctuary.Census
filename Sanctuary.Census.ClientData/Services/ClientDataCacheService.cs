@@ -46,6 +46,9 @@ public class ClientDataCacheService : IClientDataCacheService
     public IReadOnlyList<ClientItemDefinition>? ClientItemDefinitions { get; private set; }
 
     /// <inheritdoc />
+    public IReadOnlyList<ClientPrestigeLevel>? ClientPrestigeLevels { get; private set; }
+
+    /// <inheritdoc />
     public IReadOnlyList<ClientRequirementExpression>? ClientRequirementExpressions { get; private set; }
 
     /// <inheritdoc />
@@ -53,6 +56,9 @@ public class ClientDataCacheService : IClientDataCacheService
 
     /// <inheritdoc />
     public IReadOnlyList<Experience>? Experiences { get; private set; }
+
+    /// <inheritdoc />
+    public IReadOnlyList<ExperienceRank>? ExperienceRanks { get; private set; }
 
     /// <inheritdoc />
     public IReadOnlyList<Faction>? Factions { get; private set; }
@@ -101,6 +107,12 @@ public class ClientDataCacheService : IClientDataCacheService
 
     /// <inheritdoc />
     public IReadOnlyList<LoadoutSlotTintItemClass>? LoadoutSlotTintItemClasses { get; private set; }
+
+    /// <inheritdoc />
+    public IReadOnlyList<PrestigeLevelRankSet>? PrestigeLevelRankSets { get; private set; }
+
+    /// <inheritdoc />
+    public IReadOnlyList<PrestigeRankSetMapping>? PrestigeRankSetMappings { get; private set; }
 
     /// <inheritdoc />
     public IReadOnlyList<ResistInfo>? ResistInfos { get; private set; }
@@ -213,6 +225,14 @@ public class ClientDataCacheService : IClientDataCacheService
             ct
         ).ConfigureAwait(false);
 
+        ClientPrestigeLevels = await ExtractDatasheet<ClientPrestigeLevel>
+        (
+            "PrestigeLevel.txt",
+            assetHeaders,
+            reader,
+            ct
+        );
+
         ClientRequirementExpressions = await ExtractDatasheet<ClientRequirementExpression>
         (
             "ClientRequirementExpressions.txt",
@@ -232,6 +252,14 @@ public class ClientDataCacheService : IClientDataCacheService
         Experiences = await ExtractDatasheet<Experience>
         (
             "Experience.txt",
+            assetHeaders,
+            reader,
+            ct
+        );
+
+        ExperienceRanks = await ExtractDatasheet<ExperienceRank>
+        (
+            "ExperienceRanks.txt",
             assetHeaders,
             reader,
             ct
@@ -365,6 +393,22 @@ public class ClientDataCacheService : IClientDataCacheService
             ct
         ).ConfigureAwait(false);
 
+        PrestigeLevelRankSets = await ExtractDatasheet<PrestigeLevelRankSet>
+        (
+            "PrestigeLevelRankSet.txt",
+            assetHeaders,
+            reader,
+            ct
+        );
+
+        PrestigeRankSetMappings = await ExtractDatasheet<PrestigeRankSetMapping>
+        (
+            "PrestigeRankSetMapping.txt",
+            assetHeaders,
+            reader,
+            ct
+        );
+
         ResistInfos = await ExtractDatasheet<ResistInfo>
         (
             "ResistInfo.txt",
@@ -482,9 +526,11 @@ public class ClientDataCacheService : IClientDataCacheService
         AreaDefinitions = null;
         ClientItemDatasheetDatas = null;
         ClientItemDefinitions = null;
+        ClientPrestigeLevels = null;
         ClientRequirementExpressions = null;
         Currencies = null;
         Experiences = null;
+        ExperienceRanks = null;
         Factions = null;
         FireModeDisplayStats = null;
         Images = null;
@@ -498,6 +544,8 @@ public class ClientDataCacheService : IClientDataCacheService
         LoadoutSlots = null;
         LoadoutSlotItemClasses = null;
         LoadoutSlotTintItemClasses = null;
+        PrestigeLevelRankSets = null;
+        PrestigeRankSetMappings = null;
         ResistInfos = null;
         Resources = null;
         ResourceTypes = null;

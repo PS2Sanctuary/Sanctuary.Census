@@ -2,7 +2,7 @@
 
 Date format: DD/MM/YYYY
 
-## vNext
+## 25/02/2023
 
 🚨 **Breaking changes**
 
@@ -24,7 +24,7 @@ items such as vehicle attachments.
 - `string type` - The type of the zone.
 - `bool dynamic` - Indicates whether the zone is dynamic.
 
-## 07/02/2022
+## 07/02/2023
 
 🚀 **Additions**
 
@@ -41,7 +41,7 @@ items such as vehicle attachments.
 - The `item_attachment` collection no longer includes entries for non-purchasable attachments, and some
   erroneously missing links have been added.
 
-## 05/02/2022
+## 05/02/2023
 
 🚀 **Additions**
 
@@ -51,7 +51,7 @@ items such as vehicle attachments.
 - Added the `is_default_attachment` field.
 - `item` now has full parity with the official Census 🌠.
 
-## 04/01/2022
+## 04/01/2023
 
 🚨 **Breaking changes**
 

@@ -4,7 +4,16 @@ Date format: DD/MM/YYYY
 
 ## vNext
 
+🚨 **Breaking changes**
+
+- Hid the `item_attachment` collection, due to ongoing issues with accuracy of the data.
+- Removed `map_region#empire_score`. Turns out the value is dynamic, and not quite what I expected.
+
 🚀 **Additions**
+
+**item_to_item_line**
+- New collection! Links items within the same 'line' together. Useful for determining the upgrade order
+  items such as vehicle attachments.
 
 **zone**
 - `uint geometry_id` - The geometry ('terrain') ID of the zone.

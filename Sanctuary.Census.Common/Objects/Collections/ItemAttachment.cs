@@ -11,7 +11,7 @@ namespace Sanctuary.Census.Common.Objects.Collections;
 /// <param name="AttachmentItemId">The ID of the attachment item.</param>
 /// <param name="IsDefaultAttachment">Indicates whether the attachment is equipped by default.</param>
 /// <param name="IsRequiredAttachment">Indicates whether the attachment must always be equipped.</param>
-[Collection]
+[Collection(IsHidden = true, HideReason = "Entries are significantly incorrect in many cases.")]
 [Description("Links items to any attachments they may have. Note that items which do not have any default attachments will not be included in this collection.")]
 public record ItemAttachment
 (

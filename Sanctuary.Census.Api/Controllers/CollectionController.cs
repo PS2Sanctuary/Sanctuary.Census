@@ -517,6 +517,9 @@ public class CollectionController : ControllerBase
             .Sort(Builders<Datatype>.Sort.Ascending(x => x.Name))
             .ToListAsync(ct);
 
+        dataTypes = dataTypes.Where(x => !CollectionUtils.IsCollectionHidden(x.Name))
+            .ToList();
+
         _memoryCache.Set((typeof(Datatype), environment), dataTypes, TimeSpan.FromMinutes(15));
         return dataTypes;
     }

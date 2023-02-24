@@ -455,7 +455,7 @@ public static class Program
             .RegisterCollectionBuilder<FireModeCollectionBuilder>()
             .RegisterCollectionBuilder<FireModeToProjectileCollectionBuilder>()
             .RegisterCollectionBuilder<ImageCollectionsBuilder>()
-            .RegisterCollectionBuilder<ItemAttachmentCollectionBuilder>()
+            //.RegisterCollectionBuilder<ItemAttachmentCollectionBuilder>()
             .RegisterCollectionBuilder<ItemCollectionBuilder>()
             .RegisterCollectionBuilder<ItemCategoryCollectionBuilder>()
             .RegisterCollectionBuilder<ItemToItemLineCollectionBuilder>()

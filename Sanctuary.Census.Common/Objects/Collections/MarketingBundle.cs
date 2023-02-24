@@ -27,7 +27,7 @@ namespace Sanctuary.Census.Common.Objects.Collections;
 /// <param name="ImageID">The ID of the directive's default image.</param>
 /// <param name="ImagePath">The relative path to the directive's default image.</param>
 [Collection]
-[Description("Represents a purchasable item from the in-game depot")]
+[Description("Represents a purchasable bundle from the in-game depot")]
 public record MarketingBundle
 (
     [property: JoinKey] uint MarketingBundleID,

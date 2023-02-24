@@ -1,5 +1,4 @@
-﻿using Sanctuary.Census.Common;
-using Sanctuary.Census.Common.Attributes;
+﻿using Sanctuary.Census.Common.Attributes;
 using Sanctuary.Census.Common.Json;
 using Sanctuary.Census.Common.Objects.CommonModels;
 using System;
@@ -15,6 +14,7 @@ namespace Sanctuary.Census.Api.Util;
 /// </summary>
 public static class CollectionUtils
 {
+    private static readonly HashSet<string> _knownCollections;
     private static readonly Dictionary<string, Type> _collectionSnakeNameToType;
     private static readonly Dictionary<string, HashSet<string>> _collectionNamesAndFields;
     private static readonly Dictionary<string, HashSet<string>> _joinKeyFields;
@@ -22,6 +22,7 @@ public static class CollectionUtils
 
     static CollectionUtils()
     {
+        _knownCollections = new HashSet<string>();
         _collectionSnakeNameToType = new Dictionary<string, Type>();
         _collectionNamesAndFields = new Dictionary<string, HashSet<string>>();
         _joinKeyFields = new Dictionary<string, HashSet<string>>();
@@ -29,13 +30,17 @@ public static class CollectionUtils
 
         IEnumerable<Type> collTypes = typeof(CollectionAttribute).Assembly
             .GetTypes()
-            .Where(t => t.IsDefined(typeof(CollectionAttribute)));
+            .Where
+            (
+                t => t.GetCustomAttribute<CollectionAttribute>()?.IsHidden == false
+            );
 
         foreach (Type collType in collTypes)
         {
             HashSet<string> propNames = new();
             string collName = SnakeCaseJsonNamingPolicy.Default.ConvertName(collType.Name);
 
+            _knownCollections.Add(collName);
             _collectionSnakeNameToType.Add(collName, collType);
             _collectionNamesAndFields.Add(collName, propNames);
             _joinKeyFields.Add(collName, new HashSet<string>());
@@ -120,4 +125,12 @@ public static class CollectionUtils
     /// <returns></returns>
     public static IReadOnlyList<string> GetLocaleFields(string collectionName)
         => _langFields[collectionName];
+
+    /// <summary>
+    /// Gets a value indicating whether a collection is hidden.
+    /// </summary>
+    /// <param name="collectionName">The name of the collection.</param>
+    /// <returns><c>True</c> if the collection is hidden, otherwise <c>false</c>.</returns>
+    public static bool IsCollectionHidden(string collectionName)
+        => !_knownCollections.Contains(collectionName);
 }

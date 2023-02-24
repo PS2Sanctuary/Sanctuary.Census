@@ -32,7 +32,11 @@ public static class CollectionUtils
             .GetTypes()
             .Where
             (
-                t => t.GetCustomAttribute<CollectionAttribute>()?.IsHidden == false
+                t =>
+                {
+                    CollectionAttribute? collAttr = t.GetCustomAttribute<CollectionAttribute>();
+                    return collAttr is { IsHidden: false, IsNestedType: false };
+                }
             );
 
         foreach (Type collType in collTypes)
@@ -46,17 +50,27 @@ public static class CollectionUtils
             _joinKeyFields.Add(collName, new HashSet<string>());
             _langFields.Add(collName, new List<string>());
 
-            foreach (PropertyInfo prop in collType.GetProperties())
+            void AddProps(string? prefix, Type t)
             {
-                string propName = SnakeCaseJsonNamingPolicy.Default.ConvertName(prop.Name);
-                propNames.Add(propName);
+                foreach (PropertyInfo prop in t.GetProperties())
+                {
+                    string propName = SnakeCaseJsonNamingPolicy.Default.ConvertName(prop.Name);
+                    if (prefix is not null)
+                        propName = $"{prefix}.{propName}";
+                    propNames.Add(propName);
 
-                if (prop.IsDefined(typeof(JoinKeyAttribute)))
-                    _joinKeyFields[collName].Add(propName);
+                    if (prop.IsDefined(typeof(JoinKeyAttribute)))
+                        _joinKeyFields[collName].Add(propName);
 
-                if (prop.PropertyType == typeof(LocaleString))
-                    _langFields[collName].Add(propName);
+                    if (prop.PropertyType == typeof(LocaleString))
+                        _langFields[collName].Add(propName);
+
+                    if (prop.PropertyType.GetCustomAttribute<CollectionAttribute>()?.IsNestedType is true)
+                        AddProps(propName, prop.PropertyType);
+                }
             }
+
+            AddProps(null, collType);
         }
     }
 

@@ -43,5 +43,10 @@ public record ExperienceRank
     /// <param name="ImageSetId">The ID of the rank's image set.</param>
     /// <param name="ImageId">The ID of the rank's image.</param>
     [Collection(IsNestedType = true)]
-    public record FactionInfo(LocaleString? Title, uint? ImageSetId, uint? ImageId);
+    public record FactionInfo
+    (
+        LocaleString? Title,
+        [property: JoinKey] uint?ImageSetId,
+        [property: JoinKey] uint? ImageId
+    );
 }

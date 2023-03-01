@@ -36,16 +36,15 @@ All number, boolean and `null` values will then be represented appropriately, ra
 ### Error Responses
 
 Sanctuary.Census uses a different set of error codes, the definitions of which [can be found here](../Sanctuary.Census.Api/Models/QueryErrorCode.cs).
-Please note that the error response format is not consistent, although it should match Census for most query-related errors.
 
 ## Collections
 
 > **Note**:
 > Please see the [collection model definitions here](../Sanctuary.Census.Common/Objects/Collections).
 
-This section lists the Collections provided by Sanctuary.Census, and compares them to the DBG Census.
-Many collections add additional data on top of the DBG Census data, and collections which DBG Census does
-not provide also exist, but this is not documented here. The source of truth for Sanctuary.Census'
+This section lists the Collections provided by Sanctuary.Census, and compares them to the official Census.
+Many collections add additional fields on top of the official Census data, and collections which the official
+Census does not provide also exist, but this is not documented here. The source of truth for Sanctuary.Census'
 current set of collections can be found at the root endpoint of an environment
 (e.g. [https://census.lithafalcon.cc/get/ps2](https://census.lithafalcon.cc/get/ps2)).
 
@@ -53,8 +52,7 @@ current set of collections can be found at the root endpoint of an environment
 
 ### 🌠 Gold Tier Collections
 
-These collections provide the same data as their DBG Census equivalents. The shape is not guaranteed to match,
-but is likely to be very similar.
+These collections provide the same fields at minimum as their DBG Census equivalents.
 
 - ability
 - currency
@@ -99,7 +97,7 @@ will require you to query the `directive_tier_reward_set` collection. You can th
 
 ### 🌟 Silver Tier Collections
 
-These collections are missing small amounts of data as compared to their DBG Census equivalents, or are shaped differently
+These collections are missing fields that the official Census equivalents have, or are shaped differently
 in such a way that retrieving certain data may not be immediately obvious.
 
 - directive

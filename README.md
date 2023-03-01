@@ -1,9 +1,10 @@
 ﻿# Sanctuary.Census
 
-An unofficial supplement to [Daybreak Game Company's Census API](https://census.daybreakgames.com), which aims to present up-to-date
-static PlanetSide 2 data. The methods through which Sanctuary.Census retrieves data allow it to keep itself up-to-date (mostly) automatically,
-until such a time as the structure of the data it depends on, or the methods required to retrieve it, change. Major PlanetSide 2 updates will
-often require small changes in order to update certain collections, which can take a small amount of time to implement.
+An unofficial supplement to [Daybreak Game Company's Census API](https://census.daybreakgames.com), which aims to present up-to-date (and in
+some cases, more in-depth) static PlanetSide 2 data. The methods through which Sanctuary.Census retrieves data allow it to keep itself
+up-to-date (mostly) automatically, until such a time as the structure of the data it depends on, or the methods required to retrieve it, change.
+Major PlanetSide 2 updates will often require small changes in order to update certain collections, which can take a small amount of time to
+implement.
 
 *Sanctuary.Census is in no way affiliated with nor endorsed by either Daybreak Games Company or Rogue Planet Games.*
 
@@ -53,7 +54,8 @@ do so in the near future.
 
 #### Sanctuary.Census.Common
 
-This project contains the collection models, along with other shared services and types.
+This project contains the collection models, along with other shared services and types, such as JSON converters
+and the base database context.
 
 #### Sanctuary.Census.Api
 

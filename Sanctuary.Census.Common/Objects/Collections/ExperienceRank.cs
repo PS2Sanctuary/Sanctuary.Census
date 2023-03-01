@@ -46,7 +46,7 @@ public record ExperienceRank
     public record FactionInfo
     (
         LocaleString? Title,
-        [property: JoinKey] uint?ImageSetId,
+        [property: JoinKey] uint? ImageSetId,
         [property: JoinKey] uint? ImageId
     );
 }

@@ -73,7 +73,6 @@ but is likely to be very similar.
 - image_set
 - image_set_default
 - item
-- item_attachment
 - item_category
 - item_to_weapon
 - map_hex

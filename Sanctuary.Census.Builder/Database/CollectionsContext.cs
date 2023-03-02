@@ -196,7 +196,7 @@ public class CollectionsContext : ICollectionsContext
             await collection.BulkWriteAsync(dbWriteModels, null, ct).ConfigureAwait(false);
     }
 
-    private FilterDefinition<T> BuildFilter<T>
+    private static FilterDefinition<T> BuildFilter<T>
     (
         IReadOnlyList<Expression<Func<T, object?>>> equalitySelectors,
         IReadOnlyList<Func<T, object?>> compiledSelectors,
@@ -212,12 +212,6 @@ public class CollectionsContext : ICollectionsContext
         if (equalitySelectors.Count == 1)
             return Builders<T>.Filter.Eq(equalitySelectors[0], compiledSelectors[0](searchItem));
 
-        // TODO:
-        // Expression expr;
-        // for (int i = 0; i < equalitySelectors.Count; i++)
-        // {
-        //     Expression.Equal(equalitySelectors[i], Expression.)
-        // }
         FilterDefinition<T> filter = Builders<T>.Filter.Empty;
         for (int i = 0; i < equalitySelectors.Count; i++)
             filter &= Builders<T>.Filter.Eq(equalitySelectors[i], compiledSelectors[i](searchItem));

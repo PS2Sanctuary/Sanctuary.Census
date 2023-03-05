@@ -73,6 +73,7 @@ public static class Program
         builder.Services.AddEndpointsApiExplorer();
         builder.Services.AddSwaggerGen(options =>
         {
+            options.DocumentFilter<CollectionModelDocumentFilter>();
             options.SchemaFilter<EnumSchemaFilter>();
             options.ParameterFilter<EnvironmentParameterFilter>();
 

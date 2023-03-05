@@ -18,6 +18,7 @@ as the official Census, so ensure you are familiar with using that. I'd recommen
 [Leonhard's Census Primer](https://github.com/leonhard-s/auraxium/wiki/Census-API-Primer) if you're not.
 
 Jump right in by heading to [https://census.lithafalcon.cc/get/ps2](https://census.lithafalcon.cc/get/ps2) to view the available collections.
+Auto-generated API documentation can be found [here](https://census.lithafalcon.cc/api-doc/index.html).
 
 > **Warning**:
 > Please read the [migrating from Census](docs/migrating-from-census.md) documentation to get an overview of any differences between

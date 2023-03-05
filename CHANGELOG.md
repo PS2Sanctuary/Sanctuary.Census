@@ -5,7 +5,7 @@ Date format: DD/MM/YYYY
 ## 03/03/2023
 
 🚀 **Additions**
-- Collection models are now exposed in the Swagger API documentation.
+- Collection and error response models are now exposed in the Swagger API documentation.
 
 ## 25/02/2023
 

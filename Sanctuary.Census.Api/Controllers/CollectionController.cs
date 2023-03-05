@@ -27,8 +27,12 @@ namespace Sanctuary.Census.Api.Controllers;
 /// <summary>
 /// Returns collection data.
 /// </summary>
+/// <response code="400">Returns an error indicating how the request was malformed.</response>
+/// <response code="500">Returns an error indicating that the application has malfunctioned.</response>
 [ApiController]
 [Produces("application/json")]
+[ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status400BadRequest)]
+[ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status500InternalServerError)]
 public class CollectionController : ControllerBase
 {
     /// <summary>
@@ -99,7 +103,7 @@ public class CollectionController : ControllerBase
     /// <param name="censusJSON">Whether Census JSON mode is enabled.</param>
     /// <param name="ct">A <see cref="CancellationToken"/> that can be used to stop the operation.</param>
     /// <returns>The available collections.</returns>
-    /// <response code="200">Returns the list of collections.</response>
+    /// <response code="200">Returns a list of the collections in the given environment.</response>
     [HttpGet("get/{environment}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     public async Task<JsonResult> GetDatatypesAsync
@@ -126,9 +130,9 @@ public class CollectionController : ControllerBase
     /// <param name="censusJSON">Whether Census JSON mode is enabled.</param>
     /// <param name="ct">A <see cref="CancellationToken"/> that can be used to stop the operation.</param>
     /// <returns>The collection count.</returns>
-    /// <response code="200">Returns the number of collections.</response>
+    /// <response code="200">Returns the number of collections in the given environment.</response>
     [HttpGet("count/{environment}")]
-    [ProducesResponseType(StatusCodes.Status200OK)]
+    [Produces(typeof(CollectionCount))]
     public async Task<JsonResult> CountDatatypesAsync
     (
         string environment,
@@ -137,10 +141,11 @@ public class CollectionController : ControllerBase
     )
     {
         PS2Environment env = ParseEnvironment(environment);
+        int count = (await GetAndCacheDatatypeListAsync(env, ct).ConfigureAwait(false)).Count;
 
         return new JsonResult
         (
-            (await GetAndCacheDatatypeListAsync(env, ct).ConfigureAwait(false)).Count,
+            new CollectionCount((ulong)count),
             GetJsonOptions(censusJSON, true)
         );
     }
@@ -152,7 +157,7 @@ public class CollectionController : ControllerBase
     /// <param name="collectionName">The name of the collection.</param>
     /// <param name="queryParams">The query parameters.</param>
     /// <returns>Descriptions of the collection's fields.</returns>
-    /// <response code="200">Returns the descriptions of the collection's fields.</response>
+    /// <response code="200">Returns a description of the collection's structure.</response>
     [HttpGet("/describe/{environment}/{collectionName}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     public JsonResult DescribeCollection
@@ -325,9 +330,9 @@ public class CollectionController : ControllerBase
     /// <param name="queryParams">The query parameters.</param>
     /// <param name="ct">A <see cref="CancellationToken"/> that can be used to stop the operation.</param>
     /// <returns>The number of documents that match the query.</returns>
-    /// <response code="200">Returns the result of the query.</response>
+    /// <response code="200">Returns the number of elements in the query result.</response>
     [HttpGet("/count/{environment}/{collectionName}")]
-    [ProducesResponseType(StatusCodes.Status200OK)]
+    [Produces(typeof(CollectionCount))]
     public async Task<JsonResult> CountCollectionAsync
     (
         string environment,

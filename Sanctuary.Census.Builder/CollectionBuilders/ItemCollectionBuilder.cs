@@ -65,33 +65,10 @@ public class ItemCollectionBuilder : ICollectionBuilder
         if (_clientDataCache.ClientItemDefinitions is null)
             throw new MissingCacheDataException(typeof(ClientItemDefinition));
 
-        if (_serverDataCache.ItemCategories is null)
-            throw new MissingCacheDataException(typeof(ItemCategories));
-
         ItemFactionResolver factionResolver = new(_clientDataCache);
 
         HashSet<uint> defaultAttachmentItems = GetDefaultAttachmentItems();
-
-        HashSet<uint> vehicleWeaponCategories = new();
-        foreach (CategoryHierarchy heirarchy in _serverDataCache.ItemCategories.Hierarchies)
-        {
-            if (heirarchy.ParentCategoryID == VEHICLE_WEAPONS_CATEGORY_ID)
-                vehicleWeaponCategories.Add(heirarchy.ChildCategoryID);
-        }
-
-        // Add some categories manually because they don't have inheritance setup
-        vehicleWeaponCategories.Add(209); // Bastion Bombard
-        vehicleWeaponCategories.Add(210); // Bastion Weapon System
-        vehicleWeaponCategories.Add(211); // Colossus Primary Weapon
-        vehicleWeaponCategories.Add(212); // Colossus Front Right Weapon
-        vehicleWeaponCategories.Add(213); // Colossus Front Left Weapon
-        vehicleWeaponCategories.Add(214); // Colossus Rear Right Weapon
-        vehicleWeaponCategories.Add(215); // Colossus Rear Left Weapon
-        vehicleWeaponCategories.Add(216); // Javelin Primary Weapon
-        vehicleWeaponCategories.Add(217); // Chimera Primary Weapons
-        vehicleWeaponCategories.Add(218); // Chimera Secondary Weapons
-        vehicleWeaponCategories.Add(221); // Corsair Front Turret
-        vehicleWeaponCategories.Add(222); // Corsair Rear Turret
+        HashSet<uint> vehicleWeaponCategories = GetVehicleWeaponCategories();
 
         Dictionary<uint, Item> builtItems = new();
         foreach (ClientItemDefinition definition in _clientDataCache.ClientItemDefinitions)
@@ -143,6 +120,64 @@ public class ItemCollectionBuilder : ICollectionBuilder
         }
 
         await dbContext.UpsertCollectionAsync(builtItems.Values, ct).ConfigureAwait(false);
+    }
+
+    private HashSet<uint> GetVehicleWeaponCategories()
+    {
+        HashSet<uint> vehicleWeaponCategories = new();
+
+        if (_serverDataCache.ItemCategories is not null)
+        {
+            foreach (CategoryHierarchy heirarchy in _serverDataCache.ItemCategories.Hierarchies)
+            {
+                if (heirarchy.ParentCategoryID == VEHICLE_WEAPONS_CATEGORY_ID)
+                    vehicleWeaponCategories.Add(heirarchy.ChildCategoryID);
+            }
+        }
+
+        // Add known vehicle weapon categories when server data isn't available
+        vehicleWeaponCategories.Add(109); // Flash Primary Weapon
+        vehicleWeaponCategories.Add(110); // Galaxy Left Weapon
+        vehicleWeaponCategories.Add(111); // Galaxy Tail Weapon
+        vehicleWeaponCategories.Add(112); // Galaxy Right Weapon
+        vehicleWeaponCategories.Add(113); // Galaxy Top Weapon
+        vehicleWeaponCategories.Add(114); // Harasser Top Gunner
+        vehicleWeaponCategories.Add(115); // Liberator Belly Weapon
+        vehicleWeaponCategories.Add(116); // Liberator Nose Cannon
+        vehicleWeaponCategories.Add(117); // Liberator Tail Weapon
+        vehicleWeaponCategories.Add(118); // Lightning Primary Weapon
+        vehicleWeaponCategories.Add(119); // Magrider Gunner Weapon
+        vehicleWeaponCategories.Add(120); // Magrider Primary Weapon
+        vehicleWeaponCategories.Add(121); // Mosquito Nose Cannon
+        vehicleWeaponCategories.Add(122); // Mosquito Wing Mount
+        vehicleWeaponCategories.Add(123); // Prowler Gunner Weapon
+        vehicleWeaponCategories.Add(124); // Prowler Primary Weapon
+        vehicleWeaponCategories.Add(125); // Reaver Nose Cannon
+        vehicleWeaponCategories.Add(126); // Reaver Wing Mount
+        vehicleWeaponCategories.Add(127); // Scythe Nose Cannon
+        vehicleWeaponCategories.Add(128); // Scythe Wing Mount
+        vehicleWeaponCategories.Add(129); // Sunderer Front Gunner
+        vehicleWeaponCategories.Add(130); // Sunderer Rear Gunner
+        vehicleWeaponCategories.Add(131); // Vanguard Gunner Weapon
+        vehicleWeaponCategories.Add(132); // Vanguard Primary Weapon
+        vehicleWeaponCategories.Add(138); // Valkyrie Nose Gunner
+        vehicleWeaponCategories.Add(144); // ANT Top Turret
+
+        // Add some categories manually because they don't have inheritance setup
+        vehicleWeaponCategories.Add(209); // Bastion Bombard
+        vehicleWeaponCategories.Add(210); // Bastion Weapon System
+        vehicleWeaponCategories.Add(211); // Colossus Primary Weapon
+        vehicleWeaponCategories.Add(212); // Colossus Front Right Weapon
+        vehicleWeaponCategories.Add(213); // Colossus Front Left Weapon
+        vehicleWeaponCategories.Add(214); // Colossus Rear Right Weapon
+        vehicleWeaponCategories.Add(215); // Colossus Rear Left Weapon
+        vehicleWeaponCategories.Add(216); // Javelin Primary Weapon
+        vehicleWeaponCategories.Add(217); // Chimera Primary Weapons
+        vehicleWeaponCategories.Add(218); // Chimera Secondary Weapons
+        vehicleWeaponCategories.Add(221); // Corsair Front Turret
+        vehicleWeaponCategories.Add(222); // Corsair Rear Turret
+
+        return vehicleWeaponCategories;
     }
 
     private HashSet<uint> GetDefaultAttachmentItems()

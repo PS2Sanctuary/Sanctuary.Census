@@ -56,7 +56,7 @@ public class LocaleDataCacheService : ILocaleDataCacheService
         if (stringID is < 1 or > uint.MaxValue)
             return false;
 
-        uint actualID = Jenkins.GetItemLocaleID((uint)stringID);
+        uint actualID = Jenkins.LocaleStringIdToLookup((uint)stringID);
         _chinese.TryGetValue(actualID, out string? chinese);
         _english.TryGetValue(actualID, out string? english);
         _french.TryGetValue(actualID, out string? french);

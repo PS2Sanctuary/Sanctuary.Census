@@ -572,7 +572,7 @@ public class ClientDataCacheService : IClientDataCacheService
         ulong nameHash = PackCrc64.Calculate(datasheetFileName);
         Asset2Header header = assetHeaders.First(ah => ah.NameHash == nameHash);
 
-        using MemoryOwner<byte> data = await packReader.ReadAssetDataAsync(header, ct).ConfigureAwait(false);
+        using MemoryOwner<byte> data = await packReader.ReadAssetDataAsync(header, ct: ct).ConfigureAwait(false);
         return TDataType.Deserialize(data.Span);
     }
 
@@ -593,7 +593,7 @@ public class ClientDataCacheService : IClientDataCacheService
                 continue;
 
             List<AreaDefinition> builtDefinitions = new();
-            using MemoryOwner<byte> data = await packReader.ReadAssetDataAsync(header, ct).ConfigureAwait(false);
+            using MemoryOwner<byte> data = await packReader.ReadAssetDataAsync(header, ct: ct).ConfigureAwait(false);
             await using MemoryStream ms = new(data.Memory.ToArray());
 
             XmlReaderSettings xmlSettings = new()

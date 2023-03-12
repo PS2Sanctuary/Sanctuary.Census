@@ -8,14 +8,14 @@ namespace Sanctuary.Census.Common.Objects.Collections;
 /// Represents population data for a world.
 /// </summary>
 /// <param name="WorldId">The ID of the world.</param>
-/// <param name="LastUpdated">The time at which the entry was last updated.</param>
+/// <param name="Timestamp">The time at which the population entry was generated.</param>
 /// <param name="Total">The total number of players on the world.</param>
 /// <param name="Population">The total number of players per faction on the world.</param>
 [Collection]
 public record WorldPopulation
 (
     [property: JoinKey] uint WorldId,
-    long LastUpdated,
+    long Timestamp,
     int Total,
     ValueEqualityDictionary<FactionDefinition, int> Population
-) : ISanctuaryCollection;
+) : IRealtimeCollection;

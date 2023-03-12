@@ -416,9 +416,7 @@ public static class Program
             .WithEqualityKey(x => x.WorldID);
 
         configProvider.Register<WorldPopulation>()
-            .WithIndex(x => x.WorldId, true)
-            .WithEqualityKey(x => x.WorldId)
-            .IsDynamic();
+            .WithIndex(x => x.WorldId, true);
 
         configProvider.Register<Common.Objects.Collections.Zone>()
             .WithIndex(x => x.ZoneID, true)
@@ -428,10 +426,8 @@ public static class Program
         configProvider.Register<ZonePopulation>()
             .WithIndex(x => x.WorldId, false)
             .WithIndex(x => x.ZoneId, false)
-            .WithEqualityKey(x => x.WorldId)
             .WithEqualityKey(x => x.ZoneId)
-            .WithEqualityKey(x => x.ZoneInstance)
-            .IsDynamic();
+            .WithEqualityKey(x => x.ZoneInstance);
 
         foreach ((Type collType, ICollectionDbConfiguration collConfig) in configProvider.GetAll())
         {
@@ -443,7 +439,7 @@ public static class Program
 
             MethodInfo? addRemovalTestMethodInfo = typeof(Program).GetMethod
             (
-                nameof(AddRealtimeRemovalTest),
+                nameof(ConfigureRealtimeCollection),
                 BindingFlags.Instance | BindingFlags.Static | BindingFlags.NonPublic
             );
 
@@ -457,12 +453,14 @@ public static class Program
         return services;
     }
 
-    private static void AddRealtimeRemovalTest<TCollection>(CollectionDbConfiguration<TCollection> configuration)
+    private static void ConfigureRealtimeCollection<TCollection>(CollectionDbConfiguration<TCollection> configuration)
         where TCollection : IRealtimeCollection
-        => configuration.WithRemoveOldEntryTest
-        (
-            x => DateTimeOffset.FromUnixTimeSeconds(x.Timestamp).AddMinutes(15) < DateTimeOffset.UtcNow
-        );
+        => configuration.WithEqualityKey(x => x.WorldId)
+            .WithRemoveOldEntryTest
+            (
+                x => DateTimeOffset.FromUnixTimeSeconds(x.Timestamp).AddMinutes(15) < DateTimeOffset.UtcNow
+            )
+            .IsDynamic();
 
     private static IServiceCollection RegisterCollectionBuilders(this IServiceCollection services)
     {

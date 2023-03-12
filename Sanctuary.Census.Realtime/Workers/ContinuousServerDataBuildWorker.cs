@@ -178,7 +178,8 @@ public sealed class ContinuousServerDataBuildWorker : BackgroundService
 
         foreach (ContinentBattleInfo_ZoneData zone in cbi.Zones)
         {
-            if (zone.PopulationPercent.All(x => x == 0))
+            // Only cache faction limits if there is nobody on the zone and the limits are equal to each other
+            if (zone.PopulationPercent.All(x => x == 0) && zone.RemainingCharacterLimit.Distinct().Count() is 1)
             {
                 _factionLimits.TryAdd(server, new Dictionary<ZoneDefinition, ushort[]>());
                 _factionLimits[server][zone.ZoneID] = zone.RemainingCharacterLimit;

@@ -13,7 +13,7 @@ namespace Sanctuary.Census.Common.Objects.Collections;
 /// <param name="Timestamp">The time at which the population entry was generated.</param>
 /// <param name="Total">The total number of players on the zone.</param>
 /// <param name="Population">The total number of players per faction on the zone.</param>
-[Collection]
+[Collection(IsHidden = true, HideReason = "Calculation methodology is innacurate")]
 public record ZonePopulation
 (
     [property: JoinKey] uint WorldId,

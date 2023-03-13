@@ -47,7 +47,8 @@ public static class Program
                 options.JsonSerializerOptions.DefaultIgnoreCondition = JsonIgnoreCondition.Never;
             });
 
-        builder.Services.AddHostedService<ContinuousServerDataBuildWorker>();
+        builder.Services.AddHostedService<ContinuousServerDataBuildWorker>()
+            .AddHostedService<RealtimeCollectionPruneWorker>();
 
         WebApplication app = builder.Build();
 

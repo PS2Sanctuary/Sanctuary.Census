@@ -20,7 +20,6 @@ using Sanctuary.Common.Objects;
 using Serilog;
 using Serilog.Events;
 using System;
-using System.Reflection;
 using System.Threading.Tasks;
 
 namespace Sanctuary.Census.Builder;
@@ -415,50 +414,41 @@ public static class Program
             .WithIndex(x => x.WorldID, true)
             .WithEqualityKey(x => x.WorldID);
 
-        configProvider.Register<WorldPopulation>()
-            .WithIndex(x => x.WorldId, true);
-
         configProvider.Register<Common.Objects.Collections.Zone>()
             .WithIndex(x => x.ZoneID, true)
             .WithEqualityKey(x => x.ZoneID)
             .WithRemoveOldEntryTest(_ => false);
 
-        configProvider.Register<ZonePopulation>()
+        // Realtime registration
+
+        RegisterRealtime<MapState>(configProvider)
+            .WithIndex(x => x.WorldId, true)
+            .WithIndex(x => x.ZoneId, false)
+            .WithEqualityKey(x => x.ZoneId)
+            .WithEqualityKey(x => x.ZoneInstance);
+
+        RegisterRealtime<WorldPopulation>(configProvider)
+            .WithIndex(x => x.WorldId, true);
+
+        RegisterRealtime<ZonePopulation>(configProvider)
             .WithIndex(x => x.WorldId, false)
             .WithIndex(x => x.ZoneId, false)
             .WithEqualityKey(x => x.ZoneId)
             .WithEqualityKey(x => x.ZoneInstance);
 
-        foreach ((Type collType, ICollectionDbConfiguration collConfig) in configProvider.GetAll())
-        {
-            if (!collType.IsAssignableTo(typeof(IRealtimeCollection)))
-                continue;
-
-            if (collConfig.GetType().GetGenericTypeDefinition() != typeof(CollectionDbConfiguration<>))
-                continue;
-
-            MethodInfo? addRemovalTestMethodInfo = typeof(Program).GetMethod
-            (
-                nameof(ConfigureRealtimeCollection),
-                BindingFlags.Instance | BindingFlags.Static | BindingFlags.NonPublic
-            );
-
-            if (addRemovalTestMethodInfo is null)
-                continue;
-
-            addRemovalTestMethodInfo = addRemovalTestMethodInfo.MakeGenericMethod(collType);
-            addRemovalTestMethodInfo.Invoke(null, new object[] { collConfig });
-        }
-
         return services;
     }
 
-    private static void ConfigureRealtimeCollection<TCollection>(CollectionDbConfiguration<TCollection> configuration)
-        where TCollection : IRealtimeCollection
-        => configuration.WithEqualityKey(x => x.WorldId)
+    private static CollectionDbConfiguration<TCollection> RegisterRealtime<TCollection>
+    (
+        CollectionConfigurationProvider configProvider
+    ) where TCollection : IRealtimeCollection
+        => configProvider.Register<TCollection>()
+            .WithEqualityKey(x => x.WorldId)
             .WithRemoveOldEntryTest
             (
-                x => DateTimeOffset.FromUnixTimeSeconds(x.Timestamp).AddMinutes(15) < DateTimeOffset.UtcNow
+                x => DateTimeOffset.FromUnixTimeSeconds(x.Timestamp)
+                    .Add(TimeSpan.FromMinutes(10)) < DateTimeOffset.UtcNow
             )
             .IsDynamic();
 

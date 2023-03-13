@@ -10,6 +10,7 @@ using Sanctuary.Census.Common.Services;
 using Sanctuary.Census.ServerData.Internal.Objects;
 using Sanctuary.Census.ServerData.Internal.Services;
 using Sanctuary.Common.Objects;
+using Sanctuary.Zone.Packets.MapRegion;
 using Sanctuary.Zone.Packets.Server;
 using System;
 using System.Collections.Generic;
@@ -108,6 +109,8 @@ public sealed class ContinuousServerDataBuildWorker : BackgroundService
                     services.GetRequiredService<EnvironmentContextProvider>().Environment = PS2Environment.PS2;
                     IMongoContext dbContext = services.GetRequiredService<IMongoContext>();
 
+                    await ProcessMapCaptureData(bundle.Server, bundle.MapRegionCaptureData, dbContext, ct);
+
                     if (bundle.ServerPopulation is not null)
                         await ProcessWorldPopulation(bundle.Server, bundle.ServerPopulation, dbContext, ct);
 
@@ -128,6 +131,64 @@ public sealed class ContinuousServerDataBuildWorker : BackgroundService
         {
             // This is fine
         }
+    }
+
+    private static async Task ProcessMapCaptureData
+    (
+        ServerDefinition server,
+        IEnumerable<CaptureDataUpdateAll> captureData,
+        IMongoContext dbContext,
+        CancellationToken ct
+    )
+    {
+        List<ReplaceOneModel<MapState>> replacementModels = new();
+
+        foreach (CaptureDataUpdateAll data in captureData)
+        {
+            MapState.MapRegionCaptureData[] builtRegionData = new MapState.MapRegionCaptureData[data.Regions.Length];
+
+            for (int i = 0; i < data.Regions.Length; i++)
+            {
+                CaptureDataUpdateAll_Region region = data.Regions[i];
+
+                bool isContested = region.ContestingFactionId is not Sanctuary.Common.Objects.FactionDefinition.None
+                    || region.RemainingCaptureTimeMs > 0
+                    || region.RemainingCtfFlags < region.CtfFlags;
+
+                builtRegionData[i] = new MapState.MapRegionCaptureData
+                (
+                    region.MapRegionId,
+                    (byte)region.OwningFactionId,
+                    isContested,
+                    (byte)region.ContestingFactionId,
+                    region.CaptureTimeMs,
+                    region.RemainingCaptureTimeMs,
+                    region.CtfFlags,
+                    region.RemainingCtfFlags
+                );
+            }
+
+            MapState builtMapState = new
+            (
+                (uint)server,
+                (ushort)data.ZoneID,
+                data.InstanceID,
+                DateTimeOffset.UtcNow.ToUnixTimeSeconds(),
+                new ValueEqualityList<MapState.MapRegionCaptureData>(builtRegionData)
+            );
+
+            ReplaceOneModel<MapState> replacementModel = new
+            (
+                Builders<MapState>.Filter.Eq(x => x.WorldId, builtMapState.WorldId)
+                    & Builders<MapState>.Filter.Eq(x => x.ZoneId, builtMapState.ZoneId)
+                    & Builders<MapState>.Filter.Eq(x => x.ZoneInstance, builtMapState.ZoneInstance),
+                builtMapState
+            ) { IsUpsert = true };
+            replacementModels.Add(replacementModel);
+        }
+
+        IMongoCollection<MapState> mapColl = dbContext.GetCollection<MapState>();
+        await mapColl.BulkWriteAsync(replacementModels, null, ct);
     }
 
     private static async Task ProcessWorldPopulation

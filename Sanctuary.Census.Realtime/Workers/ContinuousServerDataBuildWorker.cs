@@ -284,8 +284,11 @@ public sealed class ContinuousServerDataBuildWorker : BackgroundService
             replacementModels.Add(replacementModel);
         }
 
-        IMongoCollection<ZonePopulation> zonePopColl = dbContext.GetCollection<ZonePopulation>();
-        await zonePopColl.BulkWriteAsync(replacementModels, null, ct);
+        if (replacementModels.Count > 0)
+        {
+            IMongoCollection<ZonePopulation> zonePopColl = dbContext.GetCollection<ZonePopulation>();
+            await zonePopColl.BulkWriteAsync(replacementModels, null, ct);
+        }
     }
 
     private async Task TryLoadFactionLimits(CancellationToken ct)

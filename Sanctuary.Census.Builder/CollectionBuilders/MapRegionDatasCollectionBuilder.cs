@@ -100,6 +100,10 @@ public class MapRegionDatasCollectionBuilder : ICollectionBuilder
                 .SelectMany(x => x.Value.Facilities)
                 .ToDictionary(x => x.FacilityId, x => (x.ResourceId, x.RewardAmount));
 
+            Dictionary<uint, MapRegionData_Reward> facilityRewards = _serverDataCache.MapRegionDatas.Values
+                .SelectMany(x => x.RegionRewards)
+                .ToDictionary(x => x.MapRegionID, x => x);
+
             Dictionary<uint, MapRegion> builtRegions = new();
 
             foreach ((ZoneDefinition zone, MapRegionData regionData) in _serverDataCache.MapRegionDatas)
@@ -128,6 +132,8 @@ public class MapRegionDatasCollectionBuilder : ICollectionBuilder
                     if (facility is not null)
                         hasDefaultImage = _imageSetHelper.TryGetDefaultImage(facility.IconImageSetId, out defaultImage);
 
+                    facilityRewards.TryGetValue(region.MapRegionID_1, out MapRegionData_Reward? facilityReward);
+
                     builtRegions.TryAdd(region.MapRegionID_1, new MapRegion
                     (
                         region.MapRegionID_1,
@@ -144,7 +150,9 @@ public class MapRegionDatasCollectionBuilder : ICollectionBuilder
                         (int?)rewardAmount,
                         facility?.IconImageSetId,
                         hasDefaultImage ? defaultImage : null,
-                        hasDefaultImage ? _imageSetHelper.GetRelativeImagePath(defaultImage) : null
+                        hasDefaultImage ? _imageSetHelper.GetRelativeImagePath(defaultImage) : null,
+                        facilityReward?.RewardCurrencyID,
+                        (int?)facilityReward?.RewardAmount
                     ));
                 }
             }

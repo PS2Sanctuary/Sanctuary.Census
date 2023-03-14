@@ -2,6 +2,22 @@
 
 Date format: DD/MM/YYYY
 
+## vNext
+
+Pseudo-realtime collections have been added. These update roughly every 2m. See below for more info.
+
+🚀 **Additions**
+
+**map_state**
+- New pseudo-realtime collection. Exposes the current map state of a world's zones. Contains capture data. 
+
+**world_population**
+- New pseudo-realtime collection. Exposes the current population of a world.
+
+**map_region**
+- `uint? reward_currency_id` - The currency that is awarded for capturing/owning facility.
+- `int? reward_amount` - The amount of currency that is awarded for capturing/owning the facility.
+
 ## 03/03/2023
 
 🚀 **Additions**

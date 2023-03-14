@@ -22,6 +22,8 @@ namespace Sanctuary.Census.Common.Objects.Collections;
 /// <param name="ImageSetID">The ID of the facility's image set.</param>
 /// <param name="ImageID">The ID of the facility's default image.</param>
 /// <param name="ImagePath">The relative path to the facility's default image.</param>
+/// <param name="RewardCurrencyId">The currency that is awarded for capturing/owning facility.</param>
+/// <param name="RewardAmount">The amount of currency that is awarded for capturing/owning the facility.</param>
 [Collection]
 public record MapRegion
 (
@@ -39,5 +41,7 @@ public record MapRegion
     int? OutfitResourceRewardAmount,
     [property: JoinKey] uint? ImageSetID,
     [property: JoinKey] uint? ImageID,
-    string? ImagePath
+    string? ImagePath,
+    [property: JoinKey] uint? RewardCurrencyId,
+    int? RewardAmount
 ) : ISanctuaryCollection;

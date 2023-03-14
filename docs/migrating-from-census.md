@@ -74,6 +74,7 @@ These collections provide the same fields at minimum as their DBG Census equival
 - item_category
 - item_to_weapon
 - map_hex
+- map_region
 - marketing_bundle
 - marketing_bundle_item
 - player_state_group_2
@@ -102,7 +103,6 @@ in such a way that retrieving certain data may not be immediately obvious.
 
 - directive
 - loadout
-- map_region
 - profile
 - resist_info
 - vehicle
@@ -113,10 +113,6 @@ in such a way that retrieving certain data may not be immediately obvious.
 #### directive
 
 Missing the `objective_set_id` and `qualify_requirement_id` fields.
-
-#### map_region
-
-Missing the `reward_amount` and `reward_currency_id` fields.
 
 #### profile
 

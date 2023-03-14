@@ -141,22 +141,23 @@ public sealed class ContinuousServerDataBuildWorker : BackgroundService
         CancellationToken ct
     )
     {
+        long buildTime = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
         List<ReplaceOneModel<MapState>> replacementModels = new();
 
         foreach (CaptureDataUpdateAll data in captureData)
         {
-            MapState.MapRegionCaptureData[] builtRegionData = new MapState.MapRegionCaptureData[data.Regions.Length];
-
-            for (int i = 0; i < data.Regions.Length; i++)
+            foreach (CaptureDataUpdateAll_Region region in data.Regions)
             {
-                CaptureDataUpdateAll_Region region = data.Regions[i];
-
                 bool isContested = region.ContestingFactionId is not Sanctuary.Common.Objects.FactionDefinition.None
                     || region.RemainingCaptureTimeMs > 0
                     || region.RemainingCtfFlags < region.CtfFlags;
 
-                builtRegionData[i] = new MapState.MapRegionCaptureData
+                MapState builtState = new
                 (
+                    (uint)server,
+                    (ushort)data.ZoneID,
+                    data.InstanceID,
+                    buildTime,
                     region.MapRegionId,
                     (byte)region.OwningFactionId,
                     isContested,
@@ -166,25 +167,17 @@ public sealed class ContinuousServerDataBuildWorker : BackgroundService
                     region.CtfFlags,
                     region.RemainingCtfFlags
                 );
+
+                ReplaceOneModel<MapState> replacementModel = new
+                (
+                    Builders<MapState>.Filter.Eq(x => x.WorldId, builtState.WorldId)
+                        & Builders<MapState>.Filter.Eq(x => x.ZoneId, builtState.ZoneId)
+                        & Builders<MapState>.Filter.Eq(x => x.ZoneInstance, builtState.ZoneInstance)
+                        & Builders<MapState>.Filter.Eq(x => x.MapRegionId, builtState.MapRegionId),
+                    builtState
+                ) { IsUpsert = true };
+                replacementModels.Add(replacementModel);
             }
-
-            MapState builtMapState = new
-            (
-                (uint)server,
-                (ushort)data.ZoneID,
-                data.InstanceID,
-                DateTimeOffset.UtcNow.ToUnixTimeSeconds(),
-                new ValueEqualityList<MapState.MapRegionCaptureData>(builtRegionData)
-            );
-
-            ReplaceOneModel<MapState> replacementModel = new
-            (
-                Builders<MapState>.Filter.Eq(x => x.WorldId, builtMapState.WorldId)
-                    & Builders<MapState>.Filter.Eq(x => x.ZoneId, builtMapState.ZoneId)
-                    & Builders<MapState>.Filter.Eq(x => x.ZoneInstance, builtMapState.ZoneInstance),
-                builtMapState
-            ) { IsUpsert = true };
-            replacementModels.Add(replacementModel);
         }
 
         if (replacementModels.Count > 0)

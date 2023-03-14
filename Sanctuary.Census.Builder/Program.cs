@@ -424,8 +424,10 @@ public static class Program
         RegisterRealtime<MapState>(configProvider)
             .WithIndex(x => x.WorldId, false)
             .WithIndex(x => x.ZoneId, false)
+            .WithIndex(x => x.MapRegionId, false)
             .WithEqualityKey(x => x.ZoneId)
-            .WithEqualityKey(x => x.ZoneInstance);
+            .WithEqualityKey(x => x.ZoneInstance)
+            .WithEqualityKey(x => x.MapRegionId);
 
         RegisterRealtime<WorldPopulation>(configProvider)
             .WithIndex(x => x.WorldId, true);

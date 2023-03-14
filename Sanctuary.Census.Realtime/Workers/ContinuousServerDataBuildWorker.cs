@@ -109,7 +109,7 @@ public sealed class ContinuousServerDataBuildWorker : BackgroundService
                     services.GetRequiredService<EnvironmentContextProvider>().Environment = PS2Environment.PS2;
                     IMongoContext dbContext = services.GetRequiredService<IMongoContext>();
 
-                    await ProcessMapCaptureData(bundle.Server, bundle.MapRegionCaptureData, dbContext, ct);
+                    await ProcessMapCaptureDataAsync(bundle.Server, bundle.MapRegionCaptureData, dbContext, ct);
 
                     if (bundle.ServerPopulation is not null)
                         await ProcessWorldPopulation(bundle.Server, bundle.ServerPopulation, dbContext, ct);
@@ -133,7 +133,7 @@ public sealed class ContinuousServerDataBuildWorker : BackgroundService
         }
     }
 
-    private static async Task ProcessMapCaptureData
+    private static async Task ProcessMapCaptureDataAsync
     (
         ServerDefinition server,
         IEnumerable<CaptureDataUpdateAll> captureData,
@@ -187,8 +187,11 @@ public sealed class ContinuousServerDataBuildWorker : BackgroundService
             replacementModels.Add(replacementModel);
         }
 
-        IMongoCollection<MapState> mapColl = dbContext.GetCollection<MapState>();
-        await mapColl.BulkWriteAsync(replacementModels, null, ct);
+        if (replacementModels.Count > 0)
+        {
+            IMongoCollection<MapState> mapColl = dbContext.GetCollection<MapState>();
+            await mapColl.BulkWriteAsync(replacementModels, null, ct);
+        }
     }
 
     private static async Task ProcessWorldPopulation

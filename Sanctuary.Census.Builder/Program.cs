@@ -422,7 +422,7 @@ public static class Program
         // Realtime registration
 
         RegisterRealtime<MapState>(configProvider)
-            .WithIndex(x => x.WorldId, true)
+            .WithIndex(x => x.WorldId, false)
             .WithIndex(x => x.ZoneId, false)
             .WithEqualityKey(x => x.ZoneId)
             .WithEqualityKey(x => x.ZoneInstance);

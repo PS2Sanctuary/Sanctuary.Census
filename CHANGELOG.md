@@ -2,14 +2,14 @@
 
 Date format: DD/MM/YYYY
 
-## vNext
+## 15/03/2023
 
 Pseudo-realtime collections have been added. These update roughly every 2m. See below for more info.
 
 🚀 **Additions**
 
 **map_state**
-- New pseudo-realtime collection. Exposes the current map state of a world's zones. Contains capture data. 
+- New pseudo-realtime collection. Exposes the current map state of a world's zones. Contains capture and rough population data. 
 
 **world_population**
 - New pseudo-realtime collection. Exposes the current population of a world.

@@ -109,7 +109,14 @@ public sealed class ContinuousServerDataBuildWorker : BackgroundService
                     services.GetRequiredService<EnvironmentContextProvider>().Environment = PS2Environment.PS2;
                     IMongoContext dbContext = services.GetRequiredService<IMongoContext>();
 
-                    await ProcessMapCaptureDataAsync(bundle.Server, bundle.MapRegionCaptureData, dbContext, ct);
+                    await ProcessMapCaptureDataAsync
+                    (
+                        bundle.Server,
+                        bundle.MapRegionCaptureData,
+                        bundle.MapRegionPopulationData,
+                        dbContext,
+                        ct
+                    );
 
                     if (bundle.ServerPopulation is not null)
                         await ProcessWorldPopulation(bundle.Server, bundle.ServerPopulation, dbContext, ct);
@@ -137,6 +144,7 @@ public sealed class ContinuousServerDataBuildWorker : BackgroundService
     (
         ServerDefinition server,
         IEnumerable<CaptureDataUpdateAll> captureData,
+        IReadOnlyCollection<MapRegionPopulation> populationData,
         IMongoContext dbContext,
         CancellationToken ct
     )
@@ -146,11 +154,43 @@ public sealed class ContinuousServerDataBuildWorker : BackgroundService
 
         foreach (CaptureDataUpdateAll data in captureData)
         {
+            MapRegionPopulation? popData = populationData.FirstOrDefault
+            (
+                p => p.ZoneID == data.ZoneID && p.InstanceID == data.InstanceID
+            );
+
+            Dictionary<uint, MapRegionPopulation_Region> popRegions = popData is null
+                ? new Dictionary<uint, MapRegionPopulation_Region>()
+                : popData.Regions.ToDictionary(x => x.RegionID, x => x);
+
             foreach (CaptureDataUpdateAll_Region region in data.Regions)
             {
                 bool isContested = region.ContestingFactionId is not Sanctuary.Common.Objects.FactionDefinition.None
                     || region.RemainingCaptureTimeMs > 0
                     || region.RemainingCtfFlags < region.CtfFlags;
+
+                ValueEqualityDictionary<FactionDefinition, int> popUpperBounds = new();
+                ValueEqualityDictionary<FactionDefinition, byte> popPercentages = new();
+
+                if (popRegions.TryGetValue(region.MapRegionId, out MapRegionPopulation_Region? population))
+                {
+                    for (int i = 0; i < population.FactionPopTiers.Length; i++)
+                    {
+                        FactionDefinition faction = (FactionDefinition)(i + 1);
+                        byte tier = population.FactionPopTiers[i];
+
+                        if (tier is 0)
+                            popUpperBounds[faction] = 0;
+                        else
+                            popUpperBounds[faction] = (int)(12 * Math.Pow(2, tier - 1));
+                    }
+
+                    for (int i = 0; i < population.FactionPercentages.Length; i++)
+                    {
+                        double percentage = population.FactionPercentages[i] / (double)byte.MaxValue;
+                        popPercentages[(FactionDefinition)(i + 1)] = (byte)(percentage * 100);
+                    }
+                }
 
                 MapState builtState = new
                 (
@@ -165,7 +205,9 @@ public sealed class ContinuousServerDataBuildWorker : BackgroundService
                     region.CaptureTimeMs,
                     region.RemainingCaptureTimeMs,
                     region.CtfFlags,
-                    region.RemainingCtfFlags
+                    region.RemainingCtfFlags,
+                    popUpperBounds,
+                    popPercentages
                 );
 
                 ReplaceOneModel<MapState> replacementModel = new

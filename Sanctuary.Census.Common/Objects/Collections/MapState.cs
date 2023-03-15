@@ -1,5 +1,7 @@
-﻿using Sanctuary.Census.Common.Abstractions.Objects.Collections;
+﻿using MongoDB.Bson.Serialization.Attributes;
+using Sanctuary.Census.Common.Abstractions.Objects.Collections;
 using Sanctuary.Census.Common.Attributes;
+using Sanctuary.Census.Common.Objects.CommonModels;
 
 namespace Sanctuary.Census.Common.Objects.Collections;
 
@@ -24,6 +26,10 @@ namespace Sanctuary.Census.Common.Objects.Collections;
 /// </param>
 /// <param name="CtfFlags">The number of CTF flag deposits required to capture the facility.</param>
 /// <param name="RemainingCtfFlags">The remaining CTF flags that must be deposited to capture the facility.</param>
+/// <param name="FactionPopulationUpperBound">
+/// Gets the upper bound of a faction's players that are in a region (represented in-game as 1-12, 12-24, 24+ etc.).
+/// </param>
+/// <param name="FactionPopulationPercentage">Gets the percentage balance of population at a faction.</param>
 [Collection]
 public record MapState
 (
@@ -38,5 +44,7 @@ public record MapState
     int CaptureTimeMs,
     int RemainingCaptureTimeMs,
     int CtfFlags,
-    int RemainingCtfFlags
+    int RemainingCtfFlags,
+    ValueEqualityDictionary<FactionDefinition, int> FactionPopulationUpperBound,
+    ValueEqualityDictionary<FactionDefinition, byte> FactionPopulationPercentage
 ) : IRealtimeCollection;

@@ -27,9 +27,9 @@ namespace Sanctuary.Census.Common.Objects.Collections;
 /// <param name="CtfFlags">The number of CTF flag deposits required to capture the facility.</param>
 /// <param name="RemainingCtfFlags">The remaining CTF flags that must be deposited to capture the facility.</param>
 /// <param name="FactionPopulationUpperBound">
-/// Gets the upper bound of a faction's players that are in a region (represented in-game as 1-12, 12-24, 24+ etc.).
+/// The upper bound of a faction's players that are in a region (represented in-game as 1-12, 12-24, 24+ etc.).
 /// </param>
-/// <param name="FactionPopulationPercentage">Gets the percentage balance of population at a faction.</param>
+/// <param name="FactionPopulationPercentage">The percentage balance of population at a faction.</param>
 [Collection]
 public record MapState
 (

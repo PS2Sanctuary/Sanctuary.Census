@@ -279,6 +279,9 @@ public static class Program
             .WithIndex(x => x.FacilityID, false)
             .WithEqualityKey(x => x.AreaID);
 
+        configProvider.Register<Oops>()
+            .WithEqualityKey(x => x.OopsId);
+
         configProvider.Register<OutfitWar>()
             .WithIndex(x => x.OutfitWarID, true)
             .WithEqualityKey(x => x.OutfitWarID)
@@ -483,6 +486,7 @@ public static class Program
             .RegisterCollectionBuilder<LoadoutSlotCollectionBuilder>()
             .RegisterCollectionBuilder<MapRegionDatasCollectionBuilder>()
             .RegisterCollectionBuilder<MarketingBundleCollectionBuilders>()
+            .RegisterCollectionBuilder<OopsCollectionBuilder>()
             .RegisterCollectionBuilder<OutfitWarCollectionsBuilder>()
             .RegisterCollectionBuilder<PlayerStateGroup2CollectionBuilder>()
             .RegisterCollectionBuilder<ProfileCollectionBuilder>()

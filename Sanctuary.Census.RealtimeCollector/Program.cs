@@ -26,6 +26,7 @@ public static class Program
     public static void Main(string[] args)
     {
         IHost host = Host.CreateDefaultBuilder(args)
+            .UseSystemd()
             .ConfigureServices((context, services) =>
             {
                 // Early logging and telemetry setup

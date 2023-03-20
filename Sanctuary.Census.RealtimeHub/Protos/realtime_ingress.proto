@@ -1,0 +1,41 @@
+syntax = "proto3";
+
+import "google/protobuf/timestamp.proto";
+
+option csharp_namespace = "Sanctuary.Census.RealtimeHub";
+
+package realtime;
+
+service RealtimeIngress {
+  rpc SubmitMapStateUpdate(MapStateUpdate) returns (Ok);
+  rpc SubmitWorldPopulationUpdate(WorldPopulationUpdate) returns (Ok);
+}
+
+message Ok {
+}
+
+message MapStateUpdate {
+  uint32 world_id = 1;
+  int32 zone_id = 2;
+  int32 zone_instance = 3;
+  google.protobuf.Timestamp timestamp = 4;
+  repeated MapRegionState regions = 5;
+}
+
+message MapRegionState {
+  uint32 map_region_id = 1;
+  int32 owning_faction_id = 2;
+  int32 contesting_faction_id = 3;
+  int32 capture_time_ms = 4;
+  int32 remaining_capture_time_ms = 5;
+  int32 ctf_flags = 6;
+  int32 remaining_ctf_flags = 7;
+  map<int32, int32> faction_population_upper_bound = 8;
+  map<int32, int32> faction_population_percentage = 9;
+}
+
+message WorldPopulationUpdate {
+  uint32 world_id = 1;
+  google.protobuf.Timestamp timestamp = 2;
+  map<int32, int32> faction_populations = 3;
+}

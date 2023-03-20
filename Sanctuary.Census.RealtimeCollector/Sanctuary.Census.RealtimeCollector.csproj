@@ -1,0 +1,31 @@
+<Project Sdk="Microsoft.NET.Sdk.Worker">
+
+    <PropertyGroup>
+        <UserSecretsId>dotnet-Sanctuary.Census.RealtimeCollector-6ECA58A7-7FBF-4F0C-8FB9-8D756A252F1D</UserSecretsId>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Google.Protobuf" Version="3.22.1" />
+        <PackageReference Include="Grpc.Net.Client" Version="2.52.0" />
+        <PackageReference Include="Grpc.Net.ClientFactory" Version="2.52.0" />
+        <PackageReference Include="Grpc.Tools" Version="2.52.0">
+          <PrivateAssets>all</PrivateAssets>
+          <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
+        <PackageReference Include="Microsoft.Extensions.Hosting" Version="7.0.1" />
+        <PackageReference Include="OpenTelemetry.Exporter.Console" Version="1.4.0" />
+        <PackageReference Include="OpenTelemetry.Exporter.OpenTelemetryProtocol" Version="1.5.0-alpha.1" />
+        <PackageReference Include="OpenTelemetry.Extensions.Hosting" Version="1.4.0" />
+        <PackageReference Include="Serilog.Extensions.Hosting" Version="5.0.1" />
+        <PackageReference Include="Serilog.Sinks.Console" Version="4.1.0" />
+        <PackageReference Include="Serilog.Sinks.Seq" Version="5.2.2" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <Protobuf Include="..\Sanctuary.Census.RealtimeHub\Protos\realtime_ingress.proto" GrpcServices="Client" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\Sanctuary.Census.ServerData.Internal\Sanctuary.Census.ServerData.Internal.csproj" />
+    </ItemGroup>
+</Project>

@@ -10,7 +10,7 @@
         <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="7.0.0" />
         <PackageReference Include="Microsoft.Extensions.Options" Version="7.0.1" />
         <PackageReference Include="MongoDB.Driver" Version="2.19.0" />
-        <PackageReference Include="System.IO.Abstractions" Version="19.2.1" />
+        <PackageReference Include="System.IO.Abstractions" Version="19.2.4" />
     </ItemGroup>
 
 </Project>

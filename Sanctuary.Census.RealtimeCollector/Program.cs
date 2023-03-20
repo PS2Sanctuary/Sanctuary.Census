@@ -65,13 +65,15 @@ public static class Program
                 services.AddCommonServices(context.HostingEnvironment)
                     .AddInternalServerDataServices(context.HostingEnvironment);
 
-                services.AddGrpcClient<RealtimeIngress.RealtimeIngressClient>(o =>
-                    {
-                        string? hubEndpoint = context.Configuration[$"{CollectorConfig.ConfigName}:{nameof(CollectorConfig.HubEndpoint)}"];
-                        if (string.IsNullOrEmpty(hubEndpoint))
-                            throw new InvalidOperationException("Must specify a hub endpoint in config");
-                        o.Address = new Uri(hubEndpoint);
-                    })
+                string? hubEndpointString = context.Configuration[$"{CollectorConfig.ConfigName}:{nameof(CollectorConfig.HubEndpoint)}"];
+                if (string.IsNullOrEmpty(hubEndpointString))
+                    throw new InvalidOperationException("Must specify a hub endpoint in config");
+                Uri hubEndpoint = new(hubEndpointString);
+
+                IHttpClientBuilder grpcClient = services.AddGrpcClient<RealtimeIngress.RealtimeIngressClient>
+                    (
+                        o => o.Address = hubEndpoint
+                    )
                     .AddCallCredentials((_, metadata) =>
                     {
                         string? hubToken = context.Configuration[$"{CollectorConfig.ConfigName}:{nameof(CollectorConfig.HubToken)}"];
@@ -79,6 +81,9 @@ public static class Program
                             metadata.Add("Authorization", $"Bearer {hubToken}");
                         return Task.CompletedTask;
                     });
+
+                if (hubEndpoint is { IsLoopback: true, Scheme: "http" })
+                    grpcClient.ConfigureChannel(o => o.UnsafeUseInsecureChannelCallCredentials = true);
 
                 services.AddHostedService<ServerConnectionWorker>();
             })

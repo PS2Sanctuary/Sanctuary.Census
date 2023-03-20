@@ -54,7 +54,6 @@ public static class Program
         });
 
         app.UseSerilogRequestLogging();
-        app.UseHttpsRedirection();
         app.MapGrpcService<RealtimeIngressService>();
         app.MapControllers();
 

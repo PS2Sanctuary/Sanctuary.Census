@@ -6,9 +6,9 @@
 public enum FactionDefinition : byte
 {
     /// <summary>
-    /// The given entity is compatible with all factions.
+    /// The given entity has no faction affiliation.
     /// </summary>
-    All = 0,
+    None = 0,
 
     /// <summary>
     /// The given entity is compatible with the Vanu Sovereignty.

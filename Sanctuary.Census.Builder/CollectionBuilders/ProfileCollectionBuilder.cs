@@ -78,7 +78,7 @@ public class ProfileCollectionBuilder : ICollectionBuilder
         {
             profileFactionMap.TryAdd(profile.ProfileID, profile.FactionID);
             if (profileFactionMap[profile.ProfileID] != profile.FactionID)
-                profileFactionMap[profile.ProfileID] = FactionDefinition.All;
+                profileFactionMap[profile.ProfileID] = FactionDefinition.None;
         }
 
         Dictionary<uint, MProfile> builtProfiles = new();

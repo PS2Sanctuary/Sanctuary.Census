@@ -267,7 +267,7 @@ public class ItemCollectionBuilder : ICollectionBuilder
                     return;
 
                 if (itemClassToFaction[classId] != faction)
-                    itemClassToFaction[classId] = FactionDefinition.All;
+                    itemClassToFaction[classId] = FactionDefinition.None;
             }
 
             foreach (LoadoutSlotItemClass lsic in clientDataCache.LoadoutSlotItemClasses)
@@ -301,14 +301,14 @@ public class ItemCollectionBuilder : ICollectionBuilder
             {
                 itemFactionMap.TryAdd(profile.ItemID, profile.FactionID);
                 if (itemFactionMap[profile.ItemID] != profile.FactionID)
-                    itemFactionMap[profile.ItemID] = FactionDefinition.All;
+                    itemFactionMap[profile.ItemID] = FactionDefinition.None;
             }
 
             foreach (ItemVehicle vItem in clientDataCache.ItemVehicles)
             {
                 itemFactionMap.TryAdd(vItem.ItemID, (FactionDefinition)vItem.FactionID);
                 if (itemFactionMap[vItem.ItemID] != (FactionDefinition)vItem.FactionID)
-                    itemFactionMap[vItem.ItemID] = FactionDefinition.All;
+                    itemFactionMap[vItem.ItemID] = FactionDefinition.None;
             }
 
             _itemToFaction = itemFactionMap;
@@ -331,7 +331,7 @@ public class ItemCollectionBuilder : ICollectionBuilder
             if (_itemToFaction.ContainsKey(itemId))
                 return _itemToFaction[itemId];
 
-            return FactionDefinition.All;
+            return FactionDefinition.None;
         }
     }
 }

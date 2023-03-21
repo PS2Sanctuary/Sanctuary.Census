@@ -43,7 +43,6 @@ public static class Program
                 options.JsonSerializerOptions.DefaultIgnoreCondition = JsonIgnoreCondition.Never;
             });
 
-
         builder.Services.AddHostedService<RealtimeCollectionPruneWorker>();
 
         WebApplication app = builder.Build();

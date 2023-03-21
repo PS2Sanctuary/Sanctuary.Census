@@ -1,6 +1,7 @@
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using OpenTelemetry.Resources;
 using OpenTelemetry.Trace;
 using Sanctuary.Census.Common.Extensions;
 using Sanctuary.Census.RealtimeHub;
@@ -38,7 +39,18 @@ public static class Program
                     (
                         tracerProviderBuilder =>
                         {
-                            tracerProviderBuilder.AddServerDataInstrumentation();
+                            tracerProviderBuilder.ConfigureResource
+                            (
+                                resourceBuilder =>
+                                {
+                                    resourceBuilder.AddService
+                                    (
+                                        RealtimeCollectorTelemetry.SERVICE_NAME,
+                                        serviceVersion: RealtimeCollectorTelemetry.SERVICE_VERSION
+                                    );
+                                }
+                            )
+                            .AddServerDataInstrumentation();
 
                             string? otlpEndpoint = context.Configuration["LoggingOptions:OtlpEndpoint"];
                             if (otlpEndpoint is null && context.HostingEnvironment.IsDevelopment())

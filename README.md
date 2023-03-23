@@ -38,15 +38,20 @@ descriptions of the collection's fields.
 > GET /describe/&lt;namespace&gt;/&lt;collection&gt;\
 > e.g https://census.lithafalcon.cc/describe/ps2/fire_mode_2
 
-## Building
+## Building and Deployment
 
-To build Sanctuary.Census, you'll require the [.NET 7 SDK](https://dotnet.microsoft.com/en-us/download/dotnet/7.0).
+To build and run Sanctuary.Census, you'll require the [.NET 7 SDK](https://dotnet.microsoft.com/en-us/download/dotnet/7.0).
 Furthermore, you'll need access to a MongoDB instance. This is simple to [install locally](https://www.mongodb.com/docs/manual/installation/).
 Sanctuary.Census expects the database to be running on the default endpoint of `localhost:27017`, and there is currently
 no way to configure this.
 
-I'm afraid at the current moment, you'll have to make a large number of adjustments to allow compilation.
-This is because I have not open-sourced the server data retrieval component.
+If you intend to deploy your own copy, each application is ready to send logging to a [Seq deployment](https://datalust.co/seq),
+and [OpenTelemetry](https://opentelemetry.io) tracing/metrics to an OTLP-compatible endpoint (such as Jaeger, SigNoz or the OTEL
+Collector). Each application that exposes an API expects to be hosted behind a reverse proxy (in particular, configuration has
+been performed for Nginx).
+
+> **Warning**:
+> A large number of adjustments will be required to compile successfully, as I have not open-sourced the server data retrieval component.
 
 ### Solution Architecture
 

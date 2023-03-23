@@ -2,6 +2,19 @@
 
 Date format: DD/MM/YYYY
 
+## 23/03/2023
+
+🚀 **Additions**
+
+**item**
+- `uint item_class` - The class that the item belongs to.
+
+**loadout_slot_to_item_class**
+- New collection; links a `loadout_slot` to any compatible item classes.
+
+**vehicle_loadout_slot_to_item_class**
+- New collection; links a `vehicle_loadout_slot` to any compatible item classes.
+
 ## 15/03/2023
 
 Pseudo-realtime collections have been added. These update roughly every 2m. See below for more info.

@@ -10,6 +10,7 @@ namespace Sanctuary.Census.Common.Objects.Collections;
 /// <param name="ItemID">The ID of the item.</param>
 /// <param name="ItemTypeID">The type ID of the item</param>
 /// <param name="ItemCategoryID">The ID of the category that the item belongs to.</param>
+/// <param name="ItemClassId">The ID of the class that the item belongs to.</param>
 /// <param name="FactionID">The faction that the item may be used on.</param>
 /// <param name="Name">The name of the item.</param>
 /// <param name="Description">The description of the item.</param>
@@ -37,6 +38,7 @@ public record Item
     [property: JoinKey] uint ItemID,
     uint ItemTypeID,
     [property: JoinKey] uint? ItemCategoryID,
+    [property: JoinKey] uint ItemClassId,
     [property: JoinKey] uint FactionID,
     LocaleString? Name,
     LocaleString? Description,

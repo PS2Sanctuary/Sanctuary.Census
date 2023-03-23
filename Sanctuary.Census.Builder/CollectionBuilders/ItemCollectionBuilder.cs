@@ -98,6 +98,7 @@ public class ItemCollectionBuilder : ICollectionBuilder
                 definition.ID,
                 definition.ItemType,
                 definition.CategoryID.ToNullableUInt(),
+                definition.ItemClass,
                 (uint)faction,
                 name,
                 description,

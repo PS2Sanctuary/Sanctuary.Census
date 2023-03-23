@@ -200,6 +200,9 @@ public static class Program
 
         configProvider.Register<Item>()
             .WithIndex(x => x.ItemID, true)
+            .WithIndex(x => x.ItemCategoryID, false)
+            .WithIndex(x => x.ItemClassId, false)
+            .WithIndex(x => x.ItemTypeID, false)
             .WithIndex(x => x.Name!.En, false)
             .WithEqualityKey(x => x.ItemID);
 
@@ -234,6 +237,14 @@ public static class Program
             .WithIndex(x => x.SlotID, false)
             .WithEqualityKey(x => x.LoadoutID)
             .WithEqualityKey(x => x.SlotID);
+
+        configProvider.Register<LoadoutSlotToItemClass>()
+            .WithIndex(x => x.LoadoutId, false)
+            .WithIndex(x => x.SlotId, false)
+            .WithIndex(x => x.ItemClassId, false)
+            .WithEqualityKey(x => x.LoadoutId)
+            .WithEqualityKey(x => x.SlotId)
+            .WithEqualityKey(x => x.ItemClassId);
 
         configProvider.Register<MapHex>()
             .WithIndex(x => x.MapRegionID, false)
@@ -384,6 +395,14 @@ public static class Program
             .WithEqualityKey(x => x.LoadoutID)
             .WithEqualityKey(x => x.SlotID);
 
+        configProvider.Register<VehicleLoadoutSlotToItemClass>()
+            .WithIndex(x => x.LoadoutId, false)
+            .WithIndex(x => x.SlotId, false)
+            .WithIndex(x => x.ItemClassId, false)
+            .WithEqualityKey(x => x.LoadoutId)
+            .WithEqualityKey(x => x.SlotId)
+            .WithEqualityKey(x => x.ItemClassId);
+
         configProvider.Register<VehicleSkillSet>()
             .WithIndex(x => x.SkillSetID, false)
             .WithIndex(x => x.VehicleID, false)
@@ -484,6 +503,7 @@ public static class Program
             .RegisterCollectionBuilder<ItemToWeaponCollectionBuilder>()
             .RegisterCollectionBuilder<LoadoutCollectionBuilder>()
             .RegisterCollectionBuilder<LoadoutSlotCollectionBuilder>()
+            .RegisterCollectionBuilder<LoadoutSlotToItemClassCollectionsBuilder>()
             .RegisterCollectionBuilder<MapRegionDatasCollectionBuilder>()
             .RegisterCollectionBuilder<MarketingBundleCollectionBuilders>()
             .RegisterCollectionBuilder<OopsCollectionBuilder>()

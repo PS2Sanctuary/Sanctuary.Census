@@ -1,10 +1,8 @@
 ﻿# Sanctuary.Census
 
-An unofficial supplement to [Daybreak Game Company's Census API](https://census.daybreakgames.com), which aims to present up-to-date (and in
-some cases, more in-depth) static PlanetSide 2 data. The methods through which Sanctuary.Census retrieves data allow it to keep itself
-up-to-date (mostly) automatically, until such a time as the structure of the data it depends on, or the methods required to retrieve it, change.
-Major PlanetSide 2 updates will often require small changes in order to update certain collections, which can take a small amount of time to
-implement.
+An unofficial supplement to [Daybreak Game Company's Census API](https://census.daybreakgames.com), which aims to present up-to-date and more
+in-depth PlanetSide 2 data. Data retrieval is fully automated, although major PlanetSide 2 updates will often require small changes in order
+to update certain collections, which can take a small amount of time to implement.
 
 *Sanctuary.Census is in no way affiliated with nor endorsed by either Daybreak Games Company or Rogue Planet Games.*
 
@@ -48,10 +46,15 @@ Sanctuary.Census expects the database to be running on the default endpoint of `
 no way to configure this.
 
 I'm afraid at the current moment, you'll have to make a large number of adjustments to allow compilation.
-This is because I have not open-sourced a particular data retrieval component, and don't have any plans to
-do so in the near future.
+This is because I have not open-sourced the server data retrieval component.
 
-### Solution Structure
+### Solution Architecture
+
+Sanctuary.Census follows the microservice pattern, with independent services responsible for the following primary tasks:
+
+- Data exposure (e.g. the API).
+- Static collection data extraction and collation.
+- Realtime data retrieval.
 
 #### Sanctuary.Census.Common
 
@@ -60,7 +63,7 @@ and the base database context.
 
 #### Sanctuary.Census.Api
 
-This ASP.NET Core Web API project contains the API components, much as the name suggests.
+This project is responsible for serving Census REST queries, via an ASP.NET Core Web API.
 This encompasses parsing the Census REST query format, building a corresponding query to
 the underlying MongoDB database, and converting the result into a JSON model compatible
 with expected Census results.
@@ -73,6 +76,18 @@ and the builder also maintains a diffing provider, in order to show changes to t
 
 The builder uses multiple data source projects - for example, `Sanctuary.Census.ClientData`. Data source projects contain their
 specific data models, data retrieval logic and an object inheriting from `IDataCacheService` responsible for caching their data.
+
+#### Sanctuary.Census.RealtimeHub
+
+This project is responsible for processing realtime data, which includes upserting the database collections and (soon!) distributing
+updates over the EventStream, which includes responsibility for managing the WebSocket connections. It receives data from the
+*realtime collectors* via a gRPC service and uses an ASP.NET Core Web API to provide WebSocket support.
+
+#### Sanctuary.Census.RealtimeCollector
+
+This project contains an independent game server client that is responsible for connecting to a server and retrieving realtime data.
+Collected data is sent to the *realtime hub* using a gRPC connection. Collectors work most efficiently when connecting to only a single
+server, but have support for synchronously cycling between multiple servers.
 
 ## Contributing
 

@@ -20,6 +20,7 @@ public class GroupBuilder
     private readonly string _onField;
     private readonly bool _isList;
     private readonly string? _prefix;
+    private readonly string? _start;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="GroupBuilder"/> class.
@@ -27,11 +28,13 @@ public class GroupBuilder
     /// <param name="onField">The field to group on.</param>
     /// <param name="isList">Whether the group field should contain a list of values.</param>
     /// <param name="prefix">A value to append the names of the group fields.</param>
-    public GroupBuilder(string onField, bool isList, string? prefix)
+    /// <param name="start">The level at which to start the tree.</param>
+    public GroupBuilder(string onField, bool isList, string? prefix, string? start)
     {
         _onField = onField;
         _isList = isList;
         _prefix = prefix;
+        _start = start;
     }
 
     /// <summary>
@@ -84,8 +87,7 @@ public class GroupBuilder
         if (field is null)
             throw new QueryException(QueryErrorCode.MissingRequiredKey, "The 'field' key is required on a tree command");
 
-        // TODO: Handle start
-        return new GroupBuilder(field, isList, prefix);
+        return new GroupBuilder(field, isList, prefix, start);
     }
 
     /// <summary>
@@ -94,6 +96,10 @@ public class GroupBuilder
     /// <param name="aggregatePipeline">The aggregate pipeline to append the group stage to.</param>
     public void BuildAndAppendTo(ref IAggregateFluent<BsonDocument> aggregatePipeline)
     {
+        // TODO: Handle start
+
+        // Create a group on the given field, and push the first/all relevant
+        // document/s into the accumulator
         BsonDocument group = new BsonDocument("_id", $"${_onField}")
             .Add
             (
@@ -105,9 +111,13 @@ public class GroupBuilder
                 )
             );
 
+        // Remove the tree key from the root document
         ProjectionDefinition<BsonDocument> removeTreeKey =
             Builders<BsonDocument>.Projection.Exclude("group_key." + _onField);
 
+        // Convert the group ID field (which now contains the value of _onField)
+        // to a string, or null if relevant. This is required for the root replacement
+        // to succeed
         BsonDocument groupKeyNameConversion = new
         (
             "$convert",
@@ -116,6 +126,7 @@ public class GroupBuilder
                 .Add("onNull", "null")
         );
 
+        // Concatenate the prefix and the converted group ID field
         if (_prefix is not null)
         {
             groupKeyNameConversion = new BsonDocument
@@ -133,7 +144,7 @@ public class GroupBuilder
             "$arrayToObject",
             new BsonArray(new BsonValue[] {
                 new BsonArray(new BsonValue[] {
-                    new BsonDocument("k",groupKeyNameConversion)
+                    new BsonDocument("k", groupKeyNameConversion)
                         .Add("v", "$group_key")
                 })
             })

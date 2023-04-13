@@ -28,13 +28,15 @@ namespace Sanctuary.Census.Common.Objects.Collections;
 /// <param name="LockonAcceleration">Unknown.</param>
 /// <param name="LockonLifespan">The amount of time for which a projectile will maintain a lock.</param>
 /// <param name="LockonLoseAngle">The angle to target at which the projectile will lose its lock.</param>
+/// <param name="LockonProximityDistance">
+/// The range, in half-meters (divide by two in order to match in-game meters), at which a proximity projectile will lock on to a target.
+/// </param>
 /// <param name="LockonSeekInFlight">Indicates whether the projectile will lock-on to a target while in flight.</param>
 /// <param name="ProjectileFlightTypeId">The flight type of the projectile.</param>
 /// <param name="ProjectileFlightTypeDescription">Describes the <paramref name="ProjectileFlightTypeId"/>.</param>
-/// <param name="ProjectileRadiusMeters">The radius of the projectile in meters.</param>
-/// <param name="ProximityLockonRangeHalfMeters">
-/// The range, in half-meters (divide by two in order to match in-game meters), at which a proximity projectile will lock on to a target.
-/// </param>
+/// <param name="ProjectileRadius">The radius of the projectile in meters.</param>
+/// <param name="ProjectileRadiusMeters">Old value for projectile_radius; retained for compatibility.</param>
+/// <param name="ProximityLockonRangeHalfMeters">Old value for lockon_proximity_distance; retained for compatibility.</param>
 /// <param name="Speed">The cruise speed of the projectile.</param>
 /// <param name="SpeedMax">The maximum speed of the projectile.</param>
 /// <param name="Sticky">Indicates whether the projectile is sticky.</param>
@@ -68,9 +70,11 @@ public record Projectile
     decimal? LockonAcceleration,
     decimal? LockonLifespan,
     ushort? LockonLoseAngle,
+    decimal? LockonProximityDistance,
     bool LockonSeekInFlight,
     byte ProjectileFlightTypeId,
     string? ProjectileFlightTypeDescription,
+    decimal ProjectileRadius,
     decimal ProjectileRadiusMeters,
     decimal? ProximityLockonRangeHalfMeters,
     decimal Speed,

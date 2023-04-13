@@ -98,7 +98,7 @@ public class FireModeCollectionBuilder : ICollectionBuilder
                 displayStats?.ArmorPenetration ?? false,
                 (fireMode.Flags & FireModeFlags.Automatic) != 0,
                 new decimal(fireMode.BulletArcKickAngle),
-                fireMode.FireChargeMinimumMs.ToNullableUShort(),
+                fireMode.FireChargeMinimumMs,
                 (fireMode.Flags & FireModeFlags.GriefImmune) != 0,
                 (fireMode.Flags & FireModeFlags.LaserGuided) != 0,
                 (fireMode.Flags & FireModeFlags.IronSights) != 0,

@@ -134,7 +134,7 @@ public record FireMode2
     bool ArmorPenetration,
     bool Automatic,
     decimal BulletArcKickAngle,
-    ushort? ChargeMinimumMs,
+    ushort ChargeMinimumMs,
     bool GriefImmune,
     bool LaserGuided,
     bool IronSights,

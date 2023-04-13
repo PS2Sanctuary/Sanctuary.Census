@@ -121,10 +121,17 @@ public class MapRegionDatasCollectionBuilder : ICollectionBuilder
 
                     OutfitResource? rewardType = null;
                     uint? rewardAmount = null;
+                    MapRegion.OutfitResourceReward? owReward = null;
                     if (facilityOutfitRewards.TryGetValue(region.FacilityID, out (OutfitResource, uint) reward))
                     {
                         rewardType = reward.Item1;
                         rewardAmount = reward.Item2;
+
+                        owReward = new MapRegion.OutfitResourceReward
+                        (
+                            OutfitResourceToName(reward.Item1),
+                            (int)reward.Item2
+                        );
                     }
 
                     bool hasDefaultImage = false;
@@ -148,6 +155,7 @@ public class MapRegionDatasCollectionBuilder : ICollectionBuilder
                         facility is null ? null : new decimal(facility.LocationZ),
                         rewardType?.ToString(),
                         (int?)rewardAmount,
+                        owReward,
                         facility?.IconImageSetId,
                         hasDefaultImage ? defaultImage : null,
                         hasDefaultImage ? _imageSetHelper.GetRelativeImagePath(defaultImage) : null,
@@ -289,6 +297,15 @@ public class MapRegionDatasCollectionBuilder : ICollectionBuilder
         {
             0 => "Unrestricted access",
             2 => "Restricted by faction",
+            _ => "Unknown"
+        };
+
+    private static string OutfitResourceToName(OutfitResource resource)
+        => resource switch
+        {
+            OutfitResource.Auraxium => "Auraxium - Common",
+            OutfitResource.Synthium => "Synthium - Uncommon",
+            OutfitResource.Polystellarite => "Polystellarite - Rare",
             _ => "Unknown"
         };
 }

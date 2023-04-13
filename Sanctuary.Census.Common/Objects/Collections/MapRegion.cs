@@ -17,8 +17,9 @@ namespace Sanctuary.Census.Common.Objects.Collections;
 /// <param name="LocationX">The X coordinate of the center of the region.</param>
 /// <param name="LocationY">The Y coordinate of the center of the region.</param>
 /// <param name="LocationZ">The Z coordinate of the center of the region.</param>
-/// <param name="OutfitResourceRewardTypeDescription">The type of the Outfit Resource rewarded by this facility upon capture.</param>
-/// <param name="OutfitResourceRewardAmount">The amount of the Outfit Resource rewarded by this facility upon capture.</param>
+/// <param name="OutfitResourceRewardTypeDescription">Old value for capture_reward.description; retained for compatibility.</param>
+/// <param name="OutfitResourceRewardAmount">Old value for capture_Reward.amount; retained for compatibility.</param>
+/// <param name="CaptureReward">The outfit resource that is awarded upon capturing the facility.</param>
 /// <param name="ImageSetID">The ID of the facility's image set.</param>
 /// <param name="ImageID">The ID of the facility's default image.</param>
 /// <param name="ImagePath">The relative path to the facility's default image.</param>
@@ -39,9 +40,18 @@ public record MapRegion
     decimal? LocationZ,
     string? OutfitResourceRewardTypeDescription,
     int? OutfitResourceRewardAmount,
+    MapRegion.OutfitResourceReward? CaptureReward,
     [property: JoinKey] uint? ImageSetID,
     [property: JoinKey] uint? ImageID,
     string? ImagePath,
     [property: JoinKey] uint? RewardCurrencyId,
     int? RewardAmount
-) : ISanctuaryCollection;
+) : ISanctuaryCollection
+{
+    /// <summary>
+    /// Represents a map region's outfit resource reward.
+    /// </summary>
+    /// <param name="Amount">The amount of the resource that is rewarded.</param>
+    /// <param name="Description">The type of the resource.</param>
+    public record OutfitResourceReward(string Description, int Amount);
+}

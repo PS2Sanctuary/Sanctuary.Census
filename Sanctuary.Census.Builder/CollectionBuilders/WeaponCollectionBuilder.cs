@@ -76,7 +76,9 @@ public class WeaponCollectionBuilder : ICollectionBuilder
                 definition.MeleeDetectHeight == 0 ? null : new decimal(definition.MeleeDetectHeight),
                 animWieldTypeName,
                 definition.MinPitch == 0 ? null : new decimal(definition.MinPitch),
-                definition.MaxPitch == 0 ? null : new decimal(definition.MaxPitch)
+                definition.MaxPitch == 0 ? null : new decimal(definition.MaxPitch),
+                (definition.Flags & WeaponFlags.EquipNeedsAmmo) != 0,
+                definition.NextUseDelayMs
             );
             builtWeapons.TryAdd(built.WeaponId, built);
         }

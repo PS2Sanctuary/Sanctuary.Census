@@ -9,7 +9,7 @@ namespace Sanctuary.Census.Common.Objects.Collections;
 /// </summary>
 /// <param name="WeaponId">The ID of the weapon.</param>
 /// <param name="WeaponGroupId">The ID of the group that the weapon belongs to.</param>
-/// <param name="EquipNeedsAmmo">Indicates whether the weapon requires ammo to be available to allow equipping.</param>
+/// <param name="EquipNeedsAmmo">Old value for requires_ammo; retained for compatibility reasons.</param>
 /// <param name="EquipMs">The time in milliseconds that it takes to equip this weapon.</param>
 /// <param name="UnequipMs">The time in milliseconds that it takes to unequip this weapon.</param>
 /// <param name="ToIronSightsMs">The time in milliseconds that it takes to scope into the iron sights of this weapon.</param>
@@ -17,7 +17,7 @@ namespace Sanctuary.Census.Common.Objects.Collections;
 /// <param name="ToIronSightsAnimMs">The time in milliseconds that iron-sight scope-in animation takes for this weapon.</param>
 /// <param name="FromIronSightsAnimMs">The time in milliseconds that iron-sight scope-out animation takes for this weapon.</param>
 /// <param name="SprintRecoveryMs">The time in milliseconds that it takes for this weapon to begin resetting its cone-of-fire after sprinting.</param>
-/// <param name="NextUseDelayMs">The minimum time in milliseconds between uses of this weapon.</param>
+/// <param name="NextUseDelayMs">Old value for use_cooldown_ms; retained for compatibility.</param>
 /// <param name="TurnModifier">The turn rate modifier of this weapon.</param>
 /// <param name="MoveModifier">The turn speed modifier of this weapon.</param>
 /// <param name="HeatBleedOffRate">The rate at which heat bleeds off this weapon.</param>
@@ -28,6 +28,8 @@ namespace Sanctuary.Census.Common.Objects.Collections;
 /// <param name="AnimationWieldTypeName">The name of this weapon's animation type.</param>
 /// <param name="MinViewPitch">The minimum view pitch that this weapon can be used at.</param>
 /// <param name="MaxViewPitch">The maximum view pitch that this weapon can be used at.</param>
+/// <param name="RequiresAmmo">Indicates whether the weapon requires ammo to be available to allow equipping.</param>
+/// <param name="UseCooldownMs">The minimum time in milliseconds between uses of this weapon.</param>
 [Collection]
 public record Weapon
 (
@@ -51,5 +53,7 @@ public record Weapon
     decimal? MeleeDetectHeight,
     string? AnimationWieldTypeName,
     decimal? MinViewPitch,
-    decimal? MaxViewPitch
+    decimal? MaxViewPitch,
+    bool RequiresAmmo,
+    uint UseCooldownMs
 ) : ISanctuaryCollection;

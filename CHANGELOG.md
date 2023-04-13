@@ -2,6 +2,33 @@
 
 Date format: DD/MM/YYYY
 
+## 14/04/2023
+
+To retain compatibility with the official Census, new fields have been introduced which map onto existing fields.
+🚨 **The old fields will be removed after at least three months**, in the interests of keeping a clean collection model.
+Please migrate to using the new 'official' fields.
+
+The new fields map onto the old fields as such:
+
+**fire_mode_2**
+- `ability_block_delay_ms` -> `ability_after_fire_delay_ms`
+- `charge_minimum_ms` -> `fire_charge_minimum_ms`
+- `sprint_block_delay_ms` -> `sprint_after_fire_delay_ms`
+
+**map_region**
+- `capture_reward.description` -> `outfit_resource_reward_type_description`
+- `capture_reward.amount` -> `outfit_resource_reward_amount`
+
+Note: `map_region` is now a silver-tier collection, as Census' new `tick_reward` field cannot be filled at this time.
+
+**projectile**
+- `lockon_proximity_distance` -> `projectile_lockon_range_half_meters`
+- `projectile_radius` -> `projectile_radius_meters`
+
+**weapon**
+- `requires_ammo` -> `equip_needs_ammo`
+- `use_cooldown_ms` -> `next_use_delay_ms`
+
 ## 23/03/2023
 
 🚀 **Additions**

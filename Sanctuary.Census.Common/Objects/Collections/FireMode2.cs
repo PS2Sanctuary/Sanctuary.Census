@@ -11,6 +11,7 @@ namespace Sanctuary.Census.Common.Objects.Collections;
 /// <param name="FireModeID">The ID of the fire mode.</param>
 /// <param name="FireModeTypeID">The type of the fire mode.</param>
 /// <param name="Description">A description of the fire mode.</param>
+/// <param name="AbilityBlockDelayMs">The delay in milliseconds before a profile's ability is usable, after firing.</param>
 /// <param name="AbilityID">The ID of the ability that the fire mode applies.</param>
 /// <param name="AmmoItemID"></param>
 /// <param name="AmmoSlot"></param>
@@ -19,13 +20,14 @@ namespace Sanctuary.Census.Common.Objects.Collections;
 /// <param name="ArmorPenetration"></param>
 /// <param name="Automatic"></param>
 /// <param name="BulletArcKickAngle">The relative pitch angle in degrees at which a bullet exits the barrel.</param>
+/// <param name="ChargeMinimumMs">The minimum amount of time that a weapon such as the Scorpion or Corsair catapult must be charged for.</param>
 /// <param name="GriefImmune">Indicates whether grief points can be accumulated when the fire mode is active.</param>
 /// <param name="LaserGuided">Indicates whether projectiles will follow the crosshair when the fire mode is active.</param>
 /// <param name="IronSights"></param>
 /// <param name="SprintFire">Indicates whether the fire mode is usable while sprinting.</param>
 /// <param name="SwayCanSteady">Indicates whether any scope sway applied by the fire mode can be steadied.</param>
 /// <param name="UseInWater">Indicates whether the fire mode is usable underwater.</param>
-/// <param name="AbilityAfterFireDelayMs">The delay in milliseconds before a profile's ability is usable, after firing.</param>
+/// <param name="AbilityAfterFireDelayMs">Old value for ability_block_delay_ms; retained for compatibility.</param>
 /// <param name="CanLock">Indicates whether a lock-on weapon can obtain a lock while the fire mode is active.</param>
 /// <param name="CofOverride"></param>
 /// <param name="CofPelletSpread"></param>
@@ -51,7 +53,7 @@ namespace Sanctuary.Census.Common.Objects.Collections;
 /// <param name="FireAmmoPerShot"></param>
 /// <param name="FireAutoFireMs"></param>
 /// <param name="FireBurstCount"></param>
-/// <param name="FireChargeMinimumMs">The minimum amount of time that a weapon such as the Scorpion or Corsair catapult must be charged for.</param>
+/// <param name="FireChargeMinimumMs">Old value for charge_minimum_ms; retained for compatibility.</param>
 /// <param name="FireChargeUpMs"></param>
 /// <param name="FireCooldownDurationMs"></param>
 /// <param name="FireDelayMs"></param>
@@ -106,7 +108,8 @@ namespace Sanctuary.Census.Common.Objects.Collections;
 /// <param name="ReloadLoopEndMs"></param>
 /// <param name="ReloadTimeMs"></param>
 /// <param name="ShieldBypassPct"></param>
-/// <param name="SprintAfterFireDelayMs">The delay in milliseconds before sprinting can occur, after firing.</param>
+/// <param name="SprintAfterFireDelayMs">Old value for sprint_block_delay_ms; retained for compatiblity.</param>
+/// <param name="SprintBlockDelayMs">The delay in milliseconds before sprinting can occur, after firing.</param>
 /// <param name="SwayAmplitudeX"></param>
 /// <param name="SwayAmplitudeY"></param>
 /// <param name="SwayPeriodX"></param>
@@ -122,6 +125,7 @@ public record FireMode2
     [property: JoinKey] uint FireModeID,
     byte FireModeTypeID,
     LocaleString Description,
+    int? AbilityBlockDelayMs,
     [property: JoinKey] uint? AbilityID,
     uint? AmmoItemID,
     byte AmmoSlot,
@@ -130,6 +134,7 @@ public record FireMode2
     bool ArmorPenetration,
     bool Automatic,
     decimal BulletArcKickAngle,
+    ushort? ChargeMinimumMs,
     bool GriefImmune,
     bool LaserGuided,
     bool IronSights,
@@ -205,6 +210,7 @@ public record FireMode2
     ushort ReloadTimeMs,
     int ShieldBypassPct,
     int? SprintAfterFireDelayMs,
+    int? SprintBlockDelayMs,
     decimal? SwayAmplitudeX,
     decimal? SwayAmplitudeY,
     decimal? SwayPeriodX,

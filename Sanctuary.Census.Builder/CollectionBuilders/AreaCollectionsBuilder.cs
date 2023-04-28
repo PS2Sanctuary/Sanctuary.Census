@@ -42,7 +42,7 @@ public class AreaCollectionsBuilder : ICollectionBuilder
 
             foreach (AreaDefinition area in areas)
             {
-                builtNDZAreas.Add(area.AreaID, new NoDeployArea
+                builtNDZAreas.TryAdd(area.AreaID, new NoDeployArea
                 (
                     area.AreaID,
                     (uint)actualZone,

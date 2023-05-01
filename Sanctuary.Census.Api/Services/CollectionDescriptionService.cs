@@ -1,7 +1,6 @@
 ﻿using Sanctuary.Census.Api.Exceptions;
 using Sanctuary.Census.Api.Models;
 using Sanctuary.Census.Api.Util;
-using Sanctuary.Census.Common;
 using Sanctuary.Census.Common.Json;
 using System;
 using System.Collections.Generic;
@@ -103,10 +102,7 @@ public class CollectionDescriptionService
         Dictionary<string, string?> fieldComments = new();
         string? lastName = null;
 
-        string? executionLocation = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
-        string path = executionLocation is null
-            ? DOCUMENTATION_FILE_NAME
-            : Path.Combine(executionLocation, DOCUMENTATION_FILE_NAME);
+        string path = Path.Combine(AppContext.BaseDirectory, DOCUMENTATION_FILE_NAME);
         using XmlReader reader = XmlReader.Create(path);
 
         while (reader.Read())

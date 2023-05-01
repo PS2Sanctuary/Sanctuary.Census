@@ -2,6 +2,19 @@
 
 Date format: DD/MM/YYYY
 
+## 01/05/2023
+
+🚀 **Additions**
+
+- The `c:has` command now supports the `!` syntax to return only records on which the given field is null.
+  E.g. `c:has=!field1,field2` will return all records on which `field1` is null AND `field2` is _not_ null.
+
+🐛 **Fixes**
+
+**resource**
+- The following fields are now correctly typed as `decimal` values, rather than integers:
+  `initial_value`, `initial_value_max`, `max_value`, `value_marker_lo`, `value_marker_med`, `value_marker_hi`
+
 ## 14/04/2023
 
 To retain compatibility with the official Census, new fields have been introduced which map onto existing fields.

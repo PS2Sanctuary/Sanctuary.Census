@@ -477,10 +477,16 @@ public class CollectionController : ControllerBase
     {
         FilterDefinitionBuilder<BsonDocument> filterBuilder = Builders<BsonDocument>.Filter;
         FilterDefinition<BsonDocument> filter = filterBuilder.Empty;
+
         if (queryParams.HasFields is not null)
         {
             foreach (string value in queryParams.HasFields.SelectMany(s => s.Split(',')))
-                filter &= filterBuilder.Ne(value, BsonNull.Value);
+            {
+                if (value.StartsWith('!'))
+                    filter &= filterBuilder.Eq(value[1..], BsonNull.Value);
+                else
+                    filter &= filterBuilder.Ne(value, BsonNull.Value);
+            }
         }
 
         foreach ((string paramName, StringValues paramValues) in HttpContext.Request.Query)

@@ -148,5 +148,6 @@ public partial record ClientItemDefinition
     uint ClientDisplayRequirementID,
     uint ResourceType,
     int ResourceCost,
-    bool NoGift
+    bool NoGift,
+    uint DeployableId
 );

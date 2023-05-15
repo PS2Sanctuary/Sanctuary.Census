@@ -29,4 +29,9 @@ public sealed class ApiTelemetry
     /// Gets the primary request counter.
     /// </summary>
     public static Counter<long> QueryCounter { get; } = Meter.CreateCounter<long>("api.query_counter");
+
+    /// <summary>
+    /// Gets the primary join counter.
+    /// </summary>
+    public static Counter<long> JoinCounter { get; } = Meter.CreateCounter<long>("api.join_counter");
 }

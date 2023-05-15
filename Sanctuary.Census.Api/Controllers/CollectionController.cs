@@ -211,7 +211,7 @@ public class CollectionController : ControllerBase
             ApiTelemetry.QueryCounter.Add
             (
                 1,
-                new KeyValuePair<string, object?>("environment", parsedEnvironment),
+                new KeyValuePair<string, object?>("environment", parsedEnvironment.ToString().ToLower()),
                 new KeyValuePair<string, object?>("collection", collectionName)
             );
 
@@ -291,7 +291,7 @@ public class CollectionController : ControllerBase
             }
 
             Datatype? datatypeInfo = queryParams.ShowTimings
-                ? (await GetAndCacheDatatypeListAsync(ParseEnvironment(environment), ct).ConfigureAwait(false))
+                ? (await GetAndCacheDatatypeListAsync(parsedEnvironment, ct).ConfigureAwait(false))
                     .FirstOrDefault(d => d.Name == collectionName)
                 : null;
 

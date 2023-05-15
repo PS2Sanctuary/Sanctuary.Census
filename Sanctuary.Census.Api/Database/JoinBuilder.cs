@@ -165,6 +165,12 @@ public class JoinBuilder
         out int builtLookups
     )
     {
+        ApiTelemetry.JoinCounter.Add
+        (
+            1,
+            new KeyValuePair<string, object?>("collection", onCollection)
+        );
+
         BsonDocument built = BuildInternal
         (
             this,

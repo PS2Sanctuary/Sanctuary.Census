@@ -196,13 +196,6 @@ public class CollectionController : ControllerBase
         CancellationToken ct = default
     )
     {
-        ApiTelemetry.QueryCounter.Add
-        (
-            1,
-            new KeyValuePair<string, object?>("environment", environment),
-            new KeyValuePair<string, object?>("collection", collectionName)
-        );
-
         JsonSerializerOptions jsonOptions = GetJsonOptions(queryParams.CensusJsonMode, queryParams.IncludeNullFields);
 
         try
@@ -211,8 +204,17 @@ public class CollectionController : ControllerBase
             (
                 collectionName,
                 environment,
-                queryParams
+                queryParams,
+                out PS2Environment parsedEnvironment
             );
+
+            ApiTelemetry.QueryCounter.Add
+            (
+                1,
+                new KeyValuePair<string, object?>("environment", parsedEnvironment),
+                new KeyValuePair<string, object?>("collection", collectionName)
+            );
+
             List<object> results;
             Stopwatch st = new();
 
@@ -356,7 +358,8 @@ public class CollectionController : ControllerBase
             (
                 collectionName,
                 environment,
-                queryParams
+                queryParams,
+                out _
             );
 
             IAggregateFluent<AggregateCountResult> count = ConstructBasicQuery
@@ -410,7 +413,8 @@ public class CollectionController : ControllerBase
     (
         string collectionName,
         string environment,
-        CollectionQueryParameters queryParams
+        CollectionQueryParameters queryParams,
+        out PS2Environment parsedEnvironment
     )
     {
         if (!CollectionUtils.CheckCollectionExists(collectionName))
@@ -434,8 +438,8 @@ public class CollectionController : ControllerBase
             );
         }
 
-        PS2Environment env = ParseEnvironment(environment);
-        IMongoDatabase db = _mongoContext.GetDatabase(env);
+        parsedEnvironment = ParseEnvironment(environment);
+        IMongoDatabase db = _mongoContext.GetDatabase(parsedEnvironment);
         return db.GetCollection<BsonDocument>(collectionName);
     }
 

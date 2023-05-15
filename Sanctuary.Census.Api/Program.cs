@@ -58,11 +58,11 @@ public static class Program
                 metricsProviderBuilder.AddMeter(ApiTelemetry.Meter.Name);
 
                 string? otlpEndpoint = builder.Configuration["LoggingOptions:OtlpEndpoint"];
-                if (otlpEndpoint is null && builder.Environment.IsDevelopment())
+                if (string.IsNullOrEmpty(otlpEndpoint) && builder.Environment.IsDevelopment())
                 {
                     metricsProviderBuilder.AddConsoleExporter();
                 }
-                else if (otlpEndpoint is not null)
+                else if (!string.IsNullOrEmpty(otlpEndpoint))
                 {
                     metricsProviderBuilder.AddOtlpExporter
                     (

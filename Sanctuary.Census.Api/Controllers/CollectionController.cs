@@ -196,6 +196,13 @@ public class CollectionController : ControllerBase
         CancellationToken ct = default
     )
     {
+        ApiTelemetry.QueryCounter.Add
+        (
+            1,
+            new KeyValuePair<string, object?>("environment", environment),
+            new KeyValuePair<string, object?>("collection", collectionName)
+        );
+
         JsonSerializerOptions jsonOptions = GetJsonOptions(queryParams.CensusJsonMode, queryParams.IncludeNullFields);
 
         try

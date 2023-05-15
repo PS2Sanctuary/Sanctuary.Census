@@ -165,12 +165,6 @@ public class JoinBuilder
         out int builtLookups
     )
     {
-        ApiTelemetry.JoinCounter.Add
-        (
-            1,
-            new KeyValuePair<string, object?>("collection", onCollection)
-        );
-
         BsonDocument built = BuildInternal
         (
             this,
@@ -333,6 +327,12 @@ public class JoinBuilder
         out int builtLookups
     )
     {
+        ApiTelemetry.JoinCounter.Add
+        (
+            1,
+            new KeyValuePair<string, object?>("collection", onCollection)
+        );
+
         builtLookups = 1;
         List<FilterBuilder> filterBuilders = builder.PerformPreBuildChecks(onCollection);
         BsonArray subPipeline = new();

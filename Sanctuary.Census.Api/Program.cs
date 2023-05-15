@@ -5,6 +5,8 @@ using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using OpenTelemetry.Metrics;
+using OpenTelemetry.Resources;
 using Sanctuary.Census.Api.Controllers;
 using Sanctuary.Census.Common.Extensions;
 using Sanctuary.Census.Common.Objects;
@@ -45,6 +47,29 @@ public static class Program
         string? seqApiKey = builder.Configuration["LoggingOptions:SeqApiKey"];
         SetupLogger(seqIngestionEndpoint, seqApiKey);
         builder.Host.UseSerilog();
+
+        builder.Services.AddOpenTelemetry()
+            .WithMetrics(metricsProviderBuilder =>
+            {
+                metricsProviderBuilder.ConfigureResource(resourceBuilder =>
+                {
+                    resourceBuilder.AddService(ApiTelemetry.SERVICE_NAME, serviceVersion: ApiTelemetry.SERVICE_VERSION);
+                });
+                metricsProviderBuilder.AddMeter(ApiTelemetry.Meter.Name);
+
+                string? otlpEndpoint = builder.Configuration["LoggingOptions:OtlpEndpoint"];
+                if (otlpEndpoint is null && builder.Environment.IsDevelopment())
+                {
+                    metricsProviderBuilder.AddConsoleExporter();
+                }
+                else if (otlpEndpoint is not null)
+                {
+                    metricsProviderBuilder.AddOtlpExporter
+                    (
+                        otlpOptions => otlpOptions.Endpoint = new Uri(otlpEndpoint)
+                    );
+                }
+            });
 
         builder.Services.Configure<CommonOptions>(builder.Configuration.GetSection(nameof(CommonOptions)));
 

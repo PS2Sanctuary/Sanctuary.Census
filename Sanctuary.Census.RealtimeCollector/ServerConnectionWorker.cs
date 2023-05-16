@@ -158,6 +158,8 @@ public class ServerConnectionWorker : BackgroundService
                 RemainingCtfFlags = region.RemainingCtfFlags
             };
 
+            mapStateUpdate.Regions.Add(regionState);
+
             if (!popRegions.TryGetValue(region.MapRegionId, out MapRegionPopulation_Region? population))
                 continue;
 
@@ -177,8 +179,6 @@ public class ServerConnectionWorker : BackgroundService
                 double percentage = population.FactionPercentages[i] / (double)byte.MaxValue;
                 regionState.FactionPopulationPercentage.Add(i + 1, (int)(percentage * 100));
             }
-
-            mapStateUpdate.Regions.Add(regionState);
         }
 
         await ingressClient.SubmitMapStateUpdateAsync

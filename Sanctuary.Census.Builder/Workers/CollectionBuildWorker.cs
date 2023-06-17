@@ -9,6 +9,7 @@ using Sanctuary.Census.Builder.Abstractions.Database;
 using Sanctuary.Census.Builder.Abstractions.Services;
 using Sanctuary.Census.Builder.Objects;
 using Sanctuary.Census.ClientData.Abstractions.Services;
+using Sanctuary.Census.Common.Abstractions.Objects.Collections;
 using Sanctuary.Census.Common.Abstractions.Services;
 using Sanctuary.Census.Common.Attributes;
 using Sanctuary.Census.Common.Json;
@@ -189,7 +190,7 @@ public class CollectionBuildWorker : BackgroundService
                 collType.GetCustomAttribute<DescriptionAttribute>()?.Description,
                 count,
                 DateTimeOffset.UtcNow.ToUnixTimeSeconds(),
-                updateIntervalSec
+                collType.IsAssignableTo(typeof(IRealtimeCollection)) ? 0 : updateIntervalSec // TODO: Janky
             );
 
             ReplaceOneModel<Datatype> upsertModel = new

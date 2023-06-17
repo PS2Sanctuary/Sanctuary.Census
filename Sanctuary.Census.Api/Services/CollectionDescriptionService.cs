@@ -82,6 +82,23 @@ public class CollectionDescriptionService
                 ? Nullable.GetUnderlyingType(property.PropertyType)!.Name
                 : property.PropertyType.Name;
 
+            if (property.PropertyType.IsAssignableTo(typeof(IDictionary<,>)))
+                typeName = "Dictionary";
+            else if (property.PropertyType.IsAssignableTo(typeof(IEnumerable<>)))
+                typeName = "Array";
+
+            if (property.PropertyType.IsGenericType)
+            {
+                typeName = typeName.Remove(typeName.IndexOf('`'));
+                typeName += '<';
+
+                foreach (Type genericType in property.PropertyType.GenericTypeArguments)
+                    typeName += genericType.Name + ',';
+
+                typeName = typeName.Trim(',');
+                typeName += '>';
+            }
+
             fieldInfos.Add(new CollectionFieldInformation
             (
                 SnakeCaseJsonNamingPolicy.Default.ConvertName(property.Name),
@@ -122,7 +139,16 @@ public class CollectionDescriptionService
                 if (lastName != null)
                 {
                     string inner = reader.ReadInnerXml();
-                    fieldComments[lastName] = inner.Length == 0 ? null : inner.Trim();
+                    if (inner.Length is 0)
+                        continue;
+
+                    string description = inner.Trim()
+                        .Replace("\n", string.Empty)
+                        .Replace("\r", string.Empty)
+                        .Replace("\t", string.Empty)
+                        .Replace("            ", " "); // Comes after line-breaks in XML docs
+
+                    fieldComments[lastName] = description;
                 }
                 lastName = null;
             }

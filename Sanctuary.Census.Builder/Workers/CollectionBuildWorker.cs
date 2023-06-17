@@ -184,13 +184,22 @@ public class CollectionBuildWorker : BackgroundService
             long count = await database.GetCollection(collType)
                 .CountDocumentsAsync(new BsonDocument(), cancellationToken: ct);
 
+            long lastUpdated = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
+            int updateInterval = updateIntervalSec;
+
+            if (collType.IsAssignableTo(typeof(IRealtimeCollection)))
+            {
+                lastUpdated = 0;
+                updateInterval = 0;
+            }
+
             Datatype type = new
             (
                 name,
                 collType.GetCustomAttribute<DescriptionAttribute>()?.Description,
                 count,
-                DateTimeOffset.UtcNow.ToUnixTimeSeconds(),
-                collType.IsAssignableTo(typeof(IRealtimeCollection)) ? 0 : updateIntervalSec // TODO: Janky
+                lastUpdated,
+                updateInterval
             );
 
             ReplaceOneModel<Datatype> upsertModel = new

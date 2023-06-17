@@ -1,15 +1,18 @@
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Sanctuary.Census.Common.Extensions;
-using Sanctuary.Census.Common.Json;
 using Sanctuary.Census.Common.Objects;
 using Sanctuary.Census.RealtimeHub.Services;
+using Sanctuary.Census.RealtimeHub.Workers;
 using Serilog;
 using Serilog.Events;
-using System.Text.Json.Serialization;
+using System.Net.WebSockets;
+using System.Threading.Tasks;
+using WebSocketManager = Sanctuary.Census.RealtimeHub.Services.WebSocketManager;
 
 namespace Sanctuary.Census.RealtimeHub;
 
@@ -33,17 +36,12 @@ public static class Program
         builder.Services.Configure<CommonOptions>(builder.Configuration.GetSection(nameof(CommonOptions)));
 
         builder.Services.AddCommonServices(builder.Environment);
+        builder.Services.AddSingleton<WebSocketManager>();
 
         builder.Services.AddGrpc();
 
-        builder.Services.AddControllers()
-            .AddJsonOptions(options =>
-            {
-                options.JsonSerializerOptions.PropertyNamingPolicy = new SnakeCaseJsonNamingPolicy();
-                options.JsonSerializerOptions.DefaultIgnoreCondition = JsonIgnoreCondition.Never;
-            });
-
         builder.Services.AddHostedService<RealtimeCollectionPruneWorker>();
+        builder.Services.AddHostedService<WebSocketWorker>();
 
         WebApplication app = builder.Build();
 
@@ -53,8 +51,31 @@ public static class Program
         });
 
         app.UseSerilogRequestLogging();
+        app.UseWebSockets();
+
         app.MapGrpcService<RealtimeIngressService>();
-        app.MapControllers();
+
+        app.Use(async (context, next) =>
+        {
+            if (context.Request.Path != "/eventstream")
+            {
+                await next(context);
+                return;
+            }
+
+            if (!context.WebSockets.IsWebSocketRequest)
+            {
+                context.Response.StatusCode = StatusCodes.Status400BadRequest;
+                return;
+            }
+
+            using WebSocket webSocket = await context.WebSockets.AcceptWebSocketAsync();
+            TaskCompletionSource<object> socketFinishedTcs = new();
+
+            context.RequestServices.GetRequiredService<WebSocketManager>()
+                .AddWebSocket(webSocket, socketFinishedTcs);
+            await socketFinishedTcs.Task;
+        });
 
         app.Run();
     }

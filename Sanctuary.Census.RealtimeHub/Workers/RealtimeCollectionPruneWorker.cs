@@ -10,7 +10,7 @@ using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Sanctuary.Census.RealtimeHub;
+namespace Sanctuary.Census.RealtimeHub.Workers;
 
 /// <summary>
 /// A background worker that prunes stale entries from realtime collections.

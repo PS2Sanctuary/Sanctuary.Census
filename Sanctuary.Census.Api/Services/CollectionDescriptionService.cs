@@ -78,7 +78,10 @@ public class CollectionDescriptionService
                 );
             }
 
-            string typeName = nullInfo.ReadState == NullabilityState.Nullable && property.PropertyType.IsValueType
+            bool isNullableValueType = nullInfo.ReadState == NullabilityState.Nullable
+                && property.PropertyType.IsValueType;
+
+            string typeName = isNullableValueType
                 ? Nullable.GetUnderlyingType(property.PropertyType)!.Name
                 : property.PropertyType.Name;
 
@@ -87,7 +90,7 @@ public class CollectionDescriptionService
             else if (property.PropertyType.IsAssignableTo(typeof(IEnumerable<>)))
                 typeName = "Array";
 
-            if (property.PropertyType.IsGenericType)
+            if (property.PropertyType.IsGenericType && !isNullableValueType)
             {
                 typeName = typeName.Remove(typeName.IndexOf('`'));
                 typeName += '<';

@@ -89,37 +89,37 @@ public static class Program
             .WithIndex(x => x.DirectiveID, true)
             .WithIndex(x => x.DirectiveTreeID, false)
             .WithEqualityKey(x => x.DirectiveID)
-            .WithRemoveOldEntryTest(_ => false);
+            .WithRemoveOldEntryTest(static _ => false);
 
         configProvider.Register<DirectiveTree>()
             .WithIndex(x => x.DirectiveTreeID, true)
             .WithIndex(x => x.DirectiveTreeCategoryID, false)
             .WithEqualityKey(x => x.DirectiveTreeID)
-            .WithRemoveOldEntryTest(_ => false);
+            .WithRemoveOldEntryTest(static _ => false);
 
         configProvider.Register<DirectiveTier>()
             .WithIndex(x => x.DirectiveTreeID, false)
             .WithEqualityKey(x => x.DirectiveTreeID)
             .WithEqualityKey(x => x.DirectiveTierID)
-            .WithRemoveOldEntryTest(_ => false);
+            .WithRemoveOldEntryTest(static _ => false);
 
         configProvider.Register<DirectiveTierReward>()
             .WithIndex(x => x.RewardSetID, false)
             .WithIndex(x => x.ItemID, false)
             .WithEqualityKey(x => x.RewardSetID)
             .WithEqualityKey(x => x.ItemID)
-            .WithRemoveOldEntryTest(_ => false);
+            .WithRemoveOldEntryTest(static _ => false);
 
         configProvider.Register<DirectiveTierRewardSet>()
             .WithIndex(x => x.RewardSetID, false)
             .WithEqualityKey(x => x.RewardSetID)
             .WithEqualityKey(x => x.FactionId)
-            .WithRemoveOldEntryTest(_ => false);
+            .WithRemoveOldEntryTest(static _ => false);
 
         configProvider.Register<DirectiveTreeCategory>()
             .WithIndex(x => x.DirectiveTreeCategoryID, true)
             .WithEqualityKey(x => x.DirectiveTreeCategoryID)
-            .WithRemoveOldEntryTest(_ => false);
+            .WithRemoveOldEntryTest(static _ => false);
 
         configProvider.Register<Experience>()
             .WithIndex(x => x.ExperienceID, true)
@@ -137,7 +137,7 @@ public static class Program
             .WithEqualityKey(x => x.FacilityID)
             .WithRemoveOldEntryTest
             (
-                r => r.ZoneID is not (ushort)ZoneDefinition.Nexus
+                static r => r.ZoneID is not (ushort)ZoneDefinition.Nexus
                     && r.ZoneID is not (ushort)ZoneDefinition.Tutorial2
             );
 
@@ -149,7 +149,7 @@ public static class Program
             .WithEqualityKey(x => x.FacilityIdB)
             .WithRemoveOldEntryTest
             (
-                r => r.ZoneID is not (uint)ZoneDefinition.Nexus
+                static r => r.ZoneID is not (uint)ZoneDefinition.Nexus
                     && r.ZoneID is not (uint)ZoneDefinition.Tutorial2
             );
 
@@ -254,7 +254,7 @@ public static class Program
             .WithEqualityKey(x => x.Y)
             .WithRemoveOldEntryTest
             (
-                r => r.ZoneID is not (uint)ZoneDefinition.Nexus
+                static r => r.ZoneID is not (uint)ZoneDefinition.Nexus
                     && r.ZoneID is not (uint)ZoneDefinition.Tutorial2
             );
 
@@ -264,7 +264,7 @@ public static class Program
             .WithEqualityKey(x => x.MapRegionId)
             .WithRemoveOldEntryTest
             (
-                r => r.ZoneId is not (uint)ZoneDefinition.Nexus
+                static r => r.ZoneId is not (uint)ZoneDefinition.Nexus
                     && r.ZoneId is not (uint)ZoneDefinition.Tutorial2
             );
 
@@ -296,32 +296,32 @@ public static class Program
         configProvider.Register<OutfitWar>()
             .WithIndex(x => x.OutfitWarID, true)
             .WithEqualityKey(x => x.OutfitWarID)
-            .WithRemoveOldEntryTest(_ => false);
+            .WithRemoveOldEntryTest(static _ => false);
 
         configProvider.Register<OutfitWarMatch>()
             .WithIndex(x => x.OutfitWarID, false)
             .WithIndex(x => x.RoundID, false)
             .WithEqualityKey(x => x.MatchID)
-            .WithRemoveOldEntryTest(_ => false);
+            .WithRemoveOldEntryTest(static _ => false);
 
         configProvider.Register<OutfitWarRanking>()
             .WithIndex(x => x.RoundID, false)
             .WithIndex(x => x.OutfitID, false)
             .WithEqualityKey(x => x.RoundID)
             .WithEqualityKey(x => x.OutfitID)
-            .WithRemoveOldEntryTest(_ => false);
+            .WithRemoveOldEntryTest(static _ => false);
 
         configProvider.Register<OutfitWarRegistration>()
             .WithIndex(x => x.OutfitID, false)
             .WithIndex(x => x.WorldID, false)
             .WithEqualityKey(x => x.OutfitID)
-            .WithRemoveOldEntryTest(_ => false);
+            .WithRemoveOldEntryTest(static _ => false);
 
         configProvider.Register<OutfitWarRound>()
             .WithIndex(x => x.RoundID, true)
             .WithIndex(x => x.OutfitWarID, false)
             .WithEqualityKey(x => x.RoundID)
-            .WithRemoveOldEntryTest(_ => false);
+            .WithRemoveOldEntryTest(static _ => false);
 
         configProvider.Register<PlayerStateGroup2>()
             .WithIndex(x => x.PlayerStateGroupId, false)
@@ -439,7 +439,7 @@ public static class Program
         configProvider.Register<Common.Objects.Collections.Zone>()
             .WithIndex(x => x.ZoneID, true)
             .WithEqualityKey(x => x.ZoneID)
-            .WithRemoveOldEntryTest(_ => false);
+            .WithRemoveOldEntryTest(static _ => false);
 
         // Realtime registration
 
@@ -471,7 +471,7 @@ public static class Program
             .WithEqualityKey(x => x.WorldId)
             .WithRemoveOldEntryTest
             (
-                x => DateTimeOffset.FromUnixTimeSeconds(x.Timestamp)
+                static x => DateTimeOffset.FromUnixTimeSeconds(x.Timestamp)
                     .Add(TimeSpan.FromMinutes(10)) < DateTimeOffset.UtcNow
             )
             .IsDynamic();

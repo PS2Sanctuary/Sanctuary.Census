@@ -66,7 +66,7 @@ public class CollectionDbConfiguration<TCollection> : ICollectionDbConfiguration
     {
         _equalitySelectors = new List<Expression<Func<TCollection, object?>>>();
         _indexes = new List<(Expression<Func<TCollection, object?>>, bool)>();
-        RemoveOldEntryTest = _ => true;
+        RemoveOldEntryTest = static _ => true;
     }
 
     /// <summary>

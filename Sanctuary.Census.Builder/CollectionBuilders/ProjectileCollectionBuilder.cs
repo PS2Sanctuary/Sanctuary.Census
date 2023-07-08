@@ -100,8 +100,6 @@ public class ProjectileCollectionBuilder : ICollectionBuilder
                 projectile.ProjectileFlightTypeID,
                 FlightTypeToString(projectile.ProjectileFlightTypeID),
                 new decimal(projectile.ProjectileRadiusMeters),
-                new decimal(projectile.ProjectileRadiusMeters),
-                projectile.ProximityLockonRangeHalfMeters.ToNullableDecimal(),
                 new decimal(projectile.Speed),
                 projectile.SpeedMax.ToNullableDecimal(),
                 (projectile.Flags & ProjectileFlags.Sticky) != 0,

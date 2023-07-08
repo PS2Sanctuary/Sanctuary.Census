@@ -35,8 +35,6 @@ namespace Sanctuary.Census.Common.Objects.Collections;
 /// <param name="ProjectileFlightTypeId">The flight type of the projectile.</param>
 /// <param name="ProjectileFlightTypeDescription">Describes the <paramref name="ProjectileFlightTypeId"/>.</param>
 /// <param name="ProjectileRadius">The radius of the projectile in meters.</param>
-/// <param name="ProjectileRadiusMeters">Old value for projectile_radius; retained for compatibility.</param>
-/// <param name="ProximityLockonRangeHalfMeters">Old value for lockon_proximity_distance; retained for compatibility.</param>
 /// <param name="Speed">The cruise speed of the projectile.</param>
 /// <param name="SpeedMax">The maximum speed of the projectile.</param>
 /// <param name="Sticky">Indicates whether the projectile is sticky.</param>
@@ -75,8 +73,6 @@ public record Projectile
     byte ProjectileFlightTypeId,
     string? ProjectileFlightTypeDescription,
     decimal ProjectileRadius,
-    decimal ProjectileRadiusMeters,
-    decimal? ProximityLockonRangeHalfMeters,
     decimal Speed,
     decimal? SpeedMax,
     bool Sticky,

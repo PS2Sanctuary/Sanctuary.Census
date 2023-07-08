@@ -2,6 +2,20 @@
 
 Date format: DD/MM/YYYY
 
+## vNext
+
+#### 🚀 Additions
+
+**zone_population_limits**
+- New collection. Exposes the number of characters allowed on a zone.
+
+#### 🚨 Breaking changes
+
+- The old fields mentioned in the update notes for [14/04/2023](#14042023) have now been removed.
+
+- 'Realtime' collections will now display a value of `-1` for their `last_updated` and `update_interval_sec`
+fields on the root datatype endpoint.
+
 ## 01/05/2023
 
 🚀 **Additions**

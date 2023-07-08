@@ -17,8 +17,6 @@ namespace Sanctuary.Census.Common.Objects.Collections;
 /// <param name="LocationX">The X coordinate of the center of the region.</param>
 /// <param name="LocationY">The Y coordinate of the center of the region.</param>
 /// <param name="LocationZ">The Z coordinate of the center of the region.</param>
-/// <param name="OutfitResourceRewardTypeDescription">Old value for capture_reward.description; retained for compatibility.</param>
-/// <param name="OutfitResourceRewardAmount">Old value for capture_Reward.amount; retained for compatibility.</param>
 /// <param name="CaptureReward">The outfit resource that is awarded upon capturing the facility.</param>
 /// <param name="ImageSetID">The ID of the facility's image set.</param>
 /// <param name="ImageID">The ID of the facility's default image.</param>
@@ -38,8 +36,6 @@ public record MapRegion
     decimal? LocationX,
     decimal? LocationY,
     decimal? LocationZ,
-    string? OutfitResourceRewardTypeDescription,
-    int? OutfitResourceRewardAmount,
     MapRegion.OutfitResourceReward? CaptureReward,
     [property: JoinKey] uint? ImageSetID,
     [property: JoinKey] uint? ImageID,

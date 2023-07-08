@@ -58,7 +58,6 @@ public class WeaponCollectionBuilder : ICollectionBuilder
             (
                 definition.WeaponID,
                 definition.GroupID == 0 ? null : definition.GroupID,
-                (definition.Flags & WeaponFlags.EquipNeedsAmmo) != 0,
                 definition.EquipMs,
                 definition.UnequipMs,
                 definition.ToIronSightsMs,
@@ -66,7 +65,6 @@ public class WeaponCollectionBuilder : ICollectionBuilder
                 definition.ToIronSightsAnimMs,
                 definition.FromIronSightsAnimMs,
                 definition.SprintRecoveryMs,
-                definition.NextUseDelayMs,
                 new decimal(definition.TurnRateModifier),
                 new decimal(definition.MoveSpeedModifier),
                 definition.HeatBleedoffRate == 0 ? null : definition.HeatBleedoffRate,

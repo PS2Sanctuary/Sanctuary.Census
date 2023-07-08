@@ -27,7 +27,6 @@ namespace Sanctuary.Census.Common.Objects.Collections;
 /// <param name="SprintFire">Indicates whether the fire mode is usable while sprinting.</param>
 /// <param name="SwayCanSteady">Indicates whether any scope sway applied by the fire mode can be steadied.</param>
 /// <param name="UseInWater">Indicates whether the fire mode is usable underwater.</param>
-/// <param name="AbilityAfterFireDelayMs">Old value for ability_block_delay_ms; retained for compatibility.</param>
 /// <param name="CanLock">Indicates whether a lock-on weapon can obtain a lock while the fire mode is active.</param>
 /// <param name="CofOverride"></param>
 /// <param name="CofPelletSpread"></param>
@@ -39,21 +38,24 @@ namespace Sanctuary.Census.Common.Objects.Collections;
 /// <param name="DamageLegsMultiplier"></param>
 /// <param name="DamageIndirectEffectID"></param>
 /// <param name="DeployAnimTimeMs">
-/// Time taken by the deployment animation of a relevant weapon, e.g. the Shield Recharging Device. May have additional functionality.
+/// Time taken by the deployment animation of a relevant weapon, e.g. the Shield Recharging Device.
+/// May have additional functionality.
 /// </param>
 /// <param name="FanAngle">
-/// The angle in degrees at which fan-based pellets, such as those on the VE-C Horizon, diverge from their rotational axis at.
+/// The angle in degrees at which fan-based pellets, such as those on the VE-C Horizon,
+/// diverge from their rotational axis at.
 /// </param>
 /// <param name="FanAngleRotateDegrees">
-/// The degree of rotation in the XY plane (that is, the viewing plane of the user) at which fan-based pellets are rotated.
+/// The degree of rotation in the XY plane (that is, the viewing plane of the user) at which fan-based
+/// pellets are rotated.
 /// </param>
 /// <param name="FanConicalSpread">
-/// The maximum distance at which fan-based pellets are spread from each other, by means of a dedicated 'cone of fire' for each pellet.
+/// The maximum distance at which fan-based pellets are spread from each other, by means of a dedicated
+/// 'cone of fire' for each pellet.
 /// </param>
 /// <param name="FireAmmoPerShot"></param>
 /// <param name="FireAutoFireMs"></param>
 /// <param name="FireBurstCount"></param>
-/// <param name="FireChargeMinimumMs">Old value for charge_minimum_ms; retained for compatibility.</param>
 /// <param name="FireChargeUpMs"></param>
 /// <param name="FireCooldownDurationMs"></param>
 /// <param name="FireDelayMs"></param>
@@ -99,7 +101,7 @@ namespace Sanctuary.Census.Common.Objects.Collections;
 /// <param name="RecoilShotsAtMinMagnitude"></param>
 /// <param name="ReloadAmmoFillMs"></param>
 /// <param name="ReloadBlockAuto">
-/// Better know as BlockAutoReload. Indicates whether the fire mode prevents the weapon from automatically
+/// Better know as Block Auto-Reload. Indicates whether the fire mode prevents the weapon from automatically
 /// reloading when the magazine is depleted.
 /// </param>
 /// <param name="ReloadChamberMs"></param>
@@ -108,7 +110,6 @@ namespace Sanctuary.Census.Common.Objects.Collections;
 /// <param name="ReloadLoopEndMs"></param>
 /// <param name="ReloadTimeMs"></param>
 /// <param name="ShieldBypassPct"></param>
-/// <param name="SprintAfterFireDelayMs">Old value for sprint_block_delay_ms; retained for compatiblity.</param>
 /// <param name="SprintBlockDelayMs">The delay in milliseconds before sprinting can occur, after firing.</param>
 /// <param name="SwayAmplitudeX"></param>
 /// <param name="SwayAmplitudeY"></param>
@@ -141,7 +142,6 @@ public record FireMode2
     bool SprintFire,
     bool SwayCanSteady,
     bool UseInWater,
-    int? AbilityAfterFireDelayMs,
     bool CanLock,
     decimal CofOverride,
     decimal CofPelletSpread,
@@ -159,7 +159,6 @@ public record FireMode2
     byte FireAmmoPerShot,
     ushort FireAutoFireMs,
     byte FireBurstCount,
-    ushort? FireChargeMinimumMs,
     ushort FireChargeUpMs,
     ushort FireCooldownDurationMs,
     ushort FireDelayMs,
@@ -209,7 +208,6 @@ public record FireMode2
     ushort? ReloadLoopEndMs,
     ushort ReloadTimeMs,
     int ShieldBypassPct,
-    int? SprintAfterFireDelayMs,
     int? SprintBlockDelayMs,
     decimal? SwayAmplitudeX,
     decimal? SwayAmplitudeY,

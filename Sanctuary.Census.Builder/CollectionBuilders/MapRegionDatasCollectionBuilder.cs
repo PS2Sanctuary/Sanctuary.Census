@@ -119,14 +119,9 @@ public class MapRegionDatasCollectionBuilder : ICollectionBuilder
                     regionFacilityInfos.TryGetValue(region.MapRegionID_1, out MapRegion_ExternalFacilityData_Facility? facility);
                     facilityTypeDescriptions.TryGetValue(region.FacilityTypeID, out string? facTypeDescription);
 
-                    OutfitResource? rewardType = null;
-                    uint? rewardAmount = null;
                     MapRegion.OutfitResourceReward? owReward = null;
                     if (facilityOutfitRewards.TryGetValue(region.FacilityID, out (OutfitResource, uint) reward))
                     {
-                        rewardType = reward.Item1;
-                        rewardAmount = reward.Item2;
-
                         owReward = new MapRegion.OutfitResourceReward
                         (
                             OutfitResourceToName(reward.Item1),
@@ -153,8 +148,6 @@ public class MapRegionDatasCollectionBuilder : ICollectionBuilder
                         facility is null ? null : new decimal(facility.LocationX),
                         facility is null ? null : new decimal(facility.LocationY),
                         facility is null ? null : new decimal(facility.LocationZ),
-                        rewardType?.ToString(),
-                        (int?)rewardAmount,
                         owReward,
                         facility?.IconImageSetId,
                         hasDefaultImage ? defaultImage : null,

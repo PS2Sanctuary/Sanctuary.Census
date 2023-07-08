@@ -3,6 +3,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using MongoDB.Driver;
 using Sanctuary.Census.Common.Abstractions.Objects.Collections;
+using Sanctuary.Census.Common.Abstractions.Objects.RealtimeEvents;
 using Sanctuary.Census.Common.Abstractions.Services;
 using System;
 using System.Linq;
@@ -45,9 +46,9 @@ public class RealtimeCollectionPruneWorker : BackgroundService
     {
         PeriodicTimer pruneTimer = new(TimeSpan.FromMinutes(2));
 
-        Type[] realtimeCollections = typeof(IRealtimeCollection).Assembly
+        Type[] realtimeCollections = typeof(IRealtimeEvent).Assembly
             .GetTypes()
-            .Where(t => t.IsAssignableTo(typeof(IRealtimeCollection)))
+            .Where(t => t.IsAssignableTo(typeof(IRealtimeEvent)) && t.IsAssignableTo(typeof(ISanctuaryCollection)))
             .ToArray();
 
         while (!ct.IsCancellationRequested)
@@ -87,7 +88,7 @@ public class RealtimeCollectionPruneWorker : BackgroundService
     }
 
     private static async Task DeleteStaleEntriesAsync<TCollection>(IMongoContext context, CancellationToken ct)
-        where TCollection : IRealtimeCollection
+        where TCollection : IRealtimeEvent
     {
         IMongoCollection<TCollection> collection = context.GetCollection<TCollection>();
 

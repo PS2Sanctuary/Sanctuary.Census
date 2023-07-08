@@ -1,9 +1,9 @@
-﻿using MongoDB.Bson.Serialization.Attributes;
-using Sanctuary.Census.Common.Abstractions.Objects.Collections;
+﻿using Sanctuary.Census.Common.Abstractions.Objects.Collections;
+using Sanctuary.Census.Common.Abstractions.Objects.RealtimeEvents;
 using Sanctuary.Census.Common.Attributes;
 using Sanctuary.Census.Common.Objects.CommonModels;
 
-namespace Sanctuary.Census.Common.Objects.Collections;
+namespace Sanctuary.Census.Common.Objects.RealtimeEvents;
 
 /// <summary>
 /// Represents data pertaining to the capture status of a zone map.
@@ -47,4 +47,8 @@ public record MapState
     int RemainingCtfFlags,
     ValueEqualityDictionary<FactionDefinition, int> FactionPopulationUpperBound,
     ValueEqualityDictionary<FactionDefinition, byte> FactionPopulationPercentage
-) : IRealtimeCollection;
+) : IRealtimeEvent, ISanctuaryCollection
+{
+    /// <inheritdoc />
+    public string EventName => "MapStateUpdate";
+}

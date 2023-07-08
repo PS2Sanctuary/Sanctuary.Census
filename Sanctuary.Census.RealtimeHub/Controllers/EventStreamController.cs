@@ -53,7 +53,7 @@ public class EventStreamController : ControllerBase
         using CancellationTokenSource cancelCts
             = CancellationTokenSource.CreateLinkedTokenSource(_lifetime.ApplicationStopping);
 
-        _manager.RegisterWebSocket(webSocket, cancelCts);
+        await _manager.RegisterWebSocket(webSocket, cancelCts);
 
         try
         {

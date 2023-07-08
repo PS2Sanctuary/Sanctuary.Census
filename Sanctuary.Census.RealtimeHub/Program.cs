@@ -1,5 +1,4 @@
 using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -10,9 +9,6 @@ using Sanctuary.Census.RealtimeHub.Services;
 using Sanctuary.Census.RealtimeHub.Workers;
 using Serilog;
 using Serilog.Events;
-using System;
-using System.Net.WebSockets;
-using System.Threading;
 
 namespace Sanctuary.Census.RealtimeHub;
 

@@ -9,7 +9,7 @@ using Sanctuary.Census.Builder.Abstractions.Database;
 using Sanctuary.Census.Builder.Abstractions.Services;
 using Sanctuary.Census.Builder.Objects;
 using Sanctuary.Census.ClientData.Abstractions.Services;
-using Sanctuary.Census.Common.Abstractions.Objects.Collections;
+using Sanctuary.Census.Common.Abstractions.Objects.RealtimeEvents;
 using Sanctuary.Census.Common.Abstractions.Services;
 using Sanctuary.Census.Common.Attributes;
 using Sanctuary.Census.Common.Json;
@@ -187,10 +187,10 @@ public class CollectionBuildWorker : BackgroundService
             long lastUpdated = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
             int updateInterval = updateIntervalSec;
 
-            if (collType.IsAssignableTo(typeof(IRealtimeCollection)))
+            if (collType.IsAssignableTo(typeof(IRealtimeEvent)))
             {
-                lastUpdated = 0;
-                updateInterval = 0;
+                lastUpdated = -1;
+                updateInterval = -1;
             }
 
             Datatype type = new

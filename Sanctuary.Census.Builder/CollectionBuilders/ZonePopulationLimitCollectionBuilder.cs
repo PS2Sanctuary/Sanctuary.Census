@@ -3,6 +3,7 @@ using Sanctuary.Census.Builder.Abstractions.Database;
 using Sanctuary.Census.Builder.Exceptions;
 using Sanctuary.Census.Common.Objects;
 using Sanctuary.Census.Common.Objects.Collections;
+using Sanctuary.Census.Common.Objects.RealtimeEvents;
 using Sanctuary.Census.ServerData.Internal.Abstractions.Services;
 using Sanctuary.Common.Objects;
 using Sanctuary.Zone.Packets.Server;

@@ -1,10 +1,15 @@
-﻿namespace Sanctuary.Census.Common.Abstractions.Objects.Collections;
+﻿namespace Sanctuary.Census.Common.Abstractions.Objects.RealtimeEvents;
 
 /// <summary>
-/// Represents a collection that contains 'realtime' data.
+/// Represents an event-stream event.
 /// </summary>
-public interface IRealtimeCollection : ISanctuaryCollection
+public interface IRealtimeEvent
 {
+    /// <summary>
+    /// Gets the name of the event.
+    /// </summary>
+    public string EventName { get; }
+
     /// <summary>
     /// The ID of the world on which the realtime entry was generated.
     /// </summary>

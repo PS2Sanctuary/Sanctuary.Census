@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.Logging;
+using Sanctuary.Census.Common.Abstractions.Objects.RealtimeEvents;
 using Sanctuary.Census.Common.Json;
 using Sanctuary.Census.RealtimeHub.Objects.Control;
 using System;
@@ -6,6 +7,8 @@ using System.Buffers;
 using System.Collections.Generic;
 using System.Net.WebSockets;
 using System.Text.Json;
+using System.Text.Json.Nodes;
+using System.Text.Json.Serialization;
 using System.Threading;
 using System.Threading.Channels;
 using System.Threading.Tasks;
@@ -24,7 +27,6 @@ public sealed class EventStreamSocketManager : IDisposable
         private readonly Utf8JsonWriter _jsonWriter;
 
         public SemaphoreSlim WriteSemaphore { get; }
-        public ReadOnlyMemory<byte> CurrentWriteBuffer => _bufferWriter.WrittenMemory;
 
         public WebSocketBundle(CancellationTokenSource socketConnectionCancelCts)
         {
@@ -45,8 +47,11 @@ public sealed class EventStreamSocketManager : IDisposable
             return _jsonWriter;
         }
 
-        public void EndWriting()
-            => WriteSemaphore.Release();
+        public async Task EndWriting(WebSocket socket, CancellationToken ct)
+        {
+            await socket.SendAsync(_bufferWriter.WrittenMemory, WebSocketMessageType.Text, true, ct);
+            WriteSemaphore.Release();
+        }
 
         public void Dispose()
         {
@@ -59,14 +64,17 @@ public sealed class EventStreamSocketManager : IDisposable
         }
     }
 
-    private static readonly JsonSerializerOptions INBOUND_JSON_OPTIONS = new()
-    {
-        PropertyNameCaseInsensitive = true
-    };
+    private static readonly JsonSerializerOptions INBOUND_JSON_OPTIONS
+        = new() { PropertyNameCaseInsensitive = true };
 
-    private static readonly JsonSerializerOptions OUTBOUND_JSON_OPTIONS = new()
+    private static readonly JsonSerializerOptions OUTBOUND_JSON_OPTIONS
+        = new() { PropertyNamingPolicy = JsonNamingPolicy.CamelCase };
+
+    private static readonly JsonSerializerOptions EVENT_JSON_OPTIONS = new()
     {
-        PropertyNamingPolicy = new SnakeCaseJsonNamingPolicy()
+        PropertyNamingPolicy = new SnakeCaseJsonNamingPolicy(),
+        NumberHandling = JsonNumberHandling.WriteAsString,
+        Converters = { new BooleanJsonConverter(true) }
     };
 
     /// <summary>
@@ -76,7 +84,7 @@ public sealed class EventStreamSocketManager : IDisposable
 
     private readonly ILogger<EventStreamSocketManager> _logger;
     private readonly Dictionary<WebSocket, WebSocketBundle> _sockets;
-    private readonly Channel<(object, string)> _outboundChannel;
+    private readonly Channel<IRealtimeEvent> _outboundChannel;
     private readonly ArrayBufferWriter<byte> _bufferWriter;
     private readonly Utf8JsonWriter _jsonWriter;
 
@@ -88,7 +96,7 @@ public sealed class EventStreamSocketManager : IDisposable
     {
         _logger = logger;
         _sockets = new Dictionary<WebSocket, WebSocketBundle>();
-        _outboundChannel = Channel.CreateBounded<(object, string)>(10000);
+        _outboundChannel = Channel.CreateBounded<IRealtimeEvent>(10000);
         _bufferWriter = new ArrayBufferWriter<byte>(MAX_WEBSOCKET_MESSAGE_LENGTH);
         _jsonWriter = new Utf8JsonWriter(_bufferWriter);
     }
@@ -102,14 +110,14 @@ public sealed class EventStreamSocketManager : IDisposable
     {
         try
         {
-            await foreach ((object evt, string type) in _outboundChannel.Reader.ReadAllAsync(ct))
+            await foreach (IRealtimeEvent evt in _outboundChannel.Reader.ReadAllAsync(ct))
             {
-                ServiceMessage<object> message = new
-                (
-                    evt,
-                    "event",
-                    "serviceMessage"
-                );
+                JsonNode? node = JsonSerializer.SerializeToNode(evt, evt.GetType(), EVENT_JSON_OPTIONS);
+                if (node is null)
+                    continue;
+
+                node["event_name"] = evt.EventName;
+                ServiceMessage<object> message = new(node);
 
                 _jsonWriter.Reset();
                 _bufferWriter.Clear();
@@ -159,8 +167,15 @@ public sealed class EventStreamSocketManager : IDisposable
     /// </summary>
     /// <param name="socket">The socket.</param>
     /// <param name="cancelCts">A <see cref="CancellationTokenSource"/> to set when the socket has been closed.</param>
-    public void RegisterWebSocket(WebSocket socket, CancellationTokenSource cancelCts)
-        => _sockets.Add(socket, new WebSocketBundle(cancelCts));
+    public async Task RegisterWebSocket(WebSocket socket, CancellationTokenSource cancelCts)
+    {
+        WebSocketBundle bundle = new(cancelCts);
+        _sockets.Add(socket, bundle);
+
+        Utf8JsonWriter writer = await bundle.StartWritingAsync(cancelCts.Token);
+        JsonSerializer.Serialize(writer, new ConnectionStateChanged(true), OUTBOUND_JSON_OPTIONS);
+        await bundle.EndWriting(socket, cancelCts.Token);
+    }
 
     /// <summary>
     /// De-registers a websocket from the manager.
@@ -214,9 +229,9 @@ public sealed class EventStreamSocketManager : IDisposable
     /// <typeparam name="T">The type of the event.</typeparam>
     /// <param name="evt">The event.</param>
     public void SubmitEvent<T>(T evt)
-        where T : notnull
+        where T : IRealtimeEvent
     {
-        bool written = _outboundChannel.Writer.TryWrite((evt, typeof(T).Name));
+        bool written = _outboundChannel.Writer.TryWrite(evt);
         if (!written)
             _logger.LogWarning("An outbound ESS object was dropped! Running behind?");
     }

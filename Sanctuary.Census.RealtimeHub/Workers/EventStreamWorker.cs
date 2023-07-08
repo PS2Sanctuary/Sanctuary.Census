@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.Hosting;
+using Sanctuary.Census.RealtimeHub.Objects.Events;
 using Sanctuary.Census.RealtimeHub.Services;
 using System;
 using System.Threading;
@@ -38,7 +39,7 @@ public class EventStreamWorker : BackgroundService
         {
             while (!ct.IsCancellationRequested)
             {
-                _eventStreamSocketManager.SubmitEvent("test");
+                _eventStreamSocketManager.SubmitEvent(new AwesomeEvent("100%"));
                 await Task.Delay(1000, ct);
             }
         }

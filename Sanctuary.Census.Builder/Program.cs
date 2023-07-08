@@ -11,8 +11,10 @@ using Sanctuary.Census.Builder.Services;
 using Sanctuary.Census.Builder.Workers;
 using Sanctuary.Census.ClientData.Extensions;
 using Sanctuary.Census.Common.Abstractions.Objects.Collections;
+using Sanctuary.Census.Common.Abstractions.Objects.RealtimeEvents;
 using Sanctuary.Census.Common.Extensions;
 using Sanctuary.Census.Common.Objects.Collections;
+using Sanctuary.Census.Common.Objects.RealtimeEvents;
 using Sanctuary.Census.PatchData.Extensions;
 using Sanctuary.Census.ServerData.Internal.Extensions;
 using Sanctuary.Census.ServerData.Internal.Objects;
@@ -473,7 +475,7 @@ public static class Program
     private static CollectionDbConfiguration<TCollection> RegisterRealtime<TCollection>
     (
         CollectionConfigurationProvider configProvider
-    ) where TCollection : IRealtimeCollection
+    ) where TCollection : IRealtimeEvent, ISanctuaryCollection
         => configProvider.Register<TCollection>()
             .WithEqualityKey(x => x.WorldId)
             .WithRemoveOldEntryTest

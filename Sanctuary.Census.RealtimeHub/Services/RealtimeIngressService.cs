@@ -4,8 +4,8 @@ using Microsoft.Extensions.Logging;
 using MongoDB.Driver;
 using Sanctuary.Census.Common.Abstractions.Services;
 using Sanctuary.Census.Common.Objects;
-using Sanctuary.Census.Common.Objects.Collections;
 using Sanctuary.Census.Common.Objects.CommonModels;
+using Sanctuary.Census.Common.Objects.RealtimeEvents;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 

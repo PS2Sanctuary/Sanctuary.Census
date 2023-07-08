@@ -1,8 +1,9 @@
 ﻿using Sanctuary.Census.Common.Abstractions.Objects.Collections;
+using Sanctuary.Census.Common.Abstractions.Objects.RealtimeEvents;
 using Sanctuary.Census.Common.Attributes;
 using Sanctuary.Census.Common.Objects.CommonModels;
 
-namespace Sanctuary.Census.Common.Objects.Collections;
+namespace Sanctuary.Census.Common.Objects.RealtimeEvents;
 
 /// <summary>
 /// Represents population data for a world.
@@ -18,4 +19,8 @@ public record WorldPopulation
     long Timestamp,
     int Total,
     ValueEqualityDictionary<FactionDefinition, int> Population
-) : IRealtimeCollection;
+) : IRealtimeEvent, ISanctuaryCollection
+{
+    /// <inheritdoc />
+    public string EventName => "WorldPopulationUpdate";
+}

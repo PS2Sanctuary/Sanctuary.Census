@@ -1,0 +1,245 @@
+﻿using Microsoft.Extensions.Logging;
+using Sanctuary.Census.Common.Json;
+using Sanctuary.Census.RealtimeHub.Objects.Control;
+using System;
+using System.Buffers;
+using System.Collections.Generic;
+using System.Net.WebSockets;
+using System.Text.Json;
+using System.Threading;
+using System.Threading.Channels;
+using System.Threading.Tasks;
+
+namespace Sanctuary.Census.RealtimeHub.Services;
+
+/// <summary>
+/// Manages the WebSocket connections required to serve the event stream.
+/// </summary>
+public sealed class EventStreamSocketManager : IDisposable
+{
+    private sealed class WebSocketBundle : IDisposable
+    {
+        private readonly CancellationTokenSource _socketConnectionCancelCts;
+        private readonly ArrayBufferWriter<byte> _bufferWriter;
+        private readonly Utf8JsonWriter _jsonWriter;
+
+        public SemaphoreSlim WriteSemaphore { get; }
+        public ReadOnlyMemory<byte> CurrentWriteBuffer => _bufferWriter.WrittenMemory;
+
+        public WebSocketBundle(CancellationTokenSource socketConnectionCancelCts)
+        {
+            WriteSemaphore = new SemaphoreSlim(1);
+            _bufferWriter = new ArrayBufferWriter<byte>(4096);
+            _jsonWriter = new Utf8JsonWriter(_bufferWriter);
+
+            _socketConnectionCancelCts = socketConnectionCancelCts;
+        }
+
+        public async Task<Utf8JsonWriter> StartWritingAsync(CancellationToken ct)
+        {
+            await WriteSemaphore.WaitAsync(ct);
+
+            _jsonWriter.Reset();
+            _bufferWriter.Clear();
+
+            return _jsonWriter;
+        }
+
+        public void EndWriting()
+            => WriteSemaphore.Release();
+
+        public void Dispose()
+        {
+            if (!_socketConnectionCancelCts.IsCancellationRequested)
+                _socketConnectionCancelCts.Cancel();
+
+            _jsonWriter.Dispose();
+            _bufferWriter.Clear();
+            WriteSemaphore.Dispose();
+        }
+    }
+
+    private static readonly JsonSerializerOptions INBOUND_JSON_OPTIONS = new()
+    {
+        PropertyNameCaseInsensitive = true
+    };
+
+    private static readonly JsonSerializerOptions OUTBOUND_JSON_OPTIONS = new()
+    {
+        PropertyNamingPolicy = new SnakeCaseJsonNamingPolicy()
+    };
+
+    /// <summary>
+    /// The maximum length that a single websocket message may be.
+    /// </summary>
+    public const int MAX_WEBSOCKET_MESSAGE_LENGTH = 4096;
+
+    private readonly ILogger<EventStreamSocketManager> _logger;
+    private readonly Dictionary<WebSocket, WebSocketBundle> _sockets;
+    private readonly Channel<(object, string)> _outboundChannel;
+    private readonly ArrayBufferWriter<byte> _bufferWriter;
+    private readonly Utf8JsonWriter _jsonWriter;
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="EventStreamSocketManager"/> class.
+    /// </summary>
+    /// <param name="logger">The logging interface to use.</param>
+    public EventStreamSocketManager(ILogger<EventStreamSocketManager> logger)
+    {
+        _logger = logger;
+        _sockets = new Dictionary<WebSocket, WebSocketBundle>();
+        _outboundChannel = Channel.CreateBounded<(object, string)>(10000);
+        _bufferWriter = new ArrayBufferWriter<byte>(MAX_WEBSOCKET_MESSAGE_LENGTH);
+        _jsonWriter = new Utf8JsonWriter(_bufferWriter);
+    }
+
+    /// <summary>
+    /// Runs the manager. This will cause <see cref="SubmitEvent{T}"/> to become
+    /// effective, and will mark all sockets as cancelled upon exit.
+    /// </summary>
+    /// <param name="ct">A <see cref="CancellationToken"/> that can be used to cancel this operation.</param>
+    public async Task RunAsync(CancellationToken ct = default)
+    {
+        try
+        {
+            await foreach ((object evt, string type) in _outboundChannel.Reader.ReadAllAsync(ct))
+            {
+                ServiceMessage<object> message = new
+                (
+                    evt,
+                    "event",
+                    "serviceMessage"
+                );
+
+                _jsonWriter.Reset();
+                _bufferWriter.Clear();
+                JsonSerializer.Serialize(_jsonWriter, message, OUTBOUND_JSON_OPTIONS);
+
+                foreach ((WebSocket socket, WebSocketBundle bundle) in _sockets)
+                {
+                    if (socket.CloseStatus is not null)
+                        continue;
+
+                    await bundle.WriteSemaphore.WaitAsync(ct);
+                    ReadOnlyMemory<byte> toWrite = _bufferWriter.WrittenMemory;
+
+                    while (toWrite.Length > 0)
+                    {
+                        int take = Math.Min(toWrite.Length, MAX_WEBSOCKET_MESSAGE_LENGTH);
+
+                        await socket.SendAsync
+                        (
+                            toWrite[..take],
+                            WebSocketMessageType.Text,
+                            toWrite.Length <= MAX_WEBSOCKET_MESSAGE_LENGTH,
+                            ct
+                        );
+
+                        toWrite = toWrite[take..];
+                    }
+
+                    bundle.WriteSemaphore.Release();
+                }
+            }
+        }
+        catch (OperationCanceledException)
+        {
+            // This is fine
+            _logger.LogInformation($"{nameof(EventStreamSocketManager)}#Run cancelled");
+        }
+        finally
+        {
+            _outboundChannel.Writer.Complete();
+            ReleaseSocketsAsync();
+        }
+    }
+
+    /// <summary>
+    /// Registers a websocket with the manager.
+    /// </summary>
+    /// <param name="socket">The socket.</param>
+    /// <param name="cancelCts">A <see cref="CancellationTokenSource"/> to set when the socket has been closed.</param>
+    public void RegisterWebSocket(WebSocket socket, CancellationTokenSource cancelCts)
+        => _sockets.Add(socket, new WebSocketBundle(cancelCts));
+
+    /// <summary>
+    /// De-registers a websocket from the manager.
+    /// </summary>
+    /// <param name="socket">The socket.</param>
+    public void DeregisterWebSocket(WebSocket socket)
+    {
+        if (_sockets.Remove(socket, out WebSocketBundle? bundle))
+            bundle.Dispose();
+    }
+
+    /// <summary>
+    /// Processes a WebSocket message.
+    /// </summary>
+    /// <param name="socket">The socket that the message was received from.</param>
+    /// <param name="messageData">The message data.</param>
+    /// <param name="ct">A <see cref="CancellationToken"/> that can be used to cancel this operation.</param>
+    public async ValueTask ProcessMessage
+    (
+        WebSocket socket,
+        ReadOnlyMemory<byte> messageData,
+        CancellationToken ct = default
+    )
+    {
+        if (!_sockets.TryGetValue(socket, out WebSocketBundle? bundle))
+            throw new InvalidOperationException("Unknown socket");
+
+        JsonDocument? document = JsonSerializer.Deserialize<JsonDocument>(messageData.Span, INBOUND_JSON_OPTIONS);
+        if (document is null)
+        {
+            await socket.CloseAsync(WebSocketCloseStatus.InvalidPayloadData, "Failed to parse message as JSON", ct);
+            return;
+        }
+
+        bool hasActionField = document.RootElement.TryGetProperty("action"u8, out JsonElement actionElement);
+        if (!hasActionField)
+        {
+            await socket.CloseAsync(WebSocketCloseStatus.InvalidMessageType, "Unrecognised action", ct);
+            return;
+        }
+
+        string action = actionElement.GetRawText();
+
+        // default action: echo
+        await socket.SendAsync(messageData, WebSocketMessageType.Text, true, ct);
+    }
+
+    /// <summary>
+    /// Submits an event to be sent over the event stream.
+    /// </summary>
+    /// <typeparam name="T">The type of the event.</typeparam>
+    /// <param name="evt">The event.</param>
+    public void SubmitEvent<T>(T evt)
+        where T : notnull
+    {
+        bool written = _outboundChannel.Writer.TryWrite((evt, typeof(T).Name));
+        if (!written)
+            _logger.LogWarning("An outbound ESS object was dropped! Running behind?");
+    }
+
+    /// <summary>
+    /// Cancels and releases all sockets held by the manager.
+    /// </summary>
+    private void ReleaseSocketsAsync()
+    {
+        foreach (WebSocketBundle bundle in _sockets.Values)
+            bundle.Dispose();
+
+        _sockets.Clear();
+    }
+
+    /// <inheritdoc />
+    public void Dispose()
+    {
+        _jsonWriter.Dispose();
+        _bufferWriter.Clear();
+        _outboundChannel.Writer.TryComplete();
+
+        foreach (WebSocketBundle bundle in _sockets.Values)
+            bundle.Dispose();
+    }
+}

@@ -10,9 +10,9 @@ using Sanctuary.Census.RealtimeHub.Services;
 using Sanctuary.Census.RealtimeHub.Workers;
 using Serilog;
 using Serilog.Events;
+using System;
 using System.Net.WebSockets;
-using System.Threading.Tasks;
-using WebSocketManager = Sanctuary.Census.RealtimeHub.Services.WebSocketManager;
+using System.Threading;
 
 namespace Sanctuary.Census.RealtimeHub;
 
@@ -36,12 +36,13 @@ public static class Program
         builder.Services.Configure<CommonOptions>(builder.Configuration.GetSection(nameof(CommonOptions)));
 
         builder.Services.AddCommonServices(builder.Environment);
-        builder.Services.AddSingleton<WebSocketManager>();
+        builder.Services.AddSingleton<EventStreamSocketManager>();
 
+        builder.Services.AddControllers();
         builder.Services.AddGrpc();
 
         builder.Services.AddHostedService<RealtimeCollectionPruneWorker>();
-        builder.Services.AddHostedService<WebSocketWorker>();
+        builder.Services.AddHostedService<EventStreamWorker>();
 
         WebApplication app = builder.Build();
 
@@ -53,29 +54,8 @@ public static class Program
         app.UseSerilogRequestLogging();
         app.UseWebSockets();
 
+        app.MapControllers();
         app.MapGrpcService<RealtimeIngressService>();
-
-        app.Use(async (context, next) =>
-        {
-            if (context.Request.Path != "/eventstream")
-            {
-                await next(context);
-                return;
-            }
-
-            if (!context.WebSockets.IsWebSocketRequest)
-            {
-                context.Response.StatusCode = StatusCodes.Status400BadRequest;
-                return;
-            }
-
-            using WebSocket webSocket = await context.WebSockets.AcceptWebSocketAsync();
-            TaskCompletionSource<object> socketFinishedTcs = new();
-
-            context.RequestServices.GetRequiredService<WebSocketManager>()
-                .AddWebSocket(webSocket, socketFinishedTcs);
-            await socketFinishedTcs.Task;
-        });
 
         app.Run();
     }

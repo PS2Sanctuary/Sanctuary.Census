@@ -39,8 +39,8 @@ public class EventStreamWorker : BackgroundService
         {
             while (!ct.IsCancellationRequested)
             {
-                _eventStreamSocketManager.SubmitEvent(new AwesomeEvent("100%"));
-                await Task.Delay(1000, ct);
+                _eventStreamSocketManager.SubmitEvent(new AwesomeEvent("You are 100% awesome"));
+                await Task.Delay(1000 * 60, ct);
             }
         }
         catch (OperationCanceledException)

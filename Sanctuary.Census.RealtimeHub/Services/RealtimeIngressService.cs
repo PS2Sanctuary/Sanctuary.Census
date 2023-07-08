@@ -7,6 +7,7 @@ using Sanctuary.Census.Common.Objects;
 using Sanctuary.Census.Common.Objects.CommonModels;
 using Sanctuary.Census.Common.Objects.RealtimeEvents;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace Sanctuary.Census.RealtimeHub.Services;
@@ -16,21 +17,34 @@ namespace Sanctuary.Census.RealtimeHub.Services;
 /// </summary>
 public class RealtimeIngressService : RealtimeIngress.RealtimeIngressBase
 {
+    private static readonly List<MapState> _mapStates;
+    private static readonly Dictionary<uint, WorldPopulation> _worldPopulations;
+
     private readonly ILogger<RealtimeIngressService> _logger;
+    private readonly EventStreamSocketManager _essManager;
     private readonly IServiceScopeFactory _serviceScopeFactory;
+
+    static RealtimeIngressService()
+    {
+        _mapStates = new List<MapState>();
+        _worldPopulations = new Dictionary<uint, WorldPopulation>();
+    }
 
     /// <summary>
     /// Initializes a new instance of the <see cref="RealtimeIngressService"/> class.
     /// </summary>
     /// <param name="logger">The logging interface to use.</param>
+    /// <param name="essManager">The event stream manager.</param>
     /// <param name="serviceScopeFactory">The service scope factory.</param>
     public RealtimeIngressService
     (
         ILogger<RealtimeIngressService> logger,
+        EventStreamSocketManager essManager,
         IServiceScopeFactory serviceScopeFactory
     )
     {
         _logger = logger;
+        _essManager = essManager;
         _serviceScopeFactory = serviceScopeFactory;
     }
 
@@ -52,6 +66,8 @@ public class RealtimeIngressService : RealtimeIngress.RealtimeIngressBase
         );
 
         List<ReplaceOneModel<MapState>> replacementModels = new();
+        List<MapState> changedStates = new();
+
         foreach (MapRegionState region in request.Regions)
         {
             bool isContested = region.ContestingFactionId is not (int)FactionDefinition.None
@@ -94,7 +110,32 @@ public class RealtimeIngressService : RealtimeIngress.RealtimeIngressBase
                 builtState
             ) { IsUpsert = true };
             replacementModels.Add(replacementModel);
+
+            MapState? existingState = _mapStates.FirstOrDefault
+            (
+                ms => ms.WorldId == builtState.WorldId
+                    && ms.ZoneId == builtState.ZoneId
+                    && ms.ZoneInstance == builtState.ZoneInstance
+                    && ms.MapRegionId == builtState.MapRegionId
+            );
+
+            MapState checkState = builtState with { Timestamp = 0 };
+            if (existingState is null)
+            {
+                _mapStates.Add(checkState);
+                changedStates.Add(builtState);
+            }
+            else if (!existingState.Equals(checkState))
+            {
+                _mapStates.Remove(existingState);
+                _mapStates.Add(checkState);
+                changedStates.Add(builtState);
+            }
         }
+
+        _logger.LogDebug("ESS Updating {Count} map states", changedStates.Count);
+        foreach (MapState changedState in changedStates)
+            _essManager.SubmitEvent(changedState);
 
         await using AsyncServiceScope scope = _serviceScopeFactory.CreateAsyncScope();
         IMongoContext dbContext = scope.ServiceProvider.GetRequiredService<IMongoContext>();
@@ -131,6 +172,15 @@ public class RealtimeIngressService : RealtimeIngress.RealtimeIngressBase
             total,
             pops
         );
+        WorldPopulation check = worldPop with { Timestamp = 0 };
+
+        bool needsUpdate = !_worldPopulations.TryGetValue(worldPop.WorldId, out WorldPopulation? existingPop)
+            || existingPop != check;
+        if (needsUpdate)
+        {
+            _worldPopulations[worldPop.WorldId] = check;
+            _essManager.SubmitEvent(worldPop);
+        }
 
         await using AsyncServiceScope scope = _serviceScopeFactory.CreateAsyncScope();
         IMongoContext dbContext = scope.ServiceProvider.GetRequiredService<IMongoContext>();

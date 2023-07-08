@@ -4,7 +4,6 @@ using MongoDB.Bson;
 using MongoDB.Driver;
 using Sanctuary.Census.Builder.Abstractions.Services;
 using Sanctuary.Census.Builder.Objects;
-using Sanctuary.Census.Common;
 using Sanctuary.Census.Common.Abstractions.Services;
 using Sanctuary.Census.Common.Attributes;
 using Sanctuary.Census.Common.Json;
@@ -139,7 +138,7 @@ public class GitCollectionDiffService : ICollectionDiffService
             .ExecuteAsync(ct)
             .ConfigureAwait(false);
         if (addResult.ExitCode is not (0 or 141)) // 141 thrown because STDOUT closed too fast
-            throw new Exception("Failed to commit diff files");
+            throw new Exception($"Failed to stage diff files. Exit code {addResult.ExitCode}");
 
         CommandResult commitResult = await Cli.Wrap("git")
             .WithArguments($"commit -m \"[{_environmentContextProvider.Environment}] {DateTimeOffset.UtcNow.ToString(CultureInfo.InvariantCulture)}\"")
@@ -148,7 +147,7 @@ public class GitCollectionDiffService : ICollectionDiffService
             .ExecuteAsync(ct)
             .ConfigureAwait(false);
         if (commitResult.ExitCode is not (0 or 141)) // 141 thrown because STDOUT closed too fast
-            throw new Exception("Failed to commit diff files");
+            throw new Exception($"Failed to commit diff files. Exit code {commitResult.ExitCode}");
 
         if (_pushOnCommit)
         {
@@ -159,7 +158,7 @@ public class GitCollectionDiffService : ICollectionDiffService
                 .ExecuteAsync(ct)
                 .ConfigureAwait(false);
             if (pushResult.ExitCode is not (0 or 141)) // 141 thrown because STDOUT closed too fast
-                throw new Exception("Failed to commit diff files");
+                throw new Exception($"Failed to push diff files. Exit code {pushResult.ExitCode}");
         }
     }
 }

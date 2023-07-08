@@ -47,7 +47,9 @@ public class ZoneCollectionBuilder : ICollectionBuilder
             throw new MissingCacheDataException(typeof(ContinentBattleInfo));
 
         Dictionary<uint, Common.Objects.Collections.Zone> builtZones = new();
-        IEnumerable<ContinentBattleInfo_ZoneData> zones = _serverDataCache.ContinentBattleInfos.Zones
+        IEnumerable<ContinentBattleInfo_ZoneData> zones = _serverDataCache.ContinentBattleInfos
+            .Values
+            .SelectMany(x => x.Zones)
             .OrderBy(x => x.ZoneID);
 
         foreach (ContinentBattleInfo_ZoneData zone in zones)

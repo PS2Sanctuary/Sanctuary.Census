@@ -460,6 +460,13 @@ public static class Program
             .WithEqualityKey(x => x.ZoneId)
             .WithEqualityKey(x => x.ZoneInstance);
 
+        configProvider.Register<ZonePopulationLimits>()
+            .WithIndex(x => x.WorldId, false)
+            .WithIndex(x => x.ZoneId, false)
+            .WithEqualityKey(x => x.WorldId)
+            .WithEqualityKey(x => x.ZoneId)
+            .WithRemoveOldEntryTest(static _ => false);
+
         return services;
     }
 
@@ -524,7 +531,8 @@ public static class Program
             .RegisterCollectionBuilder<WeaponToAttachmentCollectionBuilder>()
             .RegisterCollectionBuilder<WeaponToFireGroupCollectionBuilder>()
             .RegisterCollectionBuilder<WorldCollectionBuilder>()
-            .RegisterCollectionBuilder<ZoneCollectionBuilder>();
+            .RegisterCollectionBuilder<ZoneCollectionBuilder>()
+            .RegisterCollectionBuilder<ZonePopulationLimitCollectionBuilder>();
     }
 
     // ReSharper disable twice UnusedParameter.Local

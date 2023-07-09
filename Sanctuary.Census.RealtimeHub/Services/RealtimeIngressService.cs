@@ -1,4 +1,5 @@
 using Grpc.Core;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using MongoDB.Driver;
@@ -15,6 +16,7 @@ namespace Sanctuary.Census.RealtimeHub.Services;
 /// <summary>
 /// A service that handles gRPC calls for updating realtime data.
 /// </summary>
+[Authorize]
 public class RealtimeIngressService : RealtimeIngress.RealtimeIngressBase
 {
     private static readonly List<MapState> _mapStates;

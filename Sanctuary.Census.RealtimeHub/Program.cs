@@ -7,6 +7,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Sanctuary.Census.Common.Extensions;
 using Sanctuary.Census.Common.Objects;
+using Sanctuary.Census.RealtimeHub.Objects;
 using Sanctuary.Census.RealtimeHub.Services;
 using Sanctuary.Census.RealtimeHub.Workers;
 using Serilog;
@@ -42,10 +43,21 @@ public static class Program
         builder.Host.UseSerilog();
 
         builder.Services.Configure<CommonOptions>(builder.Configuration.GetSection(nameof(CommonOptions)));
+        builder.Services.Configure<BearerTokenAuthenticationOptions>
+        (
+            builder.Configuration.GetSection(BearerTokenAuthenticationOptions.OptionsName)
+        );
 
         builder.Services.AddCommonServices(builder.Environment);
         builder.Services.AddSingleton<EventStreamSocketManager>();
 
+        builder.Services.AddAuthentication("BearerTokenAuthentication")
+            .AddScheme<BearerTokenAuthenticationOptions, BearerTokenAuthenticationHandler>
+            (
+                "BearerTokenAuthentication",
+                null
+            );
+        builder.Services.AddAuthorization();
         builder.Services.AddControllers();
         builder.Services.AddGrpc();
 
@@ -61,6 +73,9 @@ public static class Program
 
         app.UseSerilogRequestLogging();
         app.UseWebSockets();
+
+        app.UseAuthentication();
+        app.UseAuthorization();
 
         app.MapControllers();
         app.MapGrpcService<RealtimeIngressService>();

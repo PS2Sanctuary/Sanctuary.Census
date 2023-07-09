@@ -1,7 +1,5 @@
 ﻿using Microsoft.Extensions.Hosting;
-using Sanctuary.Census.RealtimeHub.Objects.Events;
 using Sanctuary.Census.RealtimeHub.Services;
-using System;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -25,27 +23,5 @@ public class EventStreamWorker : BackgroundService
 
     /// <inheritdoc />
     protected override async Task ExecuteAsync(CancellationToken ct)
-    {
-        await Task.WhenAll
-        (
-            _eventStreamSocketManager.RunAsync(ct),
-            SendMessagesAsync(ct)
-        );
-    }
-
-    private async Task SendMessagesAsync(CancellationToken ct)
-    {
-        try
-        {
-            while (!ct.IsCancellationRequested)
-            {
-                _eventStreamSocketManager.SubmitEvent(new AwesomeEvent("You are 100% awesome"));
-                await Task.Delay(1000 * 60, ct);
-            }
-        }
-        catch (OperationCanceledException)
-        {
-            // This is fine
-        }
-    }
+        => await _eventStreamSocketManager.RunAsync(ct);
 }

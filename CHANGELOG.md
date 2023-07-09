@@ -6,6 +6,12 @@ Date format: DD/MM/YYYY
 
 #### 🚀 Additions
 
+**Event Streaming**
+- Sanctuary.Census now exposes an event stream for 'realtime' data.
+- Connect at `wss://census.lithafalcon.cc/streaming`.
+- Compatible with the official Census' event stream.
+- Valid event names: `WorldPopulationUpdate`, `MapStateUpdate`.
+
 **zone_population_limits**
 - New collection. Exposes the number of characters allowed on a zone.
 
@@ -15,6 +21,10 @@ Date format: DD/MM/YYYY
 
 - 'Realtime' collections will now display a value of `-1` for their `last_updated` and `update_interval_sec`
 fields on the root datatype endpoint.
+
+#### 🐛 Fixes
+
+- The `describe` now produces better output for list and dictionary properties.
 
 ## 01/05/2023
 

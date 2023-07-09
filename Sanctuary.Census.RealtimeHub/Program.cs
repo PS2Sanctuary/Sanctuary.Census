@@ -1,5 +1,7 @@
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpOverrides;
+using Microsoft.AspNetCore.Server.Kestrel.Core;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -9,6 +11,7 @@ using Sanctuary.Census.RealtimeHub.Services;
 using Sanctuary.Census.RealtimeHub.Workers;
 using Serilog;
 using Serilog.Events;
+using System.Net;
 
 namespace Sanctuary.Census.RealtimeHub;
 
@@ -24,6 +27,15 @@ public static class Program
     public static void Main(string[] args)
     {
         WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
+        builder.WebHost.ConfigureKestrel((context, options) =>
+        {
+            IPEndPoint wssAddress = IPEndPoint.Parse(context.Configuration["Addresses:WebSocket"]!);
+            IPEndPoint grpcAddress = IPEndPoint.Parse(context.Configuration["Addresses:Grpc"]!);
+
+            options.Listen(wssAddress, listenOptions => listenOptions.Protocols = HttpProtocols.Http1AndHttp2AndHttp3);
+            options.Listen(grpcAddress, listenOptions => listenOptions.Protocols = HttpProtocols.Http2);
+        });
+
         builder.Host.UseSystemd();
 
         SetupLogger(builder.Configuration, builder.Environment);

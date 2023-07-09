@@ -1,6 +1,9 @@
 ﻿using Microsoft.Extensions.Logging;
 using Sanctuary.Census.Common.Abstractions.Objects.RealtimeEvents;
 using Sanctuary.Census.Common.Json;
+using Sanctuary.Census.RealtimeHub.Json;
+using Sanctuary.Census.RealtimeHub.Objects;
+using Sanctuary.Census.RealtimeHub.Objects.Commands;
 using Sanctuary.Census.RealtimeHub.Objects.Control;
 using System;
 using System.Buffers;
@@ -27,14 +30,15 @@ public sealed class EventStreamSocketManager : IDisposable
         private readonly Utf8JsonWriter _jsonWriter;
 
         public SemaphoreSlim WriteSemaphore { get; }
+        public EventSubscription Subscription { get; set; }
 
         public WebSocketBundle(CancellationTokenSource socketConnectionCancelCts)
         {
-            WriteSemaphore = new SemaphoreSlim(1);
+            _socketConnectionCancelCts = socketConnectionCancelCts;
             _bufferWriter = new ArrayBufferWriter<byte>(4096);
             _jsonWriter = new Utf8JsonWriter(_bufferWriter);
-
-            _socketConnectionCancelCts = socketConnectionCancelCts;
+            WriteSemaphore = new SemaphoreSlim(1);
+            Subscription = new EventSubscription();
         }
 
         public async Task<Utf8JsonWriter> StartWritingAsync(CancellationToken ct)
@@ -64,11 +68,17 @@ public sealed class EventStreamSocketManager : IDisposable
         }
     }
 
-    private static readonly JsonSerializerOptions INBOUND_JSON_OPTIONS
-        = new() { PropertyNameCaseInsensitive = true };
+    private static readonly JsonSerializerOptions INBOUND_JSON_OPTIONS = new()
+    {
+        PropertyNameCaseInsensitive = true,
+        Converters = { new SubscribeWorldListJsonConverter() }
+    };
 
-    private static readonly JsonSerializerOptions OUTBOUND_JSON_OPTIONS
-        = new() { PropertyNamingPolicy = JsonNamingPolicy.CamelCase };
+    private static readonly JsonSerializerOptions OUTBOUND_JSON_OPTIONS = new()
+    {
+        PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
+        Converters = { new SubscribeWorldListJsonConverter() }
+    };
 
     private static readonly JsonSerializerOptions EVENT_JSON_OPTIONS = new()
     {
@@ -126,6 +136,12 @@ public sealed class EventStreamSocketManager : IDisposable
                 foreach ((WebSocket socket, WebSocketBundle bundle) in _sockets)
                 {
                     if (socket.CloseStatus is not null)
+                        continue;
+
+                    if (!bundle.Subscription.IsSubscribedToEvent(evt.EventName))
+                        continue;
+
+                    if (!bundle.Subscription.IsSubscribedToWorld(evt.WorldId))
                         continue;
 
                     await bundle.WriteSemaphore.WaitAsync(ct);
@@ -217,10 +233,41 @@ public sealed class EventStreamSocketManager : IDisposable
             return;
         }
 
-        string action = actionElement.GetRawText();
+        string? action = actionElement.GetString();
+        switch (action)
+        {
+            case "subscribe":
+            {
+                Subscribe? sub = document.Deserialize<Subscribe>(INBOUND_JSON_OPTIONS);
+                if (sub is not null)
+                    bundle.Subscription.AddSubscription(sub);
 
-        // default action: echo
-        await socket.SendAsync(messageData, WebSocketMessageType.Text, true, ct);
+                Utf8JsonWriter writer = await bundle.StartWritingAsync(ct);
+                JsonSerializer.Serialize(writer, bundle.Subscription.ToSubscriptionInformation(), OUTBOUND_JSON_OPTIONS);
+                await bundle.EndWriting(socket, ct);
+
+                break;
+            }
+            case "clearSubscribe":
+            {
+                ClearSubscribe? clSub = document.Deserialize<ClearSubscribe>(INBOUND_JSON_OPTIONS);
+                if (clSub is not null)
+                    bundle.Subscription.SubtractSubscription(clSub);
+
+                Utf8JsonWriter writer = await bundle.StartWritingAsync(ct);
+                JsonSerializer.Serialize(writer, bundle.Subscription.ToSubscriptionInformation(), OUTBOUND_JSON_OPTIONS);
+                await bundle.EndWriting(socket, ct);
+
+                break;
+            }
+            default: // Echo
+            {
+                await bundle.WriteSemaphore.WaitAsync(ct);
+                await socket.SendAsync(messageData, WebSocketMessageType.Text, true, ct);
+                bundle.WriteSemaphore.Release();
+                break;
+            }
+        }
     }
 
     /// <summary>

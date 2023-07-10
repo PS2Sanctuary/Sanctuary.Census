@@ -1,14 +1,6 @@
 ﻿{
   "profiles": {
-    "http": {
-      "commandName": "Project",
-      "dotnetRunMessages": true,
-      "launchBrowser": false,
-      "environmentVariables": {
-        "ASPNETCORE_ENVIRONMENT": "Development"
-      }
-    },
-    "https": {
+    "Sanctuary.Census.RealtimeHub": {
       "commandName": "Project",
       "dotnetRunMessages": true,
       "launchBrowser": false,

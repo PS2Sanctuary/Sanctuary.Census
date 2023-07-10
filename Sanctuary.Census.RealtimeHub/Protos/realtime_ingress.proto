@@ -7,11 +7,22 @@ option csharp_namespace = "Sanctuary.Census.RealtimeHub";
 package realtime;
 
 service RealtimeIngress {
+  rpc RequestZoneConnection(ZoneConnectionRequest) returns (ZoneConnectionResponse);
   rpc SubmitMapStateUpdate(MapStateUpdate) returns (Ok);
   rpc SubmitWorldPopulationUpdate(WorldPopulationUpdate) returns (Ok);
 }
 
 message Ok {
+}
+
+message ZoneConnectionRequest {
+  int32 ServerId = 1;
+  string AccountName = 2;
+}
+
+message ZoneConnectionResponse {
+  string ClientProtocolString = 1;
+  string ClientVersion = 2;
 }
 
 message MapStateUpdate {

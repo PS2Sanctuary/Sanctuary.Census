@@ -33,7 +33,7 @@ public static class Program
             IPEndPoint wssAddress = IPEndPoint.Parse(context.Configuration["Addresses:WebSocket"]!);
             IPEndPoint grpcAddress = IPEndPoint.Parse(context.Configuration["Addresses:Grpc"]!);
 
-            options.Listen(wssAddress, listenOptions => listenOptions.Protocols = HttpProtocols.Http1AndHttp2AndHttp3);
+            options.Listen(wssAddress);
             options.Listen(grpcAddress, listenOptions => listenOptions.Protocols = HttpProtocols.Http2);
         });
 
@@ -46,6 +46,10 @@ public static class Program
         builder.Services.Configure<BearerTokenAuthenticationOptions>
         (
             builder.Configuration.GetSection(BearerTokenAuthenticationOptions.OptionsName)
+        );
+        builder.Services.Configure<ZoneConnectionOptions>
+        (
+            builder.Configuration.GetSection(ZoneConnectionOptions.OPTIONS_NAME)
         );
 
         builder.Services.AddCommonServices(builder.Environment);

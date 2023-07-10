@@ -2,11 +2,13 @@ using Grpc.Core;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using MongoDB.Driver;
 using Sanctuary.Census.Common.Abstractions.Services;
 using Sanctuary.Census.Common.Objects;
 using Sanctuary.Census.Common.Objects.CommonModels;
 using Sanctuary.Census.Common.Objects.RealtimeEvents;
+using Sanctuary.Census.RealtimeHub.Objects;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -23,6 +25,7 @@ public class RealtimeIngressService : RealtimeIngress.RealtimeIngressBase
     private static readonly Dictionary<uint, WorldPopulation> _worldPopulations;
 
     private readonly ILogger<RealtimeIngressService> _logger;
+    private readonly IOptionsMonitor<ZoneConnectionOptions> _zoneConnectionOptions;
     private readonly EventStreamSocketManager _essManager;
     private readonly IServiceScopeFactory _serviceScopeFactory;
 
@@ -36,18 +39,42 @@ public class RealtimeIngressService : RealtimeIngress.RealtimeIngressBase
     /// Initializes a new instance of the <see cref="RealtimeIngressService"/> class.
     /// </summary>
     /// <param name="logger">The logging interface to use.</param>
+    /// <param name="zoneConnectionOptions">The zone connection options.</param>
     /// <param name="essManager">The event stream manager.</param>
     /// <param name="serviceScopeFactory">The service scope factory.</param>
     public RealtimeIngressService
     (
         ILogger<RealtimeIngressService> logger,
+        IOptionsMonitor<ZoneConnectionOptions> zoneConnectionOptions,
         EventStreamSocketManager essManager,
         IServiceScopeFactory serviceScopeFactory
     )
     {
         _logger = logger;
+        _zoneConnectionOptions = zoneConnectionOptions;
         _essManager = essManager;
         _serviceScopeFactory = serviceScopeFactory;
+    }
+
+    /// <summary>
+    /// Processes a zone connection request.
+    /// </summary>
+    /// <param name="request">The request.</param>
+    /// <param name="context">The context.</param>
+    /// <returns>A zone connection response.</returns>
+    public override Task<ZoneConnectionResponse> RequestZoneConnection
+    (
+        ZoneConnectionRequest request,
+        ServerCallContext context
+    )
+    {
+        ZoneConnectionOptions options = _zoneConnectionOptions.CurrentValue;
+
+        return Task.FromResult(new ZoneConnectionResponse
+        {
+            ClientVersion = options.ClientVersion,
+            ClientProtocolString = options.ClientProtocolString
+        });
     }
 
     /// <summary>

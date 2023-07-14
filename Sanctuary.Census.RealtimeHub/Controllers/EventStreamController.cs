@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
@@ -41,6 +42,7 @@ public class EventStreamController : ControllerBase
     /// Opens an event stream WebSocket connection.
     /// </summary>
     [Route("/streaming")]
+    [AllowAnonymous]
     public async Task OpenEventStreamConnection()
     {
         if (!HttpContext.WebSockets.IsWebSocketRequest)

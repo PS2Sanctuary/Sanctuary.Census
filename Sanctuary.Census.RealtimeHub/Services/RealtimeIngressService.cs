@@ -9,8 +9,10 @@ using Sanctuary.Census.Common.Objects;
 using Sanctuary.Census.Common.Objects.CommonModels;
 using Sanctuary.Census.Common.Objects.RealtimeEvents;
 using Sanctuary.Census.RealtimeHub.Objects;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Sanctuary.Census.RealtimeHub.Services;
@@ -21,8 +23,9 @@ namespace Sanctuary.Census.RealtimeHub.Services;
 [Authorize]
 public class RealtimeIngressService : RealtimeIngress.RealtimeIngressBase
 {
+    private readonly SemaphoreSlim _mapStateUpdateLock;
     private static readonly List<MapState> _mapStates;
-    private static readonly Dictionary<uint, WorldPopulation> _worldPopulations;
+    private static readonly ConcurrentDictionary<uint, WorldPopulation> _worldPopulations;
 
     private readonly ILogger<RealtimeIngressService> _logger;
     private readonly IOptionsMonitor<ZoneConnectionOptions> _zoneConnectionOptions;
@@ -32,7 +35,7 @@ public class RealtimeIngressService : RealtimeIngress.RealtimeIngressBase
     static RealtimeIngressService()
     {
         _mapStates = new List<MapState>();
-        _worldPopulations = new Dictionary<uint, WorldPopulation>();
+        _worldPopulations = new ConcurrentDictionary<uint, WorldPopulation>();
     }
 
     /// <summary>
@@ -54,6 +57,8 @@ public class RealtimeIngressService : RealtimeIngress.RealtimeIngressBase
         _zoneConnectionOptions = zoneConnectionOptions;
         _essManager = essManager;
         _serviceScopeFactory = serviceScopeFactory;
+
+        _mapStateUpdateLock = new SemaphoreSlim(1, 1);
     }
 
     /// <summary>
@@ -94,6 +99,7 @@ public class RealtimeIngressService : RealtimeIngress.RealtimeIngressBase
             request.Regions.Count
         );
 
+        await _mapStateUpdateLock.WaitAsync(context.CancellationToken);
         List<ReplaceOneModel<MapState>> replacementModels = new();
         List<MapState> changedStates = new();
 
@@ -172,6 +178,7 @@ public class RealtimeIngressService : RealtimeIngress.RealtimeIngressBase
         IMongoCollection<MapState> mapColl = dbContext.GetCollection<MapState>();
         await mapColl.BulkWriteAsync(replacementModels, null, context.CancellationToken);
 
+        _mapStateUpdateLock.Release();
         return new Ok();
     }
 

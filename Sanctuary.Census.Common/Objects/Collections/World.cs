@@ -10,6 +10,7 @@ namespace Sanctuary.Census.Common.Objects.Collections;
 /// <param name="WorldID">The ID of the server.</param>
 /// <param name="Name">The name of the server.</param>
 /// <param name="IsLocked">Indicates whether the server is locked.</param>
+/// <param name="LockState">The lock state of the server.</param>
 /// <param name="IsUnprivilegedAccessAllowed">Indicates whether standard accounts are allowed access to the server.</param>
 [Collection]
 public record World
@@ -17,5 +18,6 @@ public record World
     [property: JoinKey] uint WorldID,
     LocaleString Name,
     bool IsLocked,
+    string LockState,
     bool IsUnprivilegedAccessAllowed
 ) : ISanctuaryCollection;

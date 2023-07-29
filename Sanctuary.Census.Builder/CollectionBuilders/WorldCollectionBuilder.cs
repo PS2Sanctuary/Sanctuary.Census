@@ -54,7 +54,8 @@ public class WorldCollectionBuilder : ICollectionBuilder
             (
                 (uint)server.ServerID,
                 name!,
-                server.Islocked,
+                server.LockState is ServerLockState.Locked,
+                server.LockState.ToString(),
                 server.AllowedAccess
             );
             builtWorlds.TryAdd(built.WorldID, built);

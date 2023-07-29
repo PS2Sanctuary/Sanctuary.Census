@@ -46,7 +46,7 @@ public record MapState
     int CtfFlags,
     int RemainingCtfFlags,
     ValueEqualityDictionary<FactionDefinition, int> FactionPopulationUpperBound,
-    ValueEqualityDictionary<FactionDefinition, byte> FactionPopulationPercentage
+    ValueEqualityDictionary<FactionDefinition, float> FactionPopulationPercentage
 ) : IRealtimeEvent, ISanctuaryCollection
 {
     /// <inheritdoc />

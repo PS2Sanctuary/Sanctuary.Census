@@ -110,13 +110,13 @@ public class RealtimeIngressService : RealtimeIngress.RealtimeIngressBase
                 || region.RemainingCtfFlags < region.CtfFlags;
 
             ValueEqualityDictionary<FactionDefinition, int> popUpperBounds = new();
-            ValueEqualityDictionary<FactionDefinition, byte> popPercentages = new();
+            ValueEqualityDictionary<FactionDefinition, float> popPercentages = new();
 
             foreach ((int faction, int value) in region.FactionPopulationUpperBound)
                 popUpperBounds.Add((FactionDefinition)faction, value);
 
-            foreach ((int faction, int value) in region.FactionPopulationPercentage)
-                popPercentages.Add((FactionDefinition)faction, (byte)value);
+            foreach ((int faction, float value) in region.FactionPopulationPercentage)
+                popPercentages.Add((FactionDefinition)faction, value);
 
             MapState builtState = new
             (

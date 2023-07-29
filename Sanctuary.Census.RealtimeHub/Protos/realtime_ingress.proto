@@ -42,7 +42,7 @@ message MapRegionState {
   int32 ctf_flags = 6;
   int32 remaining_ctf_flags = 7;
   map<int32, int32> faction_population_upper_bound = 8;
-  map<int32, int32> faction_population_percentage = 9;
+  map<int32, float> faction_population_percentage = 9;
 }
 
 message WorldPopulationUpdate {

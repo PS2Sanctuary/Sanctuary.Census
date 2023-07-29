@@ -176,8 +176,8 @@ public class ServerConnectionWorker : BackgroundService
 
             for (int i = 0; i < population.FactionPercentages.Length; i++)
             {
-                double percentage = population.FactionPercentages[i] / (double)byte.MaxValue;
-                regionState.FactionPopulationPercentage.Add(i + 1, (int)(percentage * 100));
+                float percentage = population.FactionPercentages[i] / (float)byte.MaxValue;
+                regionState.FactionPopulationPercentage.Add(i + 1, percentage * 100);
             }
         }
 

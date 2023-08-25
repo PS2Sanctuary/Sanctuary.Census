@@ -4,7 +4,9 @@ using Microsoft.Extensions.Hosting;
 using OpenTelemetry.Resources;
 using OpenTelemetry.Trace;
 using Sanctuary.Census.Common.Extensions;
+using Sanctuary.Census.RealtimeCollector.Services;
 using Sanctuary.Census.RealtimeHub;
+using Sanctuary.Census.ServerData.Internal.Abstractions.Services;
 using Sanctuary.Census.ServerData.Internal.Extensions;
 using Sanctuary.Census.ServerData.Internal.Objects;
 using Serilog;
@@ -75,6 +77,7 @@ public static class Program
                     .Configure<ContinuousDataOptions>(context.Configuration.GetSection(nameof(ContinuousDataOptions)));
 
                 services.AddCommonServices(context.HostingEnvironment)
+                    .AddTransient<IClientDetailsService, HubClientDetailsService>()
                     .AddInternalServerDataServices(context.HostingEnvironment);
 
                 string? hubEndpointString = context.Configuration[$"{CollectorConfig.ConfigName}:{nameof(CollectorConfig.HubEndpoint)}"];

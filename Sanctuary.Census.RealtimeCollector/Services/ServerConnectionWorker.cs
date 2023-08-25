@@ -14,7 +14,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Sanctuary.Census.RealtimeCollector;
+namespace Sanctuary.Census.RealtimeCollector.Services;
 
 /// <summary>
 /// A background worker responsible for processing continuous server updates

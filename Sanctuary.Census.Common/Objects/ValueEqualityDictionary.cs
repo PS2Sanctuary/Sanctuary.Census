@@ -13,7 +13,6 @@ public class ValueEqualityDictionary<TKey, TValue> : Dictionary<TKey, TValue>
 {
     /// <inheritdoc />
     public ValueEqualityDictionary()
-        : base()
     {
     }
 

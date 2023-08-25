@@ -74,7 +74,7 @@ public class DatasheetGenerator : IIncrementalGenerator
         return null;
     }
 
-    private void Execute
+    private static void Execute
     (
         Compilation compilation,
         ImmutableArray<RecordDeclarationSyntax> classes,
@@ -157,7 +157,7 @@ public class DatasheetGenerator : IIncrementalGenerator
                 @class.Locations[0]
             );
             reportDiagnostic(d);
-            return $"// Must have a positional constructor, and only one constructor with parameters";
+            return "// Must have a positional constructor, and only one constructor with parameters";
         }
 
         StringBuilder ctorParamNames = new();
@@ -468,7 +468,7 @@ public partial record {@class.Name} : IDatasheet<{@class.Name}>
                 );
                 break;
             }
-            case SpecialType.None when paramType is INamedTypeSymbol { EnumUnderlyingType: {} } enumType:
+            case SpecialType.None when paramType is INamedTypeSymbol { EnumUnderlyingType: not null } enumType:
             {
                 string enumField = paramName + "EnumValue";
                 sb.Append

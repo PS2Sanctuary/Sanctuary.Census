@@ -49,5 +49,5 @@ public record OutfitWarRound
         /// A final stage.
         /// </summary>
         Final = 3
-    };
+    }
 }

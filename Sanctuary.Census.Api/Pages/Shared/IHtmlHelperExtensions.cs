@@ -15,18 +15,20 @@ public static class IHtmlHelperExtensions
     /// <param name="htmlHelper">The HTML helper.</param>
     /// <returns>A <see cref="HtmlString"/> containing the initialization script.</returns>
     public static HtmlString InitializeLocalDateDisplay(this IHtmlHelper htmlHelper)
-        => new HtmlString
+        => new
         (
-            @"<script type=""text/javascript"">
-    (function() {
-        'use strict';
-        const elements = document.getElementsByTagName('time');
-        for (const element of elements) {
-            const timestamp = element.innerHTML;
-            element.innerHTML = new Date(parseInt(timestamp)).toLocaleString();
-        }
-    })();
-</script>"
+            """
+            <script type="text/javascript">
+                (function() {
+                    'use strict';
+                    const elements = document.getElementsByTagName('time');
+                    for (const element of elements) {
+                        const timestamp = element.innerHTML;
+                        element.innerHTML = new Date(parseInt(timestamp)).toLocaleString();
+                    }
+                })();
+            </script>
+            """
         );
 
     /// <summary>

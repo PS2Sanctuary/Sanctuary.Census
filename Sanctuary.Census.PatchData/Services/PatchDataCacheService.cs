@@ -1,5 +1,4 @@
-﻿using Sanctuary.Census.Common;
-using Sanctuary.Census.Common.Json;
+﻿using Sanctuary.Census.Common.Json;
 using Sanctuary.Census.Common.Objects.Collections;
 using Sanctuary.Census.PatchData.Abstractions.Services;
 using System;

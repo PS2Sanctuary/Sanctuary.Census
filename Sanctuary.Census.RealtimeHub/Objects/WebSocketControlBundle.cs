@@ -14,7 +14,7 @@ internal sealed class WebSocketBundle : IDisposable
     private readonly Utf8JsonWriter _jsonWriter;
 
     public SemaphoreSlim WriteSemaphore { get; }
-    public EventSubscription Subscription { get; set; }
+    public EventSubscription Subscription { get; }
 
     public WebSocketBundle(CancellationTokenSource socketConnectionCancelCts)
     {

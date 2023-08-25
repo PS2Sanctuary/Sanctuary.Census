@@ -12,7 +12,6 @@ public class ValueEqualityList<T> : List<T>
 {
     /// <inheritdoc />
     public ValueEqualityList()
-        : base()
     {
     }
 

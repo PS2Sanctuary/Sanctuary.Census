@@ -1,6 +1,5 @@
 ﻿using MongoDB.Driver;
 using Sanctuary.Census.Builder.Abstractions.Services;
-using Sanctuary.Census.Common;
 using Sanctuary.Census.Common.Abstractions.Services;
 using Sanctuary.Census.Common.Json;
 using Sanctuary.Census.Common.Objects.DiffModels;
@@ -129,9 +128,7 @@ public class CollectionDiffService : ICollectionDiffService
     private void IncrementCollectionChanges<T>()
     {
         string name = GetCollectionName<T>();
-        if (!_collectionChangeCounts.ContainsKey(name))
-            _collectionChangeCounts[name] = 0;
-
+        _collectionChangeCounts.TryAdd(name, 0);
         _collectionChangeCounts[name]++;
     }
 }

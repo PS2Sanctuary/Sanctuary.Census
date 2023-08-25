@@ -396,7 +396,7 @@ public class CollectionController : ControllerBase
         }
     }
 
-    private JsonSerializerOptions GetJsonOptions(bool censusJSON, bool includeNull)
+    private static JsonSerializerOptions GetJsonOptions(bool censusJSON, bool includeNull)
     {
         JsonSerializerOptions options = _defaultOptions;
         if (includeNull && !censusJSON)
@@ -474,7 +474,7 @@ public class CollectionController : ControllerBase
                 string[] components = value.Split(':');
                 int sortDirection = 1;
 
-                if (components.Length == 2 && components[1] == "-1")
+                if (components is [_, "-1"])
                     sortDirection = -1;
 
                 aggregate = aggregate.Sort(new BsonDocument(components[0], sortDirection));

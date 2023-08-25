@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc.RazorPages;
 using MongoDB.Driver;
-using Sanctuary.Census.Common;
 using Sanctuary.Census.Common.Abstractions.Services;
 using Sanctuary.Census.Common.Json;
 using Sanctuary.Census.Common.Objects;
@@ -140,8 +139,8 @@ public class DiffViewerPage : PageModel
     {
         Type type = diffEntry.OldObject?.GetType() ?? diffEntry.NewObject!.GetType();
 
-        if (CollectionTypeProperties.ContainsKey(type))
-            return CollectionTypeProperties[type];
+        if (CollectionTypeProperties.TryGetValue(type, out PropertyInfo[]? properties))
+            return properties;
 
         PropertyInfo[] props = type.GetProperties();
         CollectionTypeProperties[type] = props;

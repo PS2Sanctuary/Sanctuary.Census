@@ -3,7 +3,7 @@ using Mandible.Manifest;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Logging.Abstractions;
 using Microsoft.Extensions.Options;
-using Moq;
+using NSubstitute;
 using Sanctuary.Census.Common.Objects;
 using Sanctuary.Census.Common.Services;
 using System;
@@ -33,22 +33,14 @@ public class CachingManifestServiceTests
 
     public async Task TestGetFileAsync()
     {
-        CachingManifestService ms = GetManifestService(out Mock<IManifestService> msMock, new MockFileSystem());
+        CachingManifestService ms = GetManifestService(out IManifestService msMock, new MockFileSystem());
 
         await Assert.ThrowsAsync<KeyNotFoundException>
         (
             async () => await ms.GetFileAsync("does_not_exist.txt", PS2Environment.PS2)
         );
 
-        msMock.Verify
-        (
-            x => x.GetDigestAsync
-            (
-                It.IsAny<string>(),
-                It.IsAny<CancellationToken>()
-            ),
-            Times.Once()
-        );
+        await msMock.Received(1).GetDigestAsync(Arg.Any<string>(), Arg.Any<CancellationToken>());
     }
 
     // [Fact]
@@ -87,7 +79,7 @@ public class CachingManifestServiceTests
     //         );
     // }
 
-    private static CachingManifestService GetManifestService(out Mock<IManifestService> manifestServiceMock, IFileSystem fileSystem)
+    private static CachingManifestService GetManifestService(out IManifestService manifestServiceMock, IFileSystem fileSystem)
     {
         Digest digest = new
         (
@@ -109,32 +101,24 @@ public class CachingManifestServiceTests
         );
         ManifestFile file = new("test.txt", 2, 1, 0, DateTimeOffset.Now, null, "abcdef", null, null, Array.Empty<ManifestFilePatch>());
 
-        manifestServiceMock = new Mock<IManifestService>();
+        manifestServiceMock = Substitute.For<IManifestService>();
 
-        manifestServiceMock.Setup<Task<Digest>>
-            (
-                x => x.GetDigestAsync(It.IsAny<string>(), It.IsAny<CancellationToken>())
-            )
-            .ReturnsAsync(digest)
-            .Verifiable();
+        manifestServiceMock.GetDigestAsync(Arg.Any<string>(), Arg.Any<CancellationToken>())
+            .Returns(digest);
 
-        manifestServiceMock.Setup<Task<Stream>>
+        manifestServiceMock.GetFileDataAsync
             (
-                x => x.GetFileDataAsync
-                (
-                    It.IsAny<Digest>(),
-                    It.IsAny<ManifestFile>(),
-                    It.IsAny<CancellationToken>()
-                )
+                Arg.Any<Digest>(),
+                Arg.Any<ManifestFile>(),
+                Arg.Any<CancellationToken>()
             )
-            .ReturnsAsync(new MemoryStream())
-            .Verifiable();
+            .Returns(new MemoryStream());
 
         return new CachingManifestService
         (
             NullLogger<CachingManifestService>.Instance,
-            manifestServiceMock.Object,
-            Mock.Of<IMemoryCache>(),
+            manifestServiceMock,
+            Substitute.For<IMemoryCache>(),
             Options.Create(new CommonOptions { AppDataDirectory = "AppData" }),
             fileSystem
         );

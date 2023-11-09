@@ -7,6 +7,7 @@ using Sanctuary.Census.Common.Objects.RealtimeEvents;
 using Sanctuary.Census.ServerData.Internal.Abstractions.Services;
 using Sanctuary.Common.Objects;
 using Sanctuary.Zone.Packets.Server;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
@@ -38,6 +39,10 @@ public class ZonePopulationLimitCollectionBuilder : ICollectionBuilder
             throw new MissingCacheDataException(typeof(ContinentBattleInfo));
 
         List<ZonePopulationLimits> builtLimits = new();
+        List<ZonePopulationLimits> existingLimits = new();
+
+        await foreach (ZonePopulationLimits limit in dbContext.GetCollectionDocumentsAsync<ZonePopulationLimits>(ct))
+            existingLimits.Add(limit);
 
         foreach ((ServerDefinition world, ContinentBattleInfo cbi) in _serverDataCache.ContinentBattleInfos)
         {
@@ -63,13 +68,24 @@ public class ZonePopulationLimitCollectionBuilder : ICollectionBuilder
                     limits[(FactionDefinition)(i + 1)] = limit;
                 }
 
-                builtLimits.Add(new ZonePopulationLimits
+                ZonePopulationLimits? oldLimit = existingLimits.FirstOrDefault
+                (
+                    x => x.WorldId == (uint)world
+                        && x.ZoneId == (ushort)zone.ZoneID
+                );
+
+                ZonePopulationLimits newLimit = new
                 (
                     (uint)world,
                     (ushort)zone.ZoneID,
                     limits.Values.Sum(),
                     limits
-                ));
+                );
+
+                // Account for small variations in the limit, owing to remnant chars on the zone.
+                // Then select the largest limit, so we creep towards the true max
+                if (oldLimit is not null && Math.Abs(oldLimit.Total - newLimit.Total) < 5)
+                    builtLimits.Add(oldLimit.Total <= newLimit.Total ? newLimit : oldLimit);
             }
         }
 

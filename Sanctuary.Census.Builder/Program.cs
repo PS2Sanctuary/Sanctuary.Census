@@ -443,6 +443,13 @@ public static class Program
             .WithEqualityKey(x => x.ZoneID)
             .WithRemoveOldEntryTest(static _ => false);
 
+        configProvider.Register<ZonePopulationLimits>()
+            .WithIndex(x => x.WorldId, false)
+            .WithIndex(x => x.ZoneId, false)
+            .WithEqualityKey(x => x.WorldId)
+            .WithEqualityKey(x => x.ZoneId)
+            .WithRemoveOldEntryTest(static _ => false);
+
         // Realtime registration
 
         RegisterRealtime<MapState>(configProvider)
@@ -462,13 +469,6 @@ public static class Program
             .WithEqualityKey(x => x.ZoneId)
             .WithEqualityKey(x => x.ZoneInstance);
 
-        configProvider.Register<ZonePopulationLimits>()
-            .WithIndex(x => x.WorldId, false)
-            .WithIndex(x => x.ZoneId, false)
-            .WithEqualityKey(x => x.WorldId)
-            .WithEqualityKey(x => x.ZoneId)
-            .WithRemoveOldEntryTest(static _ => false);
-
         return services;
     }
 
@@ -476,7 +476,8 @@ public static class Program
     (
         CollectionConfigurationProvider configProvider
     ) where TCollection : IRealtimeEvent, ISanctuaryCollection
-        => configProvider.Register<TCollection>()
+    {
+        return configProvider.Register<TCollection>()
             .WithEqualityKey(x => x.WorldId)
             .WithRemoveOldEntryTest
             (
@@ -484,6 +485,7 @@ public static class Program
                     .Add(TimeSpan.FromMinutes(10)) < DateTimeOffset.UtcNow
             )
             .IsDynamic();
+    }
 
     private static IServiceCollection RegisterCollectionBuilders(this IServiceCollection services)
     {

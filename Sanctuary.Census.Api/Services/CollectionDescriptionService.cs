@@ -142,16 +142,17 @@ public class CollectionDescriptionService
                 if (lastName != null)
                 {
                     string inner = reader.ReadInnerXml();
-                    if (inner.Length is 0)
-                        continue;
 
-                    string description = inner.Trim()
-                        .Replace("\n", string.Empty)
-                        .Replace("\r", string.Empty)
-                        .Replace("\t", string.Empty)
-                        .Replace("            ", " "); // Comes after line-breaks in XML docs
+                    if (inner.Length > 0)
+                    {
+                        inner = inner.Trim()
+                            .Replace("\n", string.Empty)
+                            .Replace("\r", string.Empty)
+                            .Replace("\t", string.Empty)
+                            .Replace("            ", " "); // Comes after line-breaks in XML docs
+                    }
 
-                    fieldComments[lastName] = description;
+                    fieldComments[lastName] = inner;
                 }
                 lastName = null;
             }

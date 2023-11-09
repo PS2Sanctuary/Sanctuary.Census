@@ -2,7 +2,7 @@
 
 Date format: DD/MM/YYYY
 
-## vNext
+## 10/11/2023
 
 #### 🚀 Additions
 
@@ -17,7 +17,8 @@ Date format: DD/MM/YYYY
 
 #### 🚨 Breaking changes
 
-- The old fields mentioned in the update notes for [14/04/2023](#14042023) have now been removed.
+- The old fields mentioned in the update notes for [14/04/2023](#14042023) have now been removed,
+and will not be added to any new records going forwards.
 
 - 'Realtime' collections will now display a value of `-1` for their `last_updated` and `update_interval_sec`
 fields on the root datatype endpoint.
@@ -25,6 +26,7 @@ fields on the root datatype endpoint.
 #### 🐛 Fixes
 
 - The `describe` now produces better output for list and dictionary properties.
+- The `describe` verb no longer fails on collections on which some fields had empty descriptions.
 
 ## 01/05/2023
 

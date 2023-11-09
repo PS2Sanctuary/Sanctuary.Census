@@ -18,6 +18,14 @@ as the official Census, so ensure you are familiar with using that. I'd recommen
 Jump right in by heading to [https://census.lithafalcon.cc/get/ps2](https://census.lithafalcon.cc/get/ps2) to view the available collections.
 Auto-generated API documentation can be found [here](https://census.lithafalcon.cc/api-doc/index.html).
 
+Sanctuary.Census has a (somewhat primitive) 'realtime' event-stream. Events are pushed every five seconds
+when operating nominally, but are likely to come in bursts with up to a minute of downtime, and occasionally
+may fail completely for a particular server for multiple hours.
+
+- Connect at `wss://census.lithafalcon.cc/streaming`.
+- Compatible with the official Census' event stream.
+- Valid event names: `WorldPopulationUpdate`, `MapStateUpdate`.
+
 > **Warning**:
 > Please read the [migrating from Census](docs/migrating-from-census.md) documentation to get an overview of any differences between
 > Sanctuary.Census and the official Census.
@@ -46,7 +54,7 @@ Sanctuary.Census expects the database to be running on the default endpoint of `
 no way to configure this.
 
 If you intend to deploy your own copy, each application is ready to send logging to a [Seq deployment](https://datalust.co/seq),
-and [OpenTelemetry](https://opentelemetry.io) tracing/metrics to an OTLP-compatible endpoint (such as Jaeger, SigNoz or the OTEL
+and [OpenTelemetry](https://opentelemetry.io) tracing/metrics to an OTLP-compatible endpoint (such as Jaeger or the OTEL
 Collector). Each application that exposes an API expects to be hosted behind a reverse proxy (in particular, configuration has
 been performed for Nginx).
 
@@ -55,7 +63,7 @@ been performed for Nginx).
 
 ### Solution Architecture
 
-Sanctuary.Census follows the microservice pattern, with independent services responsible for the following primary tasks:
+Sanctuary.Census is comprised of independent services responsible for the following primary tasks:
 
 - Data exposure (e.g. the API).
 - Static collection data extraction and collation.
@@ -79,22 +87,26 @@ This service worker project is responsible for transforming data source caches i
 collections surfaced by the API. Built collections are upserted in the underlying database,
 and the builder also maintains a diffing provider, in order to show changes to the collections.
 
-The builder uses multiple data source projects - for example, `Sanctuary.Census.ClientData`. Data source projects contain their
-specific data models, data retrieval logic and an object inheriting from `IDataCacheService` responsible for caching their data.
+The builder uses multiple data source projects - for example, `Sanctuary.Census.ClientData`.
+Data source projects contain their specific data models, data retrieval logic and an object
+inheriting from `IDataCacheService` responsible for caching their data.
 
 #### Sanctuary.Census.RealtimeHub
 
-This project is responsible for processing realtime data, which includes upserting the database collections and (soon!) distributing
-updates over the EventStream, which includes responsibility for managing the WebSocket connections. It receives data from the
-*realtime collectors* via a gRPC service and uses an ASP.NET Core Web API to provide WebSocket support.
+This project is responsible for processing realtime data, which includes upserting the database
+collections and distributing updates over the EventStream, which includes responsibility for managing
+the WebSocket connections. It receives data from the *realtime collectors* via a gRPC service and
+uses an ASP.NET Core Web API to provide WebSocket support.
 
 #### Sanctuary.Census.RealtimeCollector
 
-This project contains an independent game server client that is responsible for connecting to a server and retrieving realtime data.
-Collected data is sent to the *realtime hub* using a gRPC connection. Collectors work most efficiently when connecting to only a single
-server, but have support for synchronously cycling between multiple servers.
+This project contains an independent game server client that is responsible for connecting to a server
+and retrieving realtime data. Collected data is sent to the *realtime hub* using a gRPC connection.
+Collectors work most efficiently when connecting to only a single server, but have support for synchronously
+cycling between multiple servers.
 
 ## Contributing
 
-Contributions are more than welcome! Please consider opening an issue first to detail your ideas. This gives a maintainer a chance
-to pre-approve the work, and reduces the likelihood of two people working on the same feature simultaneously.
+Contributions are more than welcome! Please consider opening an issue first to detail your ideas.
+This gives a maintainer a chance to pre-approve the work, and reduces the likelihood of two people
+working on the same feature simultaneously.

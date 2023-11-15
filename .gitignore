@@ -7,3 +7,4 @@ riderModule.iml
 /_ReSharper.Caches/
 .idea/
 *.DotSettings.User
+*.user

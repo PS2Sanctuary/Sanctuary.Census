@@ -245,14 +245,14 @@ public class ServerConnectionWorker : BackgroundService
 
         OutfitWarRegistrationsUpdate update = new()
         {
-            WorldId = (uint)server
+            WorldId = (uint)server,
+            OutfitWarId = outfitWarId
         };
         update.Registrations.AddRange
         (
             registrations.Outfits.Select(x => new OutfitWarRegistration
             {
                 OutfitId = x.OutfitID,
-                OutfitWarId = outfitWarId,
                 FactionId = (uint)x.FactionID,
                 MemberSignupCount = x.MemberSignupCount,
                 RegistrationOrder = x.RegistrationOrder,

@@ -255,7 +255,7 @@ public class RealtimeIngressService : RealtimeIngress.RealtimeIngressBase
                 reg.OutfitId,
                 reg.FactionId,
                 request.WorldId,
-                reg.OutfitWarId,
+                request.OutfitWarId,
                 reg.RegistrationOrder,
                 (Common.Objects.Collections.OutfitWarRegistration.RegistrationStatus)reg.Status,
                 reg.MemberSignupCount

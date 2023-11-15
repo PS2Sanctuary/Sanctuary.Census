@@ -48,16 +48,16 @@ message MapRegionState {
 
 message OutfitWarRegistrationsUpdate {
   uint32 world_id = 1;
-  repeated OutfitWarRegistration registrations = 2;
+  uint32 outfit_war_id = 2;
+  repeated OutfitWarRegistration registrations = 3;
 }
 
 message OutfitWarRegistration {
   uint64 outfit_id = 1;
-  uint32 outfit_war_id = 2;
-  uint32 faction_id = 3;
-  uint32 registration_order = 4;
-  uint32 status = 5;
-  uint32 member_signup_count = 6;
+  uint32 faction_id = 2;
+  uint32 registration_order = 3;
+  uint32 status = 4;
+  uint32 member_signup_count = 5;
 }
 
 message WorldPopulationUpdate {

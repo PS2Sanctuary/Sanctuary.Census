@@ -14,6 +14,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using MOutfitWarRegistration = Sanctuary.Census.Common.Objects.Collections.OutfitWarRegistration;
 
 namespace Sanctuary.Census.RealtimeHub.Services;
 
@@ -229,6 +230,50 @@ public class RealtimeIngressService : RealtimeIngress.RealtimeIngressBase
             new ReplaceOptions { IsUpsert = true },
             context.CancellationToken
         );
+
+        return new Ok();
+    }
+
+    /// <summary>
+    /// Processes outfit war registration updates.
+    /// </summary>
+    /// <param name="request">The update request.</param>
+    /// <param name="context">The context.</param>
+    /// <returns>The result of the update.</returns>
+    public override async Task<Ok> SubmitOutfitWarRegistrationsUpdate
+    (
+        OutfitWarRegistrationsUpdate request,
+        ServerCallContext context
+    )
+    {
+        List<ReplaceOneModel<MOutfitWarRegistration>> replacementModels = new();
+
+        foreach (OutfitWarRegistration reg in request.Registrations)
+        {
+            MOutfitWarRegistration builtReg = new
+            (
+                reg.OutfitId,
+                reg.FactionId,
+                request.WorldId,
+                reg.OutfitWarId,
+                reg.RegistrationOrder,
+                (Common.Objects.Collections.OutfitWarRegistration.RegistrationStatus)reg.Status,
+                reg.MemberSignupCount
+            );
+
+            ReplaceOneModel<MOutfitWarRegistration> replacementModel = new
+            (
+                Builders<MOutfitWarRegistration>.Filter.Eq(x => x.OutfitID, builtReg.OutfitID),
+                builtReg
+            ) { IsUpsert = true };
+            replacementModels.Add(replacementModel);
+        }
+
+        await using AsyncServiceScope scope = _serviceScopeFactory.CreateAsyncScope();
+        IMongoContext dbContext = scope.ServiceProvider.GetRequiredService<IMongoContext>();
+
+        IMongoCollection<MOutfitWarRegistration> mapColl = dbContext.GetCollection<MOutfitWarRegistration>();
+        await mapColl.BulkWriteAsync(replacementModels, null, context.CancellationToken);
 
         return new Ok();
     }

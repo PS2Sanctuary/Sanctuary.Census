@@ -10,6 +10,7 @@ service RealtimeIngress {
   rpc RequestZoneConnection(ZoneConnectionRequest) returns (ZoneConnectionResponse);
   rpc SubmitMapStateUpdate(MapStateUpdate) returns (Ok);
   rpc SubmitWorldPopulationUpdate(WorldPopulationUpdate) returns (Ok);
+  rpc SubmitOutfitWarRegistrationsUpdate(OutfitWarRegistrationsUpdate) returns (Ok);
 }
 
 message Ok {
@@ -43,6 +44,20 @@ message MapRegionState {
   int32 remaining_ctf_flags = 7;
   map<int32, int32> faction_population_upper_bound = 8;
   map<int32, float> faction_population_percentage = 9;
+}
+
+message OutfitWarRegistrationsUpdate {
+  uint32 world_id = 1;
+  repeated OutfitWarRegistration registrations = 2;
+}
+
+message OutfitWarRegistration {
+  uint64 outfit_id = 1;
+  uint32 outfit_war_id = 2;
+  uint32 faction_id = 3;
+  uint32 registration_order = 4;
+  uint32 status = 5;
+  uint32 member_signup_count = 6;
 }
 
 message WorldPopulationUpdate {

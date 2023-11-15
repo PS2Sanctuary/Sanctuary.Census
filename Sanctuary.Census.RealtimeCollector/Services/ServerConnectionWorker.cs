@@ -7,12 +7,14 @@ using Sanctuary.Census.ServerData.Internal.Objects;
 using Sanctuary.Census.ServerData.Internal.Services;
 using Sanctuary.Common.Objects;
 using Sanctuary.Zone.Packets.MapRegion;
+using Sanctuary.Zone.Packets.OutfitWars;
 using Sanctuary.Zone.Packets.Server;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using OutfitWarRegistration = Sanctuary.Census.RealtimeHub.OutfitWarRegistration;
 
 namespace Sanctuary.Census.RealtimeCollector.Services;
 
@@ -75,6 +77,7 @@ public class ServerConnectionWorker : BackgroundService
         {
             await Task.Yield();
             MapRegionPopulation? lastPopulation = null;
+            Dictionary<ServerDefinition, OutfitWarWar> outfitWars = new();
 
             await foreach (RealtimeDataWrapper data in _continousServerService.DataOutputReader.ReadAllAsync(ct))
             {
@@ -99,6 +102,17 @@ public class ServerConnectionWorker : BackgroundService
                         case ServerPopulationInfo spi:
                         {
                             await ProcessWorldPopulation(data.Server, spi, ct);
+                            break;
+                        }
+                        case OutfitWarWar oww:
+                        {
+                            outfitWars[data.Server] = oww;
+                            break;
+                        }
+                        case OutfitWarRegistrations owr:
+                        {
+                            if (outfitWars.TryGetValue(data.Server, out OutfitWarWar? oww))
+                                await ProcessOWRegistrations(data.Server, oww.OutfitWarID, owr, ct);
                             break;
                         }
                     }
@@ -212,6 +226,43 @@ public class ServerConnectionWorker : BackgroundService
         await ingressClient.SubmitWorldPopulationUpdateAsync
         (
             worldPopUpdate,
+            deadline: DateTime.UtcNow.AddSeconds(10),
+            cancellationToken: ct
+        );
+    }
+
+    private async Task ProcessOWRegistrations
+    (
+        ServerDefinition server,
+        uint outfitWarId,
+        OutfitWarRegistrations registrations,
+        CancellationToken ct
+    )
+    {
+        await using AsyncServiceScope serviceScope = _scopeFactory.CreateAsyncScope();
+        RealtimeIngress.RealtimeIngressClient ingressClient = serviceScope.ServiceProvider
+            .GetRequiredService<RealtimeIngress.RealtimeIngressClient>();
+
+        OutfitWarRegistrationsUpdate update = new()
+        {
+            WorldId = (uint)server
+        };
+        update.Registrations.AddRange
+        (
+            registrations.Outfits.Select(x => new OutfitWarRegistration
+            {
+                OutfitId = x.OutfitID,
+                OutfitWarId = outfitWarId,
+                FactionId = (uint)x.FactionID,
+                MemberSignupCount = x.MemberSignupCount,
+                RegistrationOrder = x.RegistrationOrder,
+                Status = (uint)x.Status
+            })
+        );
+
+        await ingressClient.SubmitOutfitWarRegistrationsUpdateAsync
+        (
+            update,
             deadline: DateTime.UtcNow.AddSeconds(10),
             cancellationToken: ct
         );

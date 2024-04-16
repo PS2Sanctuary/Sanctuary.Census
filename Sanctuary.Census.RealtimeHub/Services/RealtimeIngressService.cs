@@ -11,7 +11,6 @@ using Sanctuary.Census.Common.Objects.RealtimeEvents;
 using Sanctuary.Census.RealtimeHub.Objects;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using MOutfitWarRegistration = Sanctuary.Census.Common.Objects.Collections.OutfitWarRegistration;
@@ -25,7 +24,7 @@ namespace Sanctuary.Census.RealtimeHub.Services;
 public class RealtimeIngressService : RealtimeIngress.RealtimeIngressBase
 {
     private readonly SemaphoreSlim _mapStateUpdateLock;
-    private static readonly List<MapState> _mapStates;
+    private static readonly Dictionary<(uint World, ushort Zone, ushort Instance, uint Region), MapState> _mapStates;
     private static readonly ConcurrentDictionary<uint, WorldPopulation> _worldPopulations;
 
     private readonly ILogger<RealtimeIngressService> _logger;
@@ -35,7 +34,7 @@ public class RealtimeIngressService : RealtimeIngress.RealtimeIngressBase
 
     static RealtimeIngressService()
     {
-        _mapStates = new List<MapState>();
+        _mapStates = new Dictionary<(uint, ushort, ushort, uint), MapState>();
         _worldPopulations = new ConcurrentDictionary<uint, WorldPopulation>();
     }
 
@@ -101,8 +100,8 @@ public class RealtimeIngressService : RealtimeIngress.RealtimeIngressBase
         );
 
         await _mapStateUpdateLock.WaitAsync(context.CancellationToken);
-        List<ReplaceOneModel<MapState>> replacementModels = new();
-        List<MapState> changedStates = new();
+        List<ReplaceOneModel<MapState>> replacementModels = [];
+        List<MapState> changedStates = [];
 
         foreach (MapRegionState region in request.Regions)
         {
@@ -147,24 +146,20 @@ public class RealtimeIngressService : RealtimeIngress.RealtimeIngressBase
             ) { IsUpsert = true };
             replacementModels.Add(replacementModel);
 
-            MapState? existingState = _mapStates.FirstOrDefault
-            (
-                ms => ms.WorldId == builtState.WorldId
-                    && ms.ZoneId == builtState.ZoneId
-                    && ms.ZoneInstance == builtState.ZoneInstance
-                    && ms.MapRegionId == builtState.MapRegionId
-            );
-
+            // The timestamp is ALWAYS going to change, but we want to do a record comparison.
+            // Hence, we'll just store and compare on a state without the timestamp.
             MapState checkState = builtState with { Timestamp = 0 };
-            if (existingState is null)
+            (uint, ushort, ushort, uint) key = (builtState.WorldId, builtState.ZoneId, builtState.ZoneInstance, builtState.MapRegionId);
+
+            // TODO: The comparison here isn't working
+            if (_mapStates.TryGetValue(key, out MapState? existingState) && !existingState.Equals(checkState))
             {
-                _mapStates.Add(checkState);
+                _mapStates[key] = checkState;
                 changedStates.Add(builtState);
             }
-            else if (!existingState.Equals(checkState))
+            else
             {
-                _mapStates.Remove(existingState);
-                _mapStates.Add(checkState);
+                _mapStates[key] = checkState;
                 changedStates.Add(builtState);
             }
         }

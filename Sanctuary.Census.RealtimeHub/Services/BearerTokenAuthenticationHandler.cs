@@ -21,14 +21,12 @@ public class BearerTokenAuthenticationHandler : AuthenticationHandler<BearerToke
     /// <param name="options">The authentication options to use.</param>
     /// <param name="logger">The logging interface to use.</param>
     /// <param name="encoder">The URL encoder to use.</param>
-    /// <param name="clock">The clock to use.</param>
     public BearerTokenAuthenticationHandler
     (
         IOptionsMonitor<BearerTokenAuthenticationOptions> options,
         ILoggerFactory logger,
-        UrlEncoder encoder,
-        ISystemClock clock
-    ) :  base(options, logger, encoder, clock)
+        UrlEncoder encoder
+    ) :  base(options, logger, encoder)
     {
     }
 

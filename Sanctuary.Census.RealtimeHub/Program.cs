@@ -30,11 +30,10 @@ public static class Program
         WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
         builder.WebHost.ConfigureKestrel((context, options) =>
         {
-            IPEndPoint wssAddress = IPEndPoint.Parse(context.Configuration["Addresses:WebSocket"]!);
-            IPEndPoint grpcAddress = IPEndPoint.Parse(context.Configuration["Addresses:Grpc"]!);
-
-            options.Listen(wssAddress);
-            options.Listen(grpcAddress, listenOptions => listenOptions.Protocols = HttpProtocols.Http2);
+            foreach (string value in context.Configuration["Addresses:WebSocket"]!.Split(";"))
+                options.Listen(IPEndPoint.Parse(value));
+            foreach (string value in context.Configuration["Addresses:Grpc"]!.Split(";"))
+                options.Listen(IPEndPoint.Parse(value), listenOptions => listenOptions.Protocols = HttpProtocols.Http2);
         });
 
         builder.Host.UseSystemd();

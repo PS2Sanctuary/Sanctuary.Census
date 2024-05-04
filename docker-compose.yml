@@ -1,0 +1,6 @@
+﻿services:
+  sanctuary-census-api:
+    image: sanctuary-census-api
+    build:
+      context: .
+      dockerfile: Sanctuary.Census.Api/Dockerfile

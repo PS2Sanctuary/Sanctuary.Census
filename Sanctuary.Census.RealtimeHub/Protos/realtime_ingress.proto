@@ -1,6 +1,7 @@
 syntax = "proto3";
 
 import "google/protobuf/timestamp.proto";
+import "google/protobuf/wrappers.proto";
 
 option csharp_namespace = "Sanctuary.Census.RealtimeHub";
 
@@ -24,6 +25,20 @@ message ZoneConnectionRequest {
 message ZoneConnectionResponse {
   string ClientProtocolString = 1;
   string ClientVersion = 2;
+}
+
+message ZoneConnectionDetails {
+  string account_username = 1;
+  string account_password = 2;
+  google.protobuf.StringValue login_session_token = 3;
+  google.protobuf.Timestamp login_start_at = 4;
+  string client_protocol_string = 5;
+  string client_version = 6;
+  uint32 world_id = 7;
+}
+
+message ZoneConnectionClosed {
+  google.protobuf.StringValue login_session_token = 1;
 }
 
 message MapStateUpdate {

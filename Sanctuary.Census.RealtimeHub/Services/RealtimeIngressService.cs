@@ -24,7 +24,7 @@ namespace Sanctuary.Census.RealtimeHub.Services;
 public class RealtimeIngressService : RealtimeIngress.RealtimeIngressBase
 {
     private readonly SemaphoreSlim _mapStateUpdateLock;
-    private static readonly Dictionary<(uint World, ushort Zone, ushort Instance, uint Region), MapState> _mapStates;
+    private static readonly Dictionary<object, MapState> _mapStates;
     private static readonly ConcurrentDictionary<uint, WorldPopulation> _worldPopulations;
 
     private readonly ILogger<RealtimeIngressService> _logger;
@@ -34,7 +34,7 @@ public class RealtimeIngressService : RealtimeIngress.RealtimeIngressBase
 
     static RealtimeIngressService()
     {
-        _mapStates = new Dictionary<(uint, ushort, ushort, uint), MapState>();
+        _mapStates = new Dictionary<object, MapState>();
         _worldPopulations = new ConcurrentDictionary<uint, WorldPopulation>();
     }
 

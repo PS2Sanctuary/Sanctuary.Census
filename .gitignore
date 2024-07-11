@@ -1,4 +1,5 @@
 Sanctuary.Census.ServerData.Internal/
+Sanctuary.Census.ClientSniffer/
 
 bin/
 obj/

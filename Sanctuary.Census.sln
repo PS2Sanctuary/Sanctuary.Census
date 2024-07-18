@@ -7,6 +7,9 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sanctuary.Census.Api", "Sanctuary.Census.Api\Sanctuary.Census.Api.csproj", "{F776D411-5CD6-4D17-B8DB-AA728E170349}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{31F4FD0F-3EA6-44E0-8CD9-1B019984FE13}"
+	ProjectSection(SolutionItems) = preProject
+		Tests\Directory.Build.props = Tests\Directory.Build.props
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sanctuary.Census.ClientData.Tests", "Tests\Sanctuary.Census.ClientData.Tests\Sanctuary.Census.ClientData.Tests.csproj", "{37D863F7-8D18-4D78-B91E-520F3CAEB613}"
 EndProject

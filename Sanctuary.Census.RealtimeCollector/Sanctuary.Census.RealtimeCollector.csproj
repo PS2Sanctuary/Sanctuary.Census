@@ -1,7 +1,10 @@
 <Project Sdk="Microsoft.NET.Sdk.Worker">
 
     <PropertyGroup>
+        <InvariantGlobalization>true</InvariantGlobalization>
         <UserSecretsId>dotnet-Sanctuary.Census.RealtimeCollector-6ECA58A7-7FBF-4F0C-8FB9-8D756A252F1D</UserSecretsId>
+        <ContainerRepository>sanctuary-census-realtimecollector</ContainerRepository>
+        <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
     </PropertyGroup>
 
     <ItemGroup>
@@ -28,5 +31,11 @@
 
     <ItemGroup>
       <ProjectReference Include="..\Sanctuary.Census.ServerData.Internal\Sanctuary.Census.ServerData.Internal.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Content Include="..\.dockerignore">
+        <Link>.dockerignore</Link>
+      </Content>
     </ItemGroup>
 </Project>

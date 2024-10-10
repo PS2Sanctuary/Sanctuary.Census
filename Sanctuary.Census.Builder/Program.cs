@@ -20,9 +20,9 @@ using Sanctuary.Census.ServerData.Internal.Extensions;
 using Sanctuary.Census.ServerData.Internal.Objects;
 using Sanctuary.Common.Objects;
 using Serilog;
+using Serilog.Core;
 using Serilog.Events;
 using System;
-using System.Threading.Tasks;
 
 namespace Sanctuary.Census.Builder;
 
@@ -35,37 +35,29 @@ public static class Program
     /// The entry point of the application.
     /// </summary>
     /// <param name="args">Runtime arguments to be passed to the application.</param>
-    public static async Task Main(string[] args)
+    public static void Main(string[] args)
     {
-        IHostBuilder builder = Host.CreateDefaultBuilder(args)
-            .UseSystemd()
-            .ConfigureServices((context, _) =>
-            {
-                string? seqIngestionEndpoint = context.Configuration["LoggingOptions:SeqIngestionEndpoint"];
-                string? seqApiKey = context.Configuration["LoggingOptions:SeqApiKey"];
-                SetupLogger(seqIngestionEndpoint, seqApiKey);
-            })
-            .UseSerilog()
-            .ConfigureServices((context, services) =>
-            {
-                services.Configure<BuildOptions>(context.Configuration.GetSection(nameof(BuildOptions)))
-                    .Configure<LoginClientOptions>(context.Configuration.GetSection(nameof(LoginClientOptions)))
-                    .Configure<GatewayClientOptions>(context.Configuration.GetSection(nameof(GatewayClientOptions)));
+        HostApplicationBuilder builder = Host.CreateApplicationBuilder(args);
+        builder.Services.AddSystemd();
+        SetupLogger(builder);
 
-                services.AddCommonServices(context.HostingEnvironment)
-                    .AddClientDataServices(context.HostingEnvironment)
-                    .AddPatchDataServices(context.HostingEnvironment)
-                    .AddInternalServerDataServices(context.HostingEnvironment)
-                    .AddScoped<ICollectionsContext, CollectionsContext>()
-                    .AddScoped<ICollectionDiffService, GitCollectionDiffService>()
-                    .AddScoped<IImageSetHelperService, ImageSetHelperService>()
-                    .AddScoped<IRequirementsHelperService, RequirementsHelperService>()
-                    .RegisterCollectionConfigurations()
-                    .RegisterCollectionBuilders()
-                    .AddHostedService<CollectionBuildWorker>();
-            });
+        builder.Services.Configure<BuildOptions>(builder.Configuration.GetSection(nameof(BuildOptions)))
+            .Configure<LoginClientOptions>(builder.Configuration.GetSection(nameof(LoginClientOptions)))
+            .Configure<GatewayClientOptions>(builder.Configuration.GetSection(nameof(GatewayClientOptions)));
 
-        await builder.Build().RunAsync().ConfigureAwait(false);
+        builder.Services.AddCommonServices(builder.Environment)
+            .AddClientDataServices(builder.Environment)
+            .AddPatchDataServices(builder.Environment)
+            .AddInternalServerDataServices(builder.Environment)
+            .AddScoped<ICollectionsContext, CollectionsContext>()
+            .AddScoped<ICollectionDiffService, GitCollectionDiffService>()
+            .AddScoped<IImageSetHelperService, ImageSetHelperService>()
+            .AddScoped<IRequirementsHelperService, RequirementsHelperService>()
+            .RegisterCollectionConfigurations()
+            .RegisterCollectionBuilders()
+            .AddHostedService<CollectionBuildWorker>();
+
+        builder.Build().Run();
     }
 
     private static IServiceCollection RegisterCollectionConfigurations(this IServiceCollection services)
@@ -507,7 +499,7 @@ public static class Program
             .RegisterCollectionBuilder<FireModeCollectionBuilder>()
             .RegisterCollectionBuilder<FireModeToProjectileCollectionBuilder>()
             .RegisterCollectionBuilder<ImageCollectionsBuilder>()
-            //.RegisterCollectionBuilder<ItemAttachmentCollectionBuilder>()
+            //.RegisterCollectionBuilder<ItemAttachmentCollectionBuilder>() Removed as the built data is not accurate
             .RegisterCollectionBuilder<ItemCollectionBuilder>()
             .RegisterCollectionBuilder<ItemCategoryCollectionBuilder>()
             .RegisterCollectionBuilder<ItemToItemLineCollectionBuilder>()
@@ -540,8 +532,11 @@ public static class Program
     }
 
     // ReSharper disable twice UnusedParameter.Local
-    private static void SetupLogger(string? seqIngestionEndpoint, string? seqApiKey)
+    private static void SetupLogger(HostApplicationBuilder builder)
     {
+        string? seqIngestionEndpoint = builder.Configuration["LoggingOptions:SeqIngestionEndpoint"];
+        string? seqApiKey = builder.Configuration["LoggingOptions:SeqApiKey"];
+
         LoggerConfiguration loggerConfig = new LoggerConfiguration()
             .MinimumLevel.Debug()
             .MinimumLevel.Override("Microsoft", LogEventLevel.Information)
@@ -554,16 +549,18 @@ public static class Program
                 outputTemplate: "[{Timestamp:HH:mm:ss} {Level:u3}] [{SourceContext}] {Message:lj}{NewLine}{Exception}"
             );
 
-#if !DEBUG
-        if (!string.IsNullOrEmpty(seqIngestionEndpoint) && !string.IsNullOrEmpty(seqApiKey))
+        bool useSeq = builder.Environment.IsProduction()
+            && !string.IsNullOrEmpty(seqIngestionEndpoint)
+            && !string.IsNullOrEmpty(seqApiKey);
+        if (useSeq)
         {
-            Serilog.Core.LoggingLevelSwitch levelSwitch = new();
+            LoggingLevelSwitch levelSwitch = new();
             loggerConfig.MinimumLevel.ControlledBy(levelSwitch)
-                .WriteTo.Seq(seqIngestionEndpoint, apiKey: seqApiKey, controlLevelSwitch: levelSwitch);
+                .WriteTo.Seq(seqIngestionEndpoint!, apiKey: seqApiKey, controlLevelSwitch: levelSwitch);
         }
-#endif
 
         Log.Logger = loggerConfig.CreateLogger();
+        builder.Services.AddSerilog();
     }
 
     private static IServiceCollection RegisterCollectionBuilder<TBuilder>(this IServiceCollection services)

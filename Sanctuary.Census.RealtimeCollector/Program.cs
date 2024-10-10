@@ -1,4 +1,3 @@
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using OpenTelemetry.Resources;
@@ -28,89 +27,74 @@ public static class Program
     /// <param name="args">The command line arguments to use.</param>
     public static void Main(string[] args)
     {
-        IHost host = Host.CreateDefaultBuilder(args)
-            .UseSystemd()
-            .ConfigureServices((context, services) =>
-            {
-                // Early logging and telemetry setup
+        HostApplicationBuilder builder = Host.CreateApplicationBuilder(args);
+        builder.Services.AddSystemd();
+        SetupLogger(builder);
 
-                SetupLogger(context.Configuration, context.HostingEnvironment);
+        builder.Services.AddOpenTelemetry()
+            .WithTracing
+            (
+                tracerProviderBuilder =>
+                {
+                    tracerProviderBuilder.ConfigureResource(resourceBuilder => resourceBuilder.AddService
+                        (
+                            RealtimeCollectorTelemetry.SERVICE_NAME,
+                            serviceVersion: RealtimeCollectorTelemetry.SERVICE_VERSION
+                        ))
+                        .AddServerDataInstrumentation();
 
-                services.AddOpenTelemetry()
-                    .WithTracing
-                    (
-                        tracerProviderBuilder =>
-                        {
-                            tracerProviderBuilder.ConfigureResource
-                            (
-                                resourceBuilder =>
-                                {
-                                    resourceBuilder.AddService
-                                    (
-                                        RealtimeCollectorTelemetry.SERVICE_NAME,
-                                        serviceVersion: RealtimeCollectorTelemetry.SERVICE_VERSION
-                                    );
-                                }
-                            )
-                            .AddServerDataInstrumentation();
-
-                            string? otlpEndpoint = context.Configuration["LoggingOptions:OtlpEndpoint"];
-                            if (otlpEndpoint is null && context.HostingEnvironment.IsDevelopment())
-                            {
-                                tracerProviderBuilder.AddConsoleExporter();
-                            }
-                            else if (otlpEndpoint is not null)
-                            {
-                                tracerProviderBuilder.AddOtlpExporter
-                                (
-                                    otlpOptions => otlpOptions.Endpoint = new Uri(otlpEndpoint)
-                                );
-                            }
-                        }
-                    );
-            })
-            .UseSerilog()
-            .ConfigureServices((context, services) =>
-            {
-                services.Configure<LoginClientOptions>(context.Configuration.GetSection(nameof(LoginClientOptions)))
-                    .Configure<GatewayClientOptions>(context.Configuration.GetSection(nameof(GatewayClientOptions)))
-                    .Configure<ContinuousDataOptions>(context.Configuration.GetSection(nameof(ContinuousDataOptions)));
-
-                services.AddCommonServices(context.HostingEnvironment)
-                    .AddTransient<IClientDetailsService, HubClientDetailsService>()
-                    .AddInternalServerDataServices(context.HostingEnvironment);
-
-                string? hubEndpointString = context.Configuration[$"{CollectorConfig.ConfigName}:{nameof(CollectorConfig.HubEndpoint)}"];
-                if (string.IsNullOrEmpty(hubEndpointString))
-                    throw new InvalidOperationException("Must specify a hub endpoint in config");
-                Uri hubEndpoint = new(hubEndpointString);
-
-                IHttpClientBuilder grpcClient = services.AddGrpcClient<RealtimeIngress.RealtimeIngressClient>
-                    (
-                        o => o.Address = hubEndpoint
-                    )
-                    .AddCallCredentials((_, metadata) =>
+                    string? otlpEndpoint = builder.Configuration["LoggingOptions:OtlpEndpoint"];
+                    if (otlpEndpoint is null && builder.Environment.IsDevelopment())
                     {
-                        string? hubToken = context.Configuration[$"{CollectorConfig.ConfigName}:{nameof(CollectorConfig.HubToken)}"];
-                        if (!string.IsNullOrEmpty(hubToken))
-                            metadata.Add("Authorization", $"Bearer {hubToken}");
-                        return Task.CompletedTask;
-                    });
+                        tracerProviderBuilder.AddConsoleExporter();
+                    }
+                    else if (!string.IsNullOrEmpty(otlpEndpoint))
+                    {
+                        tracerProviderBuilder.AddOtlpExporter
+                        (
+                            otlpOptions => otlpOptions.Endpoint = new Uri(otlpEndpoint)
+                        );
+                    }
+                }
+            );
 
-                if (hubEndpoint is { IsLoopback: true, Scheme: "http" })
-                    grpcClient.ConfigureChannel(o => o.UnsafeUseInsecureChannelCallCredentials = true);
+        builder.Services.Configure<LoginClientOptions>(builder.Configuration.GetSection(nameof(LoginClientOptions)))
+            .Configure<GatewayClientOptions>(builder.Configuration.GetSection(nameof(GatewayClientOptions)))
+            .Configure<ContinuousDataOptions>(builder.Configuration.GetSection(nameof(ContinuousDataOptions)));
 
-                services.AddHostedService<ServerConnectionWorker>();
-            })
-            .Build();
+        builder.Services.AddCommonServices(builder.Environment)
+            .AddTransient<IClientDetailsService, HubClientDetailsService>()
+            .AddInternalServerDataServices(builder.Environment);
 
-        host.Run();
+        // Retrieve the hub endpoint from configuration
+        string? hubEndpointString = builder.Configuration[$"{CollectorConfig.ConfigName}:{nameof(CollectorConfig.HubEndpoint)}"];
+        if (string.IsNullOrEmpty(hubEndpointString))
+            throw new InvalidOperationException("Must specify a hub endpoint in config");
+        Uri hubEndpoint = new(hubEndpointString);
+
+        // Register the GRPC hub client
+        IHttpClientBuilder grpcClient = builder.Services
+            .AddGrpcClient<RealtimeIngress.RealtimeIngressClient>(o => o.Address = hubEndpoint)
+            .AddCallCredentials((_, metadata) =>
+            {
+                string? hubToken = builder.Configuration[$"{CollectorConfig.ConfigName}:{nameof(CollectorConfig.HubToken)}"];
+                if (!string.IsNullOrEmpty(hubToken))
+                    metadata.Add("Authorization", $"Bearer {hubToken}");
+                return Task.CompletedTask;
+            });
+
+        if (hubEndpoint is { IsLoopback: true, Scheme: "http" })
+            grpcClient.ConfigureChannel(o => o.UnsafeUseInsecureChannelCallCredentials = true);
+
+        builder.Services.AddHostedService<ServerConnectionWorker>();
+
+        builder.Build().Run();
     }
 
-    private static void SetupLogger(IConfiguration configuration, IHostEnvironment environment)
+    private static void SetupLogger(HostApplicationBuilder builder)
     {
-        string? seqIngestionEndpoint = configuration["LoggingOptions:SeqIngestionEndpoint"];
-        string? seqApiKey = configuration["LoggingOptions:SeqApiKey"];
+        string? seqIngestionEndpoint = builder.Configuration["LoggingOptions:SeqIngestionEndpoint"];
+        string? seqApiKey = builder.Configuration["LoggingOptions:SeqApiKey"];
 
         LoggerConfiguration loggerConfig = new LoggerConfiguration()
             .MinimumLevel.Debug()
@@ -123,7 +107,7 @@ public static class Program
                 outputTemplate: "[{Timestamp:HH:mm:ss} {Level:u3}] [{SourceContext}] {Message:lj}{NewLine}{Exception}"
             );
 
-        bool useSeq = environment.IsProduction()
+        bool useSeq = builder.Environment.IsProduction()
             && !string.IsNullOrEmpty(seqIngestionEndpoint)
             && !string.IsNullOrEmpty(seqApiKey);
         if (useSeq)
@@ -133,7 +117,7 @@ public static class Program
                 .WriteTo.Seq(seqIngestionEndpoint!, apiKey: seqApiKey, controlLevelSwitch: levelSwitch);
         }
 
-
         Log.Logger = loggerConfig.CreateLogger();
+        builder.Services.AddSerilog();
     }
 }

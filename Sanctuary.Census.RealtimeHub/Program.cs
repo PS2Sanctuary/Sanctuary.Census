@@ -2,7 +2,6 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.Server.Kestrel.Core;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Sanctuary.Census.Common.Extensions;
@@ -28,6 +27,10 @@ public static class Program
     public static void Main(string[] args)
     {
         WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
+        builder.Services.AddSystemd();
+        SetupLogger(builder);
+
+        // Bind kestrel to default protocol for websockets, and HTTP2 for gRPC
         builder.WebHost.ConfigureKestrel((context, options) =>
         {
             foreach (string value in context.Configuration["Addresses:WebSocket"]!.Split(";"))
@@ -35,11 +38,6 @@ public static class Program
             foreach (string value in context.Configuration["Addresses:Grpc"]!.Split(";"))
                 options.Listen(IPEndPoint.Parse(value), listenOptions => listenOptions.Protocols = HttpProtocols.Http2);
         });
-
-        builder.Host.UseSystemd();
-
-        SetupLogger(builder.Configuration, builder.Environment);
-        builder.Host.UseSerilog();
 
         builder.Services.Configure<CommonOptions>(builder.Configuration.GetSection(nameof(CommonOptions)));
         builder.Services.Configure<BearerTokenAuthenticationOptions>
@@ -86,10 +84,10 @@ public static class Program
         app.Run();
     }
 
-    private static void SetupLogger(IConfiguration configuration, IHostEnvironment environment)
+    private static void SetupLogger(WebApplicationBuilder builder)
     {
-        string? seqIngestionEndpoint = configuration["LoggingOptions:SeqIngestionEndpoint"];
-        string? seqApiKey = configuration["LoggingOptions:SeqApiKey"];
+        string? seqIngestionEndpoint = builder.Configuration["LoggingOptions:SeqIngestionEndpoint"];
+        string? seqApiKey = builder.Configuration["LoggingOptions:SeqApiKey"];
 
         LoggerConfiguration loggerConfig = new LoggerConfiguration()
             .MinimumLevel.Debug()
@@ -104,7 +102,7 @@ public static class Program
                 outputTemplate: "[{Timestamp:HH:mm:ss} {Level:u3}] [{SourceContext}] {Message:lj}{NewLine}{Exception}"
             );
 
-        bool useSeq = environment.IsProduction()
+        bool useSeq = builder.Environment.IsProduction()
             && !string.IsNullOrEmpty(seqIngestionEndpoint)
             && !string.IsNullOrEmpty(seqApiKey);
         if (useSeq)
@@ -115,5 +113,6 @@ public static class Program
         }
 
         Log.Logger = loggerConfig.CreateLogger();
+        builder.Services.AddSerilog();
     }
 }

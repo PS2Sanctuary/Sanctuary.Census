@@ -41,12 +41,8 @@ public static class Program
     public static void Main(string[] args)
     {
         WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
-        builder.Host.UseSystemd();
-
-        string? seqIngestionEndpoint = builder.Configuration["LoggingOptions:SeqIngestionEndpoint"];
-        string? seqApiKey = builder.Configuration["LoggingOptions:SeqApiKey"];
-        SetupLogger(seqIngestionEndpoint, seqApiKey);
-        builder.Host.UseSerilog();
+        builder.Services.AddSystemd();
+        SetupLogger(builder);
 
         builder.Services.AddOpenTelemetry()
             .WithMetrics(metricsProviderBuilder =>
@@ -184,9 +180,11 @@ public static class Program
         app.Run();
     }
 
-    // ReSharper disable twice UnusedParameter.Local
-    private static void SetupLogger(string? seqIngestionEndpoint, string? seqApiKey)
+    private static void SetupLogger(WebApplicationBuilder builder)
     {
+        string? seqIngestionEndpoint = builder.Configuration["LoggingOptions:SeqIngestionEndpoint"];
+        string? seqApiKey = builder.Configuration["LoggingOptions:SeqApiKey"];
+
         LoggerConfiguration loggerConfig = new LoggerConfiguration()
             .MinimumLevel.Debug()
             .MinimumLevel.Override("Microsoft", LogEventLevel.Information)
@@ -199,15 +197,17 @@ public static class Program
                 outputTemplate: "[{Timestamp:HH:mm:ss} {Level:u3}] [{SourceContext}] {Message:lj}{NewLine}{Exception}"
             );
 
-#if !DEBUG
-        if (!string.IsNullOrEmpty(seqIngestionEndpoint) && !string.IsNullOrEmpty(seqApiKey))
+        bool useSeq = builder.Environment.IsProduction()
+            && !string.IsNullOrEmpty(seqIngestionEndpoint)
+            && !string.IsNullOrEmpty(seqApiKey);
+        if (useSeq)
         {
             Serilog.Core.LoggingLevelSwitch levelSwitch = new();
             loggerConfig.MinimumLevel.ControlledBy(levelSwitch)
-                .WriteTo.Seq(seqIngestionEndpoint, apiKey: seqApiKey, controlLevelSwitch: levelSwitch);
+                .WriteTo.Seq(seqIngestionEndpoint!, apiKey: seqApiKey, controlLevelSwitch: levelSwitch);
         }
-#endif
 
         Log.Logger = loggerConfig.CreateLogger();
+        builder.Services.AddSerilog();
     }
 }

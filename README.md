@@ -1,18 +1,20 @@
 ﻿# Sanctuary.Census
 
-An unofficial supplement to [Daybreak Game Company's Census API](https://census.daybreakgames.com), which aims to present up-to-date and more
-in-depth PlanetSide 2 data. Data retrieval is fully automated, although major PlanetSide 2 updates will often require small changes in order
-to update certain collections, which can take a small amount of time to implement.
+An unofficial supplement to [Daybreak Game Company's Census API](https://census.daybreakgames.com), which aims to
+present up-to-date and more in-depth PlanetSide 2 data. Data retrieval is fully automated, although major PlanetSide 2
+updates will often require small changes in order to update certain collections, which can take a small amount of time
+to implement.
 
 *Sanctuary.Census is in no way affiliated with nor endorsed by either Daybreak Games Company or Rogue Planet Games.*
 
-Want to chat with developers of all things Census related? Come say hello in the Planetside Community Developers Discord!\
+Want to chat with developers of all things Census related? Come say hello in the Planetside Community Developers
+Discord!\
 ![Discord](https://img.shields.io/discord/1019343142471880775?color=blue&label=Planetside%20Community%20Developers&logo=discord&logoColor=%2302B4FF)
 
 ## Getting Started
 
-An instance of Sanctuary.Census can be found at `https://census.lithafalcon.cc/`. It largely provides the same query interface
-as the official Census, so ensure you are familiar with using that. I'd recommend reading
+An instance of Sanctuary.Census can be found at `https://census.lithafalcon.cc/`. It largely provides the same query
+interface as the official Census, so ensure you are familiar with using that. I'd recommend reading
 [Leonhard's Census Primer](https://github.com/leonhard-s/auraxium/wiki/Census-API-Primer) if you're not.
 
 Jump right in by heading to [https://census.lithafalcon.cc/get/ps2](https://census.lithafalcon.cc/get/ps2) to view the available collections.
@@ -26,9 +28,9 @@ may fail completely for a particular server for multiple hours.
 - Compatible with the official Census' event stream.
 - Valid event names: `WorldPopulationUpdate`, `MapStateUpdate`.
 
-> **Warning**:
-> Please read the [migrating from Census](docs/migrating-from-census.md) documentation to get an overview of any differences between
-> Sanctuary.Census and the official Census.
+> [!TIP]
+> Please read the [differences to Census](docs/differences-to-census.md) documentation to get an overview of any
+> differences between Sanctuary.Census and the official Census.
 
 ### Namespaces
 
@@ -48,22 +50,29 @@ descriptions of the collection's fields.
 
 ## Building and Deployment
 
-To build and run Sanctuary.Census, you'll require the [.NET 7 SDK](https://dotnet.microsoft.com/en-us/download/dotnet/7.0).
+To build and run Sanctuary.Census, you'll require the [.NET 8 SDK](https://dotnet.microsoft.com/en-us/download/dotnet/8.0).
 Furthermore, you'll need access to a MongoDB instance. This is simple to [install locally](https://www.mongodb.com/docs/manual/installation/).
 Sanctuary.Census expects the database to be running on the default endpoint of `localhost:27017`, and there is currently
 no way to configure this.
 
 If you intend to deploy your own copy, each application is ready to send logging to a [Seq deployment](https://datalust.co/seq),
 and [OpenTelemetry](https://opentelemetry.io) tracing/metrics to an OTLP-compatible endpoint (such as Jaeger or the OTEL
-Collector). Each application that exposes an API expects to be hosted behind a reverse proxy (in particular, configuration has
-been performed for Nginx).
+Collector). Each application that exposes an API expects to be hosted behind a reverse proxy.
 
 > **Warning**:
-> A large number of adjustments will be required to compile successfully, as I have not open-sourced the server data retrieval component.
+> A large number of adjustments will be required to compile successfully, as I have not open-sourced the server data
+> retrieval component.
+
+Sanctuary.Census can be compiled to Docker images using the following commands:
+
+```sh
+cd <project>
+dotnet publish -c Release --os linux --arch x64 /t:PublishContainer -p ContainerRegistry=<remote>
+```
 
 ### Solution Architecture
 
-Sanctuary.Census is comprised of independent services responsible for the following primary tasks:
+Sanctuary.Census comprises independent services responsible for the following primary tasks:
 
 - Data exposure (e.g. the API).
 - Static collection data extraction and collation.
@@ -83,30 +92,29 @@ with expected Census results.
 
 #### Sanctuary.Census.Builder
 
-This service worker project is responsible for transforming data source caches into the
-collections surfaced by the API. Built collections are upserted in the underlying database,
-and the builder also maintains a diffing provider, in order to show changes to the collections.
+This service worker project is responsible for transforming data source caches into the collections surfaced by the API.
+Built collections are upserted in the underlying database, and the builder also maintains a diffing provider, in order
+to show changes to the collections.
 
-The builder uses multiple data source projects - for example, `Sanctuary.Census.ClientData`.
-Data source projects contain their specific data models, data retrieval logic and an object
-inheriting from `IDataCacheService` responsible for caching their data.
+The builder uses multiple data source projects - for example, `Sanctuary.Census.ClientData`. Data source projects
+contain their specific data models, data retrieval logic and an object inheriting from `IDataCacheService` responsible
+for caching their data.
 
 #### Sanctuary.Census.RealtimeHub
 
-This project is responsible for processing realtime data, which includes upserting the database
-collections and distributing updates over the EventStream, which includes responsibility for managing
-the WebSocket connections. It receives data from the *realtime collectors* via a gRPC service and
-uses an ASP.NET Core Web API to provide WebSocket support.
+This project is responsible for processing realtime data, which includes upserting the database collections and
+distributing updates over the EventStream, which includes responsibility for managing the WebSocket connections. It
+receives data from the *realtime collectors* via a gRPC service and uses an ASP.NET Core Web API to provide WebSocket
+support.
 
 #### Sanctuary.Census.RealtimeCollector
 
-This project contains an independent game server client that is responsible for connecting to a server
-and retrieving realtime data. Collected data is sent to the *realtime hub* using a gRPC connection.
-Collectors work most efficiently when connecting to only a single server, but have support for synchronously
-cycling between multiple servers.
+This project contains an independent game server client that is responsible for connecting to a server and retrieving
+realtime data. Collected data is sent to the *realtime hub* using a gRPC connection. Collectors work most efficiently
+when connecting to only a single server, but have support for synchronously cycling between multiple servers.
 
 ## Contributing
 
-Contributions are more than welcome! Please consider opening an issue first to detail your ideas.
-This gives a maintainer a chance to pre-approve the work, and reduces the likelihood of two people
-working on the same feature simultaneously.
+Contributions are more than welcome! Please consider opening an issue first to detail your ideas. This gives a
+maintainer a chance to pre-approve the work, and reduces the likelihood of two people working on the same feature
+simultaneously.

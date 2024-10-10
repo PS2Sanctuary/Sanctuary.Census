@@ -3,8 +3,15 @@
     <PropertyGroup>
         <InvariantGlobalization>true</InvariantGlobalization>
         <UserSecretsId>dotnet-Sanctuary.Census.RealtimeCollector-6ECA58A7-7FBF-4F0C-8FB9-8D756A252F1D</UserSecretsId>
-        <ContainerRepository>sanctuary-census-realtimecollector</ContainerRepository>
+    </PropertyGroup>
+
+    <!-- Docker Support -->
+    <PropertyGroup>
         <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
+        <IsPublishable>true</IsPublishable>
+        <EnableSdkContainerSupport>true</EnableSdkContainerSupport>
+        <ContainerRepository>sanctuary-census-realtimecollector</ContainerRepository>
+        <ContainerFamily>alpine</ContainerFamily>
     </PropertyGroup>
 
     <ItemGroup>

@@ -18,10 +18,17 @@ public class CommonOptions
     /// </summary>
     public CommonOptions()
     {
-        AppDataDirectory = Path.Combine
-        (
-            Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
-            "Sanctuary.Census"
-        );
+        if (File.Exists("/.dockerenv"))
+        {
+            AppDataDirectory = "/home/app";
+        }
+        else
+        {
+            AppDataDirectory = Path.Combine
+            (
+                Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
+                "Sanctuary.Census"
+            );
+        }
     }
 }

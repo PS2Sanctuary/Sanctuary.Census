@@ -8,7 +8,8 @@ to implement.
 *Sanctuary.Census is in no way affiliated with nor endorsed by either Daybreak Games Company or Rogue Planet Games.*
 
 Want to chat with developers of all things Census related? Come say hello in the Planetside Community Developers
-Discord!\
+Discord!
+
 ![Discord](https://img.shields.io/discord/1019343142471880775?color=blue&label=Planetside%20Community%20Developers&logo=discord&logoColor=%2302B4FF)
 
 ## Getting Started
@@ -21,12 +22,12 @@ Jump right in by heading to [https://census.lithafalcon.cc/get/ps2](https://cens
 Auto-generated API documentation can be found [here](https://census.lithafalcon.cc/api-doc/index.html).
 
 Sanctuary.Census has a (somewhat primitive) 'realtime' event-stream. Events are pushed every five seconds
-when operating nominally, but are likely to come in bursts with up to a minute of downtime, and occasionally
-may fail completely for a particular server for multiple hours.
+when operating nominally, but are likely to come in bursts with up to a minute of downtime.
 
 - Connect at `wss://census.lithafalcon.cc/streaming`.
 - Compatible with the official Census' event stream.
 - Valid event names: `WorldPopulationUpdate`, `MapStateUpdate`.
+- Events are mirrored as collections without the `Update` suffix, e.g. https://census.lithafalcon.cc/get/ps2/map_state.
 
 > [!TIP]
 > Please read the [differences to Census](docs/differences-to-census.md) documentation to get an overview of any
@@ -37,13 +38,13 @@ may fail completely for a particular server for multiple hours.
 Sanctuary.Census only provides two namespaces:
 
 - `ps2` - data from the current 'live' release of the game.
-- `pts` - data from the current 'test' release of the game.
+- `pts` - data from the current 'test' release of the game. The realtime event stream is not available for PTS.
 
 ### The `describe` verb
 
 Sanctuary.Census provides some collections, and fields on existing collections, that the official Census does not have.
 In order to better understand these collections, the `describe` verb may be used to obtain typing information and
-descriptions of the collection's fields.
+descriptions of any collection's fields.
 
 > GET /describe/&lt;namespace&gt;/&lt;collection&gt;\
 > e.g https://census.lithafalcon.cc/describe/ps2/fire_mode_2

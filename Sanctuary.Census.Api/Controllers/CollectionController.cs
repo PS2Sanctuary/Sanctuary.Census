@@ -244,6 +244,12 @@ public class CollectionController : ControllerBase
                         langProjections
                     );
 
+                RenderArgs<BsonDocument> renderArgs = new
+                (
+                    collection.DocumentSerializer,
+                    collection.Settings.SerializerRegistry
+                );
+
                 if (queryParams.Join is not null)
                 {
                     int totalLookups = 0;
@@ -256,8 +262,7 @@ public class CollectionController : ControllerBase
                             (
                                 ref query,
                                 collectionName,
-                                collection.DocumentSerializer,
-                                collection.Settings.SerializerRegistry,
+                                renderArgs,
                                 !queryParams.IsCaseSensitive,
                                 langProjections,
                                 out int builtLookups

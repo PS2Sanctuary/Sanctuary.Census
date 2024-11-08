@@ -1,6 +1,5 @@
 ﻿using MemoryReaders;
 using MongoDB.Bson;
-using MongoDB.Bson.Serialization;
 using MongoDB.Driver;
 using Sanctuary.Census.Api.Exceptions;
 using Sanctuary.Census.Api.Models;
@@ -149,8 +148,7 @@ public class JoinBuilder
     /// </summary>
     /// <param name="aggregatePipeline">The aggregate pipeline to append the join to.</param>
     /// <param name="onCollection">The collection that the join is being performed on.</param>
-    /// <param name="documentSerializer">The document serializer.</param>
-    /// <param name="serializerRegistry">The serializer registry.</param>
+    /// <param name="renderArgs">The render arguments used to format the output of the join.</param>
     /// <param name="useCaseInsensitiveRegex">Whether regex matches should be case-insensitive.</param>
     /// <param name="langProjections">A lang projection builder.</param>
     /// <param name="builtLookups">The total number of lookup stages that were built and appended.</param>
@@ -158,8 +156,7 @@ public class JoinBuilder
     (
         ref IAggregateFluent<BsonDocument> aggregatePipeline,
         string onCollection,
-        IBsonSerializer<BsonDocument> documentSerializer,
-        IBsonSerializerRegistry serializerRegistry,
+        RenderArgs<BsonDocument> renderArgs,
         bool useCaseInsensitiveRegex,
         LangProjectionBuilder? langProjections,
         out int builtLookups
@@ -169,8 +166,7 @@ public class JoinBuilder
         (
             this,
             onCollection,
-            documentSerializer,
-            serializerRegistry,
+            renderArgs,
             useCaseInsensitiveRegex,
             langProjections,
             out builtLookups
@@ -320,8 +316,7 @@ public class JoinBuilder
     (
         JoinBuilder builder,
         string onCollection,
-        IBsonSerializer<BsonDocument> documentSerializer,
-        IBsonSerializerRegistry serializerRegistry,
+        RenderArgs<BsonDocument> renderArgs,
         bool useCaseInsensitiveRegex,
         LangProjectionBuilder? langProjections,
         out int builtLookups
@@ -346,7 +341,7 @@ public class JoinBuilder
             BsonDocument filterStage = new
             (
                 "$match",
-                filter.Render(documentSerializer, serializerRegistry)
+                filter.Render(renderArgs)
             );
             subPipeline.Add(filterStage);
         }
@@ -356,7 +351,7 @@ public class JoinBuilder
         BsonDocument projectStage = new
         (
             "$project",
-            builder.Projection.Build().Render(documentSerializer, serializerRegistry)
+            builder.Projection.Build().Render(renderArgs)
         );
         subPipeline.Add(projectStage);
 
@@ -366,8 +361,7 @@ public class JoinBuilder
             (
                 child,
                 builder.ToCollection,
-                documentSerializer,
-                serializerRegistry,
+                renderArgs,
                 useCaseInsensitiveRegex,
                 langProjections,
                 out int builtChildLookups
@@ -397,7 +391,7 @@ public class JoinBuilder
                 (
                     "$match",
                     Builders<BsonDocument>.Filter.Ne(InjectAt, Array.Empty<BsonDocument>())
-                        .Render(documentSerializer, serializerRegistry)
+                        .Render(renderArgs)
                 ));
             }
         }

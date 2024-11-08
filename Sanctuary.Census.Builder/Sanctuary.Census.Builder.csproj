@@ -5,7 +5,7 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="CliWrap" Version="3.6.6" />
+        <PackageReference Include="CliWrap" Version="3.6.7" />
         <PackageReference Include="Microsoft.Extensions.Hosting" Version="8.0.1" />
         <PackageReference Include="Microsoft.Extensions.Hosting.Systemd" Version="8.0.1" />
         <PackageReference Include="Serilog.Extensions.Hosting" Version="8.0.0" />

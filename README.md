@@ -69,6 +69,11 @@ Sanctuary.Census can be compiled to Docker images using the following commands:
 ```sh
 cd <project>
 dotnet publish -c Release --os linux --arch x64 /t:PublishContainer -p ContainerRegistry=<remote>
+
+# The above may fail on certain Linux installs. Try pushing to the local docker registry, and then re-tagging to the remote:
+dotnet publish -c Release --os linux --arch x64 /t:PublishContainer 
+docker tag <container_name>:latest <remote_registry>/<container_name>:latest
+docker push remote_registry>/<container_name>:latest
 ```
 
 ### Solution Architecture

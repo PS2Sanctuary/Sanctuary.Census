@@ -15,7 +15,7 @@ namespace Sanctuary.Census.Common.Services;
 /// <inheritdoc />
 /// <remarks>
 /// This service uses the <see cref="CachingManifestService"/> but returns only local file information,
-/// ensuring the the patch manifest servers are only hit when a file is not cached.
+/// ensuring the patch manifest servers are only hit when a file is not cached.
 /// </remarks>
 public class DebugManifestService : CachingManifestService
 {
@@ -59,6 +59,7 @@ public class DebugManifestService : CachingManifestService
             return await base.GetFileAsync(fileName, ps2Environment, ct).ConfigureAwait(false);
 
         string filePath = Path.Combine(CacheDirectory, ps2Environment.ToString(), "cached.debug.digest");
+        Directory.CreateDirectory(Path.GetDirectoryName(filePath)!);
         FileInfo info = new(filePath);
 
         if (!info.Exists || info.LastWriteTime.AddHours(24) < DateTime.Now)

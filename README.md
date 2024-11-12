@@ -60,7 +60,7 @@ If you intend to deploy your own copy, each application is ready to send logging
 and [OpenTelemetry](https://opentelemetry.io) tracing/metrics to an OTLP-compatible endpoint (such as Jaeger or the OTEL
 Collector). Each application that exposes an API expects to be hosted behind a reverse proxy.
 
-> **Warning**:
+> [!WARNING]
 > A large number of adjustments will be required to compile successfully, as I have not open-sourced the server data
 > retrieval component.
 

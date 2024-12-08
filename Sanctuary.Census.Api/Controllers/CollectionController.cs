@@ -127,7 +127,6 @@ public class CollectionController : ControllerBase
     /// Counts the number of available collections.
     /// </summary>
     /// <param name="environment">The environment to retrieve the collections from.</param>
-    /// <param name="censusJSON">Whether Census JSON mode is enabled.</param>
     /// <param name="ct">A <see cref="CancellationToken"/> that can be used to stop the operation.</param>
     /// <returns>The collection count.</returns>
     /// <response code="200">Returns the number of collections in the given environment.</response>
@@ -136,7 +135,6 @@ public class CollectionController : ControllerBase
     public async Task<JsonResult> CountDatatypesAsync
     (
         string environment,
-        bool censusJSON = true,
         CancellationToken ct = default
     )
     {
@@ -146,7 +144,7 @@ public class CollectionController : ControllerBase
         return new JsonResult
         (
             new CollectionCount((ulong)count),
-            GetJsonOptions(censusJSON, true)
+            _incNullOptions
         );
     }
 
@@ -355,7 +353,7 @@ public class CollectionController : ControllerBase
         CancellationToken ct = default
     )
     {
-        JsonSerializerOptions jsonOptions = GetJsonOptions(queryParams.CensusJsonMode, queryParams.IncludeNullFields);
+        JsonSerializerOptions jsonOptions = _incNullOptions;
 
         try
         {

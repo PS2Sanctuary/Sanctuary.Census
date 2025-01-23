@@ -176,6 +176,18 @@ public static class Program
             .WithEqualityKey(x => x.FireModeID)
             .WithEqualityKey(x => x.ProjectileID);
 
+        configProvider.Register<Fish>()
+            .WithIndex(x => x.ID, true)
+            .WithEqualityKey(x => x.ID);
+
+        configProvider.Register<FishRarity>()
+            .WithIndex(x => x.ID, true)
+            .WithEqualityKey(x => x.ID);
+
+        configProvider.Register<FishSizeType>()
+            .WithIndex(x => x.ID, true)
+            .WithEqualityKey(x => x.ID);
+
         configProvider.Register<Image>()
             .WithIndex(x => x.ImageID, true)
             .WithEqualityKey(x => x.ImageID);
@@ -502,6 +514,7 @@ public static class Program
             .RegisterCollectionBuilder<FireGroupToFireModeCollectionBuilder>()
             .RegisterCollectionBuilder<FireModeCollectionBuilder>()
             .RegisterCollectionBuilder<FireModeToProjectileCollectionBuilder>()
+            .RegisterCollectionBuilder<FishCollectionsBuilder>()
             .RegisterCollectionBuilder<ImageCollectionsBuilder>()
             //.RegisterCollectionBuilder<ItemAttachmentCollectionBuilder>() Removed as the built data is not accurate
             .RegisterCollectionBuilder<ItemCollectionBuilder>()
@@ -531,7 +544,7 @@ public static class Program
             .RegisterCollectionBuilder<WeaponToAttachmentCollectionBuilder>()
             .RegisterCollectionBuilder<WeaponToFireGroupCollectionBuilder>()
             .RegisterCollectionBuilder<WorldCollectionBuilder>()
-            .RegisterCollectionBuilder<ZoneCollectionBuilder>()
+            .RegisterCollectionBuilder<ZoneCollectionsBuilder>()
             .RegisterCollectionBuilder<ZonePopulationLimitCollectionBuilder>();
     }
 

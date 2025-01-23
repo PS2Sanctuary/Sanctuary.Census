@@ -10,38 +10,45 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using CZoneSetMapping = Sanctuary.Census.ClientData.ClientDataModels.ZoneSetMapping;
 
 namespace Sanctuary.Census.Builder.CollectionBuilders;
 
 /// <summary>
-/// Builds the <see cref="Zone"/> collection.
+/// Builds the <see cref="Zone"/> and <see cref="ZoneSetMapping"/> collection.
 /// </summary>
-public class ZoneCollectionBuilder : ICollectionBuilder
+public class ZoneCollectionsBuilder : ICollectionBuilder
 {
+    private readonly IClientDataCacheService _clientDataCache;
     private readonly ILocaleDataCacheService _localeDataCache;
     private readonly IServerDataCacheService _serverDataCache;
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="ZoneCollectionBuilder"/> class.
+    /// Initializes a new instance of the <see cref="ZoneCollectionsBuilder"/> class.
     /// </summary>
+    /// <param name="clientDataCache">The client data cache.</param>
     /// <param name="localeDataCache">The locale data cache.</param>
     /// <param name="serverDataCache">The server data cache.</param>
-    public ZoneCollectionBuilder
+    public ZoneCollectionsBuilder
     (
+        IClientDataCacheService clientDataCache,
         ILocaleDataCacheService localeDataCache,
         IServerDataCacheService serverDataCache
     )
     {
+        _clientDataCache = clientDataCache;
         _localeDataCache = localeDataCache;
         _serverDataCache = serverDataCache;
     }
 
     /// <inheritdoc />
-    public async Task BuildAsync
-    (
-        ICollectionsContext dbContext,
-        CancellationToken ct
-    )
+    public async Task BuildAsync(ICollectionsContext dbContext, CancellationToken ct)
+    {
+        await UpsertZonesAsync(dbContext, ct);
+        await UpsertZoneSetMappingsAsync(dbContext, ct);
+    }
+
+    private async Task UpsertZonesAsync(ICollectionsContext dbContext, CancellationToken ct)
     {
         if (_serverDataCache.ContinentBattleInfos is null)
             throw new MissingCacheDataException(typeof(ContinentBattleInfo));
@@ -73,5 +80,22 @@ public class ZoneCollectionBuilder : ICollectionBuilder
         }
 
         await dbContext.UpsertCollectionAsync(builtZones.Values, ct).ConfigureAwait(false);
+    }
+
+    private async Task UpsertZoneSetMappingsAsync(ICollectionsContext dbContext, CancellationToken ct)
+    {
+        if (_clientDataCache.ZoneSetMappings is null)
+            throw new MissingCacheDataException(typeof(CZoneSetMapping));
+
+        IEnumerable<ZoneSetMapping> mappings = _clientDataCache.ZoneSetMappings
+            .Select(mapping => new ZoneSetMapping
+            (
+                mapping.Id,
+                mapping.ZoneSet,
+                mapping.ZoneType,
+                mapping.ZoneId
+            ));
+
+        await dbContext.UpsertCollectionAsync(mappings, ct);
     }
 }

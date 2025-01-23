@@ -442,6 +442,10 @@ public static class Program
             .WithEqualityKey(x => x.ZoneId)
             .WithRemoveOldEntryTest(static _ => false);
 
+        configProvider.Register<ZoneSetMapping>()
+            .WithIndex(x => x.ID, true)
+            .WithEqualityKey(x => x.ID);
+
         // Realtime registration
 
         RegisterRealtime<MapState>(configProvider)

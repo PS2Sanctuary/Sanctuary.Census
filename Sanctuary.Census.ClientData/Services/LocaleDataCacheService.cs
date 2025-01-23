@@ -99,6 +99,10 @@ public class LocaleDataCacheService : ILocaleDataCacheService
     }
 
     /// <inheritdoc />
+    public LocaleString? GetLocaleStringOrNull(long stringID)
+        => TryGetLocaleString(stringID, out LocaleString? localeString) ? localeString : null;
+
+    /// <inheritdoc />
     public async Task RepopulateAsync(CancellationToken ct)
     {
         (string, Dictionary<uint, string>)[] localePacks = {

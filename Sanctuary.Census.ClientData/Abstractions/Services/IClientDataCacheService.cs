@@ -70,6 +70,21 @@ public interface IClientDataCacheService : IDataCacheService
     IReadOnlyList<FireModeDisplayStat>? FireModeDisplayStats { get; }
 
     /// <summary>
+    /// Gets the cached <see cref="Fish"/> objects.
+    /// </summary>
+    IReadOnlyList<Fish>? Fishes { get; }
+
+    /// <summary>
+    /// Gets the cached <see cref="FishRarity"/> objects.
+    /// </summary>
+    IReadOnlyList<FishRarity>? FishRarities { get; }
+
+    /// <summary>
+    /// Gets the cached <see cref="FishSizeType"/> objects.
+    /// </summary>
+    IReadOnlyList<FishSizeType>? FishSizeTypes { get; }
+
+    /// <summary>
     /// Gets the cached <see cref="Image"/> objects.
     /// </summary>
     IReadOnlyList<Image>? Images { get; }
@@ -213,4 +228,9 @@ public interface IClientDataCacheService : IDataCacheService
     /// Gets the cached <see cref="VehicleSkillSet"/> objects.
     /// </summary>
     IReadOnlyList<VehicleSkillSet>? VehicleSkillSets { get; }
+
+    /// <summary>
+    /// Gets the cached <see cref="ZoneSetMapping"/> objects.
+    /// </summary>
+    IReadOnlyList<ZoneSetMapping>? ZoneSetMappings { get; }
 }

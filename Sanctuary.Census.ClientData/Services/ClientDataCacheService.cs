@@ -67,6 +67,15 @@ public class ClientDataCacheService : IClientDataCacheService
     public IReadOnlyList<FireModeDisplayStat>? FireModeDisplayStats { get; private set; }
 
     /// <inheritdoc />
+    public IReadOnlyList<Fish>? Fishes { get; private set; }
+
+    /// <inheritdoc />
+    public IReadOnlyList<FishRarity>? FishRarities { get; private set; }
+
+    /// <inheritdoc />
+    public IReadOnlyList<FishSizeType>? FishSizeTypes { get; private set; }
+
+    /// <inheritdoc />
     public IReadOnlyList<Image>? Images { get; private set; }
 
     /// <inheritdoc />
@@ -152,6 +161,9 @@ public class ClientDataCacheService : IClientDataCacheService
 
     /// <inheritdoc />
     public IReadOnlyList<VehicleSkillSet>? VehicleSkillSets { get; private set; }
+
+    /// <inheritdoc />
+    public IReadOnlyList<ZoneSetMapping>? ZoneSetMappings { get; private set; }
 
     /// <summary>
     /// Initializes a new instance of the <see cref="ClientDataCacheService"/> class.
@@ -276,6 +288,30 @@ public class ClientDataCacheService : IClientDataCacheService
         FireModeDisplayStats = await ExtractDatasheet<FireModeDisplayStat>
         (
             "FireModeDisplayStats.txt",
+            assetHeaders,
+            reader,
+            ct
+        ).ConfigureAwait(false);
+
+        Fishes = await ExtractDatasheet<Fish>
+        (
+            "Fish.txt",
+            assetHeaders,
+            reader,
+            ct
+        ).ConfigureAwait(false);
+
+        FishRarities = await ExtractDatasheet<FishRarity>
+        (
+            "FishRarity.txt",
+            assetHeaders,
+            reader,
+            ct
+        ).ConfigureAwait(false);
+
+        FishSizeTypes = await ExtractDatasheet<FishSizeType>
+        (
+            "FishSizeType.txt",
             assetHeaders,
             reader,
             ct
@@ -512,6 +548,14 @@ public class ClientDataCacheService : IClientDataCacheService
             reader,
             ct
         ).ConfigureAwait(false);
+
+        ZoneSetMappings = await ExtractDatasheet<ZoneSetMapping>
+        (
+            "ZoneSetMappings.txt",
+            assetHeaders,
+            reader,
+            ct
+        );
 
         LastPopulated = DateTimeOffset.UtcNow;
     }

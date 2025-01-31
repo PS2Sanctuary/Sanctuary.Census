@@ -71,6 +71,7 @@ public class AreaCollectionsBuilder : ICollectionBuilder
         => assetZone switch
         {
             AssetZone.Amerish => ZoneDefinition.Amerish,
+            AssetZone.Cleanroom => ZoneDefinition.Cleanroom,
             AssetZone.Esamir => ZoneDefinition.Esamir,
             AssetZone.Hossin => ZoneDefinition.Hossin,
             AssetZone.Indar => ZoneDefinition.Indar,
@@ -78,6 +79,8 @@ public class AreaCollectionsBuilder : ICollectionBuilder
             AssetZone.Oshur => ZoneDefinition.Oshur,
             AssetZone.Quickload => ZoneDefinition.Nexus,
             AssetZone.Sanctuary => ZoneDefinition.Sanctuary,
+            AssetZone.Searhus => ZoneDefinition.Searhus,
+            AssetZone.SuperCleanroom => ZoneDefinition.SuperCleanroom,
             AssetZone.Tutorial => ZoneDefinition.Tutorial,
             AssetZone.OutfitWars => ZoneDefinition.Desolation,
             AssetZone.VR => ZoneDefinition.VRTrainingNC,

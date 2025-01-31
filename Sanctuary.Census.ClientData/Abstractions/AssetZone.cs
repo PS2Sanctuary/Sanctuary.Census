@@ -7,6 +7,7 @@
 public enum AssetZone
 {
     Amerish,
+    Cleanroom,
     Esamir,
     Hossin,
     Indar,
@@ -15,6 +16,8 @@ public enum AssetZone
     OutfitWars,
     Quickload,
     Sanctuary,
+    Searhus,
+    SuperCleanroom,
     Tutorial,
     VR,
     VRTutorial2

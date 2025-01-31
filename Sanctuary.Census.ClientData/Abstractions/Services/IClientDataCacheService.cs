@@ -20,6 +20,11 @@ public interface IClientDataCacheService : IDataCacheService
     IReadOnlyList<AbilitySet>? AbilitySets { get; }
 
     /// <summary>
+    /// Gets the cached admin command aliases.
+    /// </summary>
+    IReadOnlyList<Alias>? AdminCommandAliases { get; }
+
+    /// <summary>
     /// Gets the cached <see cref="AreaDefinition"/> objects.
     /// </summary>
     IReadOnlyDictionary<AssetZone, IReadOnlyList<AreaDefinition>>? AreaDefinitions { get; }

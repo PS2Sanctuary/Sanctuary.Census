@@ -1,5 +1,5 @@
-﻿using CommunityToolkit.HighPerformance.Buffers;
-using Mandible.Abstractions.Pack2;
+﻿using CommunityToolkit.HighPerformance;
+using CommunityToolkit.HighPerformance.Buffers;
 using Mandible.Pack2;
 using Mandible.Services;
 using Mandible.Util;
@@ -18,6 +18,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Xml;
+using System.Xml.Serialization;
 
 namespace Sanctuary.Census.ClientData.Services;
 
@@ -35,6 +36,9 @@ public class ClientDataCacheService : IClientDataCacheService
 
     /// <inheritdoc />
     public IReadOnlyList<AbilitySet>? AbilitySets { get; private set; }
+
+    /// <inheritdoc />
+    public IReadOnlyList<Alias>? AdminCommandAliases { get; private set; }
 
     /// <inheritdoc />
     public IReadOnlyDictionary<AssetZone, IReadOnlyList<AreaDefinition>>? AreaDefinitions { get; private set; }
@@ -220,6 +224,14 @@ public class ClientDataCacheService : IClientDataCacheService
             reader,
             ct
         ).ConfigureAwait(false);
+
+        AdminCommandAliases = (await ExtractXmlFile<CommandAliases>
+        (
+            "AdminCommandAliases.xml",
+            assetHeaders,
+            reader,
+            ct
+        )).Aliases;
 
         ClientItemDatasheetDatas = await ExtractDatasheet<ClientItemDatasheetData>
         (
@@ -609,7 +621,7 @@ public class ClientDataCacheService : IClientDataCacheService
     (
         string datasheetFileName,
         IEnumerable<Asset2Header> assetHeaders,
-        IPack2Reader packReader,
+        Pack2Reader packReader,
         CancellationToken ct
     ) where TDataType : class, IDatasheet<TDataType>
     {
@@ -620,14 +632,32 @@ public class ClientDataCacheService : IClientDataCacheService
         return TDataType.Deserialize(data.Span);
     }
 
+    private static async Task<TDataType> ExtractXmlFile<TDataType>
+    (
+        string fileName,
+        IEnumerable<Asset2Header> assetHeaders,
+        Pack2Reader packReader,
+        CancellationToken ct
+    ) where TDataType : class
+    {
+        ulong nameHash = PackCrc64.Calculate(fileName);
+        Asset2Header header = assetHeaders.First(ah => ah.NameHash == nameHash);
+
+        using MemoryOwner<byte> data = await packReader.ReadAssetDataAsync(header, ct: ct).ConfigureAwait(false);
+        using Stream s = data.AsStream();
+
+        XmlSerializer serializer = new(typeof(TDataType));
+        return (TDataType)serializer.Deserialize(s)!;
+    }
+
     private async Task ExtractAreasAsync
     (
         IReadOnlyList<Asset2Header> assetHeaders,
-        IPack2Reader packReader,
+        Pack2Reader packReader,
         CancellationToken ct
     )
     {
-        Dictionary<AssetZone, IReadOnlyList<AreaDefinition>> areas = new();
+        Dictionary<AssetZone, IReadOnlyList<AreaDefinition>> areas = [];
 
         foreach (AssetZone zone in Enum.GetValues<AssetZone>())
         {
@@ -636,7 +666,7 @@ public class ClientDataCacheService : IClientDataCacheService
             if (header is null)
                 continue;
 
-            List<AreaDefinition> builtDefinitions = new();
+            List<AreaDefinition> builtDefinitions = [];
             using MemoryOwner<byte> data = await packReader.ReadAssetDataAsync(header, ct: ct).ConfigureAwait(false);
             await using MemoryStream ms = new(data.Memory.ToArray());
 

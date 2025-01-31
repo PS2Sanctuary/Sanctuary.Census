@@ -10,12 +10,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Alias = Sanctuary.Census.ClientData.ClientDataModels.Alias;
 using CZoneSetMapping = Sanctuary.Census.ClientData.ClientDataModels.ZoneSetMapping;
 
 namespace Sanctuary.Census.Builder.CollectionBuilders;
 
 /// <summary>
-/// Builds the <see cref="Zone"/> and <see cref="ZoneSetMapping"/> collection.
+/// Builds the <see cref="Zone"/> and <see cref="Common.Objects.Collections.ZoneSetMapping"/> collection.
 /// </summary>
 public class ZoneCollectionsBuilder : ICollectionBuilder
 {
@@ -77,6 +78,49 @@ public class ZoneCollectionsBuilder : ICollectionBuilder
                 isDynamic
             );
             builtZones.TryAdd(built.ZoneID, built);
+        }
+
+        // We can attempt to retrieve very basic info about non-serverside zones from the admin command aliases
+        if (_clientDataCache.AdminCommandAliases is not null)
+        {
+            Dictionary<uint, string> idToName = [];
+
+            foreach (Alias alias in _clientDataCache.AdminCommandAliases)
+            {
+                if (!alias.CommandString.StartsWith("zone "))
+                    continue;
+
+                // Expect zone warp strings to be in the format "/zone <zone_id>"
+                string[] parts = alias.CommandString.Split(' ');
+                if (parts.Length != 2 || !uint.TryParse(parts[1], out uint zoneId))
+                    continue;
+
+                string zoneNameString = alias.Name.Replace("zone.", string.Empty);
+                idToName.TryGetValue(zoneId, out string? existingName);
+                // Replace the zone's name with the longest variant we can find of it
+                if (existingName is null || existingName.Length < zoneNameString.Length)
+                    idToName[zoneId] = zoneNameString;
+            }
+
+            foreach ((uint id, string name) in idToName)
+            {
+                // We don't want to replace any existing zone info
+                if (builtZones.ContainsKey(id))
+                    continue;
+
+                Common.Objects.Collections.Zone built = new
+                (
+                    id,
+                    name,
+                    0,
+                    null!,
+                    null!,
+                    id,
+                    "Unknown",
+                    false
+                );
+                builtZones.Add(id, built);
+            }
         }
 
         await dbContext.UpsertCollectionAsync(builtZones.Values, ct).ConfigureAwait(false);

@@ -4,6 +4,15 @@
         <UserSecretsId>dotnet-Sanctuary.Census.Builder-68EAB76E-2E51-4848-9701-B5FCA936C9F9</UserSecretsId>
     </PropertyGroup>
 
+    <!-- Docker Support -->
+    <PropertyGroup>
+        <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
+        <IsPublishable>true</IsPublishable>
+        <EnableSdkContainerSupport>true</EnableSdkContainerSupport>
+        <ContainerRepository>sanctuary-census-builder</ContainerRepository>
+        <ContainerFamily>alpine</ContainerFamily>
+    </PropertyGroup>
+
     <ItemGroup>
         <PackageReference Include="CliWrap" Version="3.7.1" />
         <PackageReference Include="Microsoft.Extensions.Hosting" Version="9.0.1" />

@@ -4,6 +4,15 @@
       <UserSecretsId>d06f5a39-8b9d-4465-872f-a99a7ec5ffa8</UserSecretsId>
     </PropertyGroup>
 
+    <!-- Docker Support -->
+    <PropertyGroup>
+        <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
+        <IsPublishable>true</IsPublishable>
+        <EnableSdkContainerSupport>true</EnableSdkContainerSupport>
+        <ContainerRepository>sanctuary-census-realtimehub</ContainerRepository>
+        <ContainerFamily>alpine</ContainerFamily>
+    </PropertyGroup>
+
     <ItemGroup>
         <Protobuf Include="Protos\realtime_ingress.proto" GrpcServices="Server" />
     </ItemGroup>

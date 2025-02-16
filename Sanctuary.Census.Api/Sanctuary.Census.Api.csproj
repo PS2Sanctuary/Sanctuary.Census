@@ -3,8 +3,15 @@
     <PropertyGroup>
         <InvariantGlobalization>true</InvariantGlobalization>
         <UserSecretsId>2050798e-fa3f-481d-a063-94f938d68b1f</UserSecretsId>
-        <ContainerRepository>sanctuary-census-api</ContainerRepository>
+    </PropertyGroup>
+
+    <!-- Docker Support -->
+    <PropertyGroup>
         <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
+        <IsPublishable>true</IsPublishable>
+        <EnableSdkContainerSupport>true</EnableSdkContainerSupport>
+        <ContainerRepository>sanctuary-census-api</ContainerRepository>
+        <ContainerFamily>alpine</ContainerFamily>
     </PropertyGroup>
 
     <ItemGroup>

@@ -45,11 +45,12 @@ public static class Program
             .Configure<LoginClientOptions>(builder.Configuration.GetSection(nameof(LoginClientOptions)))
             .Configure<GatewayClientOptions>(builder.Configuration.GetSection(nameof(GatewayClientOptions)));
 
-        builder.Services.AddCommonServices(builder.Environment)
-            .AddClientDataServices(builder.Environment)
-            .AddPatchDataServices(builder.Environment)
-            .AddInternalServerDataServices(builder.Environment)
-            .AddScoped<ICollectionsContext, CollectionsContext>()
+        builder.AddCommonServices()
+            .AddClientDataServices()
+            .AddInternalServerDataServices()
+            .AddPatchDataServices();
+
+        builder.Services.AddScoped<ICollectionsContext, CollectionsContext>()
             .AddScoped<ICollectionDiffService, GitCollectionDiffService>()
             .AddScoped<IImageSetHelperService, ImageSetHelperService>()
             .AddScoped<IRequirementsHelperService, RequirementsHelperService>()

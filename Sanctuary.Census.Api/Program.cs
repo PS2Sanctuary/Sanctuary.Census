@@ -69,8 +69,8 @@ public static class Program
 
         builder.Services.Configure<CommonOptions>(builder.Configuration.GetSection(nameof(CommonOptions)));
 
-        builder.Services.AddCommonServices(builder.Environment)
-            .AddSingleton<CollectionDescriptionService>();
+        builder.AddCommonServices();
+        builder.Services.AddSingleton<CollectionDescriptionService>();
 
         builder.Services.AddCors()
             .AddControllers(options =>

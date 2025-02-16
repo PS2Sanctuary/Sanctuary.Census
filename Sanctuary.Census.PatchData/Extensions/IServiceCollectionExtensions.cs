@@ -15,14 +15,14 @@ public static class IServiceCollectionExtensions
     /// <summary>
     /// Adds services relevant to retrieving patch data to the service collection.
     /// </summary>
-    /// <param name="services">The service collection.</param>
-    /// <param name="hostEnvironment">The current host environment.</param>
-    /// <returns>The service collection, so that calls may be chained.</returns>
-    public static IServiceCollection AddPatchDataServices(this IServiceCollection services, IHostEnvironment hostEnvironment)
+    /// <param name="builder">The host builder.</param>
+    /// <returns>The host builder, so that calls may be chained.</returns>
+    public static IHostApplicationBuilder AddPatchDataServices(this IHostApplicationBuilder builder)
     {
-        services.AddCommonServices(hostEnvironment);
-        services.TryAddScoped<IPatchDataCacheService, PatchDataCacheService>();
+        builder.AddCommonServices();
 
-        return services;
+        builder.Services.TryAddScoped<IPatchDataCacheService, PatchDataCacheService>();
+
+        return builder;
     }
 }

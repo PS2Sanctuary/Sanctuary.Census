@@ -15,15 +15,15 @@ public static class IServiceCollectionExtensions
     /// <summary>
     /// Adds services relevant to retrieving client data to the service collection.
     /// </summary>
-    /// <param name="services">The service collection.</param>
-    /// <param name="hostEnvironment">The current host environment.</param>
-    /// <returns>The service collection, so that calls may be chained.</returns>
-    public static IServiceCollection AddClientDataServices(this IServiceCollection services, IHostEnvironment hostEnvironment)
+    /// <param name="builder">The host builder.</param>
+    /// <returns>The host builder, so that calls may be chained.</returns>
+    public static IHostApplicationBuilder AddClientDataServices(this IHostApplicationBuilder builder)
     {
-        services.AddCommonServices(hostEnvironment);
-        services.TryAddScoped<ILocaleDataCacheService, LocaleDataCacheService>();
-        services.TryAddScoped<IClientDataCacheService, ClientDataCacheService>();
+        builder.AddCommonServices();
 
-        return services;
+        builder.Services.TryAddScoped<ILocaleDataCacheService, LocaleDataCacheService>();
+        builder.Services.TryAddScoped<IClientDataCacheService, ClientDataCacheService>();
+
+        return builder;
     }
 }

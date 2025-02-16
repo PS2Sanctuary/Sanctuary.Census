@@ -49,7 +49,7 @@ public static class Program
             builder.Configuration.GetSection(ZoneConnectionOptions.OPTIONS_NAME)
         );
 
-        builder.Services.AddCommonServices(builder.Environment);
+        builder.AddCommonServices();
         builder.Services.AddSingleton<EventStreamSocketManager>();
 
         builder.Services.AddAuthentication("BearerTokenAuthentication")

@@ -62,9 +62,10 @@ public static class Program
             .Configure<GatewayClientOptions>(builder.Configuration.GetSection(nameof(GatewayClientOptions)))
             .Configure<ContinuousDataOptions>(builder.Configuration.GetSection(nameof(ContinuousDataOptions)));
 
-        builder.Services.AddCommonServices(builder.Environment)
-            .AddTransient<IClientDetailsService, HubClientDetailsService>()
-            .AddInternalServerDataServices(builder.Environment);
+        builder.AddCommonServices()
+            .AddInternalServerDataServices();
+
+        builder.Services.AddTransient<IClientDetailsService, HubClientDetailsService>();
 
         // Retrieve the hub endpoint from configuration
         string? hubEndpointString = builder.Configuration[$"{CollectorConfig.ConfigName}:{nameof(CollectorConfig.HubEndpoint)}"];

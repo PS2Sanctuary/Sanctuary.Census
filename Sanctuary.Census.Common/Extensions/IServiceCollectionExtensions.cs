@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Hosting;
 using MongoDB.Bson;
@@ -27,34 +28,36 @@ public static class IServiceCollectionExtensions
     private static bool _registrationComplete;
 
     /// <summary>
-    /// Adds common Sanctuary.Census services to the service collection.
+    /// Adds common Sanctuary.Census services to the host.
     /// </summary>
-    /// <param name="services">The service collection.</param>
-    /// <returns>The <see cref="IServiceCollection"/> instance, so that calls may be chained.</returns>
-    /// <param name="hostEnvironment">The current host environment.</param>
-    public static IServiceCollection AddCommonServices(this IServiceCollection services, IHostEnvironment hostEnvironment)
+    /// <param name="builder">The host builder.</param>
+    /// <returns>The <see cref="IHostApplicationBuilder"/> instance, so that calls may be chained.</returns>
+    public static IHostApplicationBuilder AddCommonServices(this IHostApplicationBuilder builder)
     {
         if (_registrationComplete)
-            return services;
+            return builder;
 
-        services.AddMemoryCache();
+        builder.Services.AddMemoryCache();
 
-        services.TryAddSingleton<IFileSystem, FileSystem>();
-        services.TryAddScoped<EnvironmentContextProvider>();
+        builder.Services.TryAddSingleton<IFileSystem, FileSystem>();
+        builder.Services.TryAddScoped<EnvironmentContextProvider>();
 
-        MongoClientSettings mongoSettings = MongoClientSettings.FromConnectionString("mongodb://localhost:27017");
-        services.TryAddSingleton(new MongoClient(mongoSettings));
-        services.TryAddScoped<IMongoContext, MongoContext>();
+        // Register 
+        DatabaseOptions dbOpts = new();
+        builder.Configuration.GetSection(DatabaseOptions.CONFIG_KEY).Bind(dbOpts);
+        MongoClientSettings mongoSettings = MongoClientSettings.FromConnectionString(dbOpts.ConnectionString);
+        builder.Services.TryAddSingleton(new MongoClient(mongoSettings));
+        builder.Services.TryAddScoped<IMongoContext, MongoContext>();
         RegisterCollectionClassMaps();
 
-        services.AddHttpClient<Mandible.Abstractions.Manifest.IManifestService, Mandible.Manifest.ManifestService>();
-        if (hostEnvironment.IsProduction())
-            services.TryAddScoped<IManifestService, CachingManifestService>();
+        builder.Services.AddHttpClient<Mandible.Abstractions.Manifest.IManifestService, Mandible.Manifest.ManifestService>();
+        if (builder.Environment.IsProduction())
+            builder.Services.TryAddScoped<IManifestService, CachingManifestService>();
         else
-            services.TryAddScoped<IManifestService, DebugManifestService>();
+            builder.Services.TryAddScoped<IManifestService, DebugManifestService>();
 
         _registrationComplete = true;
-        return services;
+        return builder;
     }
 
     private static void RegisterCollectionClassMaps()

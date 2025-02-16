@@ -21,6 +21,8 @@ namespace Sanctuary.Census.Common.Objects.Collections;
 /// <param name="SensitivityDistance">Unknown.</param>
 /// <param name="Cost">The number of fish directive points granted by this fish.</param>
 /// <param name="ImageSetID">The ID of the fish's image set.</param>
+/// <param name="ImageID">The ID of the fish's default icon image.</param>
+/// <param name="ImagePath">The relative path to the fish's default icon image.</param>
 /// <param name="FishSizeType">The ID of the associated `fish_size_type`.</param>
 [Collection]
 public record Fish

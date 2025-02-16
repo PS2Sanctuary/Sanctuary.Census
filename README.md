@@ -51,10 +51,8 @@ descriptions of any collection's fields.
 
 ## Building and Deployment
 
-To build and run Sanctuary.Census, you'll require the [.NET 8 SDK](https://dotnet.microsoft.com/en-us/download/dotnet/8.0).
+To build and run Sanctuary.Census, you'll require the [.NET 9 SDK](https://dotnet.microsoft.com/en-us/download/dotnet/9.0).
 Furthermore, you'll need access to a MongoDB instance. This is simple to [install locally](https://www.mongodb.com/docs/manual/installation/).
-Sanctuary.Census expects the database to be running on the default endpoint of `localhost:27017`, and there is currently
-no way to configure this.
 
 If you intend to deploy your own copy, each application is ready to send logging to a [Seq deployment](https://datalust.co/seq),
 and [OpenTelemetry](https://opentelemetry.io) tracing/metrics to an OTLP-compatible endpoint (such as Jaeger or the OTEL

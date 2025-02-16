@@ -85,6 +85,7 @@ public partial record Vehicle
     uint UpSplashEffect,
     float SubmergeDepth,
     uint WaveSet,
-    uint BoatSimInfo
+    uint BoatSimInfo,
+    bool ShowLocalPlayerInFirstPerson
 );
 #pragma warning restore CS1591

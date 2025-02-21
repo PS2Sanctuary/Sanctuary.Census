@@ -28,7 +28,9 @@ public sealed class SubscribeWorldListJsonConverter : JsonConverter<OneOf<All, I
         if (reader.TokenType is JsonTokenType.EndArray)
             return null;
 
-        if (reader.TokenType is JsonTokenType.String && reader.GetString()?.Equals(_allString, StringComparison.Ordinal) is true)
+        bool isAllSwitch = reader.TokenType is JsonTokenType.String &&
+            reader.GetString()?.Equals(_allString, StringComparison.OrdinalIgnoreCase) is true;
+        if (isAllSwitch)
         {
             reader.Read(); // Read past the end of the array
             return new All();

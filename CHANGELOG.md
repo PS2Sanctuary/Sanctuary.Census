@@ -2,6 +2,39 @@
 
 Date format: DD/MM/YYYY
 
+## 21/02/2025
+
+#### 🚀 Additions
+
+**Event Streaming**
+
+- `heartbeat` messages are now dispatched at 30-second intervals. This will help prevent the websocket connection
+timing out (without configuration on the client side) during periods when no events are being dispatched.
+- Use the `c:censusJSON=<false/true>` query parameter in your websocket endpoint to toggle Census-compatible JSON
+serialization. This defaults to true (i.e. Census-compatible JSON is rendered).
+- The 'all' token use in the `subscribe` action is now case-insensitive.
+
+#### 🚨 Breaking changes
+
+- The event stream now serializes messages exactly as Census would, meaning all values are rendered as JSON string
+tokens. In practice this has only effect the `connected` field on the `connectionStateChanged` message.
+
+## 24/01/2025
+
+#### 🚀 Additions
+
+**Fishing Collections**
+
+- `fish`, `fish_rarity`, `fish_size_type` and the supporting `world_set_mapping` are newly-added collections that
+expose fishing-related data.
+- Get an overview with this query: https://census.lithafalcon.cc/get/ps2/fish?c:join=fish_rarity,fish_size_type,zone_set_mapping^on:zone_set_id^to:zone_set_id^list:1
+
+## 30/11/2024
+
+#### 🚨 Breaking changes
+
+- The `count` verb now returns a JSON number, rather than a string.
+
 ## 10/11/2023
 
 #### 🚀 Additions

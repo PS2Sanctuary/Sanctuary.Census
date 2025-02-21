@@ -79,7 +79,7 @@ public static class Program
         app.UseAuthorization();
 
         app.MapControllers();
-        app.MapGrpcService<RealtimeIngressService>();
+        app.MapGrpcService<RealtimeIngressService>().RequireAuthorization();
 
         app.Run();
     }

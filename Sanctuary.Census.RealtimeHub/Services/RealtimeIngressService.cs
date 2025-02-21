@@ -92,7 +92,7 @@ public class RealtimeIngressService : RealtimeIngress.RealtimeIngressBase
     {
         _logger.LogDebug
         (
-            "Received map state update for {ZoneId}:{ZoneInstance} on {WorldId} update with {RegionCount} regions",
+            "Received map state update for zone {ZoneId}:{ZoneInstance} on world {WorldId} with {RegionCount} regions",
             request.ZoneId,
             request.ZoneInstance,
             request.WorldId,

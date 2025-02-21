@@ -37,7 +37,7 @@ public class BearerTokenAuthenticationHandler : AuthenticationHandler<BearerToke
         if (authHeader?.StartsWith("bearer ", StringComparison.OrdinalIgnoreCase) is not true)
         {
             Response.StatusCode = 401;
-            return Task.FromResult(AuthenticateResult.Fail("Invalid authorization header"));
+            return Task.FromResult(AuthenticateResult.NoResult());
         }
 
         string token = authHeader["Bearer ".Length..].Trim();
@@ -48,9 +48,9 @@ public class BearerTokenAuthenticationHandler : AuthenticationHandler<BearerToke
         }
 
         Claim[] claims =
-        {
+        [
             new(ClaimTypes.Role, "collector", ClaimValueTypes.String, Options.ClaimsIssuer)
-        };
+        ];
         ClaimsIdentity identity = new(claims, Scheme.Name);
 
         return Task.FromResult

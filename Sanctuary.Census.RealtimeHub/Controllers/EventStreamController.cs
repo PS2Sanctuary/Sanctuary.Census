@@ -43,7 +43,7 @@ public class EventStreamController : ControllerBase
     /// </summary>
     [Route("/streaming")]
     [AllowAnonymous]
-    public async Task OpenEventStreamConnection()
+    public async Task OpenEventStreamConnection([FromQuery(Name = "c:censusJSON")] bool useCensusJson = true)
     {
         if (!HttpContext.WebSockets.IsWebSocketRequest)
         {
@@ -55,7 +55,7 @@ public class EventStreamController : ControllerBase
         using CancellationTokenSource cancelCts
             = CancellationTokenSource.CreateLinkedTokenSource(_lifetime.ApplicationStopping);
 
-        await _manager.RegisterWebSocket(webSocket, cancelCts);
+        await _manager.RegisterWebSocket(webSocket, useCensusJson, cancelCts);
 
         try
         {

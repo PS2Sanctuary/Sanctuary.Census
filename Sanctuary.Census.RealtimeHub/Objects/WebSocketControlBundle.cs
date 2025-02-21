@@ -13,12 +13,22 @@ internal sealed class WebSocketBundle : IDisposable
     private readonly ArrayBufferWriter<byte> _bufferWriter;
     private readonly Utf8JsonWriter _jsonWriter;
 
+    public WebSocket Socket { get; }
     public SemaphoreSlim WriteSemaphore { get; }
     public EventSubscription Subscription { get; }
+    public bool UsesCensusJson { get; }
 
-    public WebSocketBundle(CancellationTokenSource socketConnectionCancelCts)
+    public WebSocketBundle
+    (
+        WebSocket socket,
+        CancellationTokenSource socketConnectionCancelCts,
+        bool usesCensusJson
+    )
     {
+        Socket = socket;
         _socketConnectionCancelCts = socketConnectionCancelCts;
+        UsesCensusJson = usesCensusJson;
+
         _bufferWriter = new ArrayBufferWriter<byte>(4096);
         _jsonWriter = new Utf8JsonWriter(_bufferWriter);
         WriteSemaphore = new SemaphoreSlim(1);
@@ -35,9 +45,9 @@ internal sealed class WebSocketBundle : IDisposable
         return _jsonWriter;
     }
 
-    public async Task EndWriting(WebSocket socket, CancellationToken ct)
+    public async Task EndWriting(CancellationToken ct)
     {
-        await socket.SendAsync(_bufferWriter.WrittenMemory, WebSocketMessageType.Text, true, ct);
+        await Socket.SendAsync(_bufferWriter.WrittenMemory, WebSocketMessageType.Text, true, ct);
         WriteSemaphore.Release();
     }
 

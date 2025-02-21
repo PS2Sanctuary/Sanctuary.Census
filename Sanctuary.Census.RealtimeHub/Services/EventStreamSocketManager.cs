@@ -8,6 +8,7 @@ using Sanctuary.Census.RealtimeHub.Objects.Control;
 using System;
 using System.Buffers;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net.WebSockets;
 using System.Text.Json;
 using System.Text.Json.Nodes;
@@ -77,48 +78,26 @@ public sealed class EventStreamSocketManager : IDisposable
         {
             await foreach (IRealtimeEvent evt in _outboundChannel.Reader.ReadAllAsync(ct))
             {
-                JsonNode? node = JsonSerializer.SerializeToNode(evt, evt.GetType(), EVENT_JSON_OPTIONS);
-                if (node is null)
+                JsonNode? censusJsonNode = JsonSerializer.SerializeToNode(evt, evt.GetType(), EVENT_JSON_OPTIONS);
+                if (censusJsonNode is null)
                     continue;
+                // At this point this should not fail
+                JsonNode nonCensusJsonNode = JsonSerializer.SerializeToNode(evt, evt.GetType(), OUTBOUND_JSON_OPTIONS)!;
 
-                node["event_name"] = evt.EventName;
-                ServiceMessage<object> message = new(node);
+                censusJsonNode["event_name"] = evt.EventName;
+                nonCensusJsonNode["event_name"] = evt.EventName;
+                ServiceMessage<object> censusMessage = new(censusJsonNode);
+                ServiceMessage<object> nonCensusMessage = new(nonCensusJsonNode);
 
-                _jsonWriter.Reset();
-                _bufferWriter.Clear();
-                JsonSerializer.Serialize(_jsonWriter, message, OUTBOUND_JSON_OPTIONS);
+                WebSocketBundle[] validBundles = _sockets.Values.Where
+                    (
+                        x => x.Subscription.IsSubscribedToEvent(evt.EventName) &&
+                            x.Subscription.IsSubscribedToWorld(evt.WorldId)
+                    )
+                    .ToArray();
 
-                foreach ((WebSocket socket, WebSocketBundle bundle) in _sockets)
-                {
-                    if (socket.CloseStatus is not null)
-                        continue;
-
-                    if (!bundle.Subscription.IsSubscribedToEvent(evt.EventName))
-                        continue;
-
-                    if (!bundle.Subscription.IsSubscribedToWorld(evt.WorldId))
-                        continue;
-
-                    await bundle.WriteSemaphore.WaitAsync(ct);
-                    ReadOnlyMemory<byte> toWrite = _bufferWriter.WrittenMemory;
-
-                    while (toWrite.Length > 0)
-                    {
-                        int take = Math.Min(toWrite.Length, MAX_WEBSOCKET_MESSAGE_LENGTH);
-
-                        await socket.SendAsync
-                        (
-                            toWrite[..take],
-                            WebSocketMessageType.Text,
-                            toWrite.Length <= MAX_WEBSOCKET_MESSAGE_LENGTH,
-                            ct
-                        );
-
-                        toWrite = toWrite[take..];
-                    }
-
-                    bundle.WriteSemaphore.Release();
-                }
+                await DispatchServiceMessage(censusMessage, validBundles.Where(x => x.UsesCensusJson), ct);
+                await DispatchServiceMessage(nonCensusMessage, validBundles.Where(x => !x.UsesCensusJson), ct);
             }
         }
         catch (OperationCanceledException)
@@ -137,15 +116,19 @@ public sealed class EventStreamSocketManager : IDisposable
     /// Registers a websocket with the manager.
     /// </summary>
     /// <param name="socket">The socket.</param>
+    /// <param name="useCensusJson">
+    /// Whether fields on the outgoing payloads should be serialized in a Census-compatible manner,
+    /// rather than respecting the JSON spec.
+    /// </param>
     /// <param name="cancelCts">A <see cref="CancellationTokenSource"/> to set when the socket has been closed.</param>
-    public async Task RegisterWebSocket(WebSocket socket, CancellationTokenSource cancelCts)
+    public async Task RegisterWebSocket(WebSocket socket, bool useCensusJson, CancellationTokenSource cancelCts)
     {
-        WebSocketBundle bundle = new(cancelCts);
+        WebSocketBundle bundle = new(socket, cancelCts, useCensusJson);
         _sockets.Add(socket, bundle);
 
         Utf8JsonWriter writer = await bundle.StartWritingAsync(cancelCts.Token);
         JsonSerializer.Serialize(writer, new ConnectionStateChanged(true), OUTBOUND_JSON_OPTIONS);
-        await bundle.EndWriting(socket, cancelCts.Token);
+        await bundle.EndWriting(cancelCts.Token);
     }
 
     /// <summary>
@@ -199,7 +182,7 @@ public sealed class EventStreamSocketManager : IDisposable
 
                 Utf8JsonWriter writer = await bundle.StartWritingAsync(ct);
                 JsonSerializer.Serialize(writer, bundle.Subscription.ToSubscriptionInformation(), OUTBOUND_JSON_OPTIONS);
-                await bundle.EndWriting(socket, ct);
+                await bundle.EndWriting(ct);
 
                 break;
             }
@@ -211,7 +194,7 @@ public sealed class EventStreamSocketManager : IDisposable
 
                 Utf8JsonWriter writer = await bundle.StartWritingAsync(ct);
                 JsonSerializer.Serialize(writer, bundle.Subscription.ToSubscriptionInformation(), OUTBOUND_JSON_OPTIONS);
-                await bundle.EndWriting(socket, ct);
+                await bundle.EndWriting(ct);
 
                 break;
             }
@@ -236,6 +219,44 @@ public sealed class EventStreamSocketManager : IDisposable
         bool written = _outboundChannel.Writer.TryWrite(evt);
         if (!written)
             _logger.LogWarning("An outbound ESS object was dropped! Running behind?");
+    }
+
+    private async Task DispatchServiceMessage<TPayload>
+    (
+        ServiceMessage<TPayload> message,
+        IEnumerable<WebSocketBundle> receivingBundles,
+        CancellationToken ct
+    )
+    {
+        _jsonWriter.Reset();
+        _bufferWriter.Clear();
+        JsonSerializer.Serialize(_jsonWriter, message, OUTBOUND_JSON_OPTIONS);
+
+        foreach (WebSocketBundle bundle in receivingBundles)
+        {
+            if (bundle.Socket.CloseStatus is not null)
+                continue;
+
+            await bundle.WriteSemaphore.WaitAsync(ct);
+            ReadOnlyMemory<byte> toWrite = _bufferWriter.WrittenMemory;
+
+            while (toWrite.Length > 0)
+            {
+                int take = Math.Min(toWrite.Length, MAX_WEBSOCKET_MESSAGE_LENGTH);
+
+                await bundle.Socket.SendAsync
+                (
+                    toWrite[..take],
+                    WebSocketMessageType.Text,
+                    toWrite.Length <= MAX_WEBSOCKET_MESSAGE_LENGTH,
+                    ct
+                );
+
+                toWrite = toWrite[take..];
+            }
+
+            bundle.WriteSemaphore.Release();
+        }
     }
 
     /// <summary>

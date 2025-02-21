@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 namespace Sanctuary.Census.RealtimeHub.Workers;
 
 /// <summary>
-/// A hosted service for managing long-running event stream operations.
+/// Runs the <see cref="EventStreamSocketManager"/> for the lifetime of the application.
 /// </summary>
 public class EventStreamWorker : BackgroundService
 {

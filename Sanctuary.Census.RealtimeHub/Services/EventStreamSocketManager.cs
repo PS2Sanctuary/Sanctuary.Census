@@ -30,17 +30,33 @@ public sealed class EventStreamSocketManager : IDisposable
         Converters = { new SubscribeWorldListJsonConverter() }
     };
 
+    // Used for top-level messages
     private static readonly JsonSerializerOptions OUTBOUND_JSON_OPTIONS = new()
+    {
+        PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
+        NumberHandling = JsonNumberHandling.WriteAsString,
+        Converters = { new BooleanJsonConverter(true, true), new SubscribeWorldListJsonConverter() }
+    };
+
+    // Used for top-level messages
+    private static readonly JsonSerializerOptions NON_CENSUS_OUTBOUND_JSON_OPTIONS = new()
     {
         PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
         Converters = { new SubscribeWorldListJsonConverter() }
     };
 
+    // Used only to serialize events, which are wrapped by an outbound service message
     private static readonly JsonSerializerOptions EVENT_JSON_OPTIONS = new()
     {
         PropertyNamingPolicy = new SnakeCaseJsonNamingPolicy(),
         NumberHandling = JsonNumberHandling.WriteAsString,
-        Converters = { new BooleanJsonConverter(true) }
+        Converters = { new BooleanJsonConverter(true, true) }
+    };
+
+    // Used only to serialize events, which are wrapped by an outbound service message
+    private static readonly JsonSerializerOptions NON_CENSUS_EVENT_JSON_OPTIONS = new()
+    {
+        PropertyNamingPolicy = new SnakeCaseJsonNamingPolicy()
     };
 
     /// <summary>
@@ -76,34 +92,22 @@ public sealed class EventStreamSocketManager : IDisposable
     {
         try
         {
-            await foreach (IRealtimeEvent evt in _outboundChannel.Reader.ReadAllAsync(ct))
-            {
-                JsonNode? censusJsonNode = JsonSerializer.SerializeToNode(evt, evt.GetType(), EVENT_JSON_OPTIONS);
-                if (censusJsonNode is null)
-                    continue;
-                // At this point this should not fail
-                JsonNode nonCensusJsonNode = JsonSerializer.SerializeToNode(evt, evt.GetType(), OUTBOUND_JSON_OPTIONS)!;
+            using Task heartbeatTask = HeartbeatTask(ct);
+            using Task messageReadTask = MessageReadTask(ct);
+            await Task.WhenAll(heartbeatTask, messageReadTask);
 
-                censusJsonNode["event_name"] = evt.EventName;
-                nonCensusJsonNode["event_name"] = evt.EventName;
-                ServiceMessage<object> censusMessage = new(censusJsonNode);
-                ServiceMessage<object> nonCensusMessage = new(nonCensusJsonNode);
-
-                WebSocketBundle[] validBundles = _sockets.Values.Where
-                    (
-                        x => x.Subscription.IsSubscribedToEvent(evt.EventName) &&
-                            x.Subscription.IsSubscribedToWorld(evt.WorldId)
-                    )
-                    .ToArray();
-
-                await DispatchServiceMessage(censusMessage, validBundles.Where(x => x.UsesCensusJson), ct);
-                await DispatchServiceMessage(nonCensusMessage, validBundles.Where(x => !x.UsesCensusJson), ct);
-            }
+            await heartbeatTask;
+            await messageReadTask;
         }
         catch (OperationCanceledException)
         {
             // This is fine
             _logger.LogInformation($"{nameof(EventStreamSocketManager)}#Run cancelled");
+        }
+        catch (AggregateException aex)
+        {
+            foreach (Exception ex in aex.InnerExceptions)
+                _logger.LogError(ex, "Error occured while running the socket manager sub-tasks");
         }
         finally
         {
@@ -125,10 +129,7 @@ public sealed class EventStreamSocketManager : IDisposable
     {
         WebSocketBundle bundle = new(socket, cancelCts, useCensusJson);
         _sockets.Add(socket, bundle);
-
-        Utf8JsonWriter writer = await bundle.StartWritingAsync(cancelCts.Token);
-        JsonSerializer.Serialize(writer, new ConnectionStateChanged(true), OUTBOUND_JSON_OPTIONS);
-        await bundle.EndWriting(cancelCts.Token);
+        await WriteToSingleSocket(bundle, new ConnectionStateChanged(true), cancelCts.Token);
     }
 
     /// <summary>
@@ -180,10 +181,7 @@ public sealed class EventStreamSocketManager : IDisposable
                 if (sub is not null)
                     bundle.Subscription.AddSubscription(sub);
 
-                Utf8JsonWriter writer = await bundle.StartWritingAsync(ct);
-                JsonSerializer.Serialize(writer, bundle.Subscription.ToSubscriptionInformation(), OUTBOUND_JSON_OPTIONS);
-                await bundle.EndWriting(ct);
-
+                await WriteToSingleSocket(bundle, bundle.Subscription.ToSubscriptionInformation(), ct);
                 break;
             }
             case "clearSubscribe":
@@ -192,10 +190,7 @@ public sealed class EventStreamSocketManager : IDisposable
                 if (clSub is not null)
                     bundle.Subscription.SubtractSubscription(clSub);
 
-                Utf8JsonWriter writer = await bundle.StartWritingAsync(ct);
-                JsonSerializer.Serialize(writer, bundle.Subscription.ToSubscriptionInformation(), OUTBOUND_JSON_OPTIONS);
-                await bundle.EndWriting(ct);
-
+                await WriteToSingleSocket(bundle, bundle.Subscription.ToSubscriptionInformation(), ct);
                 break;
             }
             default: // Echo
@@ -221,16 +216,33 @@ public sealed class EventStreamSocketManager : IDisposable
             _logger.LogWarning("An outbound ESS object was dropped! Running behind?");
     }
 
-    private async Task DispatchServiceMessage<TPayload>
+    private static async Task WriteToSingleSocket<TMessage>
     (
-        ServiceMessage<TPayload> message,
-        IEnumerable<WebSocketBundle> receivingBundles,
+        WebSocketBundle bundle,
+        TMessage message,
         CancellationToken ct
     )
     {
+        Utf8JsonWriter writer = await bundle.StartWritingAsync(ct);
+        JsonSerializerOptions jsonOpts = bundle.UsesCensusJson
+            ? OUTBOUND_JSON_OPTIONS
+            : NON_CENSUS_OUTBOUND_JSON_OPTIONS;
+
+        JsonSerializer.Serialize(writer, message, jsonOpts);
+        await bundle.EndWriting(ct);
+    }
+
+    private async Task DispatchMessage<TMessage>
+    (
+        TMessage message,
+        IEnumerable<WebSocketBundle> receivingBundles,
+        JsonSerializerOptions jsonOpts,
+        CancellationToken ct
+    ) where TMessage : MessageBase
+    {
         _jsonWriter.Reset();
         _bufferWriter.Clear();
-        JsonSerializer.Serialize(_jsonWriter, message, OUTBOUND_JSON_OPTIONS);
+        JsonSerializer.Serialize(_jsonWriter, message, jsonOpts);
 
         foreach (WebSocketBundle bundle in receivingBundles)
         {
@@ -256,6 +268,90 @@ public sealed class EventStreamSocketManager : IDisposable
             }
 
             bundle.WriteSemaphore.Release();
+        }
+    }
+
+    private async Task DispatchMessageToAll<TMessage>(TMessage message, CancellationToken ct)
+        where TMessage : MessageBase
+    {
+        await DispatchMessage
+        (
+            message,
+            _sockets.Values.Where(x => x.UsesCensusJson),
+            OUTBOUND_JSON_OPTIONS,
+            ct
+        );
+        await DispatchMessage
+        (
+            message,
+            _sockets.Values.Where(x => !x.UsesCensusJson),
+            NON_CENSUS_OUTBOUND_JSON_OPTIONS,
+            ct
+        );
+    }
+
+    private async Task MessageReadTask(CancellationToken ct)
+    {
+        await Task.Yield();
+
+        await foreach (IRealtimeEvent evt in _outboundChannel.Reader.ReadAllAsync(ct))
+        {
+            JsonNode? censusJsonNode = JsonSerializer.SerializeToNode(evt, evt.GetType(), EVENT_JSON_OPTIONS);
+            if (censusJsonNode is null)
+                continue;
+            // At this point this should not fail
+            JsonNode nonCensusJsonNode = JsonSerializer.SerializeToNode(evt, evt.GetType(), NON_CENSUS_EVENT_JSON_OPTIONS)!;
+
+            censusJsonNode["event_name"] = evt.EventName;
+            nonCensusJsonNode["event_name"] = evt.EventName;
+            ServiceMessage<object> censusMessage = new(censusJsonNode);
+            ServiceMessage<object> nonCensusMessage = new(nonCensusJsonNode);
+
+            WebSocketBundle[] validBundles = _sockets.Values.Where
+                (
+                    x => x.Subscription.IsSubscribedToEvent(evt.EventName) &&
+                        x.Subscription.IsSubscribedToWorld(evt.WorldId)
+                )
+                .ToArray();
+
+            await DispatchMessage
+            (
+                censusMessage,
+                validBundles.Where(x => x.UsesCensusJson),
+                OUTBOUND_JSON_OPTIONS,
+                ct
+            );
+            await DispatchMessage
+            (
+                nonCensusMessage,
+                validBundles.Where(x => !x.UsesCensusJson),
+                NON_CENSUS_OUTBOUND_JSON_OPTIONS,
+                ct
+            );
+        }
+    }
+
+    private async Task HeartbeatTask(CancellationToken ct)
+    {
+        await Task.Yield();
+        using PeriodicTimer timer = new(TimeSpan.FromSeconds(30));
+
+        try
+        {
+            while (!ct.IsCancellationRequested)
+            {
+                await timer.WaitForNextTickAsync(ct);
+                Heartbeat heartbeat = new(new Dictionary<string, bool>(), DateTimeOffset.UtcNow.ToUnixTimeSeconds());
+                await DispatchMessageToAll(heartbeat, ct);
+            }
+        }
+        catch (OperationCanceledException)
+        {
+            // This is fine
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "The websocket heartbeat task has failed");
         }
     }
 

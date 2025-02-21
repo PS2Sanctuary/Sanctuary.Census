@@ -12,7 +12,7 @@ namespace Sanctuary.Census.RealtimeHub.Json;
 /// </summary>
 public sealed class SubscribeWorldListJsonConverter : JsonConverter<OneOf<All, IEnumerable<uint>>?>
 {
-    private readonly All _all = new();
+    private readonly string _allString = new All().ToString();
 
     /// <inheritdoc />
     public override OneOf<All, IEnumerable<uint>>? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
@@ -28,7 +28,7 @@ public sealed class SubscribeWorldListJsonConverter : JsonConverter<OneOf<All, I
         if (reader.TokenType is JsonTokenType.EndArray)
             return null;
 
-        if (reader.TokenType is JsonTokenType.String && reader.GetString() == _all.ToString())
+        if (reader.TokenType is JsonTokenType.String && reader.GetString()?.Equals(_allString, StringComparison.Ordinal) is true)
         {
             reader.Read(); // Read past the end of the array
             return new All();
@@ -60,7 +60,7 @@ public sealed class SubscribeWorldListJsonConverter : JsonConverter<OneOf<All, I
 
         if (value.Value.IsT0)
         {
-            writer.WriteStringValue(_all.ToString());
+            writer.WriteStringValue(_allString);
         }
         else
         {

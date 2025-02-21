@@ -28,6 +28,9 @@ when operating nominally, but are likely to come in bursts with up to a minute o
 - Compatible with the official Census' event stream.
 - Valid event names: `WorldPopulationUpdate`, `MapStateUpdate`.
 - Events are mirrored as collections without the `Update` suffix, e.g. https://census.lithafalcon.cc/get/ps2/map_state.
+- Append the `c:censusJSON=false` query parameter to the websocket endpoint
+(i.e. `wss://census.lithafalcon.cc/streaming?c:censusJSON=false`)
+to disable Census JSON (where all tokens are rendered as strings).
 
 > [!TIP]
 > Please read the [differences to Census](docs/differences-to-census.md) documentation to get an overview of any

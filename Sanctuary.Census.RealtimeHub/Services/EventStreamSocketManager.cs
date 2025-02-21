@@ -342,7 +342,16 @@ public sealed class EventStreamSocketManager : IDisposable
             {
                 await timer.WaitForNextTickAsync(ct);
                 Heartbeat heartbeat = new(new Dictionary<string, bool>(), DateTimeOffset.UtcNow.ToUnixTimeSeconds());
-                await DispatchMessageToAll(heartbeat, ct);
+
+                try
+                {
+                    await DispatchMessageToAll(heartbeat, ct);
+                }
+                catch (Exception ex)
+                {
+                    // This is kinda fine. We'll just try again in the next loop
+                    _logger.LogError(ex, "Failed to dispatch a heartbeat");
+                }
             }
         }
         catch (OperationCanceledException)

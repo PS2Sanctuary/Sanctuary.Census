@@ -257,7 +257,7 @@ public sealed class EventStreamSocketManager : IDisposable
             await bundle.WriteSemaphore.WaitAsync(ct);
             try
             {
-                ReadOnlyMemory<byte> toWrite = ms.GetMemory();
+                ReadOnlyMemory<byte> toWrite = ms.GetBuffer().AsMemory(0, (int)ms.Position);
                 while (toWrite.Length > 0)
                 {
                     int take = Math.Min(toWrite.Length, MAX_WEBSOCKET_MESSAGE_LENGTH);

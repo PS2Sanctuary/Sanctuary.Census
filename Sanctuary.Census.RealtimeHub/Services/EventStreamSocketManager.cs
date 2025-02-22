@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.Logging;
+using Microsoft.IO;
 using Sanctuary.Census.Common.Abstractions.Objects.RealtimeEvents;
 using Sanctuary.Census.Common.Json;
 using Sanctuary.Census.RealtimeHub.Json;
@@ -6,8 +7,8 @@ using Sanctuary.Census.RealtimeHub.Objects;
 using Sanctuary.Census.RealtimeHub.Objects.Commands;
 using Sanctuary.Census.RealtimeHub.Objects.Control;
 using System;
-using System.Buffers;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Net.WebSockets;
 using System.Text.Json;
@@ -24,6 +25,11 @@ namespace Sanctuary.Census.RealtimeHub.Services;
 /// </summary>
 public sealed class EventStreamSocketManager : IDisposable
 {
+    /// <summary>
+    /// The maximum length that a single websocket message may be.
+    /// </summary>
+    public const int MAX_WEBSOCKET_MESSAGE_LENGTH = 4096;
+
     private static readonly JsonSerializerOptions INBOUND_JSON_OPTIONS = new()
     {
         PropertyNameCaseInsensitive = true,
@@ -59,16 +65,11 @@ public sealed class EventStreamSocketManager : IDisposable
         PropertyNamingPolicy = new SnakeCaseJsonNamingPolicy()
     };
 
-    /// <summary>
-    /// The maximum length that a single websocket message may be.
-    /// </summary>
-    public const int MAX_WEBSOCKET_MESSAGE_LENGTH = 4096;
+    private static readonly RecyclableMemoryStreamManager _rmsManager = new();
 
     private readonly ILogger<EventStreamSocketManager> _logger;
-    private readonly Dictionary<WebSocket, WebSocketBundle> _sockets;
-    private readonly Channel<IRealtimeEvent> _outboundChannel;
-    private readonly ArrayBufferWriter<byte> _bufferWriter;
-    private readonly Utf8JsonWriter _jsonWriter;
+    private readonly Dictionary<WebSocket, WebSocketBundle> _sockets = [];
+    private readonly Channel<IRealtimeEvent> _outboundChannel = Channel.CreateBounded<IRealtimeEvent>(10000);
 
     /// <summary>
     /// Initializes a new instance of the <see cref="EventStreamSocketManager"/> class.
@@ -77,10 +78,6 @@ public sealed class EventStreamSocketManager : IDisposable
     public EventStreamSocketManager(ILogger<EventStreamSocketManager> logger)
     {
         _logger = logger;
-        _sockets = new Dictionary<WebSocket, WebSocketBundle>();
-        _outboundChannel = Channel.CreateBounded<IRealtimeEvent>(10000);
-        _bufferWriter = new ArrayBufferWriter<byte>(MAX_WEBSOCKET_MESSAGE_LENGTH);
-        _jsonWriter = new Utf8JsonWriter(_bufferWriter);
     }
 
     /// <summary>
@@ -224,12 +221,18 @@ public sealed class EventStreamSocketManager : IDisposable
     )
     {
         Utf8JsonWriter writer = await bundle.StartWritingAsync(ct);
-        JsonSerializerOptions jsonOpts = bundle.UsesCensusJson
-            ? OUTBOUND_JSON_OPTIONS
-            : NON_CENSUS_OUTBOUND_JSON_OPTIONS;
+        try
+        {
+            JsonSerializerOptions jsonOpts = bundle.UsesCensusJson
+                ? OUTBOUND_JSON_OPTIONS
+                : NON_CENSUS_OUTBOUND_JSON_OPTIONS;
 
-        JsonSerializer.Serialize(writer, message, jsonOpts);
-        await bundle.EndWriting(ct);
+            JsonSerializer.Serialize(writer, message, jsonOpts);
+        }
+        finally
+        {
+            await bundle.EndWriting(ct);
+        }
     }
 
     private async Task DispatchMessage<TMessage>
@@ -240,9 +243,11 @@ public sealed class EventStreamSocketManager : IDisposable
         CancellationToken ct
     ) where TMessage : MessageBase
     {
-        _jsonWriter.Reset();
-        _bufferWriter.Clear();
-        JsonSerializer.Serialize(_jsonWriter, message, jsonOpts);
+        // ReSharper disable once UseAwaitUsing
+        using RecyclableMemoryStream ms = _rmsManager.GetStream();
+        // ReSharper disable once MethodHasAsyncOverloadWithCancellation
+        JsonSerializer.Serialize(ms, message, jsonOpts);
+        ms.Seek(0, SeekOrigin.Begin);
 
         foreach (WebSocketBundle bundle in receivingBundles)
         {
@@ -250,24 +255,28 @@ public sealed class EventStreamSocketManager : IDisposable
                 continue;
 
             await bundle.WriteSemaphore.WaitAsync(ct);
-            ReadOnlyMemory<byte> toWrite = _bufferWriter.WrittenMemory;
-
-            while (toWrite.Length > 0)
+            try
             {
-                int take = Math.Min(toWrite.Length, MAX_WEBSOCKET_MESSAGE_LENGTH);
+                ReadOnlyMemory<byte> toWrite = ms.GetMemory();
+                while (toWrite.Length > 0)
+                {
+                    int take = Math.Min(toWrite.Length, MAX_WEBSOCKET_MESSAGE_LENGTH);
 
-                await bundle.Socket.SendAsync
-                (
-                    toWrite[..take],
-                    WebSocketMessageType.Text,
-                    toWrite.Length <= MAX_WEBSOCKET_MESSAGE_LENGTH,
-                    ct
-                );
+                    await bundle.Socket.SendAsync
+                    (
+                        toWrite[..take],
+                        WebSocketMessageType.Text,
+                        toWrite.Length <= MAX_WEBSOCKET_MESSAGE_LENGTH,
+                        ct
+                    );
 
-                toWrite = toWrite[take..];
+                    toWrite = toWrite[take..];
+                }
             }
-
-            bundle.WriteSemaphore.Release();
+            finally
+            {
+                bundle.WriteSemaphore.Release();
+            }
         }
     }
 
@@ -378,8 +387,6 @@ public sealed class EventStreamSocketManager : IDisposable
     /// <inheritdoc />
     public void Dispose()
     {
-        _jsonWriter.Dispose();
-        _bufferWriter.Clear();
         _outboundChannel.Writer.TryComplete();
 
         foreach (WebSocketBundle bundle in _sockets.Values)

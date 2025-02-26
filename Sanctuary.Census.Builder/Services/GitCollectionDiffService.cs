@@ -113,7 +113,7 @@ public class GitCollectionDiffService : ICollectionDiffService
 
         using Repository repo = SetupRepository();
 
-        string envPath = Path.Combine(repo.Info.Path, _environmentContextProvider.Environment.ToString());
+        string envPath = Path.Combine(repo.Info.WorkingDirectory, _environmentContextProvider.Environment.ToString());
         Directory.CreateDirectory(envPath);
 
         // Add collections that haven't been changed, but were never added to the diff
@@ -127,9 +127,6 @@ public class GitCollectionDiffService : ICollectionDiffService
             if (!File.Exists(collPath))
                 _modifiedCollections.Add(collType);
         }
-
-        if (_modifiedCollections.Count == 0)
-            return;
 
         foreach (Type collType in _modifiedCollections)
         {
@@ -147,13 +144,13 @@ public class GitCollectionDiffService : ICollectionDiffService
             string collPath = Path.Combine(envPath, collName + ".json");
 
             await using FileStream fs = new(collPath, FileMode.Create, FileAccess.Write);
-            await JsonSerializer.SerializeAsync(fs, items, JSON_OPTIONS, ct).ConfigureAwait(false);
+            await JsonSerializer.SerializeAsync(fs, items, JSON_OPTIONS, ct);
         }
 
         // Stage everything
         Commands.Stage(repo, "*");
 
-        if (repo.Index.Count > 0)
+        if (repo.RetrieveStatus().IsDirty)
         {
             Signature commitSig = new(_gitIdentity, DateTimeOffset.UtcNow);
             Commit commit = repo.Commit

@@ -43,7 +43,8 @@ public static class Program
 
         builder.Services.Configure<BuildOptions>(builder.Configuration.GetSection(nameof(BuildOptions)))
             .Configure<LoginClientOptions>(builder.Configuration.GetSection(nameof(LoginClientOptions)))
-            .Configure<GatewayClientOptions>(builder.Configuration.GetSection(nameof(GatewayClientOptions)));
+            .Configure<GatewayClientOptions>(builder.Configuration.GetSection(nameof(GatewayClientOptions)))
+            .Configure<GitOptions>(builder.Configuration.GetSection(nameof(GitOptions)));
 
         builder.AddCommonServices()
             .AddClientDataServices()

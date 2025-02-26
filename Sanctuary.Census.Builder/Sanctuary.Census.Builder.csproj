@@ -14,7 +14,7 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="CliWrap" Version="3.8.0" />
+        <PackageReference Include="LibGit2Sharp" Version="0.31.0" />
         <PackageReference Include="Microsoft.Extensions.Hosting" Version="9.0.2" />
         <PackageReference Include="Microsoft.Extensions.Hosting.Systemd" Version="9.0.2" />
         <PackageReference Include="Serilog.Extensions.Hosting" Version="9.0.0" />

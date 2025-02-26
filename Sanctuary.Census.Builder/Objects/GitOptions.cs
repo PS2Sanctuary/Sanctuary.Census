@@ -26,9 +26,14 @@ public sealed class GitOptions
     public string BranchName { get; set; } = "main";
 
     /// <summary>
-    /// The URL of the remote. May be left null to disable syncing with a remote.
+    /// The URL of the remote. May be left null to disable pulling from a remote.
     /// </summary>
     public string? RemoteHttpUrl { get; set; }
+
+    /// <summary>
+    /// Whether the remote repository should be pushed to.
+    /// </summary>
+    public bool PushToRemote { get; set; }
 
     /// <summary>
     /// The username to connect to the remote using. If null, credentials will not be used.

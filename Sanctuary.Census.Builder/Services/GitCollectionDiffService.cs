@@ -1,4 +1,5 @@
-﻿using CliWrap;
+﻿using LibGit2Sharp;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using MongoDB.Bson;
 using MongoDB.Driver;
@@ -7,6 +8,7 @@ using Sanctuary.Census.Builder.Objects;
 using Sanctuary.Census.Common.Abstractions.Services;
 using Sanctuary.Census.Common.Attributes;
 using Sanctuary.Census.Common.Json;
+using Sanctuary.Census.Common.Objects;
 using Sanctuary.Census.Common.Services;
 using System;
 using System.Collections.Generic;
@@ -27,11 +29,14 @@ public class GitCollectionDiffService : ICollectionDiffService
     private static readonly JsonSerializerOptions JSON_OPTIONS;
     private static readonly IReadOnlyList<Type> _knownCollectionTypes;
 
-    private readonly string _gitDiffRepoPath;
-    private readonly bool _pushOnCommit;
+    private readonly ILogger<GitCollectionDiffService> _logger;
+    private readonly GitOptions _gitOptions;
     private readonly IMongoContext _mongoContext;
     private readonly EnvironmentContextProvider _environmentContextProvider;
-    private readonly HashSet<Type> _modifiedCollections;
+
+    private readonly HashSet<Type> _modifiedCollections = [];
+    private readonly FetchOptions _gitFetchOptions = new();
+    private readonly Identity _gitIdentity;
 
     static GitCollectionDiffService()
     {
@@ -57,23 +62,35 @@ public class GitCollectionDiffService : ICollectionDiffService
     /// <summary>
     /// Initializes a new instance of the <see cref="GitCollectionDiffService"/> class.
     /// </summary>
-    /// <param name="options">The builder options.</param>
+    /// <param name="logger">The logging interface to use.</param>
+    /// <param name="commonOptions">The common options.</param>
+    /// <param name="gitOptions">The Git options.</param>
     /// <param name="mongoContext">The Mongo DB context.</param>
     /// <param name="environmentContextProvider">The environment context provider.</param>
     public GitCollectionDiffService
     (
-        IOptions<BuildOptions> options,
+        ILogger<GitCollectionDiffService> logger,
+        IOptions<CommonOptions> commonOptions,
+        IOptions<GitOptions> gitOptions,
         IMongoContext mongoContext,
         EnvironmentContextProvider environmentContextProvider
     )
     {
+        _logger = logger;
+        _gitOptions = gitOptions.Value;
+        _gitOptions.LocalRepositoryPath ??= Path.Combine(commonOptions.Value.AppDataDirectory, "git-diffs-repo");
         _mongoContext = mongoContext;
         _environmentContextProvider = environmentContextProvider;
-        _modifiedCollections = new HashSet<Type>();
 
-        _pushOnCommit = options.Value.PushGitDiffToRemote;
-        _gitDiffRepoPath = options.Value.GitDiffRepoPath
-            ?? throw new InvalidOperationException("A path to the git diff repo must be provided");
+        if (!string.IsNullOrEmpty(_gitOptions.RemoteUsername))
+        {
+            _gitFetchOptions.CredentialsProvider = (_, _, _) => new UsernamePasswordCredentials
+            {
+                Username = _gitOptions.RemoteUsername,
+                Password = _gitOptions.RemotePassword
+            };
+        }
+        _gitIdentity = new Identity(_gitOptions.CommitUserName, _gitOptions.CommitEmail);
     }
 
     /// <inheritdoc />
@@ -91,10 +108,12 @@ public class GitCollectionDiffService : ICollectionDiffService
     /// <inheritdoc />
     public async Task CommitAsync(CancellationToken ct = default)
     {
-        if (!Directory.Exists(_gitDiffRepoPath))
-            throw new DirectoryNotFoundException($"The git diff repo path was not found: {_gitDiffRepoPath}");
+        if (!_gitOptions.DoGitDiffing)
+            return;
 
-        string envPath = Path.Combine(_gitDiffRepoPath, _environmentContextProvider.Environment.ToString());
+        using Repository repo = SetupRepository();
+
+        string envPath = Path.Combine(repo.Info.Path, _environmentContextProvider.Environment.ToString());
         Directory.CreateDirectory(envPath);
 
         // Add collections that haven't been changed, but were never added to the diff
@@ -131,34 +150,62 @@ public class GitCollectionDiffService : ICollectionDiffService
             await JsonSerializer.SerializeAsync(fs, items, JSON_OPTIONS, ct).ConfigureAwait(false);
         }
 
-        CommandResult addResult = await Cli.Wrap("git")
-            .WithArguments("add -A")
-            .WithWorkingDirectory(_gitDiffRepoPath)
-            .WithValidation(CommandResultValidation.None)
-            .ExecuteAsync(ct)
-            .ConfigureAwait(false);
-        if (addResult.ExitCode is not (0 or 141)) // 141 thrown because STDOUT closed too fast
-            throw new Exception($"Failed to stage diff files. Exit code {addResult.ExitCode}");
+        // Stage everything
+        Commands.Stage(repo, "*");
 
-        CommandResult commitResult = await Cli.Wrap("git")
-            .WithArguments($"commit -m \"[{_environmentContextProvider.Environment}] {DateTimeOffset.UtcNow.ToString(CultureInfo.InvariantCulture)}\"")
-            .WithWorkingDirectory(_gitDiffRepoPath)
-            .WithValidation(CommandResultValidation.None)
-            .ExecuteAsync(ct)
-            .ConfigureAwait(false);
-        if (commitResult.ExitCode is not (0 or 141)) // 141 thrown because STDOUT closed too fast
-            throw new Exception($"Failed to commit diff files. Exit code {commitResult.ExitCode}");
-
-        if (_pushOnCommit)
+        if (repo.Index.Count > 0)
         {
-            CommandResult pushResult = await Cli.Wrap("git")
-                .WithArguments("push")
-                .WithWorkingDirectory(_gitDiffRepoPath)
-                .WithValidation(CommandResultValidation.None)
-                .ExecuteAsync(ct)
-                .ConfigureAwait(false);
-            if (pushResult.ExitCode is not (0 or 141)) // 141 thrown because STDOUT closed too fast
-                throw new Exception($"Failed to push diff files. Exit code {pushResult.ExitCode}");
+            Signature commitSig = new(_gitIdentity, DateTimeOffset.UtcNow);
+            Commit commit = repo.Commit
+            (
+                $"[{_environmentContextProvider.Environment}] {DateTimeOffset.UtcNow.ToString(CultureInfo.InvariantCulture)}",
+                commitSig,
+                commitSig
+            );
+            _logger.LogInformation("Created commit {Hash} in git diff repo ({Message})", commit.Sha, commit.MessageShort);
+
+            if (_gitOptions.PushToRemote)
+            {
+                PushOptions po = new();
+                po.CredentialsProvider = _gitFetchOptions.CredentialsProvider;
+                repo.Network.Push(repo.Branches[_gitOptions.BranchName], po);
+                _logger.LogDebug("Successfully pushed git diff repo to remote");
+            }
         }
+        else
+        {
+            _logger.LogDebug("No commits were made; no need to push to the remote");
+        }
+    }
+
+    private Repository SetupRepository()
+    {
+        if (!Repository.IsValid(_gitOptions.LocalRepositoryPath))
+        {
+            if (_gitOptions.RemoteHttpUrl is null)
+                throw new InvalidOperationException("The remote git URL is null, but no repository exists locally");
+
+            _logger.LogInformation
+            (
+                "Git diff repo does not exist locally, cloning into {RepoPath}",
+                _gitOptions.LocalRepositoryPath
+            );
+            CloneOptions co = new(_gitFetchOptions);
+            Repository.Clone(_gitOptions.RemoteHttpUrl, _gitOptions.LocalRepositoryPath, co);
+        }
+
+        Repository repo = new(_gitOptions.LocalRepositoryPath);
+
+        Branch branch = repo.Branches[_gitOptions.BranchName];
+        if (branch == null)
+            throw new InvalidOperationException("The given branch does not exist in the repository");
+        Commands.Checkout(repo, repo.Branches[_gitOptions.BranchName]);
+
+        PullOptions po = new();
+        po.FetchOptions = _gitFetchOptions;
+        Commands.Pull(repo, new Signature(_gitIdentity, DateTimeOffset.UtcNow), po);
+
+        _logger.LogDebug("Git diff repo successfully pulled");
+        return repo;
     }
 }

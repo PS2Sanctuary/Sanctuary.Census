@@ -1,14 +1,11 @@
-﻿using Microsoft.Extensions.Options;
-using Sanctuary.Census.Builder.Abstractions.CollectionBuilders;
+﻿using Sanctuary.Census.Builder.Abstractions.CollectionBuilders;
 using Sanctuary.Census.Builder.Abstractions.Database;
 using Sanctuary.Census.Builder.Abstractions.Services;
 using Sanctuary.Census.Builder.Exceptions;
 using Sanctuary.Census.ClientData.Abstractions.Services;
 using Sanctuary.Census.Common.Objects.Collections;
 using Sanctuary.Census.Common.Objects.CommonModels;
-using Sanctuary.Census.Common.Services;
 using Sanctuary.Census.ServerData.Internal.Abstractions.Services;
-using Sanctuary.Census.ServerData.Internal.Objects;
 using Sanctuary.Zone.Packets.InGamePurchase;
 using System;
 using System.Collections.Generic;
@@ -26,8 +23,6 @@ public class MarketingBundleCollectionBuilders : ICollectionBuilder
     private readonly ILocaleDataCacheService _localeDataCache;
     private readonly IServerDataCacheService _serverDataCache;
     private readonly IImageSetHelperService _imageSetHelper;
-    private readonly EnvironmentContextProvider _environmentContextProvider;
-    private readonly LoginClientOptions _loginOptions;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="MarketingBundleCollectionBuilders"/> class.
@@ -35,22 +30,16 @@ public class MarketingBundleCollectionBuilders : ICollectionBuilder
     /// <param name="localeDataCache">The locale data cache.</param>
     /// <param name="serverDataCache">The server data cache.</param>
     /// <param name="imageSetHelper">The image set helper service.</param>
-    /// <param name="environmentContextProvider">The environment context provider.</param>
-    /// <param name="loginOptions">The server login options.</param>
     public MarketingBundleCollectionBuilders
     (
         ILocaleDataCacheService localeDataCache,
         IServerDataCacheService serverDataCache,
-        IImageSetHelperService imageSetHelper,
-        EnvironmentContextProvider environmentContextProvider,
-        IOptions<LoginClientOptions> loginOptions
+        IImageSetHelperService imageSetHelper
     )
     {
         _localeDataCache = localeDataCache;
         _serverDataCache = serverDataCache;
         _imageSetHelper = imageSetHelper;
-        _environmentContextProvider = environmentContextProvider;
-        _loginOptions = loginOptions.Value;
     }
 
     /// <inheritdoc />
@@ -58,23 +47,6 @@ public class MarketingBundleCollectionBuilders : ICollectionBuilder
     {
         if (_serverDataCache.StoreBundleCategories is null)
             throw new MissingCacheDataException(typeof(StoreBundleCategories));
-
-        IEnumerable<Sanctuary.Common.Objects.FactionDefinition> expectedFactions = _loginOptions
-            .Accounts[_environmentContextProvider.Environment]
-            .SelectMany(x => x.Factions);
-
-        foreach (Sanctuary.Common.Objects.FactionDefinition faction in expectedFactions)
-        {
-            if (!_serverDataCache.StoreBundles.ContainsKey(faction))
-            {
-                throw new MissingCacheDataException
-                (
-                    typeof(StoreBundles),
-                    $"Missing at least one faction ({faction}). Present: " +
-                    string.Join(", ", _serverDataCache.StoreBundles.Keys)
-                );
-            }
-        }
 
         Dictionary<uint, MarketingBundle> builtBundles = new();
         List<MarketingBundleItem> builtItems = new();

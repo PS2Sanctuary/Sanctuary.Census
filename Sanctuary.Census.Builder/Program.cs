@@ -84,38 +84,32 @@ public static class Program
         configProvider.Register<Directive>()
             .WithIndex(x => x.DirectiveID, true)
             .WithIndex(x => x.DirectiveTreeID, false)
-            .WithEqualityKey(x => x.DirectiveID)
-            .WithRemoveOldEntryTest(static _ => false);
+            .WithEqualityKey(x => x.DirectiveID);
 
         configProvider.Register<DirectiveTree>()
             .WithIndex(x => x.DirectiveTreeID, true)
             .WithIndex(x => x.DirectiveTreeCategoryID, false)
-            .WithEqualityKey(x => x.DirectiveTreeID)
-            .WithRemoveOldEntryTest(static _ => false);
+            .WithEqualityKey(x => x.DirectiveTreeID);
 
         configProvider.Register<DirectiveTier>()
             .WithIndex(x => x.DirectiveTreeID, false)
             .WithEqualityKey(x => x.DirectiveTreeID)
-            .WithEqualityKey(x => x.DirectiveTierID)
-            .WithRemoveOldEntryTest(static _ => false);
+            .WithEqualityKey(x => x.DirectiveTierID);
 
         configProvider.Register<DirectiveTierReward>()
             .WithIndex(x => x.RewardSetID, false)
             .WithIndex(x => x.ItemID, false)
             .WithEqualityKey(x => x.RewardSetID)
-            .WithEqualityKey(x => x.ItemID)
-            .WithRemoveOldEntryTest(static _ => false);
+            .WithEqualityKey(x => x.ItemID);
 
         configProvider.Register<DirectiveTierRewardSet>()
             .WithIndex(x => x.RewardSetID, false)
             .WithEqualityKey(x => x.RewardSetID)
-            .WithEqualityKey(x => x.FactionId)
-            .WithRemoveOldEntryTest(static _ => false);
+            .WithEqualityKey(x => x.FactionId);
 
         configProvider.Register<DirectiveTreeCategory>()
             .WithIndex(x => x.DirectiveTreeCategoryID, true)
-            .WithEqualityKey(x => x.DirectiveTreeCategoryID)
-            .WithRemoveOldEntryTest(static _ => false);
+            .WithEqualityKey(x => x.DirectiveTreeCategoryID);
 
         configProvider.Register<Experience>()
             .WithIndex(x => x.ExperienceID, true)
@@ -303,33 +297,28 @@ public static class Program
 
         configProvider.Register<OutfitWar>()
             .WithIndex(x => x.OutfitWarID, true)
-            .WithEqualityKey(x => x.OutfitWarID)
-            .WithRemoveOldEntryTest(static _ => false);
+            .WithEqualityKey(x => x.OutfitWarID);
 
         configProvider.Register<OutfitWarMatch>()
             .WithIndex(x => x.OutfitWarID, false)
             .WithIndex(x => x.RoundID, false)
-            .WithEqualityKey(x => x.MatchID)
-            .WithRemoveOldEntryTest(static _ => false);
+            .WithEqualityKey(x => x.MatchID);
 
         configProvider.Register<OutfitWarRanking>()
             .WithIndex(x => x.RoundID, false)
             .WithIndex(x => x.OutfitID, false)
             .WithEqualityKey(x => x.RoundID)
-            .WithEqualityKey(x => x.OutfitID)
-            .WithRemoveOldEntryTest(static _ => false);
+            .WithEqualityKey(x => x.OutfitID);
 
         configProvider.Register<OutfitWarRegistration>()
             .WithIndex(x => x.OutfitID, false)
             .WithIndex(x => x.WorldID, false)
-            .WithEqualityKey(x => x.OutfitID)
-            .WithRemoveOldEntryTest(static _ => false);
+            .WithEqualityKey(x => x.OutfitID);
 
         configProvider.Register<OutfitWarRound>()
             .WithIndex(x => x.RoundID, true)
             .WithIndex(x => x.OutfitWarID, false)
-            .WithEqualityKey(x => x.RoundID)
-            .WithRemoveOldEntryTest(static _ => false);
+            .WithEqualityKey(x => x.RoundID);
 
         configProvider.Register<PlayerStateGroup2>()
             .WithIndex(x => x.PlayerStateGroupId, false)
@@ -446,15 +435,13 @@ public static class Program
 
         configProvider.Register<Common.Objects.Collections.Zone>()
             .WithIndex(x => x.ZoneID, true)
-            .WithEqualityKey(x => x.ZoneID)
-            .WithRemoveOldEntryTest(static _ => false);
+            .WithEqualityKey(x => x.ZoneID);
 
         configProvider.Register<ZonePopulationLimits>()
             .WithIndex(x => x.WorldId, false)
             .WithIndex(x => x.ZoneId, false)
             .WithEqualityKey(x => x.WorldId)
-            .WithEqualityKey(x => x.ZoneId)
-            .WithRemoveOldEntryTest(static _ => false);
+            .WithEqualityKey(x => x.ZoneId);
 
         configProvider.Register<ZoneSetMapping>()
             .WithIndex(x => x.ID, true)

@@ -31,8 +31,8 @@ public interface ICollectionDbConfiguration
 public class CollectionDbConfiguration<TCollection> : ICollectionDbConfiguration
     where TCollection : ISanctuaryCollection
 {
-    private readonly List<Expression<Func<TCollection, object?>>> _equalitySelectors;
-    private readonly List<(Expression<Func<TCollection, object?>>, bool)> _indexes;
+    private readonly List<Expression<Func<TCollection, object?>>> _equalitySelectors = [];
+    private readonly List<(Expression<Func<TCollection, object?>>, bool)> _indexes = [];
 
     /// <summary>
     /// Gets a list of selectors to retrieve the value of properties
@@ -52,22 +52,12 @@ public class CollectionDbConfiguration<TCollection> : ICollectionDbConfiguration
     /// object should be removed from the database, if it is
     /// not present in the updated data source.
     /// </summary>
-    public Func<TCollection, bool> RemoveOldEntryTest { get; private set; }
+    public Func<TCollection, bool> RemoveOldEntryTest { get; private set; } = static _ => false;
 
     /// <summary>
     /// Gets a value indicating whether this collection stores dynamic data.
     /// </summary>
     public bool IsDynamicCollection { get; private set; }
-
-    /// <summary>
-    /// Initializes a new instance of the <see cref="CollectionDbConfiguration{TCollection}"/> class.
-    /// </summary>
-    public CollectionDbConfiguration()
-    {
-        _equalitySelectors = new List<Expression<Func<TCollection, object?>>>();
-        _indexes = new List<(Expression<Func<TCollection, object?>>, bool)>();
-        RemoveOldEntryTest = static _ => true;
-    }
 
     /// <summary>
     /// Indicates the given property should be indexed.

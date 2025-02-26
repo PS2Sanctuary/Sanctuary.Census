@@ -160,18 +160,22 @@ public class GitCollectionDiffService : ICollectionDiffService
                 commitSig
             );
             _logger.LogInformation("Created commit {Hash} in git diff repo ({Message})", commit.Sha, commit.MessageShort);
+        }
 
-            if (_gitOptions.PushToRemote)
+        if (_gitOptions.PushToRemote)
+        {
+            Branch branchToPush = repo.Branches[_gitOptions.BranchName];
+            if (branchToPush.IsTracking)
             {
                 PushOptions po = new();
                 po.CredentialsProvider = _gitFetchOptions.CredentialsProvider;
-                repo.Network.Push(repo.Branches[_gitOptions.BranchName], po);
+                repo.Network.Push(branchToPush, po);
                 _logger.LogDebug("Successfully pushed git diff repo to remote");
             }
-        }
-        else
-        {
-            _logger.LogDebug("No commits were made; no need to push to the remote");
+            else
+            {
+                throw new InvalidOperationException("Push to remote is enabled, but the local branch is not tracking");
+            }
         }
     }
 
@@ -194,13 +198,18 @@ public class GitCollectionDiffService : ICollectionDiffService
         Repository repo = new(_gitOptions.LocalRepositoryPath);
 
         Branch branch = repo.Branches[_gitOptions.BranchName];
-        if (branch == null)
-            throw new InvalidOperationException("The given branch does not exist in the repository");
-        Commands.Checkout(repo, repo.Branches[_gitOptions.BranchName]);
+        if (branch is not null)
+        {
+            Commands.Checkout(repo, repo.Branches[_gitOptions.BranchName]);
 
-        PullOptions po = new();
-        po.FetchOptions = _gitFetchOptions;
-        Commands.Pull(repo, new Signature(_gitIdentity, DateTimeOffset.UtcNow), po);
+            if (branch.IsTracking)
+            {
+                PullOptions po = new();
+                po.FetchOptions = _gitFetchOptions;
+                Commands.Pull(repo, new Signature(_gitIdentity, DateTimeOffset.UtcNow), po);
+            }
+        }
+
 
         _logger.LogDebug("Git diff repo successfully pulled");
         return repo;

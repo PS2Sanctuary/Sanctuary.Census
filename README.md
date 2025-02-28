@@ -72,7 +72,7 @@ cd <project>
 dotnet publish -c Release --os linux --arch x64 /t:PublishContainer -p ContainerRegistry=<remote>
 
 # The above may fail on certain Linux installs. Try pushing to the local docker registry, and then re-tagging to the remote:
-dotnet publish -c Release --os linux --arch x64 /t:PublishContainer 
+dotnet publish -c Release --os linux --arch x64 /t:PublishContainer
 docker tag <image_name>:latest <remote_registry>/<image_name>:latest
 docker push remote_registry>/<image_name>:latest
 ```

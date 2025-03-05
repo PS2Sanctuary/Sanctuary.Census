@@ -28,10 +28,4 @@
       <ProjectReference Include="..\Sanctuary.Census.Common\Sanctuary.Census.Common.csproj" />
     </ItemGroup>
 
-    <ItemGroup>
-      <Content Include="..\.dockerignore">
-        <Link>.dockerignore</Link>
-      </Content>
-    </ItemGroup>
-
 </Project>

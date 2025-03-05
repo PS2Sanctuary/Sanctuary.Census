@@ -1,6 +1,79 @@
-﻿services:
-  sanctuary-census-api:
-    image: sanctuary-census-api
-    build:
-      context: .
-      dockerfile: Sanctuary.Census.Api/Dockerfile
+﻿# Sample Compose file for Sanctuary services
+
+name: sanctuary
+
+x-env-common-dotnet: &common-dotnet
+  DOTNET_gcServer: 0
+
+services:
+  mongodb:
+    image: mongodb/mongodb-community-server:latest
+    restart: unless-stopped
+    user: "1000:1000"
+    mem_limit: 512m
+    cpus: 0.5
+    command: --wiredTigerCacheSizeGB 0.25
+    volumes:
+      - ./mongodb-data:/data/db
+    expose:
+      - 27017
+    healthcheck:
+      test: ["CMD","mongosh", "--eval", "db.adminCommand('ping')"]
+      interval: 5s
+      timeout: 5s
+      retries: 3
+      start_period: 5s
+
+  builder:
+    image: registry.lithafalcon.cc/sanctuary-census-builder:latest
+    restart: unless-stopped
+    user: "1000:1000"
+    environment:
+      <<: *common-dotnet
+    volumes:
+      - ./config/appsettings.builder.json:/app/appsettings.json:ro
+      - ../../docker-data/sanctuary/sanctuary-census-diff:/home/app/sanctuary-census-diff
+    depends_on:
+      mongodb:
+        condition: service_healthy
+        restart: false
+
+  api:
+    image: registry.lithafalcon.cc/sanctuary-census-api:latest
+    restart: unless-stopped
+    environment:
+      <<: *common-dotnet
+    volumes:
+      - ./config/appsettings.api.json:/app/appsettings.json:ro
+    expose:
+      - 8080
+    depends_on:
+      mongodb:
+        condition: service_healthy
+        restart: true
+
+  realtimehub:
+    image: registry.lithafalcon.cc/sanctuary-census-realtimehub:latest
+    restart: unless-stopped
+    environment:
+      <<: *common-dotnet
+    volumes:
+      - ./config/appsettings.realtimehub.json:/app/appsettings.json:ro
+    expose:
+      - 7041
+      - 5062
+    depends_on:
+      mongodb:
+        condition: service_healthy
+        restart: true
+
+  rc1:
+    image: registry.lithafalcon.cc/sanctuary-census-realtimecollector:previous
+    restart: unless-stopped
+    cpus: 0.25
+    environment:
+      <<: *common-dotnet
+    volumes:
+      - ./config/appsettings.emerald.json:/app/appsettings.json:ro
+    depends_on:
+      - realtimehub

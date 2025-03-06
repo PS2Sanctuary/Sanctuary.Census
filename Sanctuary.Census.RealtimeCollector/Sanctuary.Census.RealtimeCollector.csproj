@@ -39,10 +39,4 @@
     <ItemGroup>
       <ProjectReference Include="..\Sanctuary.Census.ServerData.Internal\Sanctuary.Census.ServerData.Internal.csproj" />
     </ItemGroup>
-
-    <ItemGroup>
-      <Content Include="..\.dockerignore">
-        <Link>.dockerignore</Link>
-      </Content>
-    </ItemGroup>
 </Project>

@@ -20,7 +20,7 @@ public class CommonOptions
     {
         if (File.Exists("/.dockerenv"))
         {
-            AppDataDirectory = "/home/app";
+            AppDataDirectory = "/AppData";
         }
         else
         {

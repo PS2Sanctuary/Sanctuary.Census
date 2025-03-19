@@ -11,7 +11,6 @@ services:
     restart: unless-stopped
     user: "1000:1000"
     mem_limit: 512m
-    cpus: 0.5
     command: --wiredTigerCacheSizeGB 0.25
     volumes:
       - ./mongodb-data:/data/db
@@ -25,21 +24,22 @@ services:
       start_period: 5s
 
   builder:
-    image: registry.lithafalcon.cc/sanctuary-census-builder:latest
+    image: sanctuary-census-builder:latest
     restart: unless-stopped
     user: "1000:1000"
     environment:
       <<: *common-dotnet
     volumes:
       - ./config/appsettings.builder.json:/app/appsettings.json:ro
-      - ../../docker-data/sanctuary/sanctuary-census-diff:/home/app/sanctuary-census-diff
+      - ./sanctuary-census-diff:/home/app/sanctuary-census-diff
+      - ./builder-app-data:/AppData
     depends_on:
       mongodb:
         condition: service_healthy
         restart: false
 
   api:
-    image: registry.lithafalcon.cc/sanctuary-census-api:latest
+    image: sanctuary-census-api:latest
     restart: unless-stopped
     environment:
       <<: *common-dotnet
@@ -53,7 +53,7 @@ services:
         restart: true
 
   realtimehub:
-    image: registry.lithafalcon.cc/sanctuary-census-realtimehub:latest
+    image: sanctuary-census-realtimehub:latest
     restart: unless-stopped
     environment:
       <<: *common-dotnet
@@ -68,12 +68,11 @@ services:
         restart: true
 
   rc1:
-    image: registry.lithafalcon.cc/sanctuary-census-realtimecollector:previous
+    image: sanctuary-census-realtimecollector:latest
     restart: unless-stopped
-    cpus: 0.25
     environment:
       <<: *common-dotnet
     volumes:
-      - ./config/appsettings.emerald.json:/app/appsettings.json:ro
+      - ./config/appsettings.rc1.json:/app/appsettings.json:ro
     depends_on:
       - realtimehub

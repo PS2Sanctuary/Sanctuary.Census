@@ -86,6 +86,7 @@ public partial record Vehicle
     float SubmergeDepth,
     uint WaveSet,
     uint BoatSimInfo,
-    bool ShowLocalPlayerInFirstPerson
+    bool ShowLocalPlayerInFirstPerson,
+    bool ChooseLocationOnSpawn
 );
 #pragma warning restore CS1591

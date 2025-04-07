@@ -32,31 +32,21 @@ public static class Program
         SetupLogger(builder);
 
         builder.Services.AddOpenTelemetry()
-            .WithTracing
-            (
-                tracerProviderBuilder =>
-                {
-                    tracerProviderBuilder.ConfigureResource(resourceBuilder => resourceBuilder.AddService
-                        (
-                            RealtimeCollectorTelemetry.SERVICE_NAME,
-                            serviceVersion: RealtimeCollectorTelemetry.SERVICE_VERSION
-                        ))
-                        .AddServerDataInstrumentation();
+            .WithTracing(tracerProviderBuilder =>
+            {
+                tracerProviderBuilder.ConfigureResource(resourceBuilder => resourceBuilder.AddService
+                    (
+                        RealtimeCollectorTelemetry.SERVICE_NAME,
+                        serviceVersion: RealtimeCollectorTelemetry.SERVICE_VERSION
+                    ))
+                    .AddServerDataInstrumentation();
 
-                    string? otlpEndpoint = builder.Configuration["LoggingOptions:OtlpEndpoint"];
-                    if (otlpEndpoint is null && builder.Environment.IsDevelopment())
-                    {
-                        tracerProviderBuilder.AddConsoleExporter();
-                    }
-                    else if (!string.IsNullOrEmpty(otlpEndpoint))
-                    {
-                        tracerProviderBuilder.AddOtlpExporter
-                        (
-                            otlpOptions => otlpOptions.Endpoint = new Uri(otlpEndpoint)
-                        );
-                    }
-                }
-            );
+                string? otlpEndpoint = builder.Configuration["LoggingOptions:OtlpEndpoint"];
+                if (otlpEndpoint is null && builder.Environment.IsDevelopment())
+                    tracerProviderBuilder.AddConsoleExporter();
+                else if (!string.IsNullOrEmpty(otlpEndpoint))
+                    tracerProviderBuilder.AddOtlpExporter(otlpOptions => otlpOptions.Endpoint = new Uri(otlpEndpoint));
+            });
 
         builder.Services.Configure<LoginClientOptions>(builder.Configuration.GetSection(nameof(LoginClientOptions)))
             .Configure<GatewayClientOptions>(builder.Configuration.GetSection(nameof(GatewayClientOptions)))

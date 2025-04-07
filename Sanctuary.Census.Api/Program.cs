@@ -7,6 +7,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using OpenTelemetry.Metrics;
 using OpenTelemetry.Resources;
+using OpenTelemetry.Trace;
 using Sanctuary.Census.Api.Controllers;
 using Sanctuary.Census.Common.Extensions;
 using Sanctuary.Census.Common.Objects;
@@ -45,6 +46,22 @@ public static class Program
         SetupLogger(builder);
 
         builder.Services.AddOpenTelemetry()
+            .WithTracing(tracingProviderBuilder =>
+            {
+                tracingProviderBuilder.ConfigureResource(resourceBuilder =>
+                    {
+                        resourceBuilder.AddService
+                        (
+                            ApiTelemetry.SERVICE_NAME,
+                            serviceVersion: ApiTelemetry.SERVICE_VERSION
+                        );
+                    })
+                    .AddAspNetCoreInstrumentation();
+
+                string? otlpEndpoint = builder.Configuration["LoggingOptions:OtlpEndpoint"];
+                if (!string.IsNullOrEmpty(otlpEndpoint))
+                    tracingProviderBuilder.AddOtlpExporter(otlpOptions => otlpOptions.Endpoint = new Uri(otlpEndpoint));
+            })
             .WithMetrics(metricsProviderBuilder =>
             {
                 metricsProviderBuilder.ConfigureResource(resourceBuilder =>
@@ -55,16 +72,9 @@ public static class Program
 
                 string? otlpEndpoint = builder.Configuration["LoggingOptions:OtlpEndpoint"];
                 if (string.IsNullOrEmpty(otlpEndpoint) && builder.Environment.IsDevelopment())
-                {
                     metricsProviderBuilder.AddConsoleExporter();
-                }
                 else if (!string.IsNullOrEmpty(otlpEndpoint))
-                {
-                    metricsProviderBuilder.AddOtlpExporter
-                    (
-                        otlpOptions => otlpOptions.Endpoint = new Uri(otlpEndpoint)
-                    );
-                }
+                    metricsProviderBuilder.AddOtlpExporter(otlpOptions => otlpOptions.Endpoint = new Uri(otlpEndpoint));
             });
 
         builder.Services.Configure<CommonOptions>(builder.Configuration.GetSection(nameof(CommonOptions)));

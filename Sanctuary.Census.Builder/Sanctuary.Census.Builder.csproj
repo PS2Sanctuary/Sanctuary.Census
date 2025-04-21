@@ -15,8 +15,8 @@
 
     <ItemGroup>
         <PackageReference Include="LibGit2Sharp" Version="0.31.0" />
-        <PackageReference Include="Microsoft.Extensions.Hosting" Version="9.0.3" />
-        <PackageReference Include="Microsoft.Extensions.Hosting.Systemd" Version="9.0.3" />
+        <PackageReference Include="Microsoft.Extensions.Hosting" Version="9.0.4" />
+        <PackageReference Include="Microsoft.Extensions.Hosting.Systemd" Version="9.0.4" />
         <PackageReference Include="Serilog.Extensions.Hosting" Version="9.0.0" />
         <PackageReference Include="Serilog.Sinks.Console" Version="6.0.0" />
         <PackageReference Include="Serilog.Sinks.Seq" Version="9.0.0" />

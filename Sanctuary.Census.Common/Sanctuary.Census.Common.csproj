@@ -3,14 +3,14 @@
     <ItemGroup>
         <PackageReference Include="carlst99.Mandible" Version="1.6.0" />
         <PackageReference Include="carlst99.MemoryReaders" Version="1.0.0" />
-        <PackageReference Include="Microsoft.Extensions.Caching.Memory" Version="9.0.3" />
-        <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="9.0.3" />
-        <PackageReference Include="Microsoft.Extensions.Hosting.Abstractions" Version="9.0.3" />
-        <PackageReference Include="Microsoft.Extensions.Http" Version="9.0.3" />
-        <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="9.0.3" />
-        <PackageReference Include="Microsoft.Extensions.Options" Version="9.0.3" />
+        <PackageReference Include="Microsoft.Extensions.Caching.Memory" Version="9.0.4" />
+        <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="9.0.4" />
+        <PackageReference Include="Microsoft.Extensions.Hosting.Abstractions" Version="9.0.4" />
+        <PackageReference Include="Microsoft.Extensions.Http" Version="9.0.4" />
+        <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="9.0.4" />
+        <PackageReference Include="Microsoft.Extensions.Options" Version="9.0.4" />
         <PackageReference Include="MongoDB.Driver" Version="3.3.0" />
-        <PackageReference Include="System.IO.Abstractions" Version="22.0.13" />
+        <PackageReference Include="System.IO.Abstractions" Version="22.0.14" />
     </ItemGroup>
 
 </Project>

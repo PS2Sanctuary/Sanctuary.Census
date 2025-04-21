@@ -183,7 +183,7 @@ public class GitCollectionDiffService : ICollectionDiffService
     {
         if (!Repository.IsValid(_gitOptions.LocalRepositoryPath))
         {
-            if (_gitOptions.RemoteHttpUrl is null)
+            if (string.IsNullOrEmpty(_gitOptions.RemoteHttpUrl))
                 throw new InvalidOperationException("The remote git URL is null, but no repository exists locally");
 
             _logger.LogInformation

@@ -38,8 +38,8 @@ public class ZonePopulationLimitCollectionBuilder : ICollectionBuilder
         if (_serverDataCache.ContinentBattleInfos is null)
             throw new MissingCacheDataException(typeof(ContinentBattleInfo));
 
-        List<ZonePopulationLimits> builtLimits = new();
-        List<ZonePopulationLimits> existingLimits = new();
+        List<ZonePopulationLimits> builtLimits = [];
+        List<ZonePopulationLimits> existingLimits = [];
 
         await foreach (ZonePopulationLimits limit in dbContext.GetCollectionDocumentsAsync<ZonePopulationLimits>(ct))
             existingLimits.Add(limit);
@@ -86,6 +86,8 @@ public class ZonePopulationLimitCollectionBuilder : ICollectionBuilder
                 // Then select the largest limit, so we creep towards the true max
                 if (oldLimit is not null && Math.Abs(oldLimit.Total - newLimit.Total) < 5)
                     builtLimits.Add(oldLimit.Total <= newLimit.Total ? newLimit : oldLimit);
+                else if (oldLimit is null)
+                    builtLimits.Add(newLimit);
             }
         }
 

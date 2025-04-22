@@ -19,12 +19,19 @@ namespace MongoNullsFixer;
 public class Worker : BackgroundService
 {
     private readonly ILogger<Worker> _logger;
+    private readonly IHostApplicationLifetime _lifetime;
     private readonly IMongoContext _mongoContext;
     private readonly SnakeCaseJsonNamingPolicy _namePolicy = SnakeCaseJsonNamingPolicy.Default;
 
-    public Worker(ILogger<Worker> logger, IMongoContext mongoContext)
+    public Worker
+    (
+        ILogger<Worker> logger,
+        IHostApplicationLifetime lifetime,
+        IMongoContext mongoContext
+    )
     {
         _logger = logger;
+        _lifetime = lifetime;
         _mongoContext = mongoContext;
     }
 
@@ -47,6 +54,8 @@ public class Worker : BackgroundService
                 await FixNullsInCollection(collType, db.GetCollection<BsonDocument>(collName), ct);
             }
         }
+
+        _lifetime.StopApplication();
     }
 
     private async Task FixNullsInCollection
@@ -56,10 +65,8 @@ public class Worker : BackgroundService
         CancellationToken ct
     )
     {
-        PropertyInfo[] stringProps = collectionType.GetProperties(BindingFlags.Instance | BindingFlags.Public)
-            .Where(x => x.PropertyType == typeof(string))
-            .ToArray();
-        await FixNullsOnField(string.Empty, stringProps, collection, ct);
+        PropertyInfo[] allProps = collectionType.GetProperties(BindingFlags.Instance | BindingFlags.Public);
+        await FixNullsOnField(string.Empty, allProps, collection, ct);
 
         PropertyInfo[] localeStringProps = typeof(LocaleString).GetProperties(BindingFlags.Instance | BindingFlags.Public)
             .Where(x => x.PropertyType == typeof(string))

@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
     <ItemGroup>
-        <PackageReference Include="carlst99.Mandible" Version="1.6.0" />
+        <PackageReference Include="carlst99.Mandible" Version="1.7.1" />
         <PackageReference Include="carlst99.MemoryReaders" Version="1.0.0" />
         <PackageReference Include="Microsoft.Extensions.Caching.Memory" Version="9.0.4" />
         <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="9.0.4" />

@@ -154,7 +154,7 @@ public class CollectionController : ControllerBase
     /// </summary>
     /// <param name="environment">The environment that the collection is from.</param>
     /// <param name="collectionName">The name of the collection.</param>
-    /// <param name="queryParams">The query parameters.</param>
+    /// <param name="censusJSON">Whether Census JSON mode is enabled.</param>
     /// <returns>Descriptions of the collection's fields.</returns>
     /// <response code="200">Returns a description of the collection's structure.</response>
     [HttpGet("/describe/{environment}/{collectionName}")]
@@ -163,16 +163,15 @@ public class CollectionController : ControllerBase
     (
         string environment,
         string collectionName,
-        [FromQuery] CollectionQueryParameters queryParams
+        [FromQuery(Name = "c:censusJSON")] bool censusJSON = true
     )
     {
-        JsonSerializerOptions jsonOptions = GetJsonOptions(queryParams.CensusJsonMode, queryParams.IncludeNullFields);
         IReadOnlyList<CollectionFieldInformation> fieldInfos = _descriptionService.GetFieldInformation(collectionName);
 
         return new JsonResult
         (
             new DataResponse<CollectionFieldInformation>(fieldInfos, fieldInfos.Count, collectionName, null),
-            jsonOptions
+            GetJsonOptions(censusJSON, true)
         );
     }
 

@@ -35,12 +35,13 @@ namespace Sanctuary.Census.Api.Controllers;
 [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status500InternalServerError)]
 public class CollectionController : ControllerBase
 {
+    private const string QueryCommandIdentifier = "c:";
+
     /// <summary>
     /// The maximum number of elements that may be returned from a query.
     /// </summary>
     public const int MAX_LIMIT = 10000;
 
-    private static readonly char[] QueryCommandIdentifier = { 'c', ':' };
     private static readonly JsonSerializerOptions _defaultOptions;
     private static readonly JsonSerializerOptions _incNullOptions;
     private static readonly JsonSerializerOptions _allStringOptions;
@@ -109,7 +110,7 @@ public class CollectionController : ControllerBase
     public async Task<JsonResult> GetDatatypesAsync
     (
         string environment,
-        bool censusJSON = true,
+        [FromQuery(Name = "c:censusJSON")] bool censusJSON = true,
         CancellationToken ct = default
     )
     {

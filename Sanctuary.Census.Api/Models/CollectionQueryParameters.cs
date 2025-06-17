@@ -9,8 +9,7 @@ namespace Sanctuary.Census.Api.Models;
 public class CollectionQueryParameters
 {
     /// <summary>
-    /// Serializes all fields on the response as strings,
-    /// to be fully compatible with Census.
+    /// Serializes all fields on the response as strings, to be fully compatible with Census.
     /// </summary>
     [FromQuery(Name = "c:censusJSON")]
     public bool CensusJsonMode { get; set; }
@@ -23,17 +22,15 @@ public class CollectionQueryParameters
     public string? Distinct { get; set; }
 
     /// <summary>
-    /// Indicates whether queries on string fields should be
-    /// case insensitive. Defaults to <c>true</c>. Note
-    /// that disabling this may slow down the query.
+    /// Indicates whether queries on string fields should be case-insensitive. Defaults to <c>true</c>. Note that
+    /// disabling this may slow down the query.
     /// E.g. <c>c:case=false</c>.
     /// </summary>
     [FromQuery(Name = "c:case")]
     public bool IsCaseSensitive { get; set; }
 
     /// <summary>
-    /// Indicates whether null fields should be included in
-    /// the results. Defaults to <c>false</c>.
+    /// Indicates whether null fields should be included in the results. Defaults to <c>false</c>.
     /// E.g. <c>c:includeNull=true</c>.
     /// </summary>
     [FromQuery(Name = "c:includeNull")]
@@ -54,16 +51,14 @@ public class CollectionQueryParameters
     public int Limit { get; set; }
 
     /// <summary>
-    /// An alias to <see cref="Limit"/>. Specifying this parameter
-    /// will override the <see cref="Limit"/> parameter.
+    /// An alias to <see cref="Limit"/>. Specifying this parameter will override the <see cref="Limit"/> parameter.
     /// E.g. <c>c:limitPerDB=20</c>.
     /// </summary>
     [FromQuery(Name = "c:limitPerDB")]
     public int? LimitPerDb { get; set; }
 
     /// <summary>
-    /// The position into the results of the query at which
-    /// to begin returning records at.
+    /// The position into the results of the query at which to begin returning records at.
     /// E.g. <c>c:start=75</c>.
     /// </summary>
     [FromQuery(Name = "c:start")]
@@ -84,8 +79,8 @@ public class CollectionQueryParameters
     public IEnumerable<string>? Hide { get; set; }
 
     /// <summary>
-    /// The fields to sort the query on. Use <c>1</c> to sort in
-    /// ascending order, and <c>-1</c> to sort in descending order.
+    /// The fields to sort the query on. Use <c>1</c> to sort in ascending order, and <c>-1</c> to sort in descending
+    /// order.
     /// E.g. <c>c:sort=item_id:-1,item_category:1</c>.
     /// </summary>
     [FromQuery(Name = "c:sort")]
@@ -99,8 +94,7 @@ public class CollectionQueryParameters
     public IEnumerable<string>? HasFields { get; set; }
 
     /// <summary>
-    /// Include the time taken to query the database
-    /// in the response.
+    /// Include the time taken to query the database in the response.
     /// E.g. <c>c:timing=true</c>.
     /// </summary>
     [FromQuery(Name = "c:timing")]

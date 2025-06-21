@@ -23,15 +23,15 @@ public class JoinBuilder
     /// </summary>
     public const int MAX_JOINS = 25;
 
-    private static readonly char[] TypeKey = "type".ToCharArray();
-    private static readonly char[] OnFieldKey = "on".ToCharArray();
-    private static readonly char[] ToFieldKey = "to".ToCharArray();
-    private static readonly char[] ListKey = "list".ToCharArray();
-    private static readonly char[] OuterKey = "outer".ToCharArray();
-    private static readonly char[] ShowKey = "show".ToCharArray();
-    private static readonly char[] HideKey = "hide".ToCharArray();
-    private static readonly char[] InjectAtKey = "inject_at".ToCharArray();
-    private static readonly char[] TermsKey = "terms".ToCharArray();
+    private const string TypeKey = "type";
+    private const string OnFieldKey = "on";
+    private const string ToFieldKey = "to";
+    private const string ListKey = "list";
+    private const string OuterKey = "outer";
+    private const string ShowKey = "show";
+    private const string HideKey = "hide";
+    private const string InjectAtKey = "inject_at";
+    private const string TermsKey = "terms";
 
     /// <summary>
     /// The collection that will be joined to.
@@ -56,7 +56,7 @@ public class JoinBuilder
     /// <summary>
     /// Whether this is an outer join.
     /// </summary>
-    public bool IsOuter { get; private set; }
+    public bool IsOuter { get; private set; } = true;
 
     /// <summary>
     /// The field to inject the joined results at.
@@ -66,7 +66,7 @@ public class JoinBuilder
     /// <summary>
     /// Filters to apply to the foreign collection before joining to it.
     /// </summary>
-    public List<string> Terms { get; }
+    public List<string> Terms { get; } = [];
 
     /// <summary>
     /// The projection to apply to the foreign collection.
@@ -76,17 +76,7 @@ public class JoinBuilder
     /// <summary>
     /// The children of this join.
     /// </summary>
-    public List<JoinBuilder> Children { get; private set; }
-
-    /// <summary>
-    /// Initializes a new instance of the <see cref="JoinBuilder"/> class.
-    /// </summary>
-    public JoinBuilder()
-    {
-        Terms = new List<string>();
-        IsOuter = true;
-        Children = new List<JoinBuilder>();
-    }
+    public List<JoinBuilder> Children { get; private set; } = [];
 
     /// <summary>
     /// Parses a <see cref="JoinBuilder"/> from a query join command.
@@ -95,11 +85,17 @@ public class JoinBuilder
     /// <returns>The parsed <see cref="JoinBuilder"/>s.</returns>
     public static List<JoinBuilder> Parse(ReadOnlySpan<char> value)
     {
-        List<JoinBuilder> builders = new();
+        List<JoinBuilder> builders = [];
 
         SpanReader<char> reader = new(value);
         while (reader.TryReadToAny(out ReadOnlySpan<char> joinValue, ",(", false))
         {
+            if (joinValue.Length is 0)
+            {
+                reader.Advance(1);
+                continue;
+            }
+
             int childDepth = 0;
 
             if (reader.IsNext(',', true))
@@ -229,7 +225,7 @@ public class JoinBuilder
     private static void ParseKeyValuePair(ReadOnlySpan<char> keyValuePair, JoinBuilder builder)
     {
         if (keyValuePair.Length == 0)
-            throw new QueryException(QueryErrorCode.Malformed, "Zero-length keyvalues are not permitted");
+            throw new QueryException(QueryErrorCode.Malformed, "Zero-length key-values are not permitted");
 
         // We're naughty and don't validate closing joins properly
         // which means we have to ignore them here
@@ -252,63 +248,63 @@ public class JoinBuilder
             throw new QueryException(QueryErrorCode.Malformed, $"The {key} key requires a value");
         SpanReader<char> valueReader = new(value);
 
-        if (key.SequenceEqual(TypeKey))
+        switch (key)
         {
-            builder.ToCollection = value.ToString();
-        }
-        if (key.SequenceEqual(OnFieldKey))
-        {
-            builder.OnField = value.ToString();
-        }
-        else if (key.SequenceEqual(ToFieldKey))
-        {
-            builder.ToField = value.ToString();
-        }
-        else if (key.SequenceEqual(ListKey))
-        {
-            builder.IsList = value[0] == '1';
-        }
-        else if (key.SequenceEqual(InjectAtKey))
-        {
-            builder.InjectAt = JavaScriptEncoder.Default.Encode(value.ToString());
-        }
-        else if (key.SequenceEqual(OuterKey))
-        {
-            builder.IsOuter = value[0] == '1';
-        }
-        else if (key.SequenceEqual(ShowKey))
-        {
-            if (builder.Projection is not null)
-                throw new QueryException(QueryErrorCode.Malformed, "The 'show' and 'hide' keys are not compatible with each other");
+            case TypeKey:
+                builder.ToCollection = value.ToString();
+                break;
+            case OnFieldKey:
+                builder.OnField = value.ToString();
+                break;
+            case ToFieldKey:
+                builder.ToField = value.ToString();
+                break;
+            case ListKey:
+                builder.IsList = value[0] is '1';
+                break;
+            case InjectAtKey:
+                builder.InjectAt = JavaScriptEncoder.Default.Encode(value.ToString());
+                break;
+            case OuterKey:
+                builder.IsOuter = value[0] is '1';
+                break;
+            case ShowKey:
+            {
+                if (builder.Projection is not null)
+                    throw new QueryException(QueryErrorCode.Malformed, "The 'show' and 'hide' keys are not compatible with each other");
 
-            builder.Projection = new ProjectionBuilder(false);
+                builder.Projection = new ProjectionBuilder(false);
 
-            while (valueReader.TryReadTo(out ReadOnlySpan<char> show, VALUE_DELIMITER))
-                builder.Projection.Project(show.ToString());
+                while (valueReader.TryReadTo(out ReadOnlySpan<char> show, VALUE_DELIMITER))
+                    builder.Projection.Project(show.ToString());
 
-            if (valueReader.TryReadExact(out ReadOnlySpan<char> finalShow, valueReader.Remaining) && !finalShow.IsEmpty)
-                builder.Projection.Project(finalShow.ToString());
-        }
-        else if (key.SequenceEqual(HideKey))
-        {
-            if (builder.Projection is not null)
-                throw new QueryException(QueryErrorCode.Malformed, "The 'show' and 'hide' keys are not compatible with each other");
+                if (valueReader.TryReadExact(out ReadOnlySpan<char> finalShow, valueReader.Remaining) && !finalShow.IsEmpty)
+                    builder.Projection.Project(finalShow.ToString());
+                break;
+            }
+            case HideKey:
+            {
+                if (builder.Projection is not null)
+                    throw new QueryException(QueryErrorCode.Malformed, "The 'show' and 'hide' keys are not compatible with each other");
 
-            builder.Projection = new ProjectionBuilder(true);
+                builder.Projection = new ProjectionBuilder(true);
 
-            while (valueReader.TryReadTo(out ReadOnlySpan<char> hide, VALUE_DELIMITER))
-                builder.Projection.Project(hide.ToString());
+                while (valueReader.TryReadTo(out ReadOnlySpan<char> hide, VALUE_DELIMITER))
+                    builder.Projection.Project(hide.ToString());
 
-            if (valueReader.TryReadExact(out ReadOnlySpan<char> finalHide, valueReader.Remaining) && !finalHide.IsEmpty)
-                builder.Projection.Project(finalHide.ToString());
-        }
-        else if (key.SequenceEqual(TermsKey))
-        {
-            while (valueReader.TryReadTo(out ReadOnlySpan<char> term, VALUE_DELIMITER))
-                builder.Terms.Add(term.ToString());
+                if (valueReader.TryReadExact(out ReadOnlySpan<char> finalHide, valueReader.Remaining) && !finalHide.IsEmpty)
+                    builder.Projection.Project(finalHide.ToString());
+                break;
+            }
+            case TermsKey:
+            {
+                while (valueReader.TryReadTo(out ReadOnlySpan<char> term, VALUE_DELIMITER))
+                    builder.Terms.Add(term.ToString());
 
-            if (valueReader.TryReadExact(out ReadOnlySpan<char> finalTerm, valueReader.Remaining) && !finalTerm.IsEmpty)
-                builder.Terms.Add(finalTerm.ToString());
+                if (valueReader.TryReadExact(out ReadOnlySpan<char> finalTerm, valueReader.Remaining) && !finalTerm.IsEmpty)
+                    builder.Terms.Add(finalTerm.ToString());
+                break;
+            }
         }
     }
 
@@ -414,7 +410,7 @@ public class JoinBuilder
     [MemberNotNull(nameof(ToField))]
     private List<FilterBuilder> PerformPreBuildChecks(string onCollection)
     {
-        List<FilterBuilder> filters = new();
+        List<FilterBuilder> filters = [];
 
         if (ToCollection is null)
         {

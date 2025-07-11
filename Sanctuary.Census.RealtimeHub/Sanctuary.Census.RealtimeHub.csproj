@@ -19,7 +19,7 @@
 
     <ItemGroup>
         <PackageReference Include="Grpc.AspNetCore" Version="2.71.0" />
-        <PackageReference Include="Microsoft.Extensions.Hosting.Systemd" Version="9.0.5" />
+        <PackageReference Include="Microsoft.Extensions.Hosting.Systemd" Version="9.0.7" />
         <PackageReference Include="Microsoft.IO.RecyclableMemoryStream" Version="3.0.1" />
         <PackageReference Include="OneOf" Version="3.0.271" />
         <PackageReference Include="Serilog.AspNetCore" Version="9.0.0" />

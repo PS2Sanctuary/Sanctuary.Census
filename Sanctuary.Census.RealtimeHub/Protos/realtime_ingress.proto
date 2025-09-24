@@ -24,6 +24,7 @@ message ZoneConnectionRequest {
 message ZoneConnectionResponse {
   string ClientProtocolString = 1;
   string ClientVersion = 2;
+  bool IgnoreBattleye = 3;
 }
 
 message MapStateUpdate {

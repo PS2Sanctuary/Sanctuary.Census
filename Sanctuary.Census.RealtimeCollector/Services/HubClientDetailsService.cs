@@ -42,6 +42,13 @@ public class HubClientDetailsService : IClientDetailsService
         return resp.ClientProtocolString;
     }
 
+    /// <inheritdoc />
+    public async ValueTask<bool> ShouldIgnoreBattlEye(CancellationToken ct = default)
+    {
+        ZoneConnectionResponse resp = await GetZoneConnectionDetails(ct);
+        return resp.IgnoreBattleye;
+    }
+
     [MemberNotNull(nameof(_zoneConnectionDetails))]
     private async ValueTask<ZoneConnectionResponse> GetZoneConnectionDetails(CancellationToken ct)
     {

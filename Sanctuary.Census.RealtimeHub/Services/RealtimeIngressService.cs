@@ -78,7 +78,8 @@ public class RealtimeIngressService : RealtimeIngress.RealtimeIngressBase
         return Task.FromResult(new ZoneConnectionResponse
         {
             ClientVersion = options.ClientVersion,
-            ClientProtocolString = options.ClientProtocolString
+            ClientProtocolString = options.ClientProtocolString,
+            IgnoreBattleye = options.ShouldIgnoreBattlEye
         });
     }
 

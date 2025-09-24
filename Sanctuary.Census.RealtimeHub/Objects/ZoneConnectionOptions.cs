@@ -21,6 +21,12 @@ public class ZoneConnectionOptions
     public string ClientProtocolString { get; set; }
 
     /// <summary>
+    /// Indicates whether BattlEye warnings should be ignored - there has been periods in the game's lifespan where
+    /// BattlEye sends heartbeats from the server, but doesn't actually kick invalid clients.
+    /// </summary>
+    public bool ShouldIgnoreBattlEye { get; set; }
+
+    /// <summary>
     /// Initializes a new instance of the <see cref="ZoneConnectionOptions"/>.
     /// </summary>
     public ZoneConnectionOptions()

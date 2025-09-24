@@ -121,11 +121,6 @@ public static class Program
 
         WebApplication app = builder.Build();
 
-        app.UseForwardedHeaders(new ForwardedHeadersOptions
-        {
-            ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto
-        });
-
         app.UseSerilogRequestLogging();
 
         if (!app.Environment.IsDevelopment())

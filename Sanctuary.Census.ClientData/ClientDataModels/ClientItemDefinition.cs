@@ -78,6 +78,7 @@ namespace Sanctuary.Census.ClientData.ClientDataModels;
 /// <param name="ResourceCost">Gets the amount of the given resource type that this item consumes.</param>
 /// <param name="NoGift">Indicates whether this item can be gifted.</param>
 /// <param name="DeployableId">The ID of the deployable that this item is linked to.</param>
+/// <param name="ScopeGlintImage">The ID of the image used to show scope glint on this item.</param>
 [Datasheet]
 public partial record ClientItemDefinition
 (

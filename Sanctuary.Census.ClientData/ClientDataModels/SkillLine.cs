@@ -9,6 +9,7 @@ namespace Sanctuary.Census.ClientData.ClientDataModels;
 /// <param name="NameID">The locale ID of the line's name.</param>
 /// <param name="DescriptionID">The locale ID of the line's description.</param>
 /// <param name="IconID">The ID of the line's image set.</param>
+/// <param name="ContentId">Unknown.</param>
 /// <param name="SkillSetID">The ID of the <see cref="SkillSet"/> that the line belongs to.</param>
 /// <param name="SkillSetIndex">Unknown.</param>
 /// <param name="SkillCategoryIdEx">The ID of the <see cref="SkillCategory"/> that the line belongs to.</param>

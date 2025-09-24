@@ -17,7 +17,7 @@ public interface IManifestService
     /// <param name="ps2Environment">The environment to retrieve manifest data from.</param>
     /// <param name="ct">A <see cref="CancellationToken"/> that can be used to stop the operation.</param>
     /// <returns>The retrieved manifest file.</returns>
-    public Task<ManifestFileWrapper> GetFileAsync(string fileName, PS2Environment ps2Environment, CancellationToken ct = default);
+    Task<ManifestFileWrapper> GetFileAsync(string fileName, PS2Environment ps2Environment, CancellationToken ct = default);
 
     /// <summary>
     /// Retrieves the data of a manifest file.

@@ -8,7 +8,7 @@ public interface IRealtimeEvent
     /// <summary>
     /// Gets the name of the event.
     /// </summary>
-    public string EventName { get; }
+    string EventName { get; }
 
     /// <summary>
     /// The ID of the world on which the realtime entry was generated.

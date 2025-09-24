@@ -32,6 +32,7 @@ public partial record SkillLine
     uint NameID,
     uint DescriptionID,
     uint IconID,
+    int ContentId,
     uint SkillSetID,
     ushort SkillSetIndex,
     uint SkillCategoryIdEx,

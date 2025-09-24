@@ -150,5 +150,6 @@ public partial record ClientItemDefinition
     uint ResourceType,
     int ResourceCost,
     bool NoGift,
-    uint DeployableId
+    uint DeployableId,
+    uint ScopeGlintImage
 );
